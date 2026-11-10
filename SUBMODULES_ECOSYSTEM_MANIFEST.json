@@ -1,0 +1,983 @@
+{
+  "repository": "C:\\src\\ai-os",
+  "generatedAt": "2026-11-10T22:26:01.276Z",
+  "cloneStrategy": "git submodule shallow (--depth 1 --filter=blob:none --single-branch --no-tags, zero-vendor)",
+  "totalConfigured": 96,
+  "totalCloned": 96,
+  "byCategory": {
+    "ggml-org": 8,
+    "astral-sh": 13,
+    "python-rust": 7,
+    "huggingface": 12,
+    "openai": 8,
+    "nvidia": 11,
+    "pytorch": 4,
+    "llm-2026": 9,
+    "uncensored": 2,
+    "rag-bigdata": 6,
+    "tree-sitter": 6,
+    "system1-decisional": 10
+  },
+  "submodules": [
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/llama.cpp",
+      "repo": "ggml-org/llama.cpp",
+      "branch": "master",
+      "description": "LLM inference in C/C++ with CUDA sm_89 Tensor Core kernels",
+      "commitSha": "b5cb8f6f470a3a4d6f329bbb050e9a34fde6638d",
+      "committedAt": "2026-11-10T22:44:23+01:00",
+      "commitSubject": "ui: keep a hidden sidebar from intercepting clicks again (#32035)"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/whisper.cpp",
+      "repo": "ggml-org/whisper.cpp",
+      "branch": "master",
+      "description": "High-performance C/C++ & CUDA ASR port of OpenAI Whisper",
+      "commitSha": "d2c6f05a46dacf663e357bcf0ed40f542a72825d",
+      "committedAt": "2026-11-10T13:09:38+01:00",
+      "commitSubject": "ci : Upgrade WoA CUDA builds to 13.5 (#4166)"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/ggml",
+      "repo": "ggml-org/ggml",
+      "branch": "master",
+      "description": "Bare-metal C/CUDA quantized tensor library for ML",
+      "commitSha": "cd6d2b75f5d3e4b2f3fe8e8fbc6c8b84ac80e74a",
+      "committedAt": "2026-11-08T15:56:21+02:00",
+      "commitSubject": "docs : sync ggml_type enum in gguf.md (#1685)"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/Llama-Windows",
+      "repo": "ggml-org/Llama-Windows",
+      "branch": "main",
+      "description": "Official Windows native Llama companion",
+      "commitSha": "190fc1016b4f9e8b3dd52b845f84bd4ec4e3e784",
+      "committedAt": "2026-11-06T14:02:24+01:00",
+      "commitSubject": "fix(deep-links): preserve explicit Hugging Face quant selection (#174)"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/llama.vscode",
+      "repo": "ggml-org/llama.vscode",
+      "branch": "master",
+      "description": "Local FIM code/text completion extension",
+      "commitSha": "161bc348213eec248844bf0ea8f4a4eb1619fd52",
+      "committedAt": "2026-11-06T00:33:26+02:00",
+      "commitSubject": "v0.0.77"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/llama.vim",
+      "repo": "ggml-org/llama.vim",
+      "branch": "master",
+      "description": "Local LLM completion plugin for Vim/Neovim",
+      "commitSha": "e1ca1cc6af9da73f4ae21f810f33909d515592e6",
+      "committedAt": "2026-09-29T08:17:56+03:00",
+      "commitSubject": "config : Make the FIM debounce timer configurable (#151)"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/convert",
+      "repo": "ggml-org/convert",
+      "branch": "master",
+      "description": "Safetensors/PyTorch to GGUF model converter",
+      "commitSha": "0ee11fe585548fa547abff61100e082f07d9d0d4",
+      "committedAt": "2026-11-07T19:38:57+01:00",
+      "commitSubject": "mode: add MageVL-Cowork"
+    },
+    {
+      "category": "ggml-org",
+      "path": "submodules/ggml-org/p1",
+      "repo": "ggml-org/p1",
+      "branch": "main",
+      "description": "LLM-based code completion engine",
+      "commitSha": "ae6d4f84b0a07c7796780ca811ca1e5e706df4c8",
+      "committedAt": "2025-01-23T14:51:45+02:00",
+      "commitSubject": "readme : add llama.vscode link"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/uv",
+      "repo": "astral-sh/uv",
+      "branch": "main",
+      "description": "Ultra-fast Python package, project, and runtime manager in Rust",
+      "commitSha": "cb44dfa2757fbf52952119c0e4b55d2a3c9be4ec",
+      "committedAt": "2026-11-10T16:50:24-05:00",
+      "commitSubject": "fix: preserve apostrophes in Windows activation paths (#23152)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/ruff",
+      "repo": "astral-sh/ruff",
+      "branch": "main",
+      "description": "Ultra-fast Python linter and code formatter in Rust",
+      "commitSha": "b5d383d9c781fcd96ddb7e82ded2790de93d8633",
+      "committedAt": "2026-11-10T18:46:34Z",
+      "commitSubject": "[ty] Avoid a panic on unions of recursive named tuples (#30222)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/ty",
+      "repo": "astral-sh/ty",
+      "branch": "main",
+      "description": "Ultra-fast Python static type checker and LSP in Rust",
+      "commitSha": "6c90fe0aff166318cf13fc18fd797f91a5d5d552",
+      "committedAt": "2026-11-09T20:51:09+01:00",
+      "commitSubject": "Bump version to 0.0.100 (#4987)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/python-build-standalone",
+      "repo": "astral-sh/python-build-standalone",
+      "branch": "main",
+      "description": "PGO+LTO redistributable CPython builds (including free-threaded 3.15t)",
+      "commitSha": "de549958c79576345140088bd5482d0b0f8a2614",
+      "committedAt": "2026-11-05T14:47:14-06:00",
+      "commitSubject": "Skip existing release artifacts when retrying mirror uploads (#1433)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/astral-codec",
+      "repo": "astral-sh/astral-codec",
+      "branch": "main",
+      "description": "Fast async format encoders/decoders in Rust",
+      "commitSha": "bbfc49a791cb31d123007db3ebe9bc3535ed6fd5",
+      "committedAt": "2026-11-10T16:28:51-05:00",
+      "commitSubject": "Accept GNU long metadata without a NUL terminator behind a policy option (#318)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/astral-yaml",
+      "repo": "astral-sh/astral-yaml",
+      "branch": "main",
+      "description": "High-performance YAML 1.2 parser in safe Rust",
+      "commitSha": "d4fff0e0072db55010a3b0f0b30ef8fda3f0f549",
+      "committedAt": "2026-11-10T15:58:43-05:00",
+      "commitSubject": "Mention the Python bindings in the main README (#165)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/astral-html",
+      "repo": "astral-sh/astral-html",
+      "branch": "main",
+      "description": "High-performance HTML parser for document traversal",
+      "commitSha": "55e7df63469b17934bef598297f808553a75d043",
+      "committedAt": "2026-10-22T16:23:21-07:00",
+      "commitSubject": "Update uv to 0.13.5 (#96)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/astral-ini",
+      "repo": "astral-sh/astral-ini",
+      "branch": "main",
+      "description": "High-performance INI parser for Python packaging",
+      "commitSha": "4c2bb605041e0d5c1ad084a6e4a934fc901ce8b4",
+      "committedAt": "2026-10-23T10:33:27-04:00",
+      "commitSubject": "Update uv to 0.13.5 (#30)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/pubgrub",
+      "repo": "astral-sh/pubgrub",
+      "branch": "main",
+      "description": "PubGrub version solving algorithm in Rust",
+      "commitSha": "6449055dabbd4f0d6b8387c06746751dd47d1d8c",
+      "committedAt": "2026-10-21T14:49:44-04:00",
+      "commitSubject": "use release-gate for approval of new releases (#95)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/hawk",
+      "repo": "astral-sh/hawk",
+      "branch": "main",
+      "description": "Workspace-aware Cargo lint for unnecessary public Rust APIs",
+      "commitSha": "143f490e7c4dc4ac55cfc86eadadbe9de99cb16e",
+      "committedAt": "2026-11-03T13:37:09-05:00",
+      "commitSubject": "Run demudhra first on macOS (#179)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/toucan",
+      "repo": "astral-sh/toucan",
+      "branch": "main",
+      "description": "Pure-Rust C frontend for generating Rust FFI bindings without libclang",
+      "commitSha": "114f35bd3c4a1a6ae510a37f4b897b3ccbb4193a",
+      "committedAt": "2026-11-03T14:43:40-05:00",
+      "commitSubject": "Run demudhra first on macOS (#573)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/xeme",
+      "repo": "astral-sh/xeme",
+      "branch": "main",
+      "description": "Streaming XML parser in Rust with Expat-compatible C ABI",
+      "commitSha": "4f97fe8a55dc06df13bb6be6996ea7978d91c526",
+      "committedAt": "2026-11-03T16:22:46-05:00",
+      "commitSubject": "Document parser limits and input contracts (#279)"
+    },
+    {
+      "category": "astral-sh",
+      "path": "submodules/astral-sh/agent-plugins",
+      "repo": "astral-sh/agent-plugins",
+      "branch": "main",
+      "description": "Official Astral coding agent skills & plugins",
+      "commitSha": "855418fb9ebfada49a8345a5c3ada9db2cdc2419",
+      "committedAt": "2026-11-09T12:28:46-06:00",
+      "commitSubject": "Document project and script type checking with `uv check` (#30)"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/cpython",
+      "repo": "python/cpython",
+      "branch": "main",
+      "description": "Canonical CPython runtime (PEP 703 free-threading + JIT)",
+      "commitSha": "226813c0f7834b55be51e912a3d8555e652d9026",
+      "committedAt": "2026-11-10T22:40:40+01:00",
+      "commitSubject": "gh-161724, PCbuild: Build also xxlimited in Debug configuration (#161725)"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/pyo3",
+      "repo": "PyO3/pyo3",
+      "branch": "main",
+      "description": "Zero-overhead Rust bindings for CPython & free-threaded ABI",
+      "commitSha": "f41d7e8799cad7f1c393d00276a4fa7b83acf885",
+      "committedAt": "2026-11-02T16:30:45Z",
+      "commitSubject": "feat: introduce stack-allocated `PyBuffer` (#5894)"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/maturin",
+      "repo": "PyO3/maturin",
+      "branch": "main",
+      "description": "Build and publish PyO3, CFFI, and UniFFI Rust crates as Python wheels",
+      "commitSha": "fe3ae413bae518dd625479af01824e82e733cd83",
+      "committedAt": "2026-10-29T21:48:28+08:00",
+      "commitSubject": "[pre-commit.ci] pre-commit autoupdate (#3347)"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/rust-numpy",
+      "repo": "PyO3/rust-numpy",
+      "branch": "main",
+      "description": "Zero-copy PyO3 Rust bindings for NumPy C-API ndarrays",
+      "commitSha": "200a421cee589747a0d96f1bb2bfe1b3b0075508",
+      "committedAt": "2026-11-03T00:13:50+01:00",
+      "commitSubject": "Bump rustls from 0.23.45 to 0.23.46 in /examples/parallel (#576)"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/pyo3-async-runtimes",
+      "repo": "PyO3/pyo3-async-runtimes",
+      "branch": "main",
+      "description": "Bridges between Python asyncio and Rust Tokio runtimes",
+      "commitSha": "137f180df167987b27537c4ded024c1c68b65175",
+      "committedAt": "2026-10-20T12:41:53-04:00",
+      "commitSubject": "Merge pull request #96 from FalkWoldmann/replace-once-cell-with-lazylock"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/pydantic",
+      "repo": "pydantic/pydantic",
+      "branch": "main",
+      "description": "Rust-accelerated data validation (pydantic-core)",
+      "commitSha": "560f0f96a37d6913afdfddb2de22030ef08e68c3",
+      "committedAt": "2026-11-10T11:17:51Z",
+      "commitSubject": "Correct typo in contribution guide (#14268)"
+    },
+    {
+      "category": "python-rust",
+      "path": "submodules/python-rust/pydantic-ai",
+      "repo": "pydantic/pydantic-ai",
+      "branch": "main",
+      "description": "Type-safe GenAI agent framework for Python",
+      "commitSha": "d9e89fee494292c28f3b0d1f16149cc06b3218d2",
+      "committedAt": "2026-11-10T21:49:11Z",
+      "commitSubject": "Add `framing_announcement` setting and only announce the `<system>` voice tag once a conversation needs it (#12661)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/safetensors",
+      "repo": "huggingface/safetensors",
+      "branch": "main",
+      "description": "Zero-copy mmap safe tensor serialization in Rust/Python/C",
+      "commitSha": "9e6f4d6c7af8c63ac791ab1bfdd58d2de02fbaa4",
+      "committedAt": "2026-11-09T17:48:54+01:00",
+      "commitSubject": "ci: fix i686 wheel builds and free-threaded jax install (#910)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/tokenizers",
+      "repo": "huggingface/tokenizers",
+      "branch": "main",
+      "description": "Fast state-of-the-art Rust BPE/WordPiece/Unigram tokenizers",
+      "commitSha": "de626d58c702b6c5f9b94850599037d23f32ef3f",
+      "committedAt": "2026-11-10T17:28:27+01:00",
+      "commitSubject": "fix(convert): canonicalize singleton Metaspace sequences (#2591)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/candle",
+      "repo": "huggingface/candle",
+      "branch": "main",
+      "description": "Minimalist serverless Rust ML & LLM framework with CUDA kernels",
+      "commitSha": "cfcbd7186d13271843ce7eb41d25659bd0835850",
+      "committedAt": "2026-11-01T17:36:13-05:00",
+      "commitSubject": "metal: add routed quantized MoE projections (#4068)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/transformers",
+      "repo": "huggingface/transformers",
+      "branch": "main",
+      "description": "Canonical model-definition framework for text, vision, audio, multimodal",
+      "commitSha": "07cc8e8c1b19160cfba6893ceb3099dc8f09d90c",
+      "committedAt": "2026-11-10T19:44:00+01:00",
+      "commitSubject": "Fix RecurrentGemma padded generation by declaring its `layer_types` (#50577)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/peft",
+      "repo": "huggingface/peft",
+      "branch": "main",
+      "description": "Parameter-Efficient Fine-Tuning (LoRA, QLoRA, DoRA)",
+      "commitSha": "92bc51b917a21af1eee22d2c3de9c44570354cb4",
+      "committedAt": "2026-11-10T09:54:34+01:00",
+      "commitSubject": "ENH Add replace_lora_weights_pissa for 4-bit models (#4135)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/trl",
+      "repo": "huggingface/trl",
+      "branch": "main",
+      "description": "Post-training Transformers with RLHF, GRPO, DPO, SFT",
+      "commitSha": "9507c44fc1714ac2b2d9ba9cc65efd2b5c9a351a",
+      "committedAt": "2026-11-10T18:00:56+01:00",
+      "commitSubject": "Remove `adjusted_mfu`, which nothing calls (#8245)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/accelerate",
+      "repo": "huggingface/accelerate",
+      "branch": "main",
+      "description": "FP8/BF16 mixed precision, FSDP2, DeepSpeed training launcher",
+      "commitSha": "f47439c1fb24721ea71ab98f9b512726b5a97828",
+      "committedAt": "2026-11-02T16:20:44+01:00",
+      "commitSubject": "Allow clip_grad_value_ under FSDP2 (#4386)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/datasets",
+      "repo": "huggingface/datasets",
+      "branch": "main",
+      "description": "Zero-copy Apache Arrow backed ML dataset streaming & processing",
+      "commitSha": "efc82474bc990f5872226dca56457536c9a880e9",
+      "committedAt": "2026-11-10T18:24:27+01:00",
+      "commitSubject": "Fix batch(by_column=) merging groups that are separated by null values (#8966)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/diffusers",
+      "repo": "huggingface/diffusers",
+      "branch": "main",
+      "description": "State-of-the-art image, video, and audio diffusion models",
+      "commitSha": "f598e6e6a99528858b962c1399c45b59a6c25484",
+      "committedAt": "2026-11-10T09:29:01-10:00",
+      "commitSubject": "Document Cosmos3 Nano, Super, and Edge FP8 as standalone repos (#15236)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/sentence-transformers",
+      "repo": "huggingface/sentence-transformers",
+      "branch": "main",
+      "description": "Dense, sparse, and ColBERT embeddings + cross-encoder rerankers for RAG",
+      "commitSha": "ae77d2b9c599c843991058323e0b69a9271b8495",
+      "committedAt": "2026-11-10T15:45:17+01:00",
+      "commitSubject": "Add `kernels` support for MaxSim, and Ward clustering, and transformers backbones (#4344)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/text-embeddings-inference",
+      "repo": "huggingface/text-embeddings-inference",
+      "branch": "main",
+      "description": "Blazing-fast Rust + Candle + CUDA server for RAG embeddings/reranking",
+      "commitSha": "da9a9ce190444ef4326e1fbab15d298f0a1016c7",
+      "committedAt": "2026-11-06T13:10:20+01:00",
+      "commitSubject": "Support a separate HTTP metrics port (#678)"
+    },
+    {
+      "category": "huggingface",
+      "path": "submodules/huggingface/smolagents",
+      "repo": "huggingface/smolagents",
+      "branch": "main",
+      "description": "Code-first minimalist agent library",
+      "commitSha": "96f33faaf028479119ec8d34507b47694cf14e34",
+      "committedAt": "2026-10-06T11:38:53+02:00",
+      "commitSubject": "Bump doc-builder workflow pin (#2906)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/codex",
+      "repo": "openai/codex",
+      "branch": "main",
+      "description": "Lightweight Rust/TS terminal coding agent",
+      "commitSha": "568c592f9cbe4388aafe9759bf6f3ed1bb0fd5e3",
+      "committedAt": "2026-11-10T22:00:40Z",
+      "commitSubject": "Add sign-only mode and tighten macOS signing verification (#60671)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/tiktoken",
+      "repo": "openai/tiktoken",
+      "branch": "main",
+      "description": "Fast Rust BPE tokenizer with PyO3 bindings",
+      "commitSha": "79dc2c0533685b893616c78160b5d9e40876e724",
+      "committedAt": "2026-11-08T00:48:19-08:00",
+      "commitSubject": "Use PEP 639 license metadata in pyproject.toml (#496)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/whisper",
+      "repo": "openai/whisper",
+      "branch": "main",
+      "description": "Reference PyTorch multilingual speech recognition",
+      "commitSha": "86098128c0b4f24f0e2aa2994de830614b474227",
+      "committedAt": "2026-08-31T10:19:19-07:00",
+      "commitSubject": "Only spell out a standalone 1 in the English number normalizer (#2836)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/gpt-oss",
+      "repo": "openai/gpt-oss",
+      "branch": "main",
+      "description": "OpenAI gpt-oss-120b and gpt-oss-20b open-weight models",
+      "commitSha": "277020131d524f06bed5f66b694a92ed7f6e5224",
+      "committedAt": "2026-10-29T09:42:12-07:00",
+      "commitSubject": "Harden YouComBackend search response parsing (#251)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/openai-python",
+      "repo": "openai/openai-python",
+      "branch": "main",
+      "description": "Official typed Python client for OpenAI-compatible APIs",
+      "commitSha": "0ebd00647f6088fb100b03440c6c4554bbab549d",
+      "committedAt": "2026-11-10T08:02:44-08:00",
+      "commitSubject": "chore(deps): bump astral-sh/setup-uv from 10.3.0 to 10.3.3 (#4261)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/openai-agents-python",
+      "repo": "openai/openai-agents-python",
+      "branch": "main",
+      "description": "Multi-agent orchestration SDK",
+      "commitSha": "d68961657843c7d81dfc25834484f8aac2957eb3",
+      "committedAt": "2026-11-10T07:54:51Z",
+      "commitSubject": "docs: update translated pages (#5388)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/evals",
+      "repo": "openai/evals",
+      "branch": "main",
+      "description": "LLM benchmark and evaluation harness",
+      "commitSha": "8eac7a7de5215c907fbddc30efdaf316913eccdd",
+      "committedAt": "2026-04-14T08:29:57-07:00",
+      "commitSubject": "Pin pre-commit hook revisions to immutable commits (#1644)"
+    },
+    {
+      "category": "openai",
+      "path": "submodules/openai/CLIP",
+      "repo": "openai/CLIP",
+      "branch": "main",
+      "description": "Contrastive Language-Image Pretraining",
+      "commitSha": "d05afc436d78f1c48dc0dbf8e5980a9d471f35f6",
+      "committedAt": "2026-03-25T13:46:40-05:00",
+      "commitSubject": "Pin GitHub Actions workflow references (#537)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/cutlass",
+      "repo": "NVIDIA/cutlass",
+      "branch": "main",
+      "description": "CUDA C++ templates & CuTe Python DSL for Tensor Core GEMM/FMHA (sm_89+)",
+      "commitSha": "b2f249acd20392beeb16f5e5a31f4f1a4e38b3bd",
+      "committedAt": "2026-11-06T17:43:14+08:00",
+      "commitSubject": "[examples/112] Free TMEM once, after both TMEM-reading warpgroups are done (#3803)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/cccl",
+      "repo": "NVIDIA/cccl",
+      "branch": "main",
+      "description": "CUDA Core Compute Libraries (Thrust, CUB, libcudacxx)",
+      "commitSha": "ea5cfb8d03b2aef3044afe28a860e76c3a9a64f8",
+      "committedAt": "2026-11-10T21:51:13Z",
+      "commitSubject": "`readability-else-after-return` (#12439)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/TensorRT-LLM",
+      "repo": "NVIDIA/TensorRT-LLM",
+      "branch": "main",
+      "description": "FP8/INT4/AWQ TensorRT inference engine for NVIDIA GPUs",
+      "commitSha": "36ef46d2530d92bd2ec7b6ef54fd42a0b56a7cdd",
+      "committedAt": "2026-11-10T14:01:43-08:00",
+      "commitSubject": "[TRTLLM-17146][feat] Add the Muse Spark Open decoder fast paths (#21356)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/Megatron-LM",
+      "repo": "NVIDIA/Megatron-LM",
+      "branch": "main",
+      "description": "3D-parallel large-scale Transformer pretraining",
+      "commitSha": "76cf2e2d64bbfa466d50de64d036db23395dc5af",
+      "committedAt": "2026-11-10T15:55:55Z",
+      "commitSubject": "feat(moe): add optional ep-invariant expert combine (#9107)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/TransformerEngine",
+      "repo": "NVIDIA/TransformerEngine",
+      "branch": "main",
+      "description": "Ada Lovelace sm_89 / Hopper FP8 Transformer acceleration",
+      "commitSha": "2cd2257eebf5714f27ba5d4865a9f8ca552c638e",
+      "committedAt": "2026-11-10T12:37:30-08:00",
+      "commitSubject": "[Common] Use software stochastic rounding in the RHT cast fusion kernels (#3706)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/Model-Optimizer",
+      "repo": "NVIDIA/Model-Optimizer",
+      "branch": "main",
+      "description": "FP8/NVFP4 quantization, pruning, distillation, speculative decoding",
+      "commitSha": "bcb847d6857374781af15d0a240a11eb3bb0b155",
+      "committedAt": "2026-11-10T13:55:39-08:00",
+      "commitSubject": "Add skip_frozen_mtp to skip a frozen MTP head in Megatron distillation training (#3203)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/cudf",
+      "repo": "NVIDIA/cudf",
+      "branch": "main",
+      "description": "RAPIDS GPU DataFrame library (Apache Arrow on CUDA)",
+      "commitSha": "e2bc4a5020996791397aac613504c7f68198fdd5",
+      "committedAt": "2026-11-10T15:21:35-06:00",
+      "commitSubject": "Merge pull request #25185 from msarahan/codex/mypy-without-rmm-20261110"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/cuml",
+      "repo": "NVIDIA/cuml",
+      "branch": "main",
+      "description": "RAPIDS GPU-accelerated classical ML algorithms",
+      "commitSha": "f0d1072cec2970a2589867bae1d357ca416d6bc9",
+      "committedAt": "2026-11-10T17:32:31Z",
+      "commitSubject": "Ensure MPI_Finalize() gets called before MG_RF_QUANTILE_TEST exits (#8806)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/DALI",
+      "repo": "NVIDIA/DALI",
+      "branch": "main",
+      "description": "Zero-bottleneck GPU data loading & augmentation pipeline",
+      "commitSha": "518715371fea54aff66e212db52e15b6f3cd704e",
+      "committedAt": "2026-11-10T13:39:40+01:00",
+      "commitSubject": "Fix Cat and Stack reading the layout only from the first input (#6479)"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/warp",
+      "repo": "NVIDIA/warp",
+      "branch": "main",
+      "description": "Python-to-CUDA JIT kernel compiler for simulation and ML",
+      "commitSha": "7c213fcc715c875f2b1fe487b026837d5185985a",
+      "committedAt": "2026-11-10T08:58:51-08:00",
+      "commitSubject": "Avoid redundant native FP64 Cholesky diagonal work [GH-2239]"
+    },
+    {
+      "category": "nvidia",
+      "path": "submodules/nvidia/garak",
+      "repo": "NVIDIA/garak",
+      "branch": "main",
+      "description": "LLM red-teaming, probe, and security scanner",
+      "commitSha": "892779207cbc38f65a738ef9cbdfbc1e83aa0b55",
+      "committedAt": "2026-11-06T23:26:28Z",
+      "commitSubject": "automatic garak/resources/plugin_cache.json update"
+    },
+    {
+      "category": "pytorch",
+      "path": "submodules/pytorch/pytorch",
+      "repo": "pytorch/pytorch",
+      "branch": "main",
+      "description": "Tensors and dynamic neural networks with torch.compile Inductor CUDA",
+      "commitSha": "00bcac407f4a0854ea5bf1b30b06cb67ce08a897",
+      "committedAt": "2026-11-10T21:53:47Z",
+      "commitSubject": "Retry optional submodule clones with backoff (#202433)"
+    },
+    {
+      "category": "pytorch",
+      "path": "submodules/pytorch/torchtitan",
+      "repo": "pytorch/torchtitan",
+      "branch": "main",
+      "description": "Clean-room PyTorch native pretraining platform",
+      "commitSha": "bb34c7591ee81148e9a64902c3fa6217d2716d77",
+      "committedAt": "2026-11-10T13:17:38-08:00",
+      "commitSubject": "[attention] Skip cuDNN varlen attention in deterministic mode (#5890)"
+    },
+    {
+      "category": "pytorch",
+      "path": "submodules/pytorch/ao",
+      "repo": "pytorch/ao",
+      "branch": "main",
+      "description": "PyTorch native FP8/INT4/INT8 quantization & sparsity",
+      "commitSha": "82c6889c4a33041a7023467746b6a91da3e691d1",
+      "committedAt": "2026-11-07T06:21:50Z",
+      "commitSubject": "Run low-bit linear (universal + LUT) on x86 (#5072)"
+    },
+    {
+      "category": "pytorch",
+      "path": "submodules/pytorch/executorch",
+      "repo": "pytorch/executorch",
+      "branch": "main",
+      "description": "AOT portable edge/bare-metal runtime for PyTorch",
+      "commitSha": "71b30e71535ce2fc7aafb647c69848b5088d6d03",
+      "committedAt": "2026-11-10T16:59:57-05:00",
+      "commitSubject": "[XNNPACK] Lower aten._to_copy dtype casts for skip_dim_order exports (#24768)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/vllm",
+      "repo": "vllm-project/vllm",
+      "branch": "main",
+      "description": "PagedAttention high-throughput LLM serving engine",
+      "commitSha": "f460a5ed01599c549f24751bdf6ee8026c590f14",
+      "committedAt": "2026-11-10T15:51:25-06:00",
+      "commitSubject": "[ROCm][Bugfix] Key the FSE MXFP8 scale-layout test check on the selected backend (#66875)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/sglang",
+      "repo": "sgl-project/sglang",
+      "branch": "main",
+      "description": "RadixAttention fast structured LLM/VLM serving framework",
+      "commitSha": "6d12127cbb61a3acb51f24b0c83298d6edea1af4",
+      "committedAt": "2026-11-10T13:54:43-08:00",
+      "commitSubject": "[CI] docker: Follow Mega main for nightly and pin releases (#49410)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/unsloth",
+      "repo": "unslothai/unsloth",
+      "branch": "main",
+      "description": "2x faster, 70% less VRAM Triton kernels for QLoRA/GRPO fine-tuning on 12GB GPUs",
+      "commitSha": "322c4c1a50541238632c2aeb95821151f575f29c",
+      "committedAt": "2026-11-10T12:23:14-08:00",
+      "commitSubject": "Studio Terminal: give the heredoc quote scanner its own substitution helper (#17442)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/flash-attention",
+      "repo": "Dao-AILab/flash-attention",
+      "branch": "main",
+      "description": "IO-aware exact attention CUDA kernels (FlashAttention-2/3)",
+      "commitSha": "69384e9c2edf0f7f77aba513b05a5368e0170641",
+      "committedAt": "2026-11-10T13:03:22-08:00",
+      "commitSubject": "[CuTe, SM100] Add MXFP8 QK forward with BF16 PV (#3019)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/flashinfer",
+      "repo": "flashinfer-ai/flashinfer",
+      "branch": "main",
+      "description": "Customizable prefill/decode/PagedAttention CUDA kernels for LLM serving",
+      "commitSha": "8fcb1f7449c7d435ecc8fd94bd88a55da608cc95",
+      "committedAt": "2026-11-10T16:53:12-05:00",
+      "commitSubject": "fix(topk): order three cross-CTA group-state accesses in the multi-CTA radix kernels (#8832)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/triton",
+      "repo": "triton-lang/triton",
+      "branch": "main",
+      "description": "Tile-based GPU kernel compiler for Deep Learning",
+      "commitSha": "fbd70d9e44ca05f6253c84fc5553981dd79b44b0",
+      "committedAt": "2026-11-10T11:54:55-08:00",
+      "commitSubject": "[AMD][gfx1250] Support PartitionedSharedLayout in TDM Gather (#12651)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/mistral.rs",
+      "repo": "EricLBuehler/mistral.rs",
+      "branch": "master",
+      "description": "Blazing-fast pure-Rust + CUDA ISQ multimodal LLM inference engine",
+      "commitSha": "fb4cdc3730dc64b366724e7637a205a8b7747499",
+      "committedAt": "2026-11-08T21:43:10-05:00",
+      "commitSubject": "fix(qwen3.5): fix qwen3.5 adaptive speculative behavior (#2542)"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/outlines",
+      "repo": "dottxt-ai/outlines",
+      "branch": "main",
+      "description": "Zero-overhead FSM/CFG structured generation",
+      "commitSha": "c52af8472c6fe8a607a733ec11b709476af77a96",
+      "committedAt": "2026-08-24T16:20:14+02:00",
+      "commitSubject": "Give the mypy hook urllib3 so the style check passes"
+    },
+    {
+      "category": "llm-2026",
+      "path": "submodules/llm-2026/dspy",
+      "repo": "stanfordnlp/dspy",
+      "branch": "main",
+      "description": "Declarative self-optimizing prompt & RAG programming framework",
+      "commitSha": "5708342f3c88b78fc3566d8294af4b1a50154c19",
+      "committedAt": "2026-11-10T12:48:41-05:00",
+      "commitSubject": "Update versions for 3.5.0 (#10865)"
+    },
+    {
+      "category": "uncensored",
+      "path": "submodules/uncensored/heretic",
+      "repo": "p-e-w/heretic",
+      "branch": "main",
+      "description": "Directional activation abliteration & refusal-suppression engine for open-weights LLMs",
+      "commitSha": "a14b8543537b50ce8db4db7eaae4eb295d5d5142",
+      "committedAt": "2026-11-10T16:10:25+05:30",
+      "commitSubject": "feat: add optional in-context Python shell (#576)"
+    },
+    {
+      "category": "uncensored",
+      "path": "submodules/uncensored/locally-uncensored",
+      "repo": "PurpleDoubleD/locally-uncensored",
+      "branch": "main",
+      "description": "Sovereign local uncensored model catalog & zero-refusal runtime",
+      "commitSha": "3dff4291f8ad5a86078679e23c7a0a2cd2adf9b3",
+      "committedAt": "2026-11-09T07:41:24-08:00",
+      "commitSubject": "site: Mac link on 3.0.10, then always the newest release with a .dmg"
+    },
+    {
+      "category": "rag-bigdata",
+      "path": "submodules/rag-bigdata/polars",
+      "repo": "pola-rs/polars",
+      "branch": "main",
+      "description": "SIMD/multithreaded Rust DataFrame query engine over Apache Arrow",
+      "commitSha": "2cb2e31a9dd2032993734e53eeaccda0ffede104",
+      "committedAt": "2026-11-10T22:03:30+01:00",
+      "commitSubject": "fix: Do not set `schema.name-mapping.default` on Iceberg commits (#30711)"
+    },
+    {
+      "category": "rag-bigdata",
+      "path": "submodules/rag-bigdata/duckdb",
+      "repo": "duckdb/duckdb",
+      "branch": "main",
+      "description": "In-process analytical OLAP SQL +VSS vector database",
+      "commitSha": "392cee07532cad39193661814ff35309b7437b1f",
+      "committedAt": "2026-11-10T19:29:49Z",
+      "commitSubject": "Convert more DBConfig and ClientConfig options into generic settings (#28571)"
+    },
+    {
+      "category": "rag-bigdata",
+      "path": "submodules/rag-bigdata/arrow-rs",
+      "repo": "apache/arrow-rs",
+      "branch": "main",
+      "description": "Official Rust Apache Arrow & Parquet zero-copy memory implementation",
+      "commitSha": "eea5c84c61cca79eb86547adaa248fab5d949c2b",
+      "committedAt": "2026-11-10T20:20:32Z",
+      "commitSubject": "docs: add API stability, unsafe, and performance guidance for agents (#12107)"
+    },
+    {
+      "category": "rag-bigdata",
+      "path": "submodules/rag-bigdata/lancedb",
+      "repo": "lancedb/lancedb",
+      "branch": "main",
+      "description": "Embedded multimodal Rust vector DB for disk-backed zero-copy RAG",
+      "commitSha": "481e82293e7894c41ee7eb8f870078f04656670e",
+      "committedAt": "2026-11-10T08:24:32-08:00",
+      "commitSubject": "fix(python): explain explicit blob reads and subset copies (#4940)"
+    },
+    {
+      "category": "rag-bigdata",
+      "path": "submodules/rag-bigdata/qdrant",
+      "repo": "qdrant/qdrant",
+      "branch": "master",
+      "description": "High-performance Rust HNSW vector similarity search engine",
+      "commitSha": "222b2e44ab1c3f17e8246396ead6558e45041df7",
+      "committedAt": "2026-10-21T19:45:09+02:00",
+      "commitSubject": "Bump version to 1.20.0 (#11298)"
+    },
+    {
+      "category": "rag-bigdata",
+      "path": "submodules/rag-bigdata/USearch",
+      "repo": "unum-cloud/USearch",
+      "branch": "main",
+      "description": "Single-header SIMD AVX2/FP16 HNSW vector search engine",
+      "commitSha": "840374af1a1dd5d411826bc62fdfe5ef6e41e1de",
+      "committedAt": "2026-11-10T19:28:22Z",
+      "commitSubject": "Merge: Supersede the 2.x line with the 3.0 redesign"
+    },
+    {
+      "category": "tree-sitter",
+      "path": "submodules/tree-sitter/tree-sitter",
+      "repo": "tree-sitter/tree-sitter",
+      "branch": "master",
+      "description": "Incremental GLR parsing system in C & Rust",
+      "commitSha": "03a4d01aa216397b6ab6474caf360e08a10455f0",
+      "committedAt": "2026-11-10T16:24:51+01:00",
+      "commitSubject": "fix(bindings): minimum zig version is 0.17"
+    },
+    {
+      "category": "tree-sitter",
+      "path": "submodules/tree-sitter/tree-sitter-python",
+      "repo": "tree-sitter/tree-sitter-python",
+      "branch": "master",
+      "description": "Tree-sitter Python grammar",
+      "commitSha": "26855eabccb19c6abf499fbc5b8dc7cc9ab8bc64",
+      "committedAt": "2025-09-15T17:33:35-04:00",
+      "commitSubject": "feat!: mark `expression_statement` as a supertype"
+    },
+    {
+      "category": "tree-sitter",
+      "path": "submodules/tree-sitter/tree-sitter-rust",
+      "repo": "tree-sitter/tree-sitter-rust",
+      "branch": "master",
+      "description": "Tree-sitter Rust grammar",
+      "commitSha": "77a3747266f4d621d0757825e6b11edcbf991ca5",
+      "committedAt": "2026-03-27T14:05:57-07:00",
+      "commitSubject": "0.24.2"
+    },
+    {
+      "category": "tree-sitter",
+      "path": "submodules/tree-sitter/tree-sitter-cpp",
+      "repo": "tree-sitter/tree-sitter-cpp",
+      "branch": "master",
+      "description": "Tree-sitter C++ grammar",
+      "commitSha": "c009222808634c1014f82438d4883753516a2c24",
+      "committedAt": "2026-09-17T15:01:52-05:00",
+      "commitSubject": "Explicitly inherit highlights from C (#361)"
+    },
+    {
+      "category": "tree-sitter",
+      "path": "submodules/tree-sitter/tree-sitter-cuda",
+      "repo": "tree-sitter-grammars/tree-sitter-cuda",
+      "branch": "master",
+      "description": "Tree-sitter CUDA C++ grammar",
+      "commitSha": "d58080a327756e4d1d16ec329ba7cb2048f6c6cd",
+      "committedAt": "2026-09-15T20:48:01+02:00",
+      "commitSubject": "publish: fix python version"
+    },
+    {
+      "category": "tree-sitter",
+      "path": "submodules/tree-sitter/tree-sitter-typescript",
+      "repo": "tree-sitter/tree-sitter-typescript",
+      "branch": "master",
+      "description": "Tree-sitter TypeScript/TSX grammar",
+      "commitSha": "75b3874edb2dc714fb1fd77a32013d0f8699989f",
+      "committedAt": "2025-01-30T14:11:39-08:00",
+      "commitSubject": "Include LICENSE file (#325)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/BitNet",
+      "repo": "microsoft/BitNet",
+      "branch": "main",
+      "description": "1.58-bit ternary LLM inference framework (bitnet.cpp) for pure CPU+RAM without GPU",
+      "commitSha": "0b341e582afbf9e1011f24744b554c96a3477eb5",
+      "committedAt": "2026-07-27T13:52:05+08:00",
+      "commitSubject": "Add VibeASR.cpp release to News (#596)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/PowerInfer",
+      "repo": "Tiiny-AI/PowerInfer",
+      "branch": "main",
+      "description": "Hot/cold neuron-sparsity CPU + NVMe SSD LLM inference engine",
+      "commitSha": "8bd56d69906c9d2dba4d3bf6899763401e01a9a4",
+      "committedAt": "2026-05-11T14:48:06+08:00",
+      "commitSubject": "Update README.md (#280)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/ktransformers",
+      "repo": "kvcache-ai/ktransformers",
+      "branch": "main",
+      "description": "CPU AVX2/AMX + SSD/RAM heterogeneous MoE & attention kernel engine",
+      "commitSha": "787258cc3cd76f2297bc223b97b4e4af4400622b",
+      "committedAt": "2026-11-06T12:49:26+08:00",
+      "commitSubject": "[docs]: link community MXFP4 CPU expert weights for Ascend (#2257)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/plano",
+      "repo": "katanemo/plano",
+      "branch": "main",
+      "description": "Katanemo Arch-Function / Arch-Router System-1 agentic gateway & prompt router",
+      "commitSha": "b13ddd632bde1fea7678386c345665ea5fa671af",
+      "committedAt": "2026-10-24T11:59:43-07:00",
+      "commitSubject": "release 0.4.39 (#1047)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/xLAM",
+      "repo": "SalesforceAIResearch/xLAM",
+      "branch": "main",
+      "description": "Large Action Models (xLAM-2 1B/3B/8B) & APIGen verifiable function-calling pipeline",
+      "commitSha": "a88aa3aeddbc2d7d6aa7a87687d1a085c34e2aec",
+      "committedAt": "2026-06-02T14:53:41-04:00",
+      "commitSubject": "Upload required SECURITY.md file for compliance"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/Hammer",
+      "repo": "MadeAgents/Hammer",
+      "branch": "main",
+      "description": "Hammer 2.1 (0.5B/1.5B/3B) function-masking System-1 tool-calling models",
+      "commitSha": "ff415d9998180b5a68bbfdda3309ec04b472fb49",
+      "committedAt": "2025-06-13T09:55:28+08:00",
+      "commitSubject": "remove LLaMA-Factory"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/functionary",
+      "repo": "MeetKai/functionary",
+      "branch": "main",
+      "description": "MeetKai Functionary native tool-calling & code-act parser/spec",
+      "commitSha": "e240e8c54684718aa9357ccf9d59ff035a6ff351",
+      "committedAt": "2026-06-30T19:05:32+03:00",
+      "commitSubject": "docs: mark project as deprecated in README"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/gorilla",
+      "repo": "ShishirPatil/gorilla",
+      "branch": "main",
+      "description": "UC Berkeley Gorilla API bench (BFCL) & AST-verified tool invocation",
+      "commitSha": "6ea57973c7a6097fd7c5915698c54c17c5b1b6c8",
+      "committedAt": "2026-03-23T19:40:47+08:00",
+      "commitSubject": "[BFCL] Request to add MiniCPM-SALA to the leaderboard (#1315)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/llguidance",
+      "repo": "guidance-ai/llguidance",
+      "branch": "main",
+      "description": "Sub-50us Rust Earley/FSM logit-masking engine converting verbose LLMs to strict schemas",
+      "commitSha": "2c281ce7598ed0b2e2865650c7c5486a62fdaba6",
+      "committedAt": "2026-11-06T10:50:10-08:00",
+      "commitSubject": "Add number and integer types to %regex (#434)"
+    },
+    {
+      "category": "system1-decisional",
+      "path": "submodules/system1-decisional/xgrammar",
+      "repo": "mlc-ai/xgrammar",
+      "branch": "main",
+      "description": "Zero-overhead pushdown automaton structured generation engine for System-1 JSON/CFG",
+      "commitSha": "8f9a1279fdbed47739bd75b4099d1d059a1ce3e0",
+      "committedAt": "2026-11-06T23:18:00-05:00",
+      "commitSubject": "fix: preserve forbidden bytes across counted repeat lowering (#949)"
+    }
+  ]
+}

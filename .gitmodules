@@ -1,0 +1,480 @@
+[submodule "submodules/ggml-org/llama.cpp"]
+	path = submodules/ggml-org/llama.cpp
+	url = https://github.com/ggml-org/llama.cpp.git
+	branch = master
+	shallow = true
+[submodule "submodules/ggml-org/whisper.cpp"]
+	path = submodules/ggml-org/whisper.cpp
+	url = https://github.com/ggml-org/whisper.cpp.git
+	branch = master
+	shallow = true
+[submodule "submodules/ggml-org/ggml"]
+	path = submodules/ggml-org/ggml
+	url = https://github.com/ggml-org/ggml.git
+	branch = master
+	shallow = true
+[submodule "submodules/ggml-org/Llama-Windows"]
+	path = submodules/ggml-org/Llama-Windows
+	url = https://github.com/ggml-org/Llama-Windows.git
+	branch = main
+	shallow = true
+[submodule "submodules/ggml-org/llama.vscode"]
+	path = submodules/ggml-org/llama.vscode
+	url = https://github.com/ggml-org/llama.vscode.git
+	branch = master
+	shallow = true
+[submodule "submodules/ggml-org/llama.vim"]
+	path = submodules/ggml-org/llama.vim
+	url = https://github.com/ggml-org/llama.vim.git
+	branch = master
+	shallow = true
+[submodule "submodules/ggml-org/convert"]
+	path = submodules/ggml-org/convert
+	url = https://github.com/ggml-org/convert.git
+	branch = master
+	shallow = true
+[submodule "submodules/ggml-org/p1"]
+	path = submodules/ggml-org/p1
+	url = https://github.com/ggml-org/p1.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/uv"]
+	path = submodules/astral-sh/uv
+	url = https://github.com/astral-sh/uv.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/ruff"]
+	path = submodules/astral-sh/ruff
+	url = https://github.com/astral-sh/ruff.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/ty"]
+	path = submodules/astral-sh/ty
+	url = https://github.com/astral-sh/ty.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/python-build-standalone"]
+	path = submodules/astral-sh/python-build-standalone
+	url = https://github.com/astral-sh/python-build-standalone.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/astral-codec"]
+	path = submodules/astral-sh/astral-codec
+	url = https://github.com/astral-sh/astral-codec.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/astral-yaml"]
+	path = submodules/astral-sh/astral-yaml
+	url = https://github.com/astral-sh/astral-yaml.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/astral-html"]
+	path = submodules/astral-sh/astral-html
+	url = https://github.com/astral-sh/astral-html.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/astral-ini"]
+	path = submodules/astral-sh/astral-ini
+	url = https://github.com/astral-sh/astral-ini.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/pubgrub"]
+	path = submodules/astral-sh/pubgrub
+	url = https://github.com/astral-sh/pubgrub.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/hawk"]
+	path = submodules/astral-sh/hawk
+	url = https://github.com/astral-sh/hawk.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/toucan"]
+	path = submodules/astral-sh/toucan
+	url = https://github.com/astral-sh/toucan.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/xeme"]
+	path = submodules/astral-sh/xeme
+	url = https://github.com/astral-sh/xeme.git
+	branch = main
+	shallow = true
+[submodule "submodules/astral-sh/agent-plugins"]
+	path = submodules/astral-sh/agent-plugins
+	url = https://github.com/astral-sh/agent-plugins.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/cpython"]
+	path = submodules/python-rust/cpython
+	url = https://github.com/python/cpython.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/pyo3"]
+	path = submodules/python-rust/pyo3
+	url = https://github.com/PyO3/pyo3.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/maturin"]
+	path = submodules/python-rust/maturin
+	url = https://github.com/PyO3/maturin.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/rust-numpy"]
+	path = submodules/python-rust/rust-numpy
+	url = https://github.com/PyO3/rust-numpy.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/pyo3-async-runtimes"]
+	path = submodules/python-rust/pyo3-async-runtimes
+	url = https://github.com/PyO3/pyo3-async-runtimes.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/pydantic"]
+	path = submodules/python-rust/pydantic
+	url = https://github.com/pydantic/pydantic.git
+	branch = main
+	shallow = true
+[submodule "submodules/python-rust/pydantic-ai"]
+	path = submodules/python-rust/pydantic-ai
+	url = https://github.com/pydantic/pydantic-ai.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/safetensors"]
+	path = submodules/huggingface/safetensors
+	url = https://github.com/huggingface/safetensors.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/tokenizers"]
+	path = submodules/huggingface/tokenizers
+	url = https://github.com/huggingface/tokenizers.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/candle"]
+	path = submodules/huggingface/candle
+	url = https://github.com/huggingface/candle.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/transformers"]
+	path = submodules/huggingface/transformers
+	url = https://github.com/huggingface/transformers.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/peft"]
+	path = submodules/huggingface/peft
+	url = https://github.com/huggingface/peft.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/trl"]
+	path = submodules/huggingface/trl
+	url = https://github.com/huggingface/trl.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/accelerate"]
+	path = submodules/huggingface/accelerate
+	url = https://github.com/huggingface/accelerate.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/datasets"]
+	path = submodules/huggingface/datasets
+	url = https://github.com/huggingface/datasets.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/diffusers"]
+	path = submodules/huggingface/diffusers
+	url = https://github.com/huggingface/diffusers.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/sentence-transformers"]
+	path = submodules/huggingface/sentence-transformers
+	url = https://github.com/huggingface/sentence-transformers.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/text-embeddings-inference"]
+	path = submodules/huggingface/text-embeddings-inference
+	url = https://github.com/huggingface/text-embeddings-inference.git
+	branch = main
+	shallow = true
+[submodule "submodules/huggingface/smolagents"]
+	path = submodules/huggingface/smolagents
+	url = https://github.com/huggingface/smolagents.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/codex"]
+	path = submodules/openai/codex
+	url = https://github.com/openai/codex.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/tiktoken"]
+	path = submodules/openai/tiktoken
+	url = https://github.com/openai/tiktoken.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/whisper"]
+	path = submodules/openai/whisper
+	url = https://github.com/openai/whisper.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/gpt-oss"]
+	path = submodules/openai/gpt-oss
+	url = https://github.com/openai/gpt-oss.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/openai-python"]
+	path = submodules/openai/openai-python
+	url = https://github.com/openai/openai-python.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/openai-agents-python"]
+	path = submodules/openai/openai-agents-python
+	url = https://github.com/openai/openai-agents-python.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/evals"]
+	path = submodules/openai/evals
+	url = https://github.com/openai/evals.git
+	branch = main
+	shallow = true
+[submodule "submodules/openai/CLIP"]
+	path = submodules/openai/CLIP
+	url = https://github.com/openai/CLIP.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/cutlass"]
+	path = submodules/nvidia/cutlass
+	url = https://github.com/NVIDIA/cutlass.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/cccl"]
+	path = submodules/nvidia/cccl
+	url = https://github.com/NVIDIA/cccl.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/TensorRT-LLM"]
+	path = submodules/nvidia/TensorRT-LLM
+	url = https://github.com/NVIDIA/TensorRT-LLM.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/Megatron-LM"]
+	path = submodules/nvidia/Megatron-LM
+	url = https://github.com/NVIDIA/Megatron-LM.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/TransformerEngine"]
+	path = submodules/nvidia/TransformerEngine
+	url = https://github.com/NVIDIA/TransformerEngine.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/Model-Optimizer"]
+	path = submodules/nvidia/Model-Optimizer
+	url = https://github.com/NVIDIA/Model-Optimizer.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/cudf"]
+	path = submodules/nvidia/cudf
+	url = https://github.com/NVIDIA/cudf.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/cuml"]
+	path = submodules/nvidia/cuml
+	url = https://github.com/NVIDIA/cuml.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/DALI"]
+	path = submodules/nvidia/DALI
+	url = https://github.com/NVIDIA/DALI.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/warp"]
+	path = submodules/nvidia/warp
+	url = https://github.com/NVIDIA/warp.git
+	branch = main
+	shallow = true
+[submodule "submodules/nvidia/garak"]
+	path = submodules/nvidia/garak
+	url = https://github.com/NVIDIA/garak.git
+	branch = main
+	shallow = true
+[submodule "submodules/pytorch/pytorch"]
+	path = submodules/pytorch/pytorch
+	url = https://github.com/pytorch/pytorch.git
+	branch = main
+	shallow = true
+[submodule "submodules/pytorch/torchtitan"]
+	path = submodules/pytorch/torchtitan
+	url = https://github.com/pytorch/torchtitan.git
+	branch = main
+	shallow = true
+[submodule "submodules/pytorch/ao"]
+	path = submodules/pytorch/ao
+	url = https://github.com/pytorch/ao.git
+	branch = main
+	shallow = true
+[submodule "submodules/pytorch/executorch"]
+	path = submodules/pytorch/executorch
+	url = https://github.com/pytorch/executorch.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/vllm"]
+	path = submodules/llm-2026/vllm
+	url = https://github.com/vllm-project/vllm.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/sglang"]
+	path = submodules/llm-2026/sglang
+	url = https://github.com/sgl-project/sglang.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/unsloth"]
+	path = submodules/llm-2026/unsloth
+	url = https://github.com/unslothai/unsloth.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/flash-attention"]
+	path = submodules/llm-2026/flash-attention
+	url = https://github.com/Dao-AILab/flash-attention.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/flashinfer"]
+	path = submodules/llm-2026/flashinfer
+	url = https://github.com/flashinfer-ai/flashinfer.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/triton"]
+	path = submodules/llm-2026/triton
+	url = https://github.com/triton-lang/triton.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/mistral.rs"]
+	path = submodules/llm-2026/mistral.rs
+	url = https://github.com/EricLBuehler/mistral.rs.git
+	branch = master
+	shallow = true
+[submodule "submodules/llm-2026/outlines"]
+	path = submodules/llm-2026/outlines
+	url = https://github.com/dottxt-ai/outlines.git
+	branch = main
+	shallow = true
+[submodule "submodules/llm-2026/dspy"]
+	path = submodules/llm-2026/dspy
+	url = https://github.com/stanfordnlp/dspy.git
+	branch = main
+	shallow = true
+[submodule "submodules/uncensored/heretic"]
+	path = submodules/uncensored/heretic
+	url = https://github.com/p-e-w/heretic.git
+	branch = main
+	shallow = true
+[submodule "submodules/uncensored/locally-uncensored"]
+	path = submodules/uncensored/locally-uncensored
+	url = https://github.com/PurpleDoubleD/locally-uncensored.git
+	branch = main
+	shallow = true
+[submodule "submodules/rag-bigdata/polars"]
+	path = submodules/rag-bigdata/polars
+	url = https://github.com/pola-rs/polars.git
+	branch = main
+	shallow = true
+[submodule "submodules/rag-bigdata/duckdb"]
+	path = submodules/rag-bigdata/duckdb
+	url = https://github.com/duckdb/duckdb.git
+	branch = main
+	shallow = true
+[submodule "submodules/rag-bigdata/arrow-rs"]
+	path = submodules/rag-bigdata/arrow-rs
+	url = https://github.com/apache/arrow-rs.git
+	branch = main
+	shallow = true
+[submodule "submodules/rag-bigdata/lancedb"]
+	path = submodules/rag-bigdata/lancedb
+	url = https://github.com/lancedb/lancedb.git
+	branch = main
+	shallow = true
+[submodule "submodules/rag-bigdata/qdrant"]
+	path = submodules/rag-bigdata/qdrant
+	url = https://github.com/qdrant/qdrant.git
+	branch = master
+	shallow = true
+[submodule "submodules/rag-bigdata/USearch"]
+	path = submodules/rag-bigdata/USearch
+	url = https://github.com/unum-cloud/USearch.git
+	branch = main
+	shallow = true
+[submodule "submodules/tree-sitter/tree-sitter"]
+	path = submodules/tree-sitter/tree-sitter
+	url = https://github.com/tree-sitter/tree-sitter.git
+	branch = master
+	shallow = true
+[submodule "submodules/tree-sitter/tree-sitter-python"]
+	path = submodules/tree-sitter/tree-sitter-python
+	url = https://github.com/tree-sitter/tree-sitter-python.git
+	branch = master
+	shallow = true
+[submodule "submodules/tree-sitter/tree-sitter-rust"]
+	path = submodules/tree-sitter/tree-sitter-rust
+	url = https://github.com/tree-sitter/tree-sitter-rust.git
+	branch = master
+	shallow = true
+[submodule "submodules/tree-sitter/tree-sitter-cpp"]
+	path = submodules/tree-sitter/tree-sitter-cpp
+	url = https://github.com/tree-sitter/tree-sitter-cpp.git
+	branch = master
+	shallow = true
+[submodule "submodules/tree-sitter/tree-sitter-cuda"]
+	path = submodules/tree-sitter/tree-sitter-cuda
+	url = https://github.com/tree-sitter-grammars/tree-sitter-cuda.git
+	branch = master
+	shallow = true
+[submodule "submodules/tree-sitter/tree-sitter-typescript"]
+	path = submodules/tree-sitter/tree-sitter-typescript
+	url = https://github.com/tree-sitter/tree-sitter-typescript.git
+	branch = master
+	shallow = true
+[submodule "submodules/system1-decisional/BitNet"]
+	path = submodules/system1-decisional/BitNet
+	url = https://github.com/microsoft/BitNet.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/PowerInfer"]
+	path = submodules/system1-decisional/PowerInfer
+	url = https://github.com/Tiiny-AI/PowerInfer.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/ktransformers"]
+	path = submodules/system1-decisional/ktransformers
+	url = https://github.com/kvcache-ai/ktransformers.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/plano"]
+	path = submodules/system1-decisional/plano
+	url = https://github.com/katanemo/plano.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/xLAM"]
+	path = submodules/system1-decisional/xLAM
+	url = https://github.com/SalesforceAIResearch/xLAM.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/Hammer"]
+	path = submodules/system1-decisional/Hammer
+	url = https://github.com/MadeAgents/Hammer.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/functionary"]
+	path = submodules/system1-decisional/functionary
+	url = https://github.com/MeetKai/functionary.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/gorilla"]
+	path = submodules/system1-decisional/gorilla
+	url = https://github.com/ShishirPatil/gorilla.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/llguidance"]
+	path = submodules/system1-decisional/llguidance
+	url = https://github.com/guidance-ai/llguidance.git
+	branch = main
+	shallow = true
+[submodule "submodules/system1-decisional/xgrammar"]
+	path = submodules/system1-decisional/xgrammar
+	url = https://github.com/mlc-ai/xgrammar.git
+	branch = main
+	shallow = true

@@ -7,6 +7,11 @@ import {
   runBrowserCli,
   runDesktopCli,
 } from "../ffi/desktop.ts";
+import { getCudaFfi, getPolyglotFfi } from "../ffi/polyglot.ts";
+import {
+  inspectPolyglotEcosystem,
+  runPythonPolyglotScan,
+} from "../polyglot/index.ts";
 import { probeLocalProviders } from "../providers/federation.ts";
 import { readCachedSentinelState, runSentinelSync } from "../sentinel/index.ts";
 import { searchSkills } from "./skills.ts";
@@ -208,6 +213,112 @@ export const MCP_TOOLS: readonly McpToolDefinition[] = [
         limit: {
           type: "integer",
           default: 20,
+        },
+      },
+    },
+  },
+  {
+    name: "cuda_sm89_scan",
+    description:
+      "Probe RTX 4070 Ada Lovelace sm_89 GPU telemetry, FP32 FMA GFLOPS, FP16 Tensor Core TFLOPS, GDDR6X bandwidth, and Zero-Copy Pinned DMA via sovereign_cuda_sm89.dll.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        quick: {
+          type: "boolean",
+          default: true,
+        },
+        includePythonTorch: {
+          type: "boolean",
+          default: false,
+        },
+      },
+    },
+  },
+  {
+    name: "polyglot_ast_parse",
+    description:
+      "Parse Python, Rust, TypeScript, or TSX source code into structural AST symbols via Fat-LTO Rust + Tree-Sitter sovereign_polyglot_ffi.dll.",
+    inputSchema: {
+      type: "object",
+      required: ["language", "code"],
+      properties: {
+        language: {
+          type: "string",
+          enum: ["python", "rust", "typescript", "tsx"],
+        },
+        code: {
+          type: "string",
+        },
+      },
+    },
+  },
+  {
+    name: "rag_zero_copy_cosine",
+    description:
+      "Compute ultra-fast batch cosine similarity across document embeddings via CUDA sm_89 or AVX2+FMA3 Rayon FFI.",
+    inputSchema: {
+      type: "object",
+      required: ["query", "corpus", "dim"],
+      properties: {
+        query: {
+          type: "array",
+          items: { type: "number" },
+        },
+        corpus: {
+          type: "array",
+          items: { type: "number" },
+        },
+        dim: {
+          type: "integer",
+        },
+        backend: {
+          type: "string",
+          enum: ["auto", "cuda", "avx2"],
+          default: "auto",
+        },
+      },
+    },
+  },
+  {
+    name: "heretic_abliterate_preview",
+    description:
+      "Project out a directional refusal vector from a weight matrix W' = W - scale*(W@r)*r^T via CUDA sm_89 or Rust AVX2 FFI.",
+    inputSchema: {
+      type: "object",
+      required: ["weights", "refusalDir", "outFeatures", "inFeatures"],
+      properties: {
+        weights: {
+          type: "array",
+          items: { type: "number" },
+        },
+        refusalDir: {
+          type: "array",
+          items: { type: "number" },
+        },
+        outFeatures: {
+          type: "integer",
+        },
+        inFeatures: {
+          type: "integer",
+        },
+        scale: {
+          type: "number",
+          default: 1.0,
+        },
+      },
+    },
+  },
+  {
+    name: "ecosystem_submodules_status",
+    description:
+      "Return full status of the 86 polyglot 2026 LLM/AI/Astral/ggml/PyO3/HuggingFace/OpenAI/NVIDIA/PyTorch/Tree-sitter submodules and compiled native binaries.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        quickGpu: {
+          type: "boolean",
+          default: true,
         },
       },
     },
@@ -444,6 +555,131 @@ export async function executeMcpTool(
       return {
         content: [{ type: "text", text: JSON.stringify(matches) }],
         structured: matches,
+      };
+    }
+
+    if (name === "cuda_sm89_scan") {
+      const cuda = getCudaFfi();
+      const quick = rawArgs.quick !== false;
+      const gpuTelemetry = cuda
+        ? cuda.scanAndBench(quick)
+        : { ok: false, error: "sovereign_cuda_sm89.dll not loaded" };
+      const pyTorch = rawArgs.includePythonTorch
+        ? await runPythonPolyglotScan()
+        : undefined;
+      const payload = { gpuTelemetry, pythonStack: pyTorch };
+      return {
+        content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+        structured: payload,
+      };
+    }
+
+    if (name === "polyglot_ast_parse") {
+      const ffi = getPolyglotFfi();
+      if (!ffi) {
+        return {
+          isError: true,
+          content: [
+            { type: "text", text: "sovereign_polyglot_ffi.dll not loaded" },
+          ],
+        };
+      }
+      const lang = String(rawArgs.language ?? "python");
+      const code = String(rawArgs.code ?? "");
+      const parsed = ffi.parseAst(lang, code);
+      return {
+        isError: !parsed.ok,
+        content: [{ type: "text", text: JSON.stringify(parsed, null, 2) }],
+        structured: parsed,
+      };
+    }
+
+    if (name === "rag_zero_copy_cosine") {
+      const qArr = Array.isArray(rawArgs.query)
+        ? new Float32Array(rawArgs.query.map(Number))
+        : new Float32Array(0);
+      const cArr = Array.isArray(rawArgs.corpus)
+        ? new Float32Array(rawArgs.corpus.map(Number))
+        : new Float32Array(0);
+      const dim = Number(rawArgs.dim ?? qArr.length);
+      const backend = String(rawArgs.backend ?? "auto");
+      const cuda = getCudaFfi();
+      const poly = getPolyglotFfi();
+
+      let scores: Float32Array;
+      let usedBackend = "none";
+      if ((backend === "cuda" || (backend === "auto" && cArr.length >= 4096)) && cuda) {
+        scores = cuda.cosineRagBatch(qArr, cArr, dim);
+        usedBackend = "cuda_sm89";
+      } else if (poly) {
+        scores = poly.cosineRagBatch(qArr, cArr, dim);
+        usedBackend = "rust_avx2_rayon";
+      } else {
+        return {
+          isError: true,
+          content: [{ type: "text", text: "No native RAG FFI backend loaded" }],
+        };
+      }
+      const payload = {
+        ok: true,
+        backend: usedBackend,
+        dim,
+        numDocs: scores.length,
+        scores: Array.from(scores).map((x) => Math.round(x * 1e6) / 1e6),
+      };
+      return {
+        content: [{ type: "text", text: JSON.stringify(payload) }],
+        structured: payload,
+      };
+    }
+
+    if (name === "heretic_abliterate_preview") {
+      const wArr = Array.isArray(rawArgs.weights)
+        ? new Float32Array(rawArgs.weights.map(Number))
+        : new Float32Array(0);
+      const rArr = Array.isArray(rawArgs.refusalDir)
+        ? new Float32Array(rawArgs.refusalDir.map(Number))
+        : new Float32Array(0);
+      const outF = Number(rawArgs.outFeatures ?? 0);
+      const inF = Number(rawArgs.inFeatures ?? 0);
+      const scale = typeof rawArgs.scale === "number" ? rawArgs.scale : 1.0;
+
+      const cuda = getCudaFfi();
+      const poly = getPolyglotFfi();
+      let backend = "rust_avx2";
+      if (cuda && wArr.length >= 4096) {
+        cuda.hereticAbliterateInPlace(wArr, rArr, outF, inF, scale);
+        backend = "cuda_sm89";
+      } else if (poly) {
+        poly.hereticAbliterateInPlace(wArr, rArr, outF, inF, scale);
+      } else {
+        return {
+          isError: true,
+          content: [{ type: "text", text: "No native abliteration FFI loaded" }],
+        };
+      }
+      const payload = {
+        ok: true,
+        backend,
+        outFeatures: outF,
+        inFeatures: inF,
+        abliteratedWeights: Array.from(wArr).map(
+          (x) => Math.round(x * 1e6) / 1e6,
+        ),
+      };
+      return {
+        content: [{ type: "text", text: JSON.stringify(payload) }],
+        structured: payload,
+      };
+    }
+
+    if (name === "ecosystem_submodules_status") {
+      const status = inspectPolyglotEcosystem({
+        quickGpu: rawArgs.quickGpu !== false,
+      });
+      return {
+        content: [{ type: "text", text: JSON.stringify(status, null, 2) }],
+        structured: status,
       };
     }
 

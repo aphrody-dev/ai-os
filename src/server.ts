@@ -3,6 +3,11 @@ import {
   resolveBrowserCliPath,
   resolveDesktopCliPath,
 } from "./ffi/desktop.ts";
+import { getCudaFfi, getPolyglotFfi } from "./ffi/polyglot.ts";
+import {
+  inspectPolyglotEcosystem,
+  runPythonPolyglotScan,
+} from "./polyglot/index.ts";
 import { buildAgentCard, handleA2AJsonRpcRequest } from "./protocols/a2a.ts";
 import { handleAcpRequest } from "./protocols/acp.ts";
 import {
@@ -89,6 +94,9 @@ export async function routeAiOsRequest(req: Request): Promise<Response> {
             "/api/hooks",
             "/api/providers",
             "/api/sentinel",
+            "/api/polyglot",
+            "/api/cuda",
+            "/api/ast",
           ],
         },
         nativeBinaries: {
@@ -97,6 +105,18 @@ export async function routeAiOsRequest(req: Request): Promise<Response> {
             ? { path: ffi.dllPath, abiVersion: ffi.abiVersion }
             : null,
           browserCli: resolveBrowserCliPath(),
+          cudaSm89Dll: getCudaFfi()
+            ? {
+                path: getCudaFfi()!.dllPath,
+                abiVersion: getCudaFfi()!.abiVersion,
+              }
+            : null,
+          polyglotRustFfiDll: getPolyglotFfi()
+            ? {
+                path: getPolyglotFfi()!.dllPath,
+                abiVersion: getPolyglotFfi()!.abiVersion,
+              }
+            : null,
         },
         skillsCount: reg.totalSkills,
         hooksCount: reg.totalHooks,
@@ -177,6 +197,49 @@ export async function routeAiOsRequest(req: Request): Promise<Response> {
         ? await runSentinelSync()
         : readCachedSentinelState()!;
     return withCors(Response.json(state));
+  }
+
+  // Polyglot 2026 Ecosystem, CUDA sm_89, Python/PyO3 & Tree-sitter AST endpoints
+  if (req.method === "GET" && path === "/api/polyglot") {
+    const includePython = url.searchParams.get("python") === "1";
+    const quickGpu = url.searchParams.get("fullGpu") !== "1";
+    const report = inspectPolyglotEcosystem({ quickGpu });
+    const pythonScan = includePython
+      ? await runPythonPolyglotScan()
+      : undefined;
+    return withCors(Response.json({ ...report, pythonScan }));
+  }
+
+  if (req.method === "GET" && path === "/api/cuda") {
+    const cuda = getCudaFfi();
+    const quick = url.searchParams.get("full") !== "1";
+    if (!cuda) {
+      return withCors(
+        Response.json(
+          { ok: false, error: "sovereign_cuda_sm89.dll not loaded" },
+          { status: 503 },
+        ),
+      );
+    }
+    return withCors(Response.json(cuda.scanAndBench(quick)));
+  }
+
+  if (req.method === "POST" && path === "/api/ast") {
+    const poly = getPolyglotFfi();
+    if (!poly) {
+      return withCors(
+        Response.json(
+          { ok: false, error: "sovereign_polyglot_ffi.dll not loaded" },
+          { status: 503 },
+        ),
+      );
+    }
+    const body = (await req.json().catch(() => ({}))) as {
+      language?: string;
+      code?: string;
+    };
+    const parsed = poly.parseAst(body.language ?? "python", body.code ?? "");
+    return withCors(Response.json(parsed, { status: parsed.ok ? 200 : 400 }));
   }
 
   return withCors(

@@ -13,6 +13,14 @@ export async function handleModelsListRequest(): Promise<Response> {
   const created = Math.floor(Date.now() / 1000);
   const models = [
     {
+      id: "ai-os/system1-bun",
+      object: "model",
+      created,
+      owned_by: "ai-os",
+      provider: "system1-bitnet-cpu-ssd",
+      zeroGpu: true,
+    },
+    {
       id: "ai-os/sovereign-local",
       object: "model",
       created,

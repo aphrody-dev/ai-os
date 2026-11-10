@@ -269,6 +269,73 @@ export const SENTINEL_TARGETS: readonly SentinelTargetSpec[] = [
       "https://api.github.com/repos/open-webui/open-webui/releases/latest",
     kind: "github-releases",
   },
+  {
+    id: "astral-uv",
+    category: "ai-protocols-engines",
+    name: "astral-sh/uv (Rust Python Package & Runtime Manager)",
+    endpoint: "https://api.github.com/repos/astral-sh/uv/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/astral-sh/uv",
+  },
+  {
+    id: "astral-ruff",
+    category: "ai-protocols-engines",
+    name: "astral-sh/ruff (Rust Python Linter & Formatter)",
+    endpoint: "https://api.github.com/repos/astral-sh/ruff/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/astral-sh/ruff",
+  },
+  {
+    id: "astral-ty",
+    category: "ai-protocols-engines",
+    name: "astral-sh/ty (Rust Python Type Checker & LSP)",
+    endpoint: "https://api.github.com/repos/astral-sh/ty/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/astral-sh/ty",
+  },
+  {
+    id: "ggml-whispercpp",
+    category: "ai-protocols-engines",
+    name: "ggml-org/whisper.cpp (CUDA sm_89 Speech Engine)",
+    endpoint:
+      "https://api.github.com/repos/ggml-org/whisper.cpp/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/ggml-org/whisper.cpp",
+  },
+  {
+    id: "pyo3-core",
+    category: "ai-protocols-engines",
+    name: "PyO3/pyo3 (Rust <-> CPython Interop)",
+    endpoint: "https://api.github.com/repos/PyO3/pyo3/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/python-rust/pyo3",
+  },
+  {
+    id: "hf-transformers",
+    category: "ai-protocols-engines",
+    name: "huggingface/transformers",
+    endpoint:
+      "https://api.github.com/repos/huggingface/transformers/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/huggingface/transformers",
+  },
+  {
+    id: "nvidia-cutlass",
+    category: "ai-protocols-engines",
+    name: "NVIDIA/cutlass (CUDA Tensor Core Templates & CuTe DSL)",
+    endpoint: "https://api.github.com/repos/NVIDIA/cutlass/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/nvidia/cutlass",
+  },
+  {
+    id: "tree-sitter-core",
+    category: "ai-protocols-engines",
+    name: "tree-sitter/tree-sitter (Polyglot AST Engine)",
+    endpoint:
+      "https://api.github.com/repos/tree-sitter/tree-sitter/releases/latest",
+    kind: "github-releases",
+    localMirrorPath: "C:/src/ai-os/submodules/tree-sitter/tree-sitter",
+  },
 ];
 
 function openSentinelDb(dbPath: string): Database {

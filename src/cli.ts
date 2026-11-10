@@ -6,6 +6,11 @@ import {
   resolveBrowserCliPath,
   resolveDesktopCliPath,
 } from "./ffi/desktop.ts";
+import { getCudaFfi, getPolyglotFfi } from "./ffi/polyglot.ts";
+import {
+  inspectPolyglotEcosystem,
+  runPythonPolyglotScan,
+} from "./polyglot/index.ts";
 import { runMcpStdioServer } from "./protocols/mcp.ts";
 import { buildSkillsAndHooksRegistry } from "./protocols/skills.ts";
 import { probeLocalProviders } from "./providers/federation.ts";
@@ -37,6 +42,8 @@ Usage:
   ai-os nightly-sync [--apply]                   Probe live upstream standards feeds & write report
   ai-os watch [--interval 3600] [--once] [--apply] Run real-time / periodic sentinel watch loop
   ai-os doctor                                   Verify native binaries, FFI ABI, providers & skills
+  ai-os polyglot-doctor [--python] [--full-gpu]  Probe 86 submodules, CUDA sm_89, Astral/PyO3 & Tree-sitter
+  ai-os cuda-scan [--full]                       Run bare-metal RTX 4070 sm_89 CUDA 13.4 benchmark
   ai-os version                                  Print version JSON`);
 }
 
@@ -193,6 +200,33 @@ async function main(): Promise<void> {
       ),
     );
     ffi?.close();
+    return;
+  }
+
+  if (subcommand === "polyglot-doctor" || subcommand === "polyglot") {
+    const includePy = hasFlag(argv, "--python");
+    const fullGpu = hasFlag(argv, "--full-gpu");
+    const report = inspectPolyglotEcosystem({ quickGpu: !fullGpu });
+    const pythonScan = includePy ? await runPythonPolyglotScan() : undefined;
+    console.log(JSON.stringify({ ...report, pythonScan }, null, 2));
+    getCudaFfi()?.close();
+    getPolyglotFfi()?.close();
+    return;
+  }
+
+  if (subcommand === "cuda-scan") {
+    const full = hasFlag(argv, "--full");
+    const cuda = getCudaFfi();
+    if (!cuda) {
+      console.error(
+        JSON.stringify({ ok: false, error: "sovereign_cuda_sm89.dll missing" }),
+      );
+      process.exitCode = 1;
+      return;
+    }
+    const telemetry = cuda.scanAndBench(!full);
+    console.log(JSON.stringify(telemetry, null, 2));
+    cuda.close();
     return;
   }
 

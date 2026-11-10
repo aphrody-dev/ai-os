@@ -1,4 +1,9 @@
 import { getSovereignEnv, maskSecret } from "../env.ts";
+import {
+  convertVerboseLlmToDecision,
+  decideSystem1,
+  type DecisionToolSpec,
+} from "../system1/decisional-engine.ts";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant" | "tool";
@@ -14,6 +19,8 @@ export interface ChatCompletionRequest {
   max_tokens?: number;
   stream?: boolean;
   provider?: string;
+  decision_mode?: boolean;
+  tools?: DecisionToolSpec[];
 }
 
 export interface ChatCompletionResponse {
@@ -99,6 +106,15 @@ export const FEDERATION_PROVIDERS: ReadonlyArray<{
     baseUrl: "http://127.0.0.1:8084",
     healthPath: "/v1/models",
     defaultModel: "llamacpp-8084",
+    uncensoredLocal: true,
+  },
+  {
+    id: "llamacpp-cpu-nogpu",
+    name: "llama.cpp Zero-GPU CPU+SSD+RAM System-1 Server (8089)",
+    kind: "local",
+    baseUrl: "http://127.0.0.1:8089",
+    healthPath: "/v1/models",
+    defaultModel: "bitnet-b1.58-cpu",
     uncensoredLocal: true,
   },
   {
@@ -561,11 +577,50 @@ function buildSovereignKernelFallback(
   };
 }
 
-export async function federateChatCompletion(
+async function federateRawChatCompletion(
   req: ChatCompletionRequest,
 ): Promise<ChatCompletionResponse> {
   const env = getSovereignEnv();
-  const requestedModel = req.model ?? "ai-os/sovereign-default";
+  const requestedModel = (req.model ?? "ai-os/sovereign-default").replace(
+    /:decide$/,
+    "",
+  );
+
+  if (
+    requestedModel === "ai-os/system1-bun" ||
+    requestedModel === "system1-bun" ||
+    req.provider === "system1-bun"
+  ) {
+    const lastUser = [...req.messages].reverse().find((m) => m.role === "user");
+    const promptText = lastUser ? flattenContent(lastUser.content) : "";
+    const envelope = decideSystem1(promptText, {
+      tools: req.tools,
+      includeBunDocsRefs: true,
+    });
+    const serialized = JSON.stringify(envelope);
+    const promptTokens = estimateTokens(promptText);
+    const completionTokens = estimateTokens(serialized);
+    return {
+      id: `chatcmpl-${crypto.randomUUID()}`,
+      object: "chat.completion",
+      created: Math.floor(Date.now() / 1000),
+      model: "ai-os/system1-bun",
+      provider: "system1-bitnet-cpu-ssd",
+      choices: [
+        {
+          index: 0,
+          message: { role: "assistant", content: serialized },
+          finish_reason:
+            envelope.decision === "CALL_TOOL" ? "tool_calls" : "stop",
+        },
+      ],
+      usage: {
+        prompt_tokens: promptTokens,
+        completion_tokens: completionTokens,
+        total_tokens: promptTokens + completionTokens,
+      },
+    };
+  }
 
   if (
     requestedModel === "ai-os/sovereign-local" ||

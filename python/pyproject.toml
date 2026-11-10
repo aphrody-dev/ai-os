@@ -1,0 +1,42 @@
+[project]
+name = "ai-os-python-stack"
+version = "1.0.0"
+description = "Sovereign Python 3.15 + CUDA 13.x (sm_89) + Rust PyO3 + Zero-Copy Arrow/Polars/DuckDB/Safetensors + Uncensored LLM/RAG/ML/Big-Data Stack"
+requires-python = ">=3.14"
+dependencies = [
+    "torch>=2.10.0",
+    "safetensors>=0.5.0",
+    "tokenizers>=0.21.0",
+    "tiktoken>=0.9.0",
+    "numpy>=2.2.0",
+    "polars>=1.20.0",
+    "duckdb>=1.2.0",
+    "pyarrow>=19.0.0",
+    "pydantic>=2.10.0",
+    "tree-sitter>=0.24.0",
+    "tree-sitter-python>=0.23.0",
+    "tree-sitter-rust>=0.23.0",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu130" }
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ai_os_stack"]
+
