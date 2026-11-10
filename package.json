@@ -1,0 +1,21 @@
+{
+  "name": "ai-os",
+  "version": "1.0.0",
+  "description": "Unified Sovereign AI Control Plane, Multi-Protocol Router (OpenAI / MCP / A2A / ACP / Skills) & Real-Time/Nightly Standards Sentinel in pure oven-sh/bun v1.4.4",
+  "type": "module",
+  "bin": {
+    "ai-os": "./src/cli.ts"
+  },
+  "scripts": {
+    "start": "bun run src/cli.ts serve",
+    "extract": "bun run src/cli.ts extract",
+    "watch": "bun run src/cli.ts watch",
+    "nightly-sync": "bun run src/cli.ts nightly-sync",
+    "build": "bun build --compile --minify src/cli.ts --outfile C:/Users/aphro/.local/bin/ai-os.exe",
+    "test": "bun test",
+    "check": "bun check",
+    "fmt": "bun fmt"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

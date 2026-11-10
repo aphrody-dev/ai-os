@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-11-10T21:40:58.521Z",
+  "bunVersion": "1.4.4",
+  "dbPath": "C:/src/ai-os/sentinel.sqlite",
+  "liveCount": 4,
+  "cachedCount": 0,
+  "offlineCount": 0,
+  "bunParitySummary": {
+    "bunVersion": "1.4.4",
+    "overallNativeScore": 71,
+    "overallPatchedScore": 100,
+    "chromeCanaryVersion": "159.0.8154.2"
+  },
+  "appliedUpdates": [],
+  "results": [
+    {
+      "id": "whatwg-html",
+      "category": "web-standards",
+      "name": "WHATWG HTML Living Standard",
+      "endpoint": "https://api.github.com/repos/whatwg/html/commits?per_page=1",
+      "status": "live",
+      "latestVersion": "a044232078",
+      "publishedAt": "2026-11-09T15:17:49Z",
+      "detail": "Handle a null custom element registry when upgrading an element",
+      "latencyMs": 1670.9,
+      "checkedAt": "2026-11-10T21:40:56.850Z"
+    },
+    {
+      "id": "linux-kernel-org",
+      "category": "unix-linux",
+      "name": "Linux Kernel Releases (kernel.org mainline / 7.4-rc* / stable)",
+      "endpoint": "https://www.kernel.org/releases.json",
+      "status": "live",
+      "latestVersion": "7.4-rc2",
+      "publishedAt": "2026-11-09",
+      "detail": "mainline=7.4-rc2, stable=7.3.4",
+      "latencyMs": 367,
+      "localParityNote": "mirror: C:/src/linux",
+      "checkedAt": "2026-11-10T21:40:56.850Z"
+    },
+    {
+      "id": "chrome-win64-canary",
+      "category": "chrome-chromiumos",
+      "name": "Chrome Canary (win64)",
+      "endpoint": "https://versionhistory.googleapis.com/v1/chrome/platforms/win64/channels/canary/versions?pageSize=1",
+      "status": "live",
+      "latestVersion": "159.0.8154.2",
+      "publishedAt": "2026-11-10T21:40:58.422Z",
+      "detail": "chrome/platforms/win64/channels/canary/versions/159.0.8154.2",
+      "latencyMs": 1571.9,
+      "localParityNote": "bun-parity v1.4.4: 100% patched / 71% native",
+      "checkedAt": "2026-11-10T21:40:56.850Z"
+    },
+    {
+      "id": "aosp-platform-build",
+      "category": "android-aosp",
+      "name": "AOSP Android 17 (Baklava) & Android 18 Next-Gen Preview Tags",
+      "endpoint": "https://android.googlesource.com/platform/build/+refs/tags?format=JSON",
+      "status": "live",
+      "latestVersion": "android-17.0.0_r1",
+      "publishedAt": "2026-11-10T21:40:57.480Z",
+      "detail": "Total AOSP tags=2691; recent=android-16.0.0_r2, android-16.0.0_r3, android-16.0.0_r4, android-17.0.0_r1 (Android 17 Baklava active; Android 18 API preview tracked)",
+      "latencyMs": 630.1,
+      "checkedAt": "2026-11-10T21:40:56.850Z"
+    }
+  ]
+}

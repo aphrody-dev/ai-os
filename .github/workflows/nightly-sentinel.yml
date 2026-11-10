@@ -1,0 +1,55 @@
+name: Nightly Standards Sentinel
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      apply_updates:
+        description: "Fast-forward git mirrors & submodules"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  sentinel-sync:
+    name: Sovereign Standards Sentinel (Bun v1.4.4)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun v1.4.4
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Typecheck & Format Gate
+        run: |
+          bun fmt --check
+          bun check
+
+      - name: Execute Live Upstream Sentinel Sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.apply_updates }}" = "true" ]; then
+            bun run src/cli.ts nightly-sync --apply
+          else
+            bun run src/cli.ts nightly-sync
+          fi
+
+      - name: Commit Updated Sentinel Report & State
+        run: |
+          if [ -n "$(git status --porcelain SENTINEL_REPORT.md sentinel-state.json)" ]; then
+            git config user.name "ai-os-sentinel[bot]"
+            git config user.email "ai-os-sentinel@aphrody.com"
+            git add SENTINEL_REPORT.md sentinel-state.json
+            git commit -m "chore(sentinel): nightly upstream standards sync"
+            git push
+          fi
