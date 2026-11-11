@@ -1,0 +1,314 @@
+[
+  {
+    "name": "transcribe.cpp",
+    "htmlUrl": "https://github.com/aphrody-dev/transcribe.cpp",
+    "description": " ggml speech-to-text inference for 16+ model families",
+    "domain": "ai-llm-compute",
+    "primaryStack": "C/C++ ggml CUDA sm_89",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "strobe",
+    "htmlUrl": "https://github.com/aphrody-dev/strobe",
+    "description": "Measure and explain performance: web pages, Electron apps, Bun/Node, any process. Agent-native CLI + MCP.",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "sst",
+    "htmlUrl": "https://github.com/aphrody-dev/sst",
+    "description": "Build full-stack apps on your own infrastructure.",
+    "domain": "cloud-edge-infra",
+    "primaryStack": "TypeScript / Go / Rust",
+    "distilledRole": "Cloud/Edge IaC, secure tunneling & next-gen VCS"
+  },
+  {
+    "name": "rune",
+    "htmlUrl": "https://github.com/aphrody-dev/rune",
+    "description": "Rune: Native UI framework",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "rio",
+    "htmlUrl": "https://github.com/aphrody-dev/rio",
+    "description": "A hardware-accelerated GPU terminal emulator focusing to run in desktops and browsers.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "opentunnel",
+    "htmlUrl": "https://github.com/aphrody-dev/opentunnel",
+    "description": "opentunnel sovereign fork",
+    "domain": "cloud-edge-infra",
+    "primaryStack": "TypeScript / Go / Rust",
+    "distilledRole": "Cloud/Edge IaC, secure tunneling & next-gen VCS"
+  },
+  {
+    "name": "NixOS-WSL",
+    "htmlUrl": "https://github.com/aphrody-dev/NixOS-WSL",
+    "description": "NixOS on WSL [maintainer=@nzbr] ",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "niri",
+    "htmlUrl": "https://github.com/aphrody-dev/niri",
+    "description": "A scrollable-tiling Wayland compositor.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "models.dev",
+    "htmlUrl": "https://github.com/aphrody-dev/models.dev",
+    "description": "An open-source database of AI models.",
+    "domain": "ai-llm-compute",
+    "primaryStack": "TypeScript (Bun/Vercel) + Rust/Zig",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "mistral.rs",
+    "htmlUrl": "https://github.com/aphrody-dev/mistral.rs",
+    "description": "Fast, flexible LLM inference",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "maki",
+    "htmlUrl": "https://github.com/aphrody-dev/maki",
+    "description": "An efficient AI coding agent extendable by neovim-like Lua plugins",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "lore",
+    "htmlUrl": "https://github.com/aphrody-dev/lore",
+    "description": "Lore is a next-generation, open source version control system",
+    "domain": "cloud-edge-infra",
+    "primaryStack": "TypeScript / Go / Rust",
+    "distilledRole": "Cloud/Edge IaC, secure tunneling & next-gen VCS"
+  },
+  {
+    "name": "litebox",
+    "htmlUrl": "https://github.com/aphrody-dev/litebox",
+    "description": "A security-focused library OS supporting kernel- and user-mode execution",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "lapce",
+    "htmlUrl": "https://github.com/aphrody-dev/lapce",
+    "description": "Lightning-fast and Powerful Code Editor written in Rust",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "jan",
+    "htmlUrl": "https://github.com/aphrody-dev/jan",
+    "description": "Jan is an open source alternative to ChatGPT that runs 100% offline on your computer.",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "hex",
+    "htmlUrl": "https://github.com/aphrody-dev/hex",
+    "description": "Local voice dictation for mac, windows and linux",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "helix",
+    "htmlUrl": "https://github.com/aphrody-dev/helix",
+    "description": "A post-modern modal text editor.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "gpui-shell",
+    "htmlUrl": "https://github.com/aphrody-dev/gpui-shell",
+    "description": "Wayland desktop shell and status bar in Rust with GPUI, featuring a modular bar, launcher, and control center for Hyprland and Niri.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "fish-shell",
+    "htmlUrl": "https://github.com/aphrody-dev/fish-shell",
+    "description": "The user-friendly command line shell.",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "Exo",
+    "htmlUrl": "https://github.com/aphrody-dev/Exo",
+    "description": "A Material 3 inspired desktop shell for Niri and Hyprland created with Ignis.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "EAC-Extractor-Utility",
+    "htmlUrl": "https://github.com/aphrody-dev/EAC-Extractor-Utility",
+    "description": "This tool Decrypt and Extract the files from the EAC",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "desktop",
+    "htmlUrl": "https://github.com/aphrody-dev/desktop",
+    "description": "Welcome to a calmer internet",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "cubecl",
+    "htmlUrl": "https://github.com/aphrody-dev/cubecl",
+    "description": "Multi-platform high-performance compute language extension for Rust.",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "cosmic-epoch",
+    "htmlUrl": "https://github.com/aphrody-dev/cosmic-epoch",
+    "description": "Next generation Cosmic desktop environment",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "burn",
+    "htmlUrl": "https://github.com/aphrody-dev/burn",
+    "description": "Burn is a next generation tensor library and Deep Learning Framework that doesn't compromise on flexibility, efficiency and portability.",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "brush",
+    "htmlUrl": "https://github.com/aphrody-dev/brush",
+    "description": "bash/POSIX-compatible shell implemented in Rust ",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "Boxedwine64",
+    "htmlUrl": "https://github.com/aphrody-dev/Boxedwine64",
+    "description": "Boxedwine fork with x86_64 guest support — runs static-PIE x86_64 ELFs end-to-end via the interpreter. Iterative roadmap to wine64 notepad.exe on desktop + Chrome.",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "C++ / WASM",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "asterinas",
+    "htmlUrl": "https://github.com/aphrody-dev/asterinas",
+    "description": "Asterinas aims to be a production-grade Linux alternative—memory safe, high-performance, and more.",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "alacritty",
+    "htmlUrl": "https://github.com/aphrody-dev/alacritty",
+    "description": "A cross-platform, OpenGL terminal emulator.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "agents-cli",
+    "htmlUrl": "https://github.com/aphrody-dev/agents-cli",
+    "description": "The CLI and skills that turn any coding assistant into an expert at creating, evaluating, and deploying AI agents on Google Cloud.",
+    "domain": "ai-llm-compute",
+    "primaryStack": "TypeScript (Bun/Vercel) + Rust/Zig",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "agent-desktop",
+    "htmlUrl": "https://github.com/aphrody-dev/agent-desktop",
+    "description": "Computer use CLI for AI agents",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "agent-browser",
+    "htmlUrl": "https://github.com/aphrody-dev/agent-browser",
+    "description": "Browser automation CLI for AI agents",
+    "domain": "ai-llm-compute",
+    "primaryStack": "Rust Fat-LTO + WebGPU/CUDA",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "bun",
+    "htmlUrl": "https://github.com/aphrody-dev/bun",
+    "description": "Incredibly fast JavaScript runtime, bundler, test runner, and package manager – all in one",
+    "domain": "ai-llm-compute",
+    "primaryStack": "TypeScript (Bun/Vercel) + Rust/Zig",
+    "distilledRole": "LLM/STT inference, WebGPU/CUDA compute, Computer-Use FFI & telemetry"
+  },
+  {
+    "name": "tree-sitter",
+    "htmlUrl": "https://github.com/aphrody-dev/tree-sitter",
+    "description": "An incremental parsing system for programming tools",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "coreutils",
+    "htmlUrl": "https://github.com/aphrody-dev/coreutils",
+    "description": "Cross-platform Rust rewrite of the GNU coreutils",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "chwd",
+    "htmlUrl": "https://github.com/aphrody-dev/chwd",
+    "description": "Hardware Detection and Configuration for CachyOS",
+    "domain": "posix-nix-kernel",
+    "primaryStack": "Rust 2024",
+    "distilledRole": "POSIX/Unix shell, coreutils, library-OS sandbox & NixOS declarative store"
+  },
+  {
+    "name": "opentui",
+    "htmlUrl": "https://github.com/aphrody-dev/opentui",
+    "description": "OpenTUI is a library to build terminal user interfaces (TUI)",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "zed",
+    "htmlUrl": "https://github.com/aphrody-dev/zed",
+    "description": "Aphrody IDE",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Rust + WebGPU/GPUI",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  },
+  {
+    "name": "mochi-desktop",
+    "htmlUrl": "https://github.com/aphrody-dev/mochi-desktop",
+    "description": "A cute, lightweight desktop companion for Linux that idles, reacts, sleeps, and hangs out while you work.",
+    "domain": "ui-terminal-editor",
+    "primaryStack": "Python (uv)",
+    "distilledRole": "GPU terminal, Tree-sitter AST, modal/IDE editor & Wayland/M3 shell"
+  }
+]

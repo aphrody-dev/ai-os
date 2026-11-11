@@ -53,7 +53,7 @@ export function openNexusDb(dbPath = DEFAULT_NEXUS_DB_PATH): Database {
   }
   mkdirSync(dirname(resolved), { recursive: true });
   const db = new Database(resolved, { create: true });
-  db.exec(`
+  db.run(`
     PRAGMA journal_mode = WAL;
     PRAGMA synchronous = NORMAL;
 

@@ -86,7 +86,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/astral-sh/uv",
     repo: "astral-sh/uv",
     branch: "main",
-    description: "Ultra-fast Python package, project, and runtime manager in Rust",
+    description:
+      "Ultra-fast Python package, project, and runtime manager in Rust",
   },
   {
     category: "astral-sh",
@@ -107,7 +108,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/astral-sh/python-build-standalone",
     repo: "astral-sh/python-build-standalone",
     branch: "main",
-    description: "PGO+LTO redistributable CPython builds (including free-threaded 3.15t)",
+    description:
+      "PGO+LTO redistributable CPython builds (including free-threaded 3.15t)",
   },
   {
     category: "astral-sh",
@@ -156,7 +158,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/astral-sh/toucan",
     repo: "astral-sh/toucan",
     branch: "main",
-    description: "Pure-Rust C frontend for generating Rust FFI bindings without libclang",
+    description:
+      "Pure-Rust C frontend for generating Rust FFI bindings without libclang",
   },
   {
     category: "astral-sh",
@@ -193,7 +196,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/python-rust/maturin",
     repo: "PyO3/maturin",
     branch: "main",
-    description: "Build and publish PyO3, CFFI, and UniFFI Rust crates as Python wheels",
+    description:
+      "Build and publish PyO3, CFFI, and UniFFI Rust crates as Python wheels",
   },
   {
     category: "python-rust",
@@ -244,14 +248,16 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/huggingface/candle",
     repo: "huggingface/candle",
     branch: "main",
-    description: "Minimalist serverless Rust ML & LLM framework with CUDA kernels",
+    description:
+      "Minimalist serverless Rust ML & LLM framework with CUDA kernels",
   },
   {
     category: "huggingface",
     path: "submodules/huggingface/transformers",
     repo: "huggingface/transformers",
     branch: "main",
-    description: "Canonical model-definition framework for text, vision, audio, multimodal",
+    description:
+      "Canonical model-definition framework for text, vision, audio, multimodal",
   },
   {
     category: "huggingface",
@@ -279,7 +285,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/huggingface/datasets",
     repo: "huggingface/datasets",
     branch: "main",
-    description: "Zero-copy Apache Arrow backed ML dataset streaming & processing",
+    description:
+      "Zero-copy Apache Arrow backed ML dataset streaming & processing",
   },
   {
     category: "huggingface",
@@ -293,14 +300,16 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/huggingface/sentence-transformers",
     repo: "huggingface/sentence-transformers",
     branch: "main",
-    description: "Dense, sparse, and ColBERT embeddings + cross-encoder rerankers for RAG",
+    description:
+      "Dense, sparse, and ColBERT embeddings + cross-encoder rerankers for RAG",
   },
   {
     category: "huggingface",
     path: "submodules/huggingface/text-embeddings-inference",
     repo: "huggingface/text-embeddings-inference",
     branch: "main",
-    description: "Blazing-fast Rust + Candle + CUDA server for RAG embeddings/reranking",
+    description:
+      "Blazing-fast Rust + Candle + CUDA server for RAG embeddings/reranking",
   },
   {
     category: "huggingface",
@@ -374,7 +383,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/nvidia/cutlass",
     repo: "NVIDIA/cutlass",
     branch: "main",
-    description: "CUDA C++ templates & CuTe Python DSL for Tensor Core GEMM/FMHA (sm_89+)",
+    description:
+      "CUDA C++ templates & CuTe Python DSL for Tensor Core GEMM/FMHA (sm_89+)",
   },
   {
     category: "nvidia",
@@ -409,7 +419,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/nvidia/Model-Optimizer",
     repo: "NVIDIA/Model-Optimizer",
     branch: "main",
-    description: "FP8/NVFP4 quantization, pruning, distillation, speculative decoding",
+    description:
+      "FP8/NVFP4 quantization, pruning, distillation, speculative decoding",
   },
   {
     category: "nvidia",
@@ -453,7 +464,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/pytorch/pytorch",
     repo: "pytorch/pytorch",
     branch: "main",
-    description: "Tensors and dynamic neural networks with torch.compile Inductor CUDA",
+    description:
+      "Tensors and dynamic neural networks with torch.compile Inductor CUDA",
   },
   {
     category: "pytorch",
@@ -497,7 +509,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/llm-2026/unsloth",
     repo: "unslothai/unsloth",
     branch: "main",
-    description: "2x faster, 70% less VRAM Triton kernels for QLoRA/GRPO fine-tuning on 12GB GPUs",
+    description:
+      "2x faster, 70% less VRAM Triton kernels for QLoRA/GRPO fine-tuning on 12GB GPUs",
   },
   {
     category: "llm-2026",
@@ -511,7 +524,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/llm-2026/flashinfer",
     repo: "flashinfer-ai/flashinfer",
     branch: "main",
-    description: "Customizable prefill/decode/PagedAttention CUDA kernels for LLM serving",
+    description:
+      "Customizable prefill/decode/PagedAttention CUDA kernels for LLM serving",
   },
   {
     category: "llm-2026",
@@ -525,7 +539,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/llm-2026/mistral.rs",
     repo: "EricLBuehler/mistral.rs",
     branch: "master",
-    description: "Blazing-fast pure-Rust + CUDA ISQ multimodal LLM inference engine",
+    description:
+      "Blazing-fast pure-Rust + CUDA ISQ multimodal LLM inference engine",
   },
   {
     category: "llm-2026",
@@ -539,7 +554,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/llm-2026/dspy",
     repo: "stanfordnlp/dspy",
     branch: "main",
-    description: "Declarative self-optimizing prompt & RAG programming framework",
+    description:
+      "Declarative self-optimizing prompt & RAG programming framework",
   },
 
   // 9. Sovereign Uncensored / Abliteration Stack
@@ -548,14 +564,16 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/uncensored/heretic",
     repo: "p-e-w/heretic",
     branch: "main",
-    description: "Directional activation abliteration & refusal-suppression engine for open-weights LLMs",
+    description:
+      "Directional activation abliteration & refusal-suppression engine for open-weights LLMs",
   },
   {
     category: "uncensored",
     path: "submodules/uncensored/locally-uncensored",
     repo: "PurpleDoubleD/locally-uncensored",
     branch: "main",
-    description: "Sovereign local uncensored model catalog & zero-refusal runtime",
+    description:
+      "Sovereign local uncensored model catalog & zero-refusal runtime",
   },
 
   // 10. RAG, Vector Search & Zero-Copy Big Data (Polars, DuckDB, Arrow-rs, LanceDB, Qdrant, USearch)
@@ -564,7 +582,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/rag-bigdata/polars",
     repo: "pola-rs/polars",
     branch: "main",
-    description: "SIMD/multithreaded Rust DataFrame query engine over Apache Arrow",
+    description:
+      "SIMD/multithreaded Rust DataFrame query engine over Apache Arrow",
   },
   {
     category: "rag-bigdata",
@@ -578,14 +597,16 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/rag-bigdata/arrow-rs",
     repo: "apache/arrow-rs",
     branch: "main",
-    description: "Official Rust Apache Arrow & Parquet zero-copy memory implementation",
+    description:
+      "Official Rust Apache Arrow & Parquet zero-copy memory implementation",
   },
   {
     category: "rag-bigdata",
     path: "submodules/rag-bigdata/lancedb",
     repo: "lancedb/lancedb",
     branch: "main",
-    description: "Embedded multimodal Rust vector DB for disk-backed zero-copy RAG",
+    description:
+      "Embedded multimodal Rust vector DB for disk-backed zero-copy RAG",
   },
   {
     category: "rag-bigdata",
@@ -652,7 +673,8 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/system1-decisional/BitNet",
     repo: "microsoft/BitNet",
     branch: "main",
-    description: "1.58-bit ternary LLM inference framework (bitnet.cpp) for pure CPU+RAM without GPU",
+    description:
+      "1.58-bit ternary LLM inference framework (bitnet.cpp) for pure CPU+RAM without GPU",
   },
   {
     category: "system1-decisional",
@@ -666,56 +688,64 @@ export const ECOSYSTEM_REPOS: readonly EcosystemRepoSpec[] = [
     path: "submodules/system1-decisional/ktransformers",
     repo: "kvcache-ai/ktransformers",
     branch: "main",
-    description: "CPU AVX2/AMX + SSD/RAM heterogeneous MoE & attention kernel engine",
+    description:
+      "CPU AVX2/AMX + SSD/RAM heterogeneous MoE & attention kernel engine",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/plano",
     repo: "katanemo/plano",
     branch: "main",
-    description: "Katanemo Arch-Function / Arch-Router System-1 agentic gateway & prompt router",
+    description:
+      "Katanemo Arch-Function / Arch-Router System-1 agentic gateway & prompt router",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/xLAM",
     repo: "SalesforceAIResearch/xLAM",
     branch: "main",
-    description: "Large Action Models (xLAM-2 1B/3B/8B) & APIGen verifiable function-calling pipeline",
+    description:
+      "Large Action Models (xLAM-2 1B/3B/8B) & APIGen verifiable function-calling pipeline",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/Hammer",
     repo: "MadeAgents/Hammer",
     branch: "main",
-    description: "Hammer 2.1 (0.5B/1.5B/3B) function-masking System-1 tool-calling models",
+    description:
+      "Hammer 2.1 (0.5B/1.5B/3B) function-masking System-1 tool-calling models",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/functionary",
     repo: "MeetKai/functionary",
     branch: "main",
-    description: "MeetKai Functionary native tool-calling & code-act parser/spec",
+    description:
+      "MeetKai Functionary native tool-calling & code-act parser/spec",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/gorilla",
     repo: "ShishirPatil/gorilla",
     branch: "main",
-    description: "UC Berkeley Gorilla API bench (BFCL) & AST-verified tool invocation",
+    description:
+      "UC Berkeley Gorilla API bench (BFCL) & AST-verified tool invocation",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/llguidance",
     repo: "guidance-ai/llguidance",
     branch: "main",
-    description: "Sub-50us Rust Earley/FSM logit-masking engine converting verbose LLMs to strict schemas",
+    description:
+      "Sub-50us Rust Earley/FSM logit-masking engine converting verbose LLMs to strict schemas",
   },
   {
     category: "system1-decisional",
     path: "submodules/system1-decisional/xgrammar",
     repo: "mlc-ai/xgrammar",
     branch: "main",
-    description: "Zero-overhead pushdown automaton structured generation engine for System-1 JSON/CFG",
+    description:
+      "Zero-overhead pushdown automaton structured generation engine for System-1 JSON/CFG",
   },
 ];
 
@@ -768,11 +798,13 @@ export interface ClonedSubmoduleStatus {
   commitSubject: string;
 }
 
-export async function syncEcosystemSubmodules(options: {
-  rootDir?: string;
-  concurrency?: number;
-  manifestOnly?: boolean;
-} = {}) {
+export async function syncEcosystemSubmodules(
+  options: {
+    rootDir?: string;
+    concurrency?: number;
+    manifestOnly?: boolean;
+  } = {},
+) {
   const rootDir = resolve(options.rootDir ?? join(import.meta.dir, ".."));
   const concurrency = options.concurrency ?? 8;
 
@@ -886,7 +918,13 @@ export async function syncEcosystemSubmodules(options: {
         rootDir,
       );
       runGitSync(
-        ["config", "-f", ".git/config", `submodule.${spec.path}.active`, "true"],
+        [
+          "config",
+          "-f",
+          ".git/config",
+          `submodule.${spec.path}.active`,
+          "true",
+        ],
         rootDir,
       );
     }
@@ -925,7 +963,8 @@ export async function syncEcosystemSubmodules(options: {
   const manifest = {
     repository: "C:\\src\\ai-os",
     generatedAt: syncedAt,
-    cloneStrategy: "git submodule shallow (--depth 1 --filter=blob:none --single-branch --no-tags, zero-vendor)",
+    cloneStrategy:
+      "git submodule shallow (--depth 1 --filter=blob:none --single-branch --no-tags, zero-vendor)",
     totalConfigured: ECOSYSTEM_REPOS.length,
     totalCloned: entries.length,
     byCategory,

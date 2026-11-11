@@ -1,0 +1,400 @@
+{
+  "format": "BN15-BitNet-1.58bit",
+  "version": 1,
+  "trainedAt": "2026-11-11T02:11:01.722Z",
+  "docsRoot": "C:/src/bun/docs",
+  "totalMdxFilesTrained": 1412,
+  "featureDim": 512,
+  "numClasses": 19,
+  "packedWeightBytes": 2432,
+  "sqliteDbPath": "C:/src/ai-os/system1-bun-mdx.sqlite",
+  "binaryWeightsPath": "C:/src/ai-os/models/bun-system1-b158.bin",
+  "trainingDurationMs": 741,
+  "selfEvalAccuracyPct": 96.39,
+  "classes": [
+    {
+      "index": 0,
+      "id": "Bun.serve",
+      "canonicalApi": "Bun.serve",
+      "category": "runtime",
+      "summary": "Native HTTP/HTTPS/WebSocket/TLS server with routes and zero-copy Response",
+      "docCount": 128,
+      "rowScale": 0.703278,
+      "keywords": [
+        "bun.serve",
+        "http server",
+        "https",
+        "routes",
+        "fetch(",
+        "port",
+        "websocket upgrade",
+        " runtime/http"
+      ],
+      "nodeLegacyAliases": [
+        "express",
+        "fastify",
+        "koa",
+        "node:http",
+        "createServer"
+      ]
+    },
+    {
+      "index": 1,
+      "id": "bun:sqlite",
+      "canonicalApi": "bun:sqlite",
+      "category": "runtime",
+      "summary": "Synchronous high-speed embedded SQLite3 engine with WAL, FTS5, and zero-copy typed arrays",
+      "docCount": 5,
+      "rowScale": 0.169255,
+      "keywords": [
+        "bun:sqlite",
+        "database",
+        "sqlite",
+        "fts5",
+        "wal",
+        "pragma",
+        "query(",
+        "prepare("
+      ],
+      "nodeLegacyAliases": ["better-sqlite3", "sqlite3", "sql.js"]
+    },
+    {
+      "index": 2,
+      "id": "Bun.SQL",
+      "canonicalApi": "Bun.SQL",
+      "category": "runtime",
+      "summary": "Unified native SQL client for PostgreSQL, MySQL, MariaDB, and SQLite using tagged templates",
+      "docCount": 5,
+      "rowScale": 0.208607,
+      "keywords": [
+        "bun.sql",
+        "postgres",
+        "postgresql",
+        "mysql",
+        "mariadb",
+        "sql`",
+        "connection pool",
+        "transaction"
+      ],
+      "nodeLegacyAliases": ["pg", "mysql2", "knex", "typeorm", "prisma"]
+    },
+    {
+      "index": 3,
+      "id": "bun:ffi",
+      "canonicalApi": "bun:ffi",
+      "category": "runtime",
+      "summary": "Zero-copy Foreign Function Interface (dlopen, FFIType, ptr, CString, JSCallback) for C/Rust/CUDA ABI",
+      "docCount": 3,
+      "rowScale": 0.145956,
+      "keywords": [
+        "bun:ffi",
+        "dlopen",
+        "ffitype",
+        "cstring",
+        "ptr(",
+        "shared library",
+        ".dll",
+        ".so",
+        ".dylib",
+        "c abi"
+      ],
+      "nodeLegacyAliases": ["ffi-napi", "node-gyp", "node-addon-api", "koffi"]
+    },
+    {
+      "index": 4,
+      "id": "Bun.plugin",
+      "canonicalApi": "Bun.plugin",
+      "category": "bundler",
+      "summary": "Runtime and bundler plugin engine (onResolve, onLoad, virtual modules, custom loaders)",
+      "docCount": 2,
+      "rowScale": 0.0912,
+      "keywords": [
+        "bun.plugin",
+        "onload",
+        "onresolve",
+        "virtual module",
+        "bundler/plugins",
+        "runtime plugin",
+        "custom loader"
+      ],
+      "nodeLegacyAliases": ["esbuild-plugin", "rollup-plugin", "webpack-loader"]
+    },
+    {
+      "index": 5,
+      "id": "Bun.build",
+      "canonicalApi": "Bun.build",
+      "category": "bundler",
+      "summary": "Full-Rust JS/TS/JSX/CSS/HTML bundler with tree-shaking, code-splitting, and macros",
+      "docCount": 23,
+      "rowScale": 0.362605,
+      "keywords": [
+        "bun.build",
+        "bundler",
+        "entrypoints",
+        "outdir",
+        "splitting",
+        "minify",
+        "sourcemap",
+        "bundle"
+      ],
+      "nodeLegacyAliases": ["webpack", "rollup", "parcel", "esbuild"]
+    },
+    {
+      "index": 6,
+      "id": "bun compile",
+      "canonicalApi": "bun compile",
+      "category": "compiler",
+      "summary": "Ahead-of-time (AoT) native machine code & standalone executable compiler (--compile, --trim, --explain)",
+      "docCount": 13,
+      "rowScale": 0.294641,
+      "keywords": [
+        "bun compile",
+        "ahead-of-time",
+        "aot",
+        "--compile",
+        "standalone executable",
+        "machine code",
+        "--trim",
+        "compiler/"
+      ],
+      "nodeLegacyAliases": ["pkg", "nexe", "sea"]
+    },
+    {
+      "index": 7,
+      "id": "Bun.file",
+      "canonicalApi": "Bun.file",
+      "category": "runtime",
+      "summary": "Lazy zero-copy file reference & writer (Bun.file, Bun.write, sendfile/splice/io_uring)",
+      "docCount": 42,
+      "rowScale": 0.496014,
+      "keywords": [
+        "bun.file",
+        "bun.write",
+        "file i/o",
+        "arraybuffer",
+        "filewriter",
+        "read file",
+        "write file",
+        "runtime/file-io"
+      ],
+      "nodeLegacyAliases": ["fs-extra", "readFileSync", "writeFileSync"]
+    },
+    {
+      "index": 8,
+      "id": "Bun.spawn",
+      "canonicalApi": "Bun.spawn",
+      "category": "runtime",
+      "summary": "Fast child process spawning and IPC (Bun.spawn, Bun.spawnSync, PTY terminal)",
+      "docCount": 9,
+      "rowScale": 0.235193,
+      "keywords": [
+        "bun.spawn",
+        "bun.spawnsync",
+        "child process",
+        "subprocess",
+        "ipc",
+        "stdout",
+        "pty",
+        "runtime/child-process"
+      ],
+      "nodeLegacyAliases": ["execa", "cross-spawn", "child_process"]
+    },
+    {
+      "index": 9,
+      "id": "Bun.$",
+      "canonicalApi": "Bun.$",
+      "category": "runtime",
+      "summary": "Cross-platform native Bun Shell withautomatic escaping, pipes, and globbing",
+      "docCount": 8,
+      "rowScale": 0.280134,
+      "keywords": [
+        "bun.$",
+        "bun shell",
+        "shell script",
+        "runtime/shell",
+        "pipe",
+        "glob"
+      ],
+      "nodeLegacyAliases": ["zx", "shelljs", "rimraf"]
+    },
+    {
+      "index": 10,
+      "id": "Bun.CryptoHasher",
+      "canonicalApi": "Bun.CryptoHasher",
+      "category": "runtime",
+      "summary": "Hardware-accelerated hashing, HMAC, Argon2id/bcrypt Bun.password, and CSRF",
+      "docCount": 3,
+      "rowScale": 0.135847,
+      "keywords": [
+        "cryptohasher",
+        "bun.password",
+        "argon2",
+        "bcrypt",
+        "sha256",
+        "blake2b",
+        "csrf",
+        "hashing"
+      ],
+      "nodeLegacyAliases": ["bcrypt", "argon2", "crypto-js"]
+    },
+    {
+      "index": 11,
+      "id": "Bun.S3Client",
+      "canonicalApi": "Bun.S3Client",
+      "category": "runtime",
+      "summary": "Zero-dependency S3 / Cloudflare R2 / MinIO object storage client (s3://, presign, streaming)",
+      "docCount": 1,
+      "rowScale": 0.097025,
+      "keywords": [
+        "s3client",
+        "bun.s3",
+        "r2",
+        "presign",
+        "object storage",
+        "bucket",
+        "runtime/s3"
+      ],
+      "nodeLegacyAliases": ["@aws-sdk/client-s3", "minio"]
+    },
+    {
+      "index": 12,
+      "id": "Bun.RedisClient",
+      "canonicalApi": "Bun.RedisClient",
+      "category": "runtime",
+      "summary": "Built-in RESP3 Redis / Valkey client with pub/sub and pipelining",
+      "docCount": 1,
+      "rowScale": 0.090834,
+      "keywords": [
+        "redisclient",
+        "bun.redis",
+        "valkey",
+        "resp3",
+        "pubsub",
+        "runtime/redis"
+      ],
+      "nodeLegacyAliases": ["ioredis", "redis"]
+    },
+    {
+      "index": 13,
+      "id": "bun test",
+      "canonicalApi": "bun:test",
+      "category": "test",
+      "summary": "Jest/Vitest-compatible fast test runner with snapshots, mocks, DOM, and coverage",
+      "docCount": 35,
+      "rowScale": 0.359347,
+      "keywords": [
+        "bun:test",
+        "bun test",
+        "describe(",
+        "expect(",
+        "mock(",
+        "spyOn",
+        "snapshot",
+        "test/"
+      ],
+      "nodeLegacyAliases": ["jest", "mocha", "vitest", "ts-jest"]
+    },
+    {
+      "index": 14,
+      "id": "bun install",
+      "canonicalApi": "bun pm",
+      "category": "pm",
+      "summary": "Global cache copy-on-write/hardlink package manager, workspaces, catalogs, isolated installs, and security scanner",
+      "docCount": 51,
+      "rowScale": 0.498596,
+      "keywords": [
+        "bun install",
+        "bun add",
+        "bun pm",
+        "workspaces",
+        "lockfile",
+        "bun.lock",
+        "catalogs",
+        "pm/"
+      ],
+      "nodeLegacyAliases": ["npm install", "yarn", "pnpm"]
+    },
+    {
+      "index": 15,
+      "id": "bun check",
+      "canonicalApi": "bun check",
+      "category": "quality",
+      "summary": "Native Rust TypeScript typechecker (bun check) with sub-second monorepo diagnostics",
+      "docCount": 4,
+      "rowScale": 0.148289,
+      "keywords": [
+        "bun check",
+        "typecheck",
+        "typescript-6",
+        "tsc",
+        "type checker"
+      ],
+      "nodeLegacyAliases": ["tsc --noEmit", "ts-node"]
+    },
+    {
+      "index": 16,
+      "id": "bun fmt",
+      "canonicalApi": "bun fmt",
+      "category": "quality",
+      "summary": "Native Rust code formatter and linter (bun fmt, bun lint)",
+      "docCount": 1058,
+      "rowScale": 1.920088,
+      "keywords": [
+        "bun fmt",
+        "bun lint",
+        "format/",
+        "lint/",
+        "formatter",
+        "linter"
+      ],
+      "nodeLegacyAliases": ["prettier", "eslint", "@biomejs/biome"]
+    },
+    {
+      "index": 17,
+      "id": "Bun.Glob",
+      "canonicalApi": "Bun.Glob",
+      "category": "runtime",
+      "summary": "Fast native filesystem & string glob matcher, YAML, TOML, JSON5, JSONL, Semver, and HTMLRewriter",
+      "docCount": 15,
+      "rowScale": 0.359256,
+      "keywords": [
+        "bun.glob",
+        "bun.yaml",
+        "bun.toml",
+        "jsonl",
+        "bun.semver",
+        "htmlrewriter",
+        "markdown",
+        "archive"
+      ],
+      "nodeLegacyAliases": [
+        "glob",
+        "fast-glob",
+        "minimatch",
+        "js-yaml",
+        "semver"
+      ]
+    },
+    {
+      "index": 18,
+      "id": "SovereignDesign",
+      "canonicalApi": "Bun.Design",
+      "category": "design",
+      "summary": "Unified Sovereign Design System (CAM16/HCT, Material 3 Expressive, Fluent 2, Web Vitals CLS=0, TUI/GPUI)",
+      "docCount": 6,
+      "rowScale": 0.210565,
+      "keywords": [
+        "cam16",
+        "hct",
+        "material 3",
+        "fluent 2",
+        "design/",
+        "stitch",
+        "web-vitals",
+        "material-symbols",
+        "tokens"
+      ],
+      "nodeLegacyAliases": ["styled-components", "@mui/material"]
+    }
+  ]
+}

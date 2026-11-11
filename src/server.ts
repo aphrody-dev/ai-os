@@ -33,6 +33,21 @@ import {
   probeLocalProviders,
 } from "./providers/federation.ts";
 import { readCachedSentinelState, runSentinelSync } from "./sentinel/index.ts";
+import { runObjectiveStackBenchmark } from "./benchmark/arena.ts";
+import {
+  distillAphrodyAndVendorEcosystem,
+  listNixDerivations,
+  listNixGenerations,
+} from "./nix/store.ts";
+import { AiPosixOs } from "./posix/unix-os.ts";
+import {
+  FUSED_ECOSYSTEM_PROTOCOLS,
+  handleAnthropicMessagesRequest,
+  handleVercelStreamRequest,
+} from "./protocols/fusion-specs.ts";
+import { inspectWasmAndWebGpuCapabilities } from "./wasm-webgpu/index.ts";
+
+const httpPosixSession = new AiPosixOs({ enableHostMount: true });
 
 const CORS_HEADERS: Record<string, string> = {
   "access-control-allow-origin": "*",
@@ -97,7 +112,14 @@ export async function routeAiOsRequest(req: Request): Promise<Response> {
             "/api/polyglot",
             "/api/cuda",
             "/api/ast",
+            "/api/posix",
+            "/api/nix",
+            "/api/wasm",
+            "/api/benchmark",
+            "/v1/vercel/stream",
+            "/v1/messages",
           ],
+          fusedEcosystems: FUSED_ECOSYSTEM_PROTOCOLS,
         },
         nativeBinaries: {
           desktopCli: resolveDesktopCliPath(),
@@ -151,6 +173,12 @@ export async function routeAiOsRequest(req: Request): Promise<Response> {
   }
   if (req.method === "POST" && path === "/v1/embeddings") {
     return withCors(await handleEmbeddingsRequest(req));
+  }
+  if (req.method === "POST" && path === "/v1/vercel/stream") {
+    return withCors(await handleVercelStreamRequest(req));
+  }
+  if (req.method === "POST" && path === "/v1/messages") {
+    return withCors(await handleAnthropicMessagesRequest(req));
   }
   if (req.method === "GET" && path === "/api/version") {
     return withCors(handleOpenWebUiVersionRequest());
@@ -240,6 +268,48 @@ export async function routeAiOsRequest(req: Request): Promise<Response> {
     };
     const parsed = poly.parseAst(body.language ?? "python", body.code ?? "");
     return withCors(Response.json(parsed, { status: parsed.ok ? 200 : 400 }));
+  }
+
+  if (path === "/api/posix") {
+    if (req.method === "GET") {
+      return withCors(
+        Response.json(
+          httpPosixSession.exec(url.searchParams.get("cmd") ?? "uname -a"),
+        ),
+      );
+    }
+    if (req.method === "POST") {
+      const body = (await req.json().catch(() => ({}))) as { command?: string };
+      return withCors(
+        Response.json(httpPosixSession.exec(body.command ?? "uname -a")),
+      );
+    }
+  }
+
+  if (path === "/api/nix") {
+    if (req.method === "POST" || url.searchParams.get("distill") === "1") {
+      return withCors(Response.json(distillAphrodyAndVendorEcosystem()));
+    }
+    return withCors(
+      Response.json({
+        derivations: listNixDerivations(),
+        generations: listNixGenerations(),
+      }),
+    );
+  }
+
+  if (req.method === "GET" && path === "/api/wasm") {
+    return withCors(Response.json(inspectWasmAndWebGpuCapabilities()));
+  }
+
+  if (path === "/api/benchmark") {
+    const writeReport =
+      req.method === "POST" || url.searchParams.get("write") === "1";
+    const report = await runObjectiveStackBenchmark({
+      iterations: 11,
+      writeReport,
+    });
+    return withCors(Response.json(report));
   }
 
   return withCors(

@@ -1,7 +1,7 @@
 {
   "name": "@aphrody/ai-os",
-  "version": "2.0.0",
-  "description": "Sole Monorepo AI & Unified Context-Optimized MCP Owner (OpenAI / MCP / A2A / ACP / Triad / Soul / Brain / Memory / Sessions / Skills / Google Cloud & Workspace / CUDA / n2b-REA) in pure oven-sh/bun v1.4.4",
+  "version": "2.1.0",
+  "description": "Sole Monorepo AI, POSIX/Unix OS, NixOS Store, WASM32/WebGPU & Unified Context-Optimized MCP Owner in pure oven-sh/bun v1.4.4 + Rust 2024",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -9,7 +9,12 @@
     "./brain": "./src/nexus/brain-memory.ts",
     "./skills": "./src/nexus/skills-hub.ts",
     "./triad": "./src/triad/index.ts",
-    "./extracted": "./src/extracted/index.ts"
+    "./extracted": "./src/extracted/index.ts",
+    "./posix": "./src/posix/unix-os.ts",
+    "./nix": "./src/nix/store.ts",
+    "./wasm-webgpu": "./src/wasm-webgpu/index.ts",
+    "./benchmark": "./src/benchmark/arena.ts",
+    "./fusion-specs": "./src/protocols/fusion-specs.ts"
   },
   "bin": {
     "ai-os": "./src/cli.ts"
@@ -17,10 +22,12 @@
   "scripts": {
     "start": "bun run src/cli.ts serve",
     "sync": "bun run src/cli.ts sync",
+    "distill": "bun run src/cli.ts nix distill",
+    "benchmark": "bun run src/cli.ts benchmark --write",
     "extract": "bun run src/cli.ts extract",
     "watch": "bun run src/cli.ts watch",
     "nightly-sync": "bun run src/cli.ts nightly-sync",
-    "build": "bun build --compile --minify src/cli.ts --outfile C:/Users/aphro/.local/bin/ai-os.exe",
+    "build": "bun run scripts/install-bin.ts",
     "test": "bun test ./tests/",
     "check": "bun check",
     "fmt": "bun fmt"
