@@ -11,7 +11,7 @@
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "types": []
+    "typeRoots": []
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["dist", "node_modules", "submodules"]
