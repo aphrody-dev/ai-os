@@ -1,18 +1,27 @@
 {
   "name": "@aphrody/ai-os",
-  "version": "1.0.0",
-  "description": "Unified Sovereign AI Control Plane, Multi-Protocol Router (OpenAI / MCP / A2A / ACP / Skills) & Real-Time/Nightly Standards Sentinel in pure oven-sh/bun v1.4.4",
+  "version": "2.0.0",
+  "description": "Sole Monorepo AI & Unified Context-Optimized MCP Owner (OpenAI / MCP / A2A / ACP / Triad / Soul / Brain / Memory / Sessions / Skills / Google Cloud & Workspace / CUDA / n2b-REA) in pure oven-sh/bun v1.4.4",
   "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./security": "./src/nexus/security.ts",
+    "./brain": "./src/nexus/brain-memory.ts",
+    "./skills": "./src/nexus/skills-hub.ts",
+    "./triad": "./src/triad/index.ts",
+    "./extracted": "./src/extracted/index.ts"
+  },
   "bin": {
     "ai-os": "./src/cli.ts"
   },
   "scripts": {
     "start": "bun run src/cli.ts serve",
+    "sync": "bun run src/cli.ts sync",
     "extract": "bun run src/cli.ts extract",
     "watch": "bun run src/cli.ts watch",
     "nightly-sync": "bun run src/cli.ts nightly-sync",
     "build": "bun build --compile --minify src/cli.ts --outfile C:/Users/aphro/.local/bin/ai-os.exe",
-    "test": "bun test ./tests/ai-os.test.ts",
+    "test": "bun test ./tests/",
     "check": "bun check",
     "fmt": "bun fmt"
   },

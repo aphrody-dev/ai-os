@@ -57,7 +57,12 @@ declare const Bun: {
     cmd: string[],
     options?: {
       stdin?:
-        "pipe" | "inherit" | Uint8Array | ReadableStream<Uint8Array> | null;
+        | "pipe"
+        | "inherit"
+        | "ignore"
+        | Uint8Array
+        | ReadableStream<Uint8Array>
+        | null;
       stdout?: "pipe" | "inherit" | "ignore";
       stderr?: "pipe" | "inherit" | "ignore";
       cwd?: string;
@@ -68,7 +73,7 @@ declare const Bun: {
   spawnSync(
     cmd: string[],
     options?: {
-      stdin?: "pipe" | "inherit" | Uint8Array | null;
+      stdin?: "pipe" | "inherit" | "ignore" | Uint8Array | null;
       stdout?: "pipe" | "inherit" | "ignore";
       stderr?: "pipe" | "inherit" | "ignore";
       cwd?: string;
@@ -161,9 +166,7 @@ declare module "bun:ffi" {
     path: string,
     symbols: T,
   ): {
-    readonly symbols: {
-      [K in keyof T]: (...args: any[]) => any;
-    };
+    readonly symbols: Record<keyof T, (...args: any[]) => any>;
     close(): void;
   };
 }

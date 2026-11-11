@@ -1041,4 +1041,13 @@ export async function runMcpStdioServer(
         }
       } catch {
         process.stdout.write(
-          `${JSON.stringify
+          `${JSON.stringify({
+            jsonrpc: "2.0",
+            id: null,
+            error: { code: -32700, message: "Parse error" },
+          })}\n`,
+        );
+      }
+    }
+  }
+}

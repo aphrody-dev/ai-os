@@ -11,11 +11,22 @@ import {
   inspectPolyglotEcosystem,
   runPythonPolyglotScan,
 } from "./polyglot/index.ts";
+import {
+  buildCanonicalSoulMarkdown,
+  syncBrainMemoriesAndSessions,
+} from "./nexus/brain-memory.ts";
+import { diagnoseGoogleAuth } from "./nexus/security.ts";
+import {
+  installSkillCollection,
+  listActiveCollections,
+  removeSkillCollection,
+} from "./nexus/skills-hub.ts";
 import { runMcpStdioServer } from "./protocols/mcp.ts";
 import { buildSkillsAndHooksRegistry } from "./protocols/skills.ts";
 import { probeLocalProviders } from "./providers/federation.ts";
 import { runSentinelSync } from "./sentinel/index.ts";
 import { startAiOsServer } from "./server.ts";
+import { syncUnifiedAgentHomes } from "./triad/index.ts";
 
 function parseFlag(args: string[], flag: string): string | undefined {
   const eqPrefix = `${flag}=`;
@@ -93,7 +104,47 @@ async function main(): Promise<void> {
   }
 
   if (subcommand === "mcp-stdio" || subcommand === "mcp") {
-    await runMcpStdioServer();
+    const profile =
+      parseFlag(argv, "--profile") === "minimal" ? "minimal" : "default";
+    await runMcpStdioServer(profile);
+    return;
+  }
+
+  if (subcommand === "sync" || subcommand === "sync-configs") {
+    const profile =
+      parseFlag(argv, "--profile") === "minimal" ? "minimal" : "default";
+    const report = syncUnifiedAgentHomes({ mcpProfile: profile });
+    console.log(JSON.stringify({ ok: true, ...report }, null, 2));
+    return;
+  }
+
+  if (subcommand === "soul") {
+    if (hasFlag(argv, "--sync")) {
+      const synced = syncBrainMemoriesAndSessions();
+      console.log(JSON.stringify({ ok: true, ...synced }, null, 2));
+    } else {
+      console.log(buildCanonicalSoulMarkdown());
+    }
+    return;
+  }
+
+  if (subcommand === "collections") {
+    const action = argv[1] ?? "list";
+    const id = argv[2] ?? "os-minimal";
+    if (action === "install") {
+      console.log(JSON.stringify(installSkillCollection(id), null, 2));
+      return;
+    }
+    if (action === "remove") {
+      console.log(JSON.stringify(removeSkillCollection(id), null, 2));
+      return;
+    }
+    console.log(JSON.stringify(listActiveCollections(), null, 2));
+    return;
+  }
+
+  if (subcommand === "auth-doctor") {
+    console.log(JSON.stringify(await diagnoseGoogleAuth(), null, 2));
     return;
   }
 

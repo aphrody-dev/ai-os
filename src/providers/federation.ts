@@ -1,4 +1,5 @@
 import { getSovereignEnv, maskSecret } from "../env.ts";
+import { mintGoogleAccessToken } from "../nexus/security.ts";
 import {
   convertVerboseLlmToDecision,
   decideSystem1,
@@ -630,12 +631,83 @@ async function federateRawChatCompletion(
     return buildSovereignKernelFallback(requestedModel, req);
   }
 
-  // Explicit provider / model prefix routing
+  // Explicit provider / model prefix routing (Keyless Vertex AI ADC first, then API key)
   if (
     requestedModel.startsWith("gemini-") ||
     requestedModel.startsWith("google/") ||
     req.provider === "google"
   ) {
+    const cleanModel = requestedModel.replace(/^google\//, "");
+    const minted = await mintGoogleAccessToken();
+    if (minted.token) {
+      try {
+        const vertexUrl = `https://aiplatform.googleapis.com/v1/projects/${encodeURIComponent(minted.projectId)}/locations/global/publishers/google/models/${encodeURIComponent(cleanModel)}:generateContent`;
+        const contents = req.messages
+          .filter((m) => m.role !== "system")
+          .map((m) => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: flattenContent(m.content) }],
+          }));
+        const res = await fetch(vertexUrl, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${minted.token}`,
+            "x-goog-user-project": minted.projectId,
+          },
+          body: JSON.stringify({
+            contents:
+              contents.length > 0
+                ? contents
+                : [{ role: "user", parts: [{ text: "Hello" }] }],
+            generationConfig: {
+              temperature: req.temperature ?? 0.2,
+              maxOutputTokens: req.max_tokens ?? 1024,
+            },
+          }),
+          signal: AbortSignal.timeout(15000),
+        });
+        if (res.ok) {
+          const data = (await res.json()) as {
+            candidates?: Array<{
+              content?: { parts?: Array<{ text?: string }> };
+            }>;
+          };
+          const text =
+            data.candidates?.[0]?.content?.parts
+              ?.map((p) => p.text ?? "")
+              .join("") ?? "";
+          if (text) {
+            const promptTokens = estimateTokens(
+              req.messages.map((m) => flattenContent(m.content)).join(" "),
+            );
+            const completionTokens = estimateTokens(text);
+            return {
+              id: `chatcmpl-${crypto.randomUUID()}`,
+              object: "chat.completion",
+              created: Math.floor(Date.now() / 1000),
+              model: cleanModel,
+              provider: "google-vertex-keyless",
+              choices: [
+                {
+                  index: 0,
+                  message: { role: "assistant", content: text },
+                  finish_reason: "stop",
+                },
+              ],
+              usage: {
+                prompt_tokens: promptTokens,
+                completion_tokens: completionTokens,
+                total_tokens: promptTokens + completionTokens,
+              },
+            };
+          }
+        }
+      } catch {
+        // Fall through to GEMINI_API_KEY
+      }
+    }
+
     const key = env.get("GEMINI_API_KEY") ?? env.get("GOOGLE_API_KEY");
     if (key) {
       try {
