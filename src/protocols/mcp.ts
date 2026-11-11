@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   getDesktopFfi,
@@ -8,6 +8,15 @@ import {
   runDesktopCli,
 } from "../ffi/desktop.ts";
 import { getCudaFfi, getPolyglotFfi } from "../ffi/polyglot.ts";
+import {
+  buildCanonicalSoulMarkdown,
+  DEFAULT_BRAIN_VAULT_DIR,
+} from "../nexus/brain-memory.ts";
+import { listActiveCollections } from "../nexus/skills-hub.ts";
+import {
+  executeUnifiedDomainTool,
+  UNIFIED_DOMAIN_TOOLS,
+} from "../nexus/unified-mcp.ts";
 import {
   inspectPolyglotEcosystem,
   runPythonPolyglotScan,
@@ -323,7 +332,37 @@ export const MCP_TOOLS: readonly McpToolDefinition[] = [
       },
     },
   },
+  ...UNIFIED_DOMAIN_TOOLS,
 ];
+
+export function getMcpToolsForProfile(
+  profile: "default" | "minimal" = "default",
+): readonly McpToolDefinition[] {
+  if (profile === "minimal") {
+    const minimalSet = new Set([
+      "os_atomic",
+      "desktop_snapshot",
+      "desktop_action",
+      "browser_navigate",
+      "browser_a11y_tree",
+      "skills_search",
+    ]);
+    return MCP_TOOLS.filter((t) => minimalSet.has(t.name));
+  }
+  // Context-optimized unified default: core OS tools + unified domain routers
+  const unifiedSet = new Set([
+    "os_atomic",
+    "desktop_snapshot",
+    "desktop_action",
+    "browser_navigate",
+    "browser_a11y_tree",
+    "monorepo_exec",
+    "sentinel_status",
+    "skills_search",
+    ...UNIFIED_DOMAIN_TOOLS.map((t) => t.name),
+  ]);
+  return MCP_TOOLS.filter((t) => unifiedSet.has(t.name));
+}
 
 export async function executeMcpTool(
   name: string,
@@ -688,6 +727,23 @@ export async function executeMcpTool(
       };
     }
 
+    const unifiedRes = await executeUnifiedDomainTool(name, rawArgs);
+    if (unifiedRes.handled) {
+      return {
+        isError: Boolean(unifiedRes.isError),
+        content: [
+          {
+            type: "text",
+            text:
+              typeof unifiedRes.payload === "string"
+                ? unifiedRes.payload
+                : JSON.stringify(unifiedRes.payload, null, 2),
+          },
+        ],
+        structured: unifiedRes.payload,
+      };
+    }
+
     return {
       isError: true,
       content: [{ type: "text", text: `Unknown MCP tool: ${name}` }],
@@ -723,6 +779,7 @@ export interface JsonRpcResponse {
 
 export async function dispatchMcpJsonRpc(
   msg: JsonRpcRequest,
+  profile: "default" | "minimal" = "default",
 ): Promise<JsonRpcResponse | null> {
   // JSON-RPC notifications (no id) return null
   if (msg.id === undefined) {
@@ -744,7 +801,7 @@ export async function dispatchMcpJsonRpc(
           },
           serverInfo: {
             name: "ai-os-sovereign-mcp",
-            version: "1.0.0",
+            version: "2.0.0",
           },
         },
       };
@@ -757,7 +814,7 @@ export async function dispatchMcpJsonRpc(
         jsonrpc: "2.0",
         id,
         result: {
-          tools: MCP_TOOLS,
+          tools: getMcpToolsForProfile(profile),
         },
       };
     }
@@ -783,6 +840,21 @@ export async function dispatchMcpJsonRpc(
         result: {
           resources: [
             {
+              uri: "soul://canonical",
+              name: "SOUL.md",
+              mimeType: "text/markdown",
+            },
+            {
+              uri: "brain://index",
+              name: "00 Unified Brain Index.md",
+              mimeType: "text/markdown",
+            },
+            {
+              uri: "skills://collections",
+              name: "Active Skill & MCP Collections",
+              mimeType: "application/json",
+            },
+            {
               uri: "file:///C:/src/ai-os/EXTRACTION_MANIFEST.json",
               name: "EXTRACTION_MANIFEST.json",
               mimeType: "application/json",
@@ -798,6 +870,32 @@ export async function dispatchMcpJsonRpc(
               mimeType: "text/markdown",
             },
           ],
+        },
+      };
+    }
+    case "resources/read": {
+      const uri = String(msg.params?.uri ?? "");
+      let text = "";
+      let mimeType = "text/markdown";
+      if (uri === "soul://canonical") {
+        text = buildCanonicalSoulMarkdown();
+      } else if (uri === "brain://index") {
+        const idxPath = `${DEFAULT_BRAIN_VAULT_DIR}/00 Unified Brain Index.md`;
+        text = existsSync(idxPath)
+          ? readFileSync(idxPath, "utf8")
+          : "# Unified Brain Index (run ai-os sync)";
+      } else if (uri === "skills://collections") {
+        mimeType = "application/json";
+        text = JSON.stringify(listActiveCollections(), null, 2);
+      } else if (uri.startsWith("file:///")) {
+        const localPath = uri.replace(/^file:\/\/\//, "");
+        text = existsSync(localPath) ? readFileSync(localPath, "utf8") : "";
+      }
+      return {
+        jsonrpc: "2.0",
+        id,
+        result: {
+          contents: [{ uri, mimeType, text }],
         },
       };
     }
@@ -921,7 +1019,11 @@ export async function handleMcpHttpRequest(req: Request): Promise<Response> {
   return Response.json(response, { headers: { "mcp-session-id": sessionId } });
 }
 
-export async function runMcpStdioServer(): Promise<void> {
+export async function runMcpStdioServer(
+  profile: "default" | "minimal" = "default",
+): Promise<void> {
+  const effectiveProfile =
+    process.env.AI_OS_MCP_PROFILE === "minimal" ? "minimal" : profile;
   const decoder = new TextDecoder();
   let buffer = "";
   for await (const chunk of Bun.stdin.stream()) {
@@ -933,19 +1035,10 @@ export async function runMcpStdioServer(): Promise<void> {
       if (!line) continue;
       try {
         const parsed = JSON.parse(line) as JsonRpcRequest;
-        const resp = await dispatchMcpJsonRpc(parsed);
+        const resp = await dispatchMcpJsonRpc(parsed, effectiveProfile);
         if (resp) {
           process.stdout.write(`${JSON.stringify(resp)}\n`);
         }
       } catch {
         process.stdout.write(
-          `${JSON.stringify({
-            jsonrpc: "2.0",
-            id: null,
-            error: { code: -32700, message: "Parse error" },
-          })}\n`,
-        );
-      }
-    }
-  }
-}
+          `${JSON.stringify

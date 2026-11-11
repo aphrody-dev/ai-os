@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T01:26:02.019Z",
+  "generatedAt": "2026-11-11T01:50:32.165Z",
   "bunVersion": "1.4.4",
   "dbPath": "C:/src/ai-os/sentinel.sqlite",
   "liveCount": 4,
@@ -22,8 +22,8 @@
       "latestVersion": "a044232078",
       "publishedAt": "2026-11-09T15:17:49Z",
       "detail": "Handle a null custom element registry when upgrading an element",
-      "latencyMs": 598.5,
-      "checkedAt": "2026-11-11T01:26:01.420Z"
+      "latencyMs": 382.1,
+      "checkedAt": "2026-11-11T01:50:31.783Z"
     },
     {
       "id": "linux-kernel-org",
@@ -34,9 +34,9 @@
       "latestVersion": "7.4-rc2",
       "publishedAt": "2026-11-09",
       "detail": "mainline=7.4-rc2, stable=7.3.4",
-      "latencyMs": 151,
+      "latencyMs": 74.8,
       "localParityNote": "mirror: C:/src/linux",
-      "checkedAt": "2026-11-11T01:26:01.421Z"
+      "checkedAt": "2026-11-11T01:50:31.783Z"
     },
     {
       "id": "chrome-win64-canary",
@@ -45,11 +45,11 @@
       "endpoint": "https://versionhistory.googleapis.com/v1/chrome/platforms/win64/channels/canary/versions?pageSize=1",
       "status": "live",
       "latestVersion": "159.0.8154.2",
-      "publishedAt": "2026-11-11T01:26:01.651Z",
+      "publishedAt": "2026-11-11T01:50:31.992Z",
       "detail": "chrome/platforms/win64/channels/canary/versions/159.0.8154.2",
-      "latencyMs": 230,
+      "latencyMs": 209.1,
       "localParityNote": "bun-parity v1.4.4: 100% patched / 71% native",
-      "checkedAt": "2026-11-11T01:26:01.421Z"
+      "checkedAt": "2026-11-11T01:50:31.783Z"
     },
     {
       "id": "aosp-platform-build",
@@ -58,10 +58,10 @@
       "endpoint": "https://android.googlesource.com/platform/build/+refs/tags?format=JSON",
       "status": "live",
       "latestVersion": "android-17.0.0_r1",
-      "publishedAt": "2026-11-11T01:26:01.661Z",
+      "publishedAt": "2026-11-11T01:50:31.992Z",
       "detail": "Total AOSP tags=2691; recent=android-16.0.0_r2, android-16.0.0_r3, android-16.0.0_r4, android-17.0.0_r1 (Android 17 Baklava active; Android 18 API preview tracked)",
-      "latencyMs": 240.3,
-      "checkedAt": "2026-11-11T01:26:01.421Z"
+      "latencyMs": 208.8,
+      "checkedAt": "2026-11-11T01:50:31.783Z"
     }
   ]
 }

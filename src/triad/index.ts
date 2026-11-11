@@ -288,7 +288,8 @@ function inspectJsonKeysOnly(filePath: string): {
   sizeBytes: number;
   topKeys: string[];
 } {
-  if (!existsSync(filePath)) return { exists: false, sizeBytes: 0, topKeys: [] };
+  if (!existsSync(filePath))
+    return { exists: false, sizeBytes: 0, topKeys: [] };
   try {
     const st = statSync(filePath);
     const parsed = JSON.parse(readFileSync(filePath, "utf8")) as Record<
@@ -353,7 +354,9 @@ export async function inspectCrossAuthStatus(options?: {
       provider: "codex",
       label: "OpenAI Codex CLI",
       ready: codexCred.exists || Boolean(openAiKey),
-      mechanism: codexCred.exists ? "OAuth2 PKCE / Device Auth" : "OPENAI_API_KEY",
+      mechanism: codexCred.exists
+        ? "OAuth2 PKCE / Device Auth"
+        : "OPENAI_API_KEY",
       envStatus: `OPENAI_API_KEY=${redactSecret(openAiKey)}`,
       credentialStore: codexCred.exists ? "present" : "absent",
       details: codexCred.exists
@@ -363,8 +366,7 @@ export async function inspectCrossAuthStatus(options?: {
     {
       provider: "antigravity-gemini",
       label: "Google Antigravity, Gemini & Keyless ADC",
-      ready:
-        existsSync(agyStatePath) || adcInfo.exists || Boolean(geminiKey),
+      ready: existsSync(agyStatePath) || adcInfo.exists || Boolean(geminiKey),
       mechanism: adcInfo.exists
         ? "Keyless Google ADC + Antigravity Session"
         : "GEMINI_API_KEY",
@@ -505,7 +507,11 @@ export async function runCliSubprocess(
       const parsed = JSON.parse(rawOut) as Record<string, unknown>;
       structured = parsed;
       text = String(
-        parsed.result ?? parsed.response ?? parsed.output ?? parsed.text ?? rawOut,
+        parsed.result ??
+          parsed.response ??
+          parsed.output ??
+          parsed.text ??
+          rawOut,
       );
     } catch {
       // NDJSON fallback
@@ -576,9 +582,7 @@ export async function runAgent(
       ok: true,
       agent,
       model: req.model ?? agent,
-      output: redactSecretsFromText(
-        data.choices?.[0]?.message?.content ?? "",
-      ),
+      output: redactSecretsFromText(data.choices?.[0]?.message?.content ?? ""),
       exitCode: 0,
       durationMs: Date.now() - started,
     };
@@ -804,10 +808,9 @@ export function syncUnifiedAgentHomes(options?: {
   if (existsSync(claudeRootPath)) {
     backupOnce(claudeRootPath, backupsCreated);
     try {
-      const rootObj = JSON.parse(readFileSync(claudeRootPath, "utf8")) as Record<
-        string,
-        unknown
-      >;
+      const rootObj = JSON.parse(
+        readFileSync(claudeRootPath, "utf8"),
+      ) as Record<string, unknown>;
       rootObj.mcpServers = singleClaudeMcp;
       writeFileSync(
         claudeRootPath,
@@ -854,9 +857,9 @@ ${CODEX_END}`;
         ]
           .filter(Boolean)
           .join("\n\n") + "\n"
-      : (existingCodex.trim()
-          ? `${existingCodex.trim()}\n\n${codexBlock}\n`
-          : `${codexBlock}\n`);
+      : existingCodex.trim()
+        ? `${existingCodex.trim()}\n\n${codexBlock}\n`
+        : `${codexBlock}\n`;
   writeFileSync(codexConfigPath, nextCodex, "utf8");
   updatedFiles.push(codexConfigPath);
 

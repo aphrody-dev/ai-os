@@ -56,17 +56,24 @@ declare const Bun: {
   spawn(
     cmd: string[],
     options?: {
-      stdout?: "pipe" | "inherit";
-      stderr?: "pipe" | "inherit";
+      stdin?:
+        "pipe" | "inherit" | Uint8Array | ReadableStream<Uint8Array> | null;
+      stdout?: "pipe" | "inherit" | "ignore";
+      stderr?: "pipe" | "inherit" | "ignore";
       cwd?: string;
+      env?: Record<string, string | undefined>;
+      timeout?: number;
     },
   ): SovereignAsyncProc;
   spawnSync(
     cmd: string[],
     options?: {
-      stdout?: "pipe" | "inherit";
-      stderr?: "pipe" | "inherit";
+      stdin?: "pipe" | "inherit" | Uint8Array | null;
+      stdout?: "pipe" | "inherit" | "ignore";
+      stderr?: "pipe" | "inherit" | "ignore";
       cwd?: string;
+      env?: Record<string, string | undefined>;
+      timeout?: number;
     },
   ): SovereignSpawnResult;
 };
