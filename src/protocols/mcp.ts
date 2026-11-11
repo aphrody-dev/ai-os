@@ -608,7 +608,10 @@ export async function executeMcpTool(
 
       let scores: Float32Array;
       let usedBackend = "none";
-      if ((backend === "cuda" || (backend === "auto" && cArr.length >= 4096)) && cuda) {
+      if (
+        (backend === "cuda" || (backend === "auto" && cArr.length >= 4096)) &&
+        cuda
+      ) {
         scores = cuda.cosineRagBatch(qArr, cArr, dim);
         usedBackend = "cuda_sm89";
       } else if (poly) {
@@ -655,7 +658,9 @@ export async function executeMcpTool(
       } else {
         return {
           isError: true,
-          content: [{ type: "text", text: "No native abliteration FFI loaded" }],
+          content: [
+            { type: "text", text: "No native abliteration FFI loaded" },
+          ],
         };
       }
       const payload = {

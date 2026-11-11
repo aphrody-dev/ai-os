@@ -125,7 +125,11 @@ export interface SovereignCudaBinding {
   readonly dllPath: string;
   readonly abiVersion: number;
   scanAndBench(quickMode?: boolean): CudaSm89Telemetry;
-  cosineRagBatch(query: Float32Array, corpus: Float32Array, dim: number): Float32Array;
+  cosineRagBatch(
+    query: Float32Array,
+    corpus: Float32Array,
+    dim: number,
+  ): Float32Array;
   hereticAbliterateInPlace(
     weights: Float32Array,
     refusalDir: Float32Array,
@@ -133,7 +137,13 @@ export interface SovereignCudaBinding {
     inFeatures: number,
     scale?: number,
   ): number;
-  rmsNorm(x: Float32Array, weight: Float32Array, rows: number, hiddenDim: number, eps?: number): Float32Array;
+  rmsNorm(
+    x: Float32Array,
+    weight: Float32Array,
+    rows: number,
+    hiddenDim: number,
+    eps?: number,
+  ): Float32Array;
   close(): void;
 }
 
@@ -141,7 +151,11 @@ export interface SovereignPolyglotBinding {
   readonly dllPath: string;
   readonly abiVersion: number;
   dotProductF32(a: Float32Array, b: Float32Array): number;
-  cosineRagBatch(query: Float32Array, corpus: Float32Array, dim: number): Float32Array;
+  cosineRagBatch(
+    query: Float32Array,
+    corpus: Float32Array,
+    dim: number,
+  ): Float32Array;
   hereticAbliterateInPlace(
     weights: Float32Array,
     refusalDir: Float32Array,
@@ -333,23 +347,11 @@ export function getPolyglotFfi(): SovereignPolyglotBinding | null {
       returns: FFIType.f32,
     },
     sov_polyglot_cosine_rag_batch: {
-      args: [
-        FFIType.ptr,
-        FFIType.ptr,
-        FFIType.ptr,
-        FFIType.u64,
-        FFIType.u64,
-      ],
+      args: [FFIType.ptr, FFIType.ptr, FFIType.ptr, FFIType.u64, FFIType.u64],
       returns: FFIType.i32,
     },
     sov_polyglot_heretic_abliterate: {
-      args: [
-        FFIType.ptr,
-        FFIType.ptr,
-        FFIType.u64,
-        FFIType.u64,
-        FFIType.f32,
-      ],
+      args: [FFIType.ptr, FFIType.ptr, FFIType.u64, FFIType.u64, FFIType.f32],
       returns: FFIType.i32,
     },
     sov_polyglot_inspect_safetensors: {

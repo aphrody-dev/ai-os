@@ -43,6 +43,9 @@ declare const Bun: {
       encoding: "hex" | "base64",
     ): string;
   };
+  which(bin: string): string | null;
+  nanoseconds(): number;
+  plugin(spec: unknown): void;
   file(path: string): { text(): Promise<string> };
   serve(options: {
     port?: number;
@@ -90,6 +93,7 @@ declare module "node:fs" {
     options?: { recursive?: boolean },
   ): string | undefined;
   export function readFileSync(path: string, encoding: "utf8"): string;
+  export function readFileSync(path: string): Uint8Array;
   export function writeFileSync(
     path: string,
     data: string | Uint8Array,
@@ -132,6 +136,8 @@ declare module "bun:ffi" {
     readonly i32: "i32";
     readonly u32: "u32";
     readonly u64: "u64";
+    readonly f32: "f32";
+    readonly f64: "f64";
     readonly ptr: "ptr";
   };
 
@@ -170,12 +176,36 @@ declare module "bun:sqlite" {
       filename: string,
       options?: { create?: boolean; readonly?: boolean },
     );
+    exec(sql: string): void;
     run(sql: string, ...bindings: unknown[]): void;
+    query<ResultType = unknown, ParamsType extends unknown[] = unknown[]>(
+      sql: string,
+    ): Statement<ResultType, ParamsType>;
     prepare<ResultType = unknown, ParamsType extends unknown[] = unknown[]>(
       sql: string,
     ): Statement<ResultType, ParamsType>;
+    transaction<Args extends unknown[], Ret>(
+      fn: (...args: Args) => Ret,
+    ): (...args: Args) => Ret;
     close(throwOnError?: boolean): void;
   }
+}
+
+declare module "bun" {
+  export interface BunPlugin {
+    name: string;
+    setup(build: {
+      onResolve(
+        opts: { filter: RegExp },
+        cb: (args: { path: string }) => { path: string; namespace?: string },
+      ): void;
+      onLoad(
+        opts: { filter: RegExp; namespace?: string },
+        cb: (args: { path: string }) => { loader: string; contents: string },
+      ): void;
+    }): void;
+  }
+  export function plugin(p: BunPlugin): void;
 }
 
 declare module "bun:test" {

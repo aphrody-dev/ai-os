@@ -33,7 +33,8 @@ export const OPEN_SOURCE_SYSTEM1_MODELS: readonly System1OpenSourceModelSpec[] =
       huggingFaceRepo: "microsoft/BitNet-b1.58-2B-4T",
       paramsBillions: 2.0,
       license: "MIT",
-      architecture: "Ternary {-1, 0, +1} 1.58-bit W1.58A8 Transformer (Zero FP32 Mul)",
+      architecture:
+        "Ternary {-1, 0, +1} 1.58-bit W1.58A8 Transformer (Zero FP32 Mul)",
       cpuSsdQuantization: "I2_S / TL2 (2-bit packed ternary)",
       ramFootprintMb: 420,
       corePrinciples: [
@@ -133,9 +134,7 @@ export const OPEN_SOURCE_SYSTEM1_MODELS: readonly System1OpenSourceModelSpec[] =
         "Strict separation between tool invocation and direct response",
         "JSON Schema adherence via logit-masking finite-state machines",
       ],
-      defenseMechanisms: [
-        "Schema-first type verification before execution",
-      ],
+      defenseMechanisms: ["Schema-first type verification before execution"],
       submoduleRef: "submodules/system1/functionary",
     },
     {
@@ -143,7 +142,8 @@ export const OPEN_SOURCE_SYSTEM1_MODELS: readonly System1OpenSourceModelSpec[] =
       huggingFaceRepo: "gorilla-llm/gorilla-openfunctions-v2",
       paramsBillions: 7.0,
       license: "Apache-2.0",
-      architecture: "AST-Evaluated Multi-Language API Dispatcher (BFCL Standard)",
+      architecture:
+        "AST-Evaluated Multi-Language API Dispatcher (BFCL Standard)",
       cpuSsdQuantization: "IQ4_XS + PowerInfer Cold-SSD Sparsity",
       ramFootprintMb: 3800,
       corePrinciples: [
@@ -160,8 +160,10 @@ export const OPEN_SOURCE_SYSTEM1_MODELS: readonly System1OpenSourceModelSpec[] =
       huggingFaceRepo: "Tiiny-AI/PowerInfer",
       paramsBillions: 3.0,
       license: "Apache-2.0",
-      architecture: "Power-Law Hot-RAM / Cold-NVMe-SSD Neuron Activation Engine",
-      cpuSsdQuantization: "Hot Neurons in DDR5 RAM + Cold Neurons mmap on NVMe SSD",
+      architecture:
+        "Power-Law Hot-RAM / Cold-NVMe-SSD Neuron Activation Engine",
+      cpuSsdQuantization:
+        "Hot Neurons in DDR5 RAM + Cold Neurons mmap on NVMe SSD",
       ramFootprintMb: 640,
       corePrinciples: [
         "Exploits power-law activation sparsity (>80% neurons inactive per query)",
@@ -201,23 +203,28 @@ export interface DefenseVerdict {
 const FORBIDDEN_OS_PATTERNS: ReadonlyArray<{ id: string; regex: RegExp }> = [
   {
     id: "WINDOWS_SYSTEM32_IMMUTABLE",
-    regex: /(?:c:[/\\]+windows[/\\]+system32|[/\\]system32[/\\]|syswow64[/\\])/i,
+    regex:
+      /(?:c:[/\\]+windows[/\\]+system32|[/\\]system32[/\\]|syswow64[/\\])/i,
   },
   {
     id: "PATH_TRAVERSAL_SENSITIVE",
-    regex: /(?:\.\.[/\\]){2,}(?:windows|etc[/\\](?:passwd|shadow)|users[/\\][^/\\]+[/\\]\.ssh)/i,
+    regex:
+      /(?:\.\.[/\\]){2,}(?:windows|etc[/\\](?:passwd|shadow)|users[/\\][^/\\]+[/\\]\.ssh)/i,
   },
   {
     id: "DESTRUCTIVE_DISK_WIPE",
-    regex: /\b(?:format-volume|diskpart\s+clean|rm\s+-rf\s+\/(?:\s|$)|del\s+\/[fqs]\s+c:\\windows)\b/i,
+    regex:
+      /\b(?:format-volume|diskpart\s+clean|rm\s+-rf\s+\/(?:\s|$)|del\s+\/[fqs]\s+c:\\windows)\b/i,
   },
   {
     id: "PROMPT_INJECTION_OVERRIDE",
-    regex: /(?:ignore\s+(?:all\s+)?previous\s+instructions\s+and\s+(?:delete|exfiltrate|exec)|<\|im_start\|>\s*system\s*override)/i,
+    regex:
+      /(?:ignore\s+(?:all\s+)?previous\s+instructions\s+and\s+(?:delete|exfiltrate|exec)|<\|im_start\|>\s*system\s*override)/i,
   },
   {
     id: "SECRET_EXFILTRATION",
-    regex: /(?:curl|wget|invoke-webrequest)\b[^\n]*(?:\.env|api_key|id_rsa|shadow)/i,
+    regex:
+      /(?:curl|wget|invoke-webrequest)\b[^\n]*(?:\.env|api_key|id_rsa|shadow)/i,
   },
 ];
 
@@ -315,7 +322,10 @@ export function buildLlamaCpuNoGpuLaunchSpec(options: {
   gbnfGrammar: string;
   zeroGpuGuaranteed: true;
 } {
-  const home = (process.env.USERPROFILE ?? "C:/Users/aphro").replace(/\\/g, "/");
+  const home = (process.env.USERPROFILE ?? "C:/Users/aphro").replace(
+    /\\/g,
+    "/",
+  );
   const binaryPath = `${home}/.local/bin/llama-cpu-nogpu/llama-server.exe`;
   const threads = options.threads ?? 16;
   const port = options.port ?? 8089;
@@ -602,7 +612,9 @@ export function decideSystem1(
       decision: "CLARIFY",
       toolOrApi: null,
       category: "clarification",
-      arguments: { message: "Empty input: provide an action, tool, or Bun intent." },
+      arguments: {
+        message: "Empty input: provide an action, tool, or Bun intent.",
+      },
       confidence: 1.0,
       latencyMs: Math.round((performance.now() - t0) * 1000) / 1000,
       engine: "custom-policy-router",
@@ -652,7 +664,10 @@ export function decideSystem1(
       toolOrApi: unmaskedName,
       category: "tool_call",
       arguments: customHit.args,
-      confidence: Math.min(0.99, Math.round((0.78 + customHit.score * 0.03) * 100) / 100),
+      confidence: Math.min(
+        0.99,
+        Math.round((0.78 + customHit.score * 0.03) * 100) / 100,
+      ),
       latencyMs: Math.round((performance.now() - t0) * 1000) / 1000,
       engine: "custom-policy-router",
       zeroGpu: true,
@@ -743,17 +758,14 @@ export function decideSystem1(
 
   const margin = Math.max(0, bestLogit - Math.max(0, secondLogit));
   const confidence =
-    Math.round(Math.min(0.99, 0.62 + Math.tanh(bestLogit * 0.9 + margin) * 0.37) * 1000) /
-    1000;
+    Math.round(
+      Math.min(0.99, 0.62 + Math.tanh(bestLogit * 0.9 + margin) * 0.37) * 1000,
+    ) / 1000;
   const threshold = options.confidenceThreshold ?? 0.58;
   const chosenClass = BUN_SYSTEM1_ACTION_CLASSES[bestIdx]!;
 
   const bunDocsRefs = options.includeBunDocsRefs
-    ? queryBunMdxFts5(
-        `${chosenClass.canonicalApi} ${trimmed}`,
-        3,
-        aiOsRoot,
-      )
+    ? queryBunMdxFts5(`${chosenClass.canonicalApi} ${trimmed}`, 3, aiOsRoot)
     : undefined;
 
   const decisionKind: System1DecisionKind =

@@ -742,6 +742,33 @@ async function federateRawChatCompletion(
   return buildSovereignKernelFallback(requestedModel, req);
 }
 
+export async function federateChatCompletion(
+  req: ChatCompletionRequest,
+): Promise<ChatCompletionResponse> {
+  const res = await federateRawChatCompletion(req);
+  const wantDecide =
+    req.decision_mode === true || (req.model ?? "").endsWith(":decide");
+  if (!wantDecide) return res;
+
+  const rawText = res.choices[0]?.message.content ?? "";
+  const envelope = convertVerboseLlmToDecision(rawText, {
+    tools: req.tools,
+    includeBunDocsRefs: true,
+  });
+  const serialized = JSON.stringify(envelope);
+  return {
+    ...res,
+    choices: [
+      {
+        index: 0,
+        message: { role: "assistant", content: serialized },
+        finish_reason:
+          envelope.decision === "CALL_TOOL" ? "tool_calls" : "stop",
+      },
+    ],
+  };
+}
+
 export function createOpenAiSseStream(
   completion: ChatCompletionResponse,
 ): ReadableStream<Uint8Array> {

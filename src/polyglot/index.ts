@@ -57,16 +57,19 @@ export interface PolyglotEcosystemReport {
   };
 }
 
-function quickVersion(binPath: string, args = ["--version"]): string | undefined {
+function quickVersion(
+  binPath: string,
+  args = ["--version"],
+): string | undefined {
   if (!existsSync(binPath)) return undefined;
   try {
     const proc = Bun.spawnSync([binPath, ...args], {
       stdout: "pipe",
       stderr: "pipe",
     });
+    const dec = new TextDecoder();
     const out =
-      proc.stdout.toString("utf8").trim() ||
-      proc.stderr.toString("utf8").trim();
+      dec.decode(proc.stdout).trim() || dec.decode(proc.stderr).trim();
     const firstLine = out.split(/\r?\n/)[0]?.trim();
     return firstLine || undefined;
   } catch {
@@ -93,11 +96,13 @@ function resolveToolBinary(name: string, candidates: string[]): BinaryStatus {
   };
 }
 
-export function inspectPolyglotEcosystem(options: {
-  quickGpu?: boolean;
-  aiOsRoot?: string;
-} = {}): PolyglotEcosystemReport {
-  const root = resolve(options.aiOsRoot ?? "C:/src/ai-os");
+export function inspectPolyglotEcosystem(
+  options: {
+    quickGpu?: boolean;
+    aiOsRoot?: string;
+  } = {},
+): PolyglotEcosystemReport {
+  const root = resolve(options.aiOsRoot ?? "C:/src/packages/ai-os");
   const manifestPath = resolve(root, "SUBMODULES_ECOSYSTEM_MANIFEST.json");
 
   let submodulesSummary = {
@@ -132,7 +137,10 @@ export function inspectPolyglotEcosystem(options: {
     : { ok: false as const, detail: "sovereign_cuda_sm89.dll not loaded" };
 
   // Astral + CPython 3.15 + Free-Threaded 3.15t
-  const home = (process.env.USERPROFILE ?? "C:/Users/aphro").replace(/\\/g, "/");
+  const home = (process.env.USERPROFILE ?? "C:/Users/aphro").replace(
+    /\\/g,
+    "/",
+  );
   const uvBin = resolveToolBinary("uv", [
     `${home}/AppData/Local/Microsoft/WinGet/Links/uv.exe`,
     `${home}/.local/bin/uv.exe`,
@@ -216,9 +224,18 @@ export function inspectPolyglotEcosystem(options: {
 
     const q = new Float32Array([1, 0, 0, 0]);
     const corpus = new Float32Array([
-      0, 1, 0, 0, // doc 0 -> 0.0
-      0.9, 0.1, 0, 0, // doc 1 -> ~0.9938 (top)
-      -1, 0, 0, 0, // doc 2 -> -1.0
+      0,
+      1,
+      0,
+      0, // doc 0 -> 0.0
+      0.9,
+      0.1,
+      0,
+      0, // doc 1 -> ~0.9938 (top)
+      -1,
+      0,
+      0,
+      0, // doc 2 -> -1.0
     ]);
     const ragScores = polyFfi.cosineRagBatch(q, corpus, 4);
     let topIdx = 0;
@@ -247,7 +264,14 @@ export function inspectPolyglotEcosystem(options: {
     const scales = new Float32Array([p0.scale, p1.scale]);
     const hotMask = new Uint8Array([1, 0]); // row 0 active in RAM, row 1 cold skipped
     const actX = new Float32Array(32).fill(1.0);
-    const gemv = polyFfi.bitnetSparseGemv(packedMat, scales, hotMask, actX, 2, 32);
+    const gemv = polyFfi.bitnetSparseGemv(
+      packedMat,
+      scales,
+      hotMask,
+      actX,
+      2,
+      32,
+    );
 
     const trans = polyFfi.transduceVerboseToSystem1(
       '<think>verbose chain of thought</think>{"tool":"bun:sqlite","arguments":{"wal":true}}',

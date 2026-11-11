@@ -61,19 +61,7 @@ export function createPolicyRouter(
   };
 }
 
-declare global {
-  // Augment global Bun namespace so `Bun.decide(...)` and `Bun.transduceDecision(...)` are first-class citizens
-  namespace Bun {
-    function decide(
-      prompt: string,
-      options?: DecideSystem1Options,
-    ): System1DecisionEnvelope;
-    function transduceDecision(
-      rawVerboseOutput: string,
-      options?: DecideSystem1Options,
-    ): System1DecisionEnvelope;
-  }
-}
+// Bun.decide and Bun.transduceDecision runtime installation
 
 const GLOBAL_DECIDE_SYMBOL = Symbol.for("sovereign.bun.decide.runtime");
 
@@ -150,11 +138,9 @@ export const bunDecidePlugin: BunPlugin = {
       namespace: "bun-decide-virtual",
     }));
 
-    build.onLoad(
-      { filter: /.*/, namespace: "bun-decide-virtual" },
-      () => ({
-        loader: "js",
-        contents: `
+    build.onLoad({ filter: /.*/, namespace: "bun-decide-virtual" }, () => ({
+      loader: "js",
+      contents: `
 const bridge = globalThis[Symbol.for("sovereign.bun.decide.runtime")];
 export const decide = bridge.decideSystem1;
 export const transduce = bridge.convertVerboseLlmToDecision;
@@ -171,8 +157,7 @@ export default {
   OPEN_SOURCE_SYSTEM1_MODELS: bridge.OPEN_SOURCE_SYSTEM1_MODELS,
 };
 `,
-      }),
-    );
+    }));
 
     // 2. Compile declarative `*.decide.json` & `*.decide.toml` files into native System-1 routers
     build.onLoad({ filter: /\.decide\.(json|toml)$/i }, (args) => {

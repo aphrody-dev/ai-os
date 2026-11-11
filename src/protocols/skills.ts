@@ -52,11 +52,24 @@ function getScanRoots(): Array<{
       ecosystem: "google-deepmind",
       dir: join(home, ".gemini", "config", "plugins"),
     },
+    {
+      ecosystem: "google-deepmind",
+      dir: "C:/src/third_party/google-ecosystem",
+    },
     { ecosystem: "vercel-labs", dir: "C:/src/labs" },
+    { ecosystem: "vercel-labs", dir: "C:/src/third_party/labs" },
     { ecosystem: "anthropic-claude", dir: join(home, ".claude") },
     { ecosystem: "opencode", dir: join(home, ".config", "opencode") },
     { ecosystem: "agent-browser", dir: "C:/src/agent-browser/skills" },
+    {
+      ecosystem: "agent-browser",
+      dir: "C:/src/third_party/agent-browser/skills",
+    },
     { ecosystem: "agent-desktop", dir: "C:/src/agent-desktop/skills" },
+    {
+      ecosystem: "agent-desktop",
+      dir: "C:/src/third_party/agent-desktop/skills",
+    },
     { ecosystem: "sovereign-monorepo", dir: "C:/src/.agents" },
   ];
 }
