@@ -388,13 +388,14 @@ export function getPolyglotFfi(): SovereignPolyglotBinding | null {
     },
   });
 
-  const readAndFreeJson = <T>(rawPtr: Pointer | null): T => {
+  const readAndFreeJson = <T>(rawPtr: Pointer | bigint | null): T => {
     if (!rawPtr) return { ok: false, error: "null pointer" } as T;
+    const p = rawPtr as Pointer;
     try {
-      const str = new CString(rawPtr).toString();
+      const str = new CString(p).toString();
       return JSON.parse(str) as T;
     } finally {
-      lib.symbols.sov_polyglot_free_string(rawPtr);
+      lib.symbols.sov_polyglot_free_string(p);
     }
   };
 

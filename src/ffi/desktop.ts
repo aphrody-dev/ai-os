@@ -206,7 +206,7 @@ export function getDesktopFfi(
     if (!adapterPtr) {
       throw new Error(`ad_adapter_create failed: ${readLastError()}`);
     }
-    return adapterPtr;
+    return adapterPtr as Pointer;
   };
 
   const binding: DesktopFfiBinding = {

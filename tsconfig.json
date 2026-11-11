@@ -11,7 +11,7 @@
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": []
+    "types": ["bun"]
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["dist", "node_modules", "submodules"]
