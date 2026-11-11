@@ -23,7 +23,11 @@ export type N2bReaOperation =
   | "ghidra_decompile"
   | "dotnet"
   | "mingw_rea"
-  | "replica_blueprint";
+  | "replica_blueprint"
+  | "level5_formats"
+  | "level5_decode"
+  | "pdata_sre"
+  | "rtti_dump";
 
 export interface ReplicaStageSpec {
   stage: number;
@@ -159,6 +163,105 @@ export async function runN2bReaAction(
       cliArgs = ["mingw", String(args.action ?? "doctor"), "--json"];
       if (args.binary) cliArgs.push("--binary", String(args.binary));
       break;
+    case "level5_formats": {
+      const nieBin = join(homedir(), ".local", "bin", "nie.exe");
+      const targetPath = String(
+        args.path ??
+          args.source ??
+          "C:/src/apps/rosegriffon/crates/aphrody-nie-formats",
+      );
+      if (existsSync(nieBin)) {
+        const nieProc = Bun.spawnSync([nieBin, "format", targetPath], {
+          stdout: "pipe",
+          stderr: "pipe",
+          timeout: 25_000,
+        });
+        const out = new TextDecoder().decode(nieProc.stdout).trim();
+        const err = new TextDecoder().decode(nieProc.stderr).trim();
+        return {
+          ok: nieProc.exitCode === 0,
+          engine: "nie.exe",
+          exitCode: nieProc.exitCode,
+          target: targetPath,
+          stdout: out,
+          stderr: err,
+        };
+      }
+      cliArgs = ["scan", targetPath, "--json"];
+      break;
+    }
+    case "level5_decode": {
+      const nieBin = join(homedir(), ".local", "bin", "nie.exe");
+      const srcFile = String(args.file ?? args.source ?? "");
+      if (existsSync(nieBin) && srcFile) {
+        const nieArgs = ["decode", srcFile];
+        if (args.out) nieArgs.push("-o", String(args.out));
+        const nieProc = Bun.spawnSync([nieBin, ...nieArgs], {
+          stdout: "pipe",
+          stderr: "pipe",
+          timeout: 30_000,
+        });
+        const out = new TextDecoder().decode(nieProc.stdout).trim();
+        const err = new TextDecoder().decode(nieProc.stderr).trim();
+        return {
+          ok: nieProc.exitCode === 0,
+          engine: "nie.exe",
+          exitCode: nieProc.exitCode,
+          source: srcFile,
+          stdout: out,
+          stderr: err,
+        };
+      }
+      return { ok: false, error: "Missing source file or nie.exe unavailable" };
+    }
+    case "pdata_sre": {
+      const nieBin = join(homedir(), ".local", "bin", "nie.exe");
+      const exePath = String(args.binary ?? args.exe ?? "");
+      if (existsSync(nieBin) && exePath) {
+        const pdataArgs = ["pdata", "--exe", exePath];
+        if (args.db) pdataArgs.push("--db", String(args.db));
+        const nieProc = Bun.spawnSync([nieBin, ...pdataArgs], {
+          stdout: "pipe",
+          stderr: "pipe",
+          timeout: 45_000,
+        });
+        const out = new TextDecoder().decode(nieProc.stdout).trim();
+        const err = new TextDecoder().decode(nieProc.stderr).trim();
+        return {
+          ok: nieProc.exitCode === 0,
+          engine: "nie.exe",
+          exitCode: nieProc.exitCode,
+          binary: exePath,
+          stdout: out,
+          stderr: err,
+        };
+      }
+      return { ok: false, error: "Missing binary path or nie.exe unavailable" };
+    }
+    case "rtti_dump": {
+      const nieBin = join(homedir(), ".local", "bin", "nie.exe");
+      const exePath = String(args.binary ?? args.exe ?? "");
+      if (existsSync(nieBin) && exePath) {
+        const rttiArgs = ["rtti", "--exe", exePath];
+        if (args.db) rttiArgs.push("--db", String(args.db));
+        const nieProc = Bun.spawnSync([nieBin, ...rttiArgs], {
+          stdout: "pipe",
+          stderr: "pipe",
+          timeout: 45_000,
+        });
+        const out = new TextDecoder().decode(nieProc.stdout).trim();
+        const err = new TextDecoder().decode(nieProc.stderr).trim();
+        return {
+          ok: nieProc.exitCode === 0,
+          engine: "nie.exe",
+          exitCode: nieProc.exitCode,
+          binary: exePath,
+          stdout: out,
+          stderr: err,
+        };
+      }
+      return { ok: false, error: "Missing binary path or nie.exe unavailable" };
+    }
   }
 
   const proc = Bun.spawnSync([bin, ...cliArgs], {
@@ -524,7 +627,7 @@ export async function queryContext7Unified(options: {
   if (apiKey) headers.authorization = `Bearer ${apiKey}`;
 
   const db = openNexusDb(options.dbPath ?? DEFAULT_NEXUS_DB_PATH);
-  db.exec(`
+  db.run(`
     CREATE TABLE IF NOT EXISTS context7_cache (
       cache_key TEXT PRIMARY KEY,
       payload_json TEXT NOT NULL,

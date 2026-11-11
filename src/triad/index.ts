@@ -228,6 +228,18 @@ export function resolveBinaryCatalog(home = homedir()): Record<
       configDir: isWin ? "C:\\src\\packages\\ai-os" : "/src/packages/ai-os",
       versionArgs: ["version"],
     },
+    nie: {
+      label: "Rose Griffon NIE RE & Engine CLI (Rust)",
+      executable: isWin ? join(localBin, "nie.exe") : join(localBin, "nie"),
+      configDir: isWin ? "C:\\src\\apps\\rosegriffon" : "/src/apps/rosegriffon",
+      versionArgs: ["--version"],
+    },
+    ie: {
+      label: "Rose Griffon Unified Bun CLI (ie/rg)",
+      executable: isWin ? join(localBin, "ie.cmd") : join(localBin, "ie"),
+      configDir: isWin ? "C:\\src\\apps\\rosegriffon" : "/src/apps/rosegriffon",
+      versionArgs: ["--version"],
+    },
   };
 }
 

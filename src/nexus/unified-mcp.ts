@@ -11,6 +11,16 @@ import {
   runN2bReaAction,
 } from "../extracted/index.ts";
 import { getCudaFfi } from "../ffi/polyglot.ts";
+import { runObjectiveStackBenchmark } from "../benchmark/arena.ts";
+import {
+  distillAphrodyAndVendorEcosystem,
+  garbageCollectNixStore,
+  listNixDerivations,
+  listNixGenerations,
+  rollbackNixGeneration,
+} from "../nix/store.ts";
+import { AiPosixOs, POSIX_BUILTINS } from "../posix/unix-os.ts";
+import { inspectWasmAndWebGpuCapabilities } from "../wasm-webgpu/index.ts";
 import {
   inspectCrossAuthStatus,
   runAgent,
@@ -30,6 +40,10 @@ import {
   redactSecretsFromText,
   stripEmojis,
 } from "./security.ts";
+import {
+  executeRosegriffonOps,
+  type RosegriffonAction,
+} from "./rosegriffon.ts";
 import {
   installSkillCollection,
   listActiveCollections,
@@ -249,7 +263,7 @@ export const UNIFIED_DOMAIN_TOOLS: readonly CompactToolDefinition[] = [
   {
     name: "n2b_rea",
     description:
-      "Extracted n2b + Ghidra SRE + Replica clean-room router: scan, ripgrep, ast, migrate, llvm, ghidra_decompile, dotnet, mingw_rea, replica_blueprint.",
+      "Extracted n2b + Ghidra SRE + Replica clean-room router + Level-5/NIE formats: scan, ripgrep, ast, migrate, llvm, ghidra_decompile, dotnet, mingw_rea, replica_blueprint, level5_formats, level5_decode, pdata_sre, rtti_dump.",
     inputSchema: {
       type: "object",
       required: ["op"],
@@ -266,6 +280,10 @@ export const UNIFIED_DOMAIN_TOOLS: readonly CompactToolDefinition[] = [
             "dotnet",
             "mingw_rea",
             "replica_blueprint",
+            "level5_formats",
+            "level5_decode",
+            "pdata_sre",
+            "rtti_dump",
           ],
         },
         path: { type: "string" },
@@ -274,6 +292,59 @@ export const UNIFIED_DOMAIN_TOOLS: readonly CompactToolDefinition[] = [
         source: { type: "string" },
         binary: { type: "string" },
         target: { type: "string" },
+        exe: { type: "string" },
+        db: { type: "string" },
+        out: { type: "string" },
+      },
+    },
+  },
+  {
+    name: "rosegriffon_ops",
+    description:
+      "Execute sovereign Rose Griffon platform operations, nie.exe / ie.cmd invocations, WASM verification, VFS exploration, and Next.js rg-website deploy checks across C:\\src\\apps\\rosegriffon.",
+    inputSchema: {
+      type: "object",
+      required: ["action"],
+      properties: {
+        action: {
+          type: "string",
+          enum: [
+            "status",
+            "check",
+            "test",
+            "nie_cli",
+            "ie_cli",
+            "wasm_verify",
+            "vfs_inspect",
+            "deploy_check",
+          ],
+        },
+        args: {
+          type: "array",
+          items: { type: "string" },
+          description: "Optional CLI arguments for nie_cli or ie_cli.",
+        },
+        target: {
+          type: "string",
+          description: "Optional test file or target path.",
+        },
+        subcommand: {
+          type: "string",
+          description:
+            "VFS subcommand (e.g. info, ls, find, stat, formats, chara).",
+        },
+        prefix: {
+          type: "string",
+          description: "VFS path prefix for ls or extraction.",
+        },
+        gameDir: {
+          type: "string",
+          description: "Optional custom game directory containing CPKs.",
+        },
+        timeoutMs: {
+          type: "integer",
+          description: "Execution timeout in milliseconds.",
+        },
       },
     },
   },
@@ -308,7 +379,58 @@ export const UNIFIED_DOMAIN_TOOLS: readonly CompactToolDefinition[] = [
       },
     },
   },
+  {
+    name: "posix_os",
+    description:
+      "POSIX/Unix OS for LLMs & Decision Models (uutils + brush + just-bash + litebox VFS + WASM32): pipelines, redirections, /etc, /proc, /nix/store, /mnt/src.",
+    inputSchema: {
+      type: "object",
+      required: ["command"],
+      properties: {
+        command: { type: "string" },
+        enableHostMount: { type: "boolean", default: true },
+      },
+    },
+  },
+  {
+    name: "nix_store",
+    description:
+      "NixOS declarative content-addressed /nix/store manager & vendor distiller: status, distill, generations, rollback, gc.",
+    inputSchema: {
+      type: "object",
+      required: ["action"],
+      properties: {
+        action: {
+          type: "string",
+          enum: ["status", "distill", "generations", "rollback", "gc"],
+        },
+        generation: { type: "integer" },
+      },
+    },
+  },
+  {
+    name: "stack_benchmark",
+    description:
+      "Objective AI/LLM & polyglot compute benchmark (Rust, Bun TS, Rust/Zig WASM32, WebGPU WGSL, CUDA sm_89, providers).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        iterations: { type: "integer", default: 15 },
+        writeReport: { type: "boolean", default: false },
+      },
+    },
+  },
 ];
+
+let sharedPosixSession: AiPosixOs | null = null;
+function getSharedPosixSession(enableHostMount = true): AiPosixOs {
+  if (!sharedPosixSession && enableHostMount) {
+    sharedPosixSession = new AiPosixOs({ enableHostMount: true });
+  }
+  return enableHostMount
+    ? sharedPosixSession!
+    : new AiPosixOs({ enableHostMount: false });
+}
 
 async function callRemoteMcpTool(
   endpointUrl: string,
@@ -921,6 +1043,14 @@ export async function executeUnifiedDomainTool(
     return { handled: true, payload };
   }
 
+  if (toolName === "rosegriffon_ops") {
+    const payload = await executeRosegriffonOps(
+      String(args.action ?? "status") as RosegriffonAction,
+      args,
+    );
+    return { handled: true, payload };
+  }
+
   if (toolName === "brain_memory_soul") {
     const action = String(args.action ?? "soul");
     if (action === "soul") {
@@ -985,6 +1115,56 @@ export async function executeUnifiedDomainTool(
         payload: searchUnifiedSkills(String(args.query ?? "")),
       };
     }
+  }
+
+  if (toolName === "posix_os") {
+    const posix = getSharedPosixSession(args.enableHostMount !== false);
+    const res = posix.exec(String(args.command ?? "uname -a"));
+    return {
+      handled: true,
+      payload: {
+        ...res,
+        builtinsCount: POSIX_BUILTINS.length,
+      },
+    };
+  }
+
+  if (toolName === "nix_store") {
+    const action = String(args.action ?? "status");
+    if (action === "distill") {
+      return { handled: true, payload: distillAphrodyAndVendorEcosystem() };
+    }
+    if (action === "generations") {
+      return {
+        handled: true,
+        payload: { generations: listNixGenerations() },
+      };
+    }
+    if (action === "rollback") {
+      return {
+        handled: true,
+        payload: rollbackNixGeneration(Number(args.generation ?? 1)),
+      };
+    }
+    if (action === "gc") {
+      return { handled: true, payload: garbageCollectNixStore() };
+    }
+    return {
+      handled: true,
+      payload: {
+        derivations: listNixDerivations(),
+        generations: listNixGenerations(),
+        wasmWebGpu: inspectWasmAndWebGpuCapabilities(),
+      },
+    };
+  }
+
+  if (toolName === "stack_benchmark") {
+    const report = await runObjectiveStackBenchmark({
+      iterations: typeof args.iterations === "number" ? args.iterations : 15,
+      writeReport: Boolean(args.writeReport),
+    });
+    return { handled: true, payload: report };
   }
 
   return { handled: false };

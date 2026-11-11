@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { homedir } from "node:os";
+import { join, resolve } from "node:path";
 import {
   getDesktopFfi,
   resolveBrowserCliPath,
@@ -341,6 +342,7 @@ export function getMcpToolsForProfile(
   if (profile === "minimal") {
     const minimalSet = new Set([
       "os_atomic",
+      "posix_os",
       "desktop_snapshot",
       "desktop_action",
       "browser_navigate",
@@ -499,6 +501,9 @@ export async function executeMcpTool(
           wckDir: existsSync("C:/src/wck"),
           depotDir: existsSync("C:/src/depot"),
           ring3AgentDir: existsSync("C:/src/ring3-agent"),
+          rosegriffonDir: existsSync("C:/src/apps/rosegriffon"),
+          nieBin: existsSync(join(homedir(), ".local", "bin", "nie.exe")),
+          ieCmd: existsSync(join(homedir(), ".local", "bin", "ie.cmd")),
         };
         return {
           content: [{ type: "text", text: JSON.stringify(info, null, 2) }],

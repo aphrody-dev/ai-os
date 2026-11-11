@@ -1,4 +1,7 @@
 #!/usr/bin/env bun
+import { existsSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { getSovereignEnv } from "./env.ts";
 import { runExtraction } from "./extractor.ts";
 import {
@@ -27,6 +30,20 @@ import { probeLocalProviders } from "./providers/federation.ts";
 import { runSentinelSync } from "./sentinel/index.ts";
 import { startAiOsServer } from "./server.ts";
 import { syncUnifiedAgentHomes } from "./triad/index.ts";
+import { runObjectiveStackBenchmark } from "./benchmark/arena.ts";
+import {
+  distillAphrodyAndVendorEcosystem,
+  garbageCollectNixStore,
+  listNixDerivations,
+  listNixGenerations,
+  rollbackNixGeneration,
+} from "./nix/store.ts";
+import { AiPosixOs } from "./posix/unix-os.ts";
+import { inspectWasmAndWebGpuCapabilities } from "./wasm-webgpu/index.ts";
+import {
+  executeRosegriffonOps,
+  type RosegriffonAction,
+} from "./nexus/rosegriffon.ts";
 
 function parseFlag(args: string[], flag: string): string | undefined {
   const eqPrefix = `${flag}=`;
@@ -55,6 +72,11 @@ Usage:
   ai-os doctor                                   Verify native binaries, FFI ABI, providers & skills
   ai-os polyglot-doctor [--python] [--full-gpu]  Probe 86 submodules, CUDA sm_89, Astral/PyO3 & Tree-sitter
   ai-os cuda-scan [--full]                       Run bare-metal RTX 4070 sm_89 CUDA 13.4 benchmark
+  ai-os posix "<pipeline>"                       Execute POSIX/Unix OS command or pipeline for LLMs
+  ai-os nix <distill|status|generations|rollback|gc> Manage NixOS /nix/store & vendor distillation
+  ai-os rosegriffon <status|check|test|wasm|vfs|deploy> Rose Griffon platform operations & verification
+  ai-os benchmark [--write]                      Run objective AI/LLM & polyglot stack benchmark
+  ai-os wasm-doctor                              Inspect embedded Rust/Zig WASM32 & WebGPU WGSL kernels
   ai-os version                                  Print version JSON`);
 }
 
@@ -238,6 +260,11 @@ async function main(): Promise<void> {
             : { loaded: false },
           skillsIndexed: registry.totalSkills,
           hooksIndexed: registry.totalHooks,
+          rosegriffon: {
+            workspace: existsSync("C:/src/apps/rosegriffon"),
+            nie: existsSync(join(homedir(), ".local", "bin", "nie.exe")),
+            ie: existsSync(join(homedir(), ".local", "bin", "ie.cmd")),
+          },
           providers: providers.map((p) => ({
             id: p.id,
             kind: p.kind,
@@ -278,6 +305,92 @@ async function main(): Promise<void> {
     const telemetry = cuda.scanAndBench(!full);
     console.log(JSON.stringify(telemetry, null, 2));
     cuda.close();
+    return;
+  }
+
+  if (subcommand === "posix") {
+    const cmdLine = argv.slice(1).join(" ") || "uname -a";
+    const posix = new AiPosixOs({ enableHostMount: true });
+    const res = posix.exec(cmdLine);
+    if (hasFlag(argv, "--json")) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      if (res.stdout) process.stdout.write(res.stdout);
+      if (res.stderr) process.stderr.write(res.stderr);
+    }
+    process.exitCode = res.exitCode;
+    return;
+  }
+
+  if (subcommand === "nix" || subcommand === "distill") {
+    const action = subcommand === "distill" ? "distill" : (argv[1] ?? "status");
+    if (action === "distill") {
+      console.log(JSON.stringify(distillAphrodyAndVendorEcosystem(), null, 2));
+      return;
+    }
+    if (action === "generations") {
+      console.log(JSON.stringify(listNixGenerations(), null, 2));
+      return;
+    }
+    if (action === "rollback") {
+      console.log(
+        JSON.stringify(rollbackNixGeneration(Number(argv[2] ?? "1")), null, 2),
+      );
+      return;
+    }
+    if (action === "gc") {
+      console.log(JSON.stringify(garbageCollectNixStore(), null, 2));
+      return;
+    }
+    console.log(
+      JSON.stringify(
+        {
+          derivations: listNixDerivations(),
+          generations: listNixGenerations(),
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
+
+  if (subcommand === "rosegriffon" || subcommand === "rg") {
+    const rawAction = argv[1] ?? "status";
+    const actionMap: Record<string, RosegriffonAction> = {
+      status: "status",
+      check: "check",
+      test: "test",
+      wasm: "wasm_verify",
+      vfs: "vfs_inspect",
+      deploy: "deploy_check",
+      nie: "nie_cli",
+      ie: "ie_cli",
+    };
+    const action = actionMap[rawAction] ?? (rawAction as RosegriffonAction);
+    const result = await executeRosegriffonOps(action, {
+      args: argv.slice(2),
+      target: argv[2],
+      subcommand: argv[2],
+    });
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  if (subcommand === "benchmark") {
+    const writeReport = hasFlag(argv, "--write");
+    const report = await runObjectiveStackBenchmark({
+      iterations: 21,
+      writeReport,
+    });
+    console.log(JSON.stringify(report, null, 2));
+    getCudaFfi()?.close();
+    getPolyglotFfi()?.close();
+    return;
+  }
+
+  if (subcommand === "wasm-doctor") {
+    console.log(JSON.stringify(inspectWasmAndWebGpuCapabilities(), null, 2));
     return;
   }
 
