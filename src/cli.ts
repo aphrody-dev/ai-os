@@ -20,9 +20,12 @@ import {
 } from "./nexus/brain-memory.ts";
 import { diagnoseGoogleAuth } from "./nexus/security.ts";
 import {
+  enableFullDesignModeGlobal,
+  getAiOsGlobalMode,
   installSkillCollection,
   listActiveCollections,
   removeSkillCollection,
+  resetToMinimalCollectionsOnly,
 } from "./nexus/skills-hub.ts";
 import { runMcpStdioServer } from "./protocols/mcp.ts";
 import { buildSkillsAndHooksRegistry } from "./protocols/skills.ts";
@@ -147,6 +150,45 @@ async function main(): Promise<void> {
     } else {
       console.log(buildCanonicalSoulMarkdown());
     }
+    return;
+  }
+
+  if (subcommand === "mode" || subcommand === "design-mode") {
+    const target = argv[1] ?? "full-design";
+    if (target === "status") {
+      console.log(
+        JSON.stringify({ ok: true, ...getAiOsGlobalMode() }, null, 2),
+      );
+      return;
+    }
+    if (target === "minimal") {
+      resetToMinimalCollectionsOnly();
+      const synced = syncUnifiedAgentHomes({ mcpProfile: "minimal" });
+      console.log(
+        JSON.stringify(
+          {
+            ok: true,
+            mode: "minimal",
+            syncedFiles: synced.updatedFiles.length,
+          },
+          null,
+          2,
+        ),
+      );
+      return;
+    }
+    const enabled = enableFullDesignModeGlobal();
+    const synced = syncUnifiedAgentHomes({ mcpProfile: "default" });
+    console.log(
+      JSON.stringify(
+        {
+          ...enabled,
+          syncedFiles: synced.updatedFiles.length,
+        },
+        null,
+        2,
+      ),
+    );
     return;
   }
 
@@ -394,10 +436,44 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (subcommand === "mode") {
+    const arg = argv[1] === "set" ? argv[2] : argv[1];
+    if (!arg || arg === "status") {
+      console.log(
+        JSON.stringify(
+          {
+            ok: true,
+            mode: getAiOsGlobalMode(),
+            activeCollections: listActiveCollections().map((c) => c.id),
+          },
+          null,
+          2,
+        ),
+      );
+      return;
+    }
+    if (arg === "full-design") {
+      console.log(
+        JSON.stringify({ ok: true, ...enableFullDesignModeGlobal() }, null, 2),
+      );
+      return;
+    }
+    if (arg === "minimal") {
+      console.log(
+        JSON.stringify(
+          { ok: true, mode: "minimal", ...resetToMinimalCollectionsOnly() },
+          null,
+          2,
+        ),
+      );
+      return;
+    }
+  }
+
   printUsage();
   process.exitCode = 1;
 }
 
 if (import.meta.main) {
-  await main();
+  void main();
 }

@@ -89,7 +89,7 @@ export const SKILL_COLLECTION_PACKS: readonly SkillCollectionPack[] = [
     title: "Google Labs Stitch, DESIGN.md, Jules & Stax (22 Official Skills)",
     description:
       "Official google-labs-code skills for Stitch UI generation, DESIGN.md system synthesis, Jules autonomous tasks, and Stax evaluation.",
-    defaultEnabled: false,
+    defaultEnabled: true,
     mcpToolsUnlocked: ["design_figma"],
     sourceDirs: [
       "C:/src/third_party/google-ecosystem/stitch-skills",
@@ -114,7 +114,7 @@ export const SKILL_COLLECTION_PACKS: readonly SkillCollectionPack[] = [
       "Fullstack Pro-Max (Lighthouse, CWV, Stitch, Figma, REA, Replica, 3D, Humanizer, Deploy)",
     description:
       "Complete Bun + Rust fullstack builder pack: Modern Web Guidelines, Lighthouse 100 & Web Vitals (wck), Figma/M3 (gds), REA/Ghidra/Replica (n2b), UI/UX Pro Max, 3D WebGPU/WGSL Pro Max, Impeccable, Humanizer, Cloudflare + Vercel + src-deploy.",
-    defaultEnabled: false,
+    defaultEnabled: true,
     mcpToolsUnlocked: [
       "design_figma",
       "n2b_rea",
@@ -402,7 +402,104 @@ export function resetToMinimalCollectionsOnly(
   db.exec(
     `UPDATE active_collections SET enabled = 0 WHERE collection_id != 'os-minimal'`,
   );
+  const nowIso = new Date().toISOString();
   db.query(
     `INSERT OR REPLACE INTO active_collections (collection_id, installed_at, enabled) VALUES ('os-minimal', ?1, 1)`,
-  ).run(new Date().toISOString());
+  ).run(nowIso);
+  db.query(
+    `INSERT OR REPLACE INTO global_settings (key, value, updated_at) VALUES ('default_mode', 'minimal', ?1)`,
+  ).run(nowIso);
+}
+
+export const DEFAULT_GLOBAL_DESIGN_COLLECTIONS: readonly string[] = [
+  "os-minimal",
+  "pro-max-fullstack",
+  "google-labs",
+  "gemini-multimodal",
+  "google-cloud",
+];
+
+export function enableFullDesignModeGlobal(options?: {
+  dbPath?: string;
+  skillsOutRoot?: string;
+  modeStatePath?: string;
+}): {
+  ok: true;
+  mode: "full-design";
+  activeCollections: string[];
+  umbrellaSkillsWritten: string[];
+  modeStatePath: string;
+} {
+  const dbPath = options?.dbPath ?? DEFAULT_NEXUS_DB_PATH;
+  const db = openNexusDb(dbPath);
+  const nowIso = new Date().toISOString();
+  const umbrellaSkillsWritten: string[] = [];
+
+  for (const cid of DEFAULT_GLOBAL_DESIGN_COLLECTIONS) {
+    const res = installSkillCollection(cid, {
+      dbPath,
+      skillsOutRoot: options?.skillsOutRoot,
+    });
+    if (res.umbrellaSkillPath) {
+      umbrellaSkillsWritten.push(res.umbrellaSkillPath);
+    }
+  }
+
+  db.query(
+    `INSERT OR REPLACE INTO global_settings (key, value, updated_at) VALUES ('default_mode', 'full-design', ?1)`,
+  ).run(nowIso);
+
+  const modeStatePath =
+    options?.modeStatePath ?? "C:/src/var/agy-mode-state.json";
+  const statePayload = {
+    mode: "fullstack",
+    globalDesignMode: "full-design",
+    domainFocus: "full-design-pro-max",
+    ephemeralUnrecorded: false,
+    elevatedUserspaceNoSandbox: false,
+    system32Protected: true,
+    gates: [
+      "agent-browser",
+      "lighthouse-100",
+      "modern-web-guidelines",
+      "core-web-vitals",
+      "humanizer",
+      "impeccable",
+      "ui-ux-pro-max",
+      "3d-pro-max",
+      "gds-design-first",
+      "wck-100",
+    ],
+    activeCollections: [...DEFAULT_GLOBAL_DESIGN_COLLECTIONS],
+    updatedAt: nowIso,
+  };
+  writeFileSafeUserspace(
+    modeStatePath,
+    `${JSON.stringify(statePayload, null, 2)}\n`,
+  );
+
+  return {
+    ok: true,
+    mode: "full-design",
+    activeCollections: [...DEFAULT_GLOBAL_DESIGN_COLLECTIONS],
+    umbrellaSkillsWritten,
+    modeStatePath,
+  };
+}
+
+export function getAiOsGlobalMode(dbPath = DEFAULT_NEXUS_DB_PATH): {
+  mode: "full-design" | "minimal";
+  activeCollections: string[];
+} {
+  const db = openNexusDb(dbPath);
+  const row = db
+    .query(`SELECT value FROM global_settings WHERE key = 'default_mode'`)
+    .get() as { value: string } | null;
+  const active = listActiveCollections(dbPath)
+    .filter((c) => c.enabled)
+    .map((c) => c.id);
+  return {
+    mode: row?.value === "minimal" ? "minimal" : "full-design",
+    activeCollections: active,
+  };
 }

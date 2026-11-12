@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T08:27:15.026Z",
+  "generatedAt": "2026-11-12T02:51:55.164Z",
   "bunVersion": "1.4.4",
   "dbPath": "C:/src/ai-os/sentinel.sqlite",
   "liveCount": 4,
@@ -9,7 +9,7 @@
     "bunVersion": "1.4.4",
     "overallNativeScore": 71,
     "overallPatchedScore": 100,
-    "chromeCanaryVersion": "160.0.8155.0"
+    "chromeCanaryVersion": "160.0.8156.0"
   },
   "appliedUpdates": [],
   "results": [
@@ -19,11 +19,11 @@
       "name": "WHATWG HTML Living Standard",
       "endpoint": "https://api.github.com/repos/whatwg/html/commits?per_page=1",
       "status": "live",
-      "latestVersion": "83578e680d",
-      "publishedAt": "2026-11-11T07:29:13Z",
-      "detail": "Editorial: fix two links to DOM definitions",
-      "latencyMs": 469.2,
-      "checkedAt": "2026-11-11T08:27:14.557Z"
+      "latestVersion": "91052e839c",
+      "publishedAt": "2026-11-11T21:16:07Z",
+      "detail": "Check the incumbent document's sandboxing flags in window.close()",
+      "latencyMs": 435,
+      "checkedAt": "2026-11-12T02:51:54.729Z"
     },
     {
       "id": "linux-kernel-org",
@@ -34,9 +34,9 @@
       "latestVersion": "7.4-rc2",
       "publishedAt": "2026-11-09",
       "detail": "mainline=7.4-rc2, stable=7.3.4",
-      "latencyMs": 67.2,
+      "latencyMs": 102.6,
       "localParityNote": "mirror: C:/src/linux",
-      "checkedAt": "2026-11-11T08:27:14.557Z"
+      "checkedAt": "2026-11-12T02:51:54.730Z"
     },
     {
       "id": "chrome-win64-canary",
@@ -44,12 +44,12 @@
       "name": "Chrome Canary (win64)",
       "endpoint": "https://versionhistory.googleapis.com/v1/chrome/platforms/win64/channels/canary/versions?pageSize=1",
       "status": "live",
-      "latestVersion": "160.0.8155.0",
-      "publishedAt": "2026-11-11T08:27:14.778Z",
-      "detail": "chrome/platforms/win64/channels/canary/versions/160.0.8155.0",
-      "latencyMs": 220.8,
+      "latestVersion": "160.0.8156.0",
+      "publishedAt": "2026-11-12T02:51:54.960Z",
+      "detail": "chrome/platforms/win64/channels/canary/versions/160.0.8156.0",
+      "latencyMs": 230.4,
       "localParityNote": "bun-parity v1.4.4: 100% patched / 71% native",
-      "checkedAt": "2026-11-11T08:27:14.557Z"
+      "checkedAt": "2026-11-12T02:51:54.730Z"
     },
     {
       "id": "aosp-platform-build",
@@ -58,10 +58,10 @@
       "endpoint": "https://android.googlesource.com/platform/build/+refs/tags?format=JSON",
       "status": "live",
       "latestVersion": "android-17.0.0_r1",
-      "publishedAt": "2026-11-11T08:27:14.778Z",
+      "publishedAt": "2026-11-12T02:51:54.954Z",
       "detail": "Total AOSP tags=2691; recent=android-16.0.0_r2, android-16.0.0_r3, android-16.0.0_r4, android-17.0.0_r1 (Android 17 Baklava active; Android 18 API preview tracked)",
-      "latencyMs": 220.1,
-      "checkedAt": "2026-11-11T08:27:14.558Z"
+      "latencyMs": 223.9,
+      "checkedAt": "2026-11-12T02:51:54.730Z"
     }
   ]
 }

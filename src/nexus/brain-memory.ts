@@ -100,11 +100,29 @@ export function openNexusDb(dbPath = DEFAULT_NEXUS_DB_PATH): Database {
       installed_at TEXT NOT NULL,
       enabled INTEGER NOT NULL DEFAULT 1
     );
+
+    CREATE TABLE IF NOT EXISTS global_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
   `);
 
+  const nowIso = new Date().toISOString();
+  for (const cid of [
+    "os-minimal",
+    "pro-max-fullstack",
+    "google-labs",
+    "gemini-multimodal",
+    "google-cloud",
+  ]) {
+    db.query(
+      `INSERT OR IGNORE INTO active_collections (collection_id, installed_at, enabled) VALUES (?1, ?2, 1)`,
+    ).run(cid, nowIso);
+  }
   db.query(
-    `INSERT OR IGNORE INTO active_collections (collection_id, installed_at, enabled) VALUES ('os-minimal', ?1, 1)`,
-  ).run(new Date().toISOString());
+    `INSERT OR IGNORE INTO global_settings (key, value, updated_at) VALUES ('default_mode', 'full-design', ?1)`,
+  ).run(nowIso);
 
   if (resolved === resolve(DEFAULT_NEXUS_DB_PATH)) {
     singletonDb = db;
