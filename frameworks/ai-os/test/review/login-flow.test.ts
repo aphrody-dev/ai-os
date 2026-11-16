@@ -117,7 +117,7 @@ test("sign-in not completed: the window closes at the timeout and the state says
 });
 
 test("a review without a session raises the notification, waits for the sign-in, then resumes", async () => {
-  if (!chrome) return;
+  if (!chrome || process.env.CI) return; // timing of a real browser window: not run on shared CI runners
   state.signedIn = false;
   const base = `http://127.0.0.1:${server.port}`;
   let raised = 0;

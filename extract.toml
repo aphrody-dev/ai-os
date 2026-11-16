@@ -42,8 +42,6 @@ paths = [
 exclude = [
   "**/*.dll",
   "**/*.exe",
-  "**/bin/**",
-  "**/obj/**",
   "frameworks/*/Cargo.lock",
   "frameworks/*/Cargo.toml.orig",
 ]

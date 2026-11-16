@@ -9,15 +9,18 @@ import {
   discoverAiCatalog,
   extractCommands,
 } from "../src/term/agent-bridge.ts";
+import { loadAySys } from "../../../system/core-ts/src/sys.ts";
 import { createTermTools } from "../src/term/mcp-tools.ts";
 import { TermManager } from "../src/term/pty.ts";
 import { startTermServer } from "../src/term/server.ts";
 
 // The daemon serves aysys.wasm, a build output of the OS repository (not part of this one): the test runs where it exists.
+// The PTY layer needs libaysys, a native build of the OS repository.
+const HAS_SYS = loadAySys() !== null;
 const HAS_WASM = existsSync(join(Bun.env.SRC_ROOT ?? join(import.meta.dir, "..", "..", ".."), "target", "sys", "aysys.wasm"));
 
 describe("@aphrody/ai-os AI-First WebGPU Terminal", () => {
-  test("TermManager spawns real ConPTY shell, tracks VTerm text & captures OSC-133 errors", async () => {
+  test.skipIf(!HAS_SYS)("TermManager spawns real ConPTY shell, tracks VTerm text & captures OSC-133 errors", async () => {
     const mgr = new TermManager();
     const profiles = mgr.profiles();
     expect(profiles.length).toBeGreaterThan(0);
@@ -101,7 +104,7 @@ describe("@aphrody/ai-os AI-First WebGPU Terminal", () => {
     expect(ids).toContain("a2a");
   });
 
-  test("MCP tools (term_*) + ACP v1.31.0 support opencode/openrouter sessions", async () => {
+  test.skipIf(!HAS_SYS)("MCP tools (term_*) + ACP v1.31.0 support opencode/openrouter sessions", async () => {
     const res = await mcpRpc({
       jsonrpc: "2.0",
       id: 1,
