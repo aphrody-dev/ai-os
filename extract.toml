@@ -32,6 +32,9 @@ paths = [
   ".github/workflows/jules.yml",
   ".github/workflows/claude.yml",
   "docs/ai",
+  "docs/reviews",
+  ".claude/agents",
+  "prebuilts/up/tools.toml",
   "docs/proofs/ai-os-interop-2026-11-13.md",
 ]
 # Removed after extraction: binaries and build outputs that are not reproducible sources.

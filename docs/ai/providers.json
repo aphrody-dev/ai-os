@@ -1,0 +1,3705 @@
+{
+ "sources": [
+  "https://openrouter.ai/api/v1/models",
+  "https://models.dev/api.json",
+  "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
+  "docs/ai/arena.json"
+ ],
+ "failed": [],
+ "providers": [
+  {
+   "id": "~anthropic",
+   "sources": {
+    "openrouter": 4
+   }
+  },
+  {
+   "id": "~deepseek",
+   "sources": {
+    "openrouter": 3
+   }
+  },
+  {
+   "id": "~google",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "~moonshotai",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "~openai",
+   "sources": {
+    "openrouter": 5
+   }
+  },
+  {
+   "id": "~unbiased",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "~x-ai",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "~z-ai",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "302ai",
+   "sources": {
+    "models.dev": 126
+   },
+   "api": "https://api.302.ai/v1",
+   "doc": "https://doc.302.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "abacus",
+   "sources": {
+    "models.dev": 108
+   },
+   "api": "https://routellm.abacus.ai/v1",
+   "doc": "https://abacus.ai/help/api",
+   "probe": {
+    "status": 200,
+    "models": 134
+   }
+  },
+  {
+   "id": "abliteration",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "abliteration-ai",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://api.abliteration.ai/v1",
+   "doc": "https://docs.abliteration.ai/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "above",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://api.above.dev/v1",
+   "doc": "https://above.dev/docs",
+   "probe": {
+    "status": 200,
+    "models": 9
+   }
+  },
+  {
+   "id": "agentcore",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "agentrouter",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://agentrouter.org/v1",
+   "doc": "https://agentrouter.org/docs/opencode.html",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "agnes",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://apihub.agnes-ai.com/v1",
+   "doc": "https://agnes-ai.com/doc",
+   "probe": {
+    "status": 200,
+    "models": 10
+   }
+  },
+  {
+   "id": "ai-router",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://api.ai-router.dev/v1",
+   "doc": "https://ai-router.dev/openai-compatible-api-gateway/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "ai2",
+   "sources": {
+    "arena": 8
+   }
+  },
+  {
+   "id": "ai21",
+   "sources": {
+    "litellm": 12,
+    "models.dev": 2
+   },
+   "api": "https://api.ai21.com/studio/v1",
+   "doc": "https://docs.ai21.com/docs/jamba-foundation-models",
+   "probe": {
+    "status": 200,
+    "models": 0
+   }
+  },
+  {
+   "id": "aiand",
+   "sources": {
+    "litellm": 15,
+    "models.dev": 12
+   },
+   "api": "https://api.aiand.com/v1",
+   "doc": "https://docs.aiand.com/",
+   "probe": {
+    "status": 200,
+    "models": 12
+   }
+  },
+  {
+   "id": "aihubmix",
+   "sources": {
+    "litellm": 72,
+    "models.dev": 154
+   },
+   "doc": "https://docs.aihubmix.com"
+  },
+  {
+   "id": "aiml",
+   "sources": {
+    "litellm": 13
+   }
+  },
+  {
+   "id": "aimlapi",
+   "sources": {
+    "models.dev": 168
+   },
+   "api": "https://api.aimlapi.com/v1",
+   "doc": "https://docs.aimlapi.com",
+   "probe": {
+    "status": 200,
+    "models": 999
+   }
+  },
+  {
+   "id": "ainetcafe",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://microquickjs.com/v1",
+   "doc": "https://ainetcafe.com/k3/guides/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "aion-labs",
+   "sources": {
+    "openrouter": 6
+   }
+  },
+  {
+   "id": "aixy",
+   "sources": {
+    "models.dev": 13
+   },
+   "api": "https://api.aixy-gateway.com/v1",
+   "doc": "https://docs.aixy-gateway.com/integrations/overview",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "aki-io",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://aki.io/v1",
+   "doc": "https://aki.io/docs/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "alibaba",
+   "sources": {
+    "arena": 42,
+    "models.dev": 53
+   },
+   "api": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+   "doc": "https://www.alibabacloud.com/help/en/model-studio/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "alibaba-cn",
+   "sources": {
+    "models.dev": 80
+   },
+   "api": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+   "doc": "https://www.alibabacloud.com/help/en/model-studio/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "alibaba-coding-plan",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://coding-intl.dashscope.aliyuncs.com/v1",
+   "doc": "https://www.alibabacloud.com/help/en/model-studio/coding-plan",
+   "probe": {
+    "status": 200,
+    "models": 6
+   }
+  },
+  {
+   "id": "alibaba-coding-plan-cn",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://coding.dashscope.aliyuncs.com/v1",
+   "doc": "https://help.aliyun.com/zh/model-studio/coding-plan",
+   "probe": {
+    "status": 200,
+    "models": 6
+   }
+  },
+  {
+   "id": "alibaba-token-plan",
+   "sources": {
+    "models.dev": 29
+   },
+   "api": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+   "doc": "https://www.alibabacloud.com/help/en/model-studio/token-plan-overview",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "alibaba-token-plan-cn",
+   "sources": {
+    "models.dev": 29
+   },
+   "api": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+   "doc": "https://www.alibabacloud.com/help/zh/model-studio/token-plan-overview",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "amazon",
+   "sources": {
+    "arena": 10,
+    "openrouter": 5
+   }
+  },
+  {
+   "id": "amazon_nova",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "amazon-bedrock",
+   "sources": {
+    "models.dev": 208
+   },
+   "doc": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html"
+  },
+  {
+   "id": "ambient",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://api.ambient.xyz/v1",
+   "doc": "https://ambient.xyz",
+   "probe": {
+    "status": 200,
+    "models": 9
+   }
+  },
+  {
+   "id": "amd",
+   "sources": {
+    "models.dev": 11
+   },
+   "api": "https://developer.amd.com.cn/radeon/api/v1",
+   "doc": "https://developer.amd.com.cn/radeon/tokenfactory",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "ant-group",
+   "sources": {
+    "arena": 2
+   }
+  },
+  {
+   "id": "anthracite-org",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "anthropic",
+   "sources": {
+    "arena": 34,
+    "openrouter": 32,
+    "litellm": 24,
+    "models.dev": 18
+   },
+   "doc": "https://docs.anthropic.com/en/docs/about-claude/models"
+  },
+  {
+   "id": "anyapi",
+   "sources": {
+    "models.dev": 30
+   },
+   "api": "https://api.anyapi.ai/v1",
+   "doc": "https://docs.anyapi.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "anyscale",
+   "sources": {
+    "litellm": 12
+   }
+  },
+  {
+   "id": "apiserpent",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "arcee",
+   "sources": {
+    "models.dev": 11
+   },
+   "api": "https://api.arcee.ai/api/v1",
+   "doc": "https://docs.arcee.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "assemblyai",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "atomic-chat",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "http://127.0.0.1:1337/v1",
+   "doc": "https://atomic.chat"
+  },
+  {
+   "id": "auriko",
+   "sources": {
+    "models.dev": 15
+   },
+   "api": "https://api.auriko.ai/v1",
+   "doc": "https://docs.auriko.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "aws_polly",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "azure",
+   "sources": {
+    "litellm": 322,
+    "models.dev": 97
+   },
+   "doc": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models"
+  },
+  {
+   "id": "azure_ai",
+   "sources": {
+    "litellm": 141
+   }
+  },
+  {
+   "id": "azure_text",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "azure-cognitive-services",
+   "sources": {
+    "models.dev": 97
+   },
+   "doc": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models"
+  },
+  {
+   "id": "baidu",
+   "sources": {
+    "arena": 4,
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "bailing",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://api.tbox.cn/api/llm/v1",
+   "doc": "https://alipaytbox.yuque.com/sxs0ba/ling/intro",
+   "probe": {
+    "status": 200
+   }
+  },
+  {
+   "id": "baseten",
+   "sources": {
+    "litellm": 36,
+    "models.dev": 15
+   },
+   "api": "https://inference.baseten.co/v1",
+   "doc": "https://docs.baseten.co/inference/model-apis/overview",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "bedrock",
+   "sources": {
+    "litellm": 342
+   }
+  },
+  {
+   "id": "bedrock_converse",
+   "sources": {
+    "litellm": 250
+   }
+  },
+  {
+   "id": "bedrock_mantle",
+   "sources": {
+    "litellm": 62
+   }
+  },
+  {
+   "id": "bee",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.bee.heossi.com/bee",
+   "doc": "https://bee.heossi.com/docs/sdks",
+   "probe": {
+    "status": 200,
+    "models": 13
+   }
+  },
+  {
+   "id": "berget",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.berget.ai/v1",
+   "doc": "https://api.berget.ai",
+   "probe": {
+    "status": 200,
+    "models": 14
+   }
+  },
+  {
+   "id": "bespoke",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "bigmodel",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "bing_grounding",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "black_forest_labs",
+   "sources": {
+    "litellm": 8
+   }
+  },
+  {
+   "id": "blueclaw",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://openai.blueclaw.network/v1",
+   "doc": "https://blueclaw.network",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "bothub",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://openai.bothub.ru/v1",
+   "doc": "https://bothub.ru/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "boundless",
+   "sources": {
+    "models.dev": 20
+   },
+   "api": "https://api.inference.boundless.network/v1",
+   "doc": "https://inference.boundless.network/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "bytedance",
+   "sources": {
+    "arena": 1,
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "bytedance-seed",
+   "sources": {
+    "openrouter": 3
+   }
+  },
+  {
+   "id": "byteplus",
+   "sources": {
+    "models.dev": 14
+   },
+   "api": "https://ark.ap-southeast.bytepluses.com/api/v3",
+   "doc": "https://docs.byteplus.com/en/docs/ModelArk/1529329",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "cerebras",
+   "sources": {
+    "litellm": 8,
+    "models.dev": 2
+   },
+   "doc": "https://inference-docs.cerebras.ai/models/overview"
+  },
+  {
+   "id": "chatgpt",
+   "sources": {
+    "litellm": 22
+   }
+  },
+  {
+   "id": "chutes",
+   "sources": {
+    "models.dev": 19
+   },
+   "api": "https://llm.chutes.ai/v1",
+   "doc": "https://llm.chutes.ai/v1/models",
+   "probe": {
+    "status": 200,
+    "models": 19
+   }
+  },
+  {
+   "id": "clarifai",
+   "sources": {
+    "models.dev": 12
+   },
+   "api": "https://api.clarifai.com/v2/ext/openai/v1",
+   "doc": "https://docs.clarifai.com/compute/inference/",
+   "probe": {
+    "status": 0
+   }
+  },
+  {
+   "id": "claudinio",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://api.claudin.io/v1",
+   "doc": "https://claudin.io",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "clf_ai_gateway",
+   "sources": {
+    "litellm": 10
+   }
+  },
+  {
+   "id": "cline-pass",
+   "sources": {
+    "models.dev": 18
+   },
+   "api": "https://api.cline.bot/api/v1",
+   "doc": "https://docs.cline.bot/getting-started/clinepass",
+   "probe": {
+    "status": 200,
+    "models": 454
+   }
+  },
+  {
+   "id": "cloudferro-sherlock",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://api-sherlock.cloudferro.com/openai/v1/",
+   "doc": "https://docs.sherlock.cloudferro.com/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "cloudflare",
+   "sources": {
+    "litellm": 40
+   }
+  },
+  {
+   "id": "cloudflare-ai-gateway",
+   "sources": {
+    "models.dev": 77
+   },
+   "doc": "https://developers.cloudflare.com/ai-gateway/"
+  },
+  {
+   "id": "cloudflare-workers-ai",
+   "sources": {
+    "models.dev": 29
+   },
+   "api": "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
+   "doc": "https://developers.cloudflare.com/workers-ai/models/",
+   "probe": {
+    "status": 405
+   }
+  },
+  {
+   "id": "codestral",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "cognition",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "cognitivecomputations",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "cohere",
+   "sources": {
+    "arena": 7,
+    "openrouter": 6,
+    "litellm": 16,
+    "models.dev": 17
+   },
+   "doc": "https://docs.cohere.com/docs/models"
+  },
+  {
+   "id": "cohere_chat",
+   "sources": {
+    "litellm": 6
+   }
+  },
+  {
+   "id": "commandcode",
+   "sources": {
+    "models.dev": 72
+   },
+   "api": "https://api.commandcode.ai/provider/v1",
+   "doc": "https://commandcode.ai/docs/provider",
+   "probe": {
+    "status": 200,
+    "models": 98
+   }
+  },
+  {
+   "id": "coralbricks",
+   "sources": {
+    "litellm": 6,
+    "models.dev": 1
+   },
+   "api": "https://inference.coralbricks.ai/v1",
+   "doc": "https://www.coralbricks.ai/docs",
+   "probe": {
+    "status": 200,
+    "models": 3
+   }
+  },
+  {
+   "id": "cortecs",
+   "sources": {
+    "models.dev": 106
+   },
+   "api": "https://api.cortecs.ai/v1",
+   "doc": "https://api.cortecs.ai/v1/models",
+   "probe": {
+    "status": 200,
+    "models": 106
+   }
+  },
+  {
+   "id": "crossmodel",
+   "sources": {
+    "models.dev": 73
+   },
+   "api": "https://api.crossmodel.ai/v1",
+   "doc": "https://www.crossmodel.ai/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "crusoe",
+   "sources": {
+    "litellm": 7,
+    "models.dev": 11
+   },
+   "api": "https://api.inference.crusoecloud.com/v1",
+   "doc": "https://docs.crusoecloud.com/managed-inference/overview",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "daoxe",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://daoxe.com/v1",
+   "doc": "https://daoxe.com/pricing",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "darkbloom",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "dashscope",
+   "sources": {
+    "litellm": 63
+   }
+  },
+  {
+   "id": "databricks",
+   "sources": {
+    "litellm": 91,
+    "models.dev": 31
+   },
+   "api": "https://${DATABRICKS_HOST}/ai-gateway/mlflow/v1",
+   "doc": "https://docs.databricks.com/aws/en/machine-learning/foundation-models/",
+   "probe": {
+    "status": 0
+   }
+  },
+  {
+   "id": "dataforseo",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "deepgram",
+   "sources": {
+    "litellm": 45
+   }
+  },
+  {
+   "id": "deepinfra",
+   "sources": {
+    "litellm": 140,
+    "models.dev": 79
+   },
+   "doc": "https://deepinfra.com/models"
+  },
+  {
+   "id": "deepseek",
+   "sources": {
+    "arena": 22,
+    "openrouter": 17,
+    "litellm": 17,
+    "models.dev": 4
+   },
+   "api": "https://api.deepseek.com",
+   "doc": "https://api-docs.deepseek.com/quick_start/pricing",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "digitalocean",
+   "sources": {
+    "models.dev": 86
+   },
+   "api": "https://inference.do-ai.run/v1",
+   "doc": "https://docs.digitalocean.com/products/gradient-ai-platform/details/models/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "dinference",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.dinference.com/v1",
+   "doc": "https://dinference.com",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "dots-studio",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "drun",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://chat.d.run/v1",
+   "doc": "https://www.d.run",
+   "probe": {
+    "status": 0
+   }
+  },
+  {
+   "id": "duckduckgo",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "ebcloud",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://maas-api.ebcloud.com/v1",
+   "doc": "https://docs.ebtech.com/ai/model-api.html",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "echo",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://echo.tracerml.ai/v1",
+   "doc": "https://echo.tracerml.ai/docs/api",
+   "probe": {
+    "status": 200,
+    "models": 3
+   }
+  },
+  {
+   "id": "edenai",
+   "sources": {
+    "models.dev": 396
+   },
+   "api": "https://api.edenai.run/v3",
+   "doc": "https://docs.edenai.co",
+   "probe": {
+    "status": 200,
+    "models": 1316
+   }
+  },
+  {
+   "id": "elevenlabs",
+   "sources": {
+    "litellm": 12
+   }
+  },
+  {
+   "id": "elorian",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "empiriolabs",
+   "sources": {
+    "litellm": 96,
+    "models.dev": 64
+   },
+   "api": "https://api.empiriolabs.ai/v1",
+   "doc": "https://docs.empiriolabs.ai",
+   "probe": {
+    "status": 200,
+    "models": 222
+   }
+  },
+  {
+   "id": "engy",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://api.engy.ai/v1",
+   "doc": "https://engy.ai/pricing",
+   "probe": {
+    "status": 200,
+    "models": 10
+   }
+  },
+  {
+   "id": "eu_jev",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "evroc",
+   "sources": {
+    "models.dev": 16
+   },
+   "api": "https://models.think.evroc.com/v1",
+   "doc": "https://docs.evroc.com/products/think/overview.html",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "exa_ai",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "fal_ai",
+   "sources": {
+    "litellm": 943
+   }
+  },
+  {
+   "id": "fastrouter",
+   "sources": {
+    "models.dev": 39
+   },
+   "api": "https://go.fastrouter.ai/api/v1",
+   "doc": "https://fastrouter.ai/models",
+   "probe": {
+    "status": 200,
+    "models": 290
+   }
+  },
+  {
+   "id": "featherless_ai",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "firecrawl",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "fireworks",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "fireworks_ai",
+   "sources": {
+    "litellm": 356
+   }
+  },
+  {
+   "id": "fireworks_ai-embedding-models",
+   "sources": {
+    "litellm": 7
+   }
+  },
+  {
+   "id": "fireworks-ai",
+   "sources": {
+    "models.dev": 27
+   },
+   "api": "https://api.fireworks.ai/inference/v1/",
+   "doc": "https://fireworks.ai/docs/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "freemodel",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://cc.freemodel.dev/v1",
+   "doc": "https://freemodel.dev",
+   "probe": {
+    "status": 200,
+    "models": 10
+   }
+  },
+  {
+   "id": "friendli",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://api.friendli.ai/serverless/v1",
+   "doc": "https://friendli.ai/docs/guides/serverless_endpoints/introduction",
+   "probe": {
+    "status": 200,
+    "models": 5
+   }
+  },
+  {
+   "id": "friendliai",
+   "sources": {
+    "litellm": 5
+   }
+  },
+  {
+   "id": "frogbot",
+   "sources": {
+    "models.dev": 51
+   },
+   "api": "https://app.frogbot.ai/api/v1",
+   "doc": "https://docs.frogbot.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "gemini",
+   "sources": {
+    "litellm": 87
+   }
+  },
+  {
+   "id": "gigachat",
+   "sources": {
+    "litellm": 7
+   }
+  },
+  {
+   "id": "github_copilot",
+   "sources": {
+    "litellm": 53
+   }
+  },
+  {
+   "id": "github-copilot",
+   "sources": {
+    "models.dev": 38
+   },
+   "api": "https://api.githubcopilot.com",
+   "doc": "https://docs.github.com/en/copilot",
+   "probe": {
+    "status": 400
+   }
+  },
+  {
+   "id": "gitlab",
+   "sources": {
+    "models.dev": 31
+   },
+   "doc": "https://docs.gitlab.com/user/duo_agent_platform/"
+  },
+  {
+   "id": "gmi",
+   "sources": {
+    "litellm": 121
+   }
+  },
+  {
+   "id": "gmicloud",
+   "sources": {
+    "models.dev": 17
+   },
+   "api": "https://api.gmi-serving.com/v1",
+   "doc": "https://docs.gmicloud.ai/inference-engine/api-reference/llm-api-reference",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "google",
+   "sources": {
+    "arena": 43,
+    "openrouter": 47,
+    "models.dev": 37
+   },
+   "doc": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  {
+   "id": "google_pse",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "google-vertex",
+   "sources": {
+    "models.dev": 64
+   },
+   "doc": "https://cloud.google.com/vertex-ai/generative-ai/docs/models"
+  },
+  {
+   "id": "google-vertex-anthropic",
+   "sources": {
+    "models.dev": 18
+   },
+   "doc": "https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude"
+  },
+  {
+   "id": "gradient_ai",
+   "sources": {
+    "litellm": 13
+   }
+  },
+  {
+   "id": "greenpt",
+   "sources": {
+    "models.dev": 41
+   },
+   "api": "https://api.greenpt.ai/v1",
+   "doc": "https://docs.greenpt.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "groq",
+   "sources": {
+    "litellm": 10,
+    "models.dev": 14
+   },
+   "doc": "https://console.groq.com/docs/models"
+  },
+  {
+   "id": "gryphe",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "helicone",
+   "sources": {
+    "models.dev": 90
+   },
+   "api": "https://ai-gateway.helicone.ai/v1",
+   "doc": "https://helicone.ai/models",
+   "probe": {
+    "status": 200,
+    "models": 111
+   }
+  },
+  {
+   "id": "heroku",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "hetzner",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://inference.hetzner.com/api/v1",
+   "doc": "https://experiments.hetzner.com/docs/inference",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "hopper",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://api.withhopper.com/v1",
+   "doc": "https://withhopper.com/agents/deepseek-v4.1-flash-1017",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "hostinger_router",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "hpc-ai",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://api.hpc-ai.com/inference/v1",
+   "doc": "https://www.hpc-ai.com/doc/docs/quickstart/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "huggingface",
+   "sources": {
+    "models.dev": 82
+   },
+   "api": "https://router.huggingface.co/v1",
+   "doc": "https://huggingface.co/docs/inference-providers",
+   "probe": {
+    "status": 200,
+    "models": 132
+   }
+  },
+  {
+   "id": "hyper",
+   "sources": {
+    "models.dev": 19
+   },
+   "api": "https://hyper.charm.land/v1",
+   "doc": "https://hyper.charm.land",
+   "probe": {
+    "status": 200,
+    "models": 19
+   }
+  },
+  {
+   "id": "hyperbolic",
+   "sources": {
+    "litellm": 16
+   }
+  },
+  {
+   "id": "ibm",
+   "sources": {
+    "arena": 9
+   }
+  },
+  {
+   "id": "ibm-granite",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "impossibl",
+   "sources": {
+    "models.dev": 76
+   },
+   "api": "https://api.impossibl.com/v1",
+   "doc": "https://impossibl.com/docs/models",
+   "probe": {
+    "status": 200,
+    "models": 163
+   }
+  },
+  {
+   "id": "inception",
+   "sources": {
+    "litellm": 2,
+    "models.dev": 4
+   },
+   "api": "https://api.inceptionlabs.ai/v1/",
+   "doc": "https://docs.inceptionlabs.ai/get-started/models",
+   "probe": {
+    "status": 200,
+    "models": 2
+   }
+  },
+  {
+   "id": "inception-ai",
+   "sources": {
+    "arena": 2
+   }
+  },
+  {
+   "id": "inceptron",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.inceptron.io/v1",
+   "doc": "https://docs.inceptron.io",
+   "probe": {
+    "status": 200,
+    "models": 6
+   }
+  },
+  {
+   "id": "inclusionai",
+   "sources": {
+    "openrouter": 5
+   }
+  },
+  {
+   "id": "inco",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://api.inco.ai/v1",
+   "doc": "https://platform.inco.ai/docs",
+   "probe": {
+    "status": 200,
+    "models": 10
+   }
+  },
+  {
+   "id": "infer",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://infer.flow7.org/v1",
+   "doc": "https://infer.flow7.org/opencode",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "inference",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://inference.net/v1",
+   "doc": "https://inference.net/models",
+   "probe": {
+    "status": 404
+   }
+  },
+  {
+   "id": "inference-net",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "inferenceapis",
+   "sources": {
+    "litellm": 36
+   }
+  },
+  {
+   "id": "inferx",
+   "sources": {
+    "models.dev": 12
+   },
+   "api": "https://model.inferx.net/endpoints/v1",
+   "doc": "https://model.inferx.net/endpoints",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "infomaniak",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://api.infomaniak.com/2/ai/${INFOMANIAK_PRODUCT_ID}/openai/v1",
+   "doc": "https://www.infomaniak.com/en/hosting/ai-services/open-source-models",
+   "probe": {
+    "status": 404
+   }
+  },
+  {
+   "id": "io-net",
+   "sources": {
+    "models.dev": 17
+   },
+   "api": "https://api.intelligence.io.solutions/api/v1",
+   "doc": "https://io.net/docs/guides/intelligence/io-intelligence",
+   "probe": {
+    "status": 200,
+    "models": 42
+   }
+  },
+  {
+   "id": "iteracompute",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://api.iteracompute.com/v1",
+   "doc": "https://iteracompute.com/docs.html",
+   "probe": {
+    "status": 200,
+    "models": 32
+   }
+  },
+  {
+   "id": "jalapeno",
+   "sources": {
+    "models.dev": 17
+   },
+   "api": "https://api.jalapeno-cloud.ai/v1",
+   "doc": "https://www.jalapeno-cloud.ai/docs/",
+   "probe": {
+    "status": 403
+   }
+  },
+  {
+   "id": "jiekou",
+   "sources": {
+    "models.dev": 61
+   },
+   "api": "https://api.jiekou.ai/openai",
+   "doc": "https://docs.jiekou.ai/docs/support/quickstart?utm_source=github_models.dev",
+   "probe": {
+    "status": 200,
+    "models": 187
+   }
+  },
+  {
+   "id": "jina_ai",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "kenari",
+   "sources": {
+    "models.dev": 64
+   },
+   "api": "https://kenari.id/v1",
+   "doc": "https://kenari.id/docs",
+   "probe": {
+    "status": 200,
+    "models": 96
+   }
+  },
+  {
+   "id": "kilo",
+   "sources": {
+    "models.dev": 468
+   },
+   "api": "https://api.kilo.ai/api/gateway",
+   "doc": "https://kilo.ai",
+   "probe": {
+    "status": 200,
+    "models": 473
+   }
+  },
+  {
+   "id": "kimi-code-plan-cn",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.kimi.com/coding/v1",
+   "doc": "https://www.kimi.com/code/docs/en/kimi-code/models.html",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "kimi-code-plan-global",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.kimi.ai/coding/v1",
+   "doc": "https://www.kimi.ai/code/docs/en/kimi-code/models.html",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "klokintegration",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://api-gw.klok.ipaas.se/proxy/kloker-key/v1",
+   "doc": "https://klokintegration.se/docs/ai-api",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "kosmik",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://api.koscompute.com/v1",
+   "doc": "https://api.koscompute.com/docs/",
+   "probe": {
+    "status": 200,
+    "models": 11
+   }
+  },
+  {
+   "id": "kt",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "kuae-cloud-coding-plan",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://coding-plan-endpoint.kuaecloud.net/v1",
+   "doc": "https://docs.mthreads.com/kuaecloud/kuaecloud-doc-online/coding_plan/",
+   "probe": {
+    "status": 404
+   }
+  },
+  {
+   "id": "kyma",
+   "sources": {
+    "litellm": 83
+   }
+  },
+  {
+   "id": "lambda_ai",
+   "sources": {
+    "litellm": 20
+   }
+  },
+  {
+   "id": "laya",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "lemonade",
+   "sources": {
+    "litellm": 5
+   }
+  },
+  {
+   "id": "libertai",
+   "sources": {
+    "litellm": 12
+   }
+  },
+  {
+   "id": "lilac",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://api.getlilac.com/v1",
+   "doc": "https://docs.getlilac.com/inference/models",
+   "probe": {
+    "status": 410
+   }
+  },
+  {
+   "id": "linkup",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "liquid",
+   "sources": {
+    "openrouter": 3,
+    "models.dev": 1
+   },
+   "api": "https://router.inference.ai.exchange/v1",
+   "doc": "https://inference.ai.exchange/docs",
+   "probe": {
+    "status": 200,
+    "models": 959
+   }
+  },
+  {
+   "id": "llamagate",
+   "sources": {
+    "litellm": 16
+   }
+  },
+  {
+   "id": "llmgateway",
+   "sources": {
+    "models.dev": 202
+   },
+   "api": "https://api.llmgateway.io/v1",
+   "doc": "https://llmgateway.io/docs",
+   "probe": {
+    "status": 200,
+    "models": 312
+   }
+  },
+  {
+   "id": "llmgateway-providers",
+   "sources": {
+    "models.dev": 467
+   },
+   "api": "https://api.llmgateway.io/v1",
+   "doc": "https://llmgateway.io/docs",
+   "probe": {
+    "status": 200,
+    "models": 312
+   }
+  },
+  {
+   "id": "llmtech",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://api.llmtech.eu/v1",
+   "doc": "https://llmtech.eu/models/qwen3.8-27b",
+   "probe": {
+    "status": 410
+   }
+  },
+  {
+   "id": "llmtr",
+   "sources": {
+    "models.dev": 32
+   },
+   "api": "https://llmtr.com/v1",
+   "doc": "https://llmtr.com/docs",
+   "probe": {
+    "status": 200,
+    "models": 417
+   }
+  },
+  {
+   "id": "lmstudio",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "http://127.0.0.1:1234/v1",
+   "doc": "https://lmstudio.ai/models"
+  },
+  {
+   "id": "longcat",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://api.longcat.chat/openai",
+   "doc": "https://longcat.chat/platform/docs/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "lowrouter",
+   "sources": {
+    "models.dev": 32
+   },
+   "api": "https://api.lowrouter.ai/v1",
+   "doc": "https://lowrouter.ai/docs/models/available",
+   "probe": {
+    "status": 200,
+    "models": 1193
+   }
+  },
+  {
+   "id": "lucidquery",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://api.lucidquery.com/v1",
+   "doc": "https://lucidquery.com/docs",
+   "probe": {
+    "status": 200,
+    "models": 4
+   }
+  },
+  {
+   "id": "lynkr",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "http://127.0.0.1:8081/v1",
+   "doc": "https://github.com/Fast-Editor/Lynkr"
+  },
+  {
+   "id": "mancer",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "meganova",
+   "sources": {
+    "models.dev": 19
+   },
+   "api": "https://api.meganova.ai/v1",
+   "doc": "https://docs.meganova.ai",
+   "probe": {
+    "status": 200,
+    "models": 148
+   }
+  },
+  {
+   "id": "meituan",
+   "sources": {
+    "arena": 2,
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "melious",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.melious.ai/v1",
+   "doc": "https://melious.ai/docs/reference/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "merge-gateway",
+   "sources": {
+    "models.dev": 206
+   },
+   "api": "https://api-gateway.merge.dev/v1/ai-sdk",
+   "doc": "https://docs.merge.dev/merge-gateway",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "meta",
+   "sources": {
+    "arena": 23,
+    "openrouter": 10,
+    "litellm": 10,
+    "models.dev": 7
+   },
+   "api": "https://api.meta.ai/v1",
+   "doc": "https://dev.meta.ai/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "meta_llama",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "meta-llama",
+   "sources": {
+    "openrouter": 8
+   }
+  },
+  {
+   "id": "microsoft",
+   "sources": {
+    "arena": 8,
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "microsoft_365_copilot",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "minimax",
+   "sources": {
+    "arena": 6,
+    "openrouter": 5,
+    "litellm": 13,
+    "models.dev": 8
+   },
+   "api": "https://api.minimax.io/anthropic/v1",
+   "doc": "https://platform.minimax.io/docs/guides/quickstart",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "minimax-cn",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.minimax.cn/anthropic/v1",
+   "doc": "https://platform.minimaxi.com/docs/guides/quickstart",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "minimax-cn-coding-plan",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://api.minimax.cn/anthropic/v1",
+   "doc": "https://platform.minimaxi.com/docs/token-plan/intro",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "minimax-coding-plan",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://api.minimax.io/anthropic/v1",
+   "doc": "https://platform.minimax.io/docs/token-plan/intro",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "mistral",
+   "sources": {
+    "arena": 18,
+    "litellm": 79,
+    "models.dev": 36
+   },
+   "doc": "https://docs.mistral.ai/getting-started/models/"
+  },
+  {
+   "id": "mistralai",
+   "sources": {
+    "openrouter": 21
+   }
+  },
+  {
+   "id": "mixlayer",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://models.mixlayer.ai/v1",
+   "doc": "https://docs.mixlayer.com",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "moark",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://moark.com/v1",
+   "doc": "https://moark.com/docs/openapi/v1#tag/%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90",
+   "probe": {
+    "status": 200,
+    "models": 214
+   }
+  },
+  {
+   "id": "modal",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://inference.us-west.modal.direct/v1",
+   "doc": "https://modal.com/docs/guide/endpoints",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "model-oracle-ai",
+   "sources": {
+    "models.dev": 15
+   },
+   "api": "https://api.modeloracle.com/api/v1",
+   "doc": "https://modeloracle.com/setup/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "modelis",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://modelishub.com/v1",
+   "doc": "https://modelishub.com/pricing",
+   "probe": {
+    "status": 502
+   }
+  },
+  {
+   "id": "modelscope",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://api-inference.modelscope.cn/v1",
+   "doc": "https://modelscope.cn/docs/model-service/API-Inference/intro",
+   "probe": {
+    "status": 200,
+    "models": 38
+   }
+  },
+  {
+   "id": "modular",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://api.modular.com/v1",
+   "doc": "https://docs.modular.com/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "moondream",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "moonshot",
+   "sources": {
+    "arena": 8,
+    "litellm": 13
+   }
+  },
+  {
+   "id": "moonshotai",
+   "sources": {
+    "openrouter": 10,
+    "models.dev": 6
+   },
+   "api": "https://api.moonshot.ai/v1",
+   "doc": "https://platform.moonshot.ai/docs/api/chat",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "moonshotai-cn",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.moonshot.cn/v1",
+   "doc": "https://platform.moonshot.cn/docs/api/chat",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "morph",
+   "sources": {
+    "openrouter": 4,
+    "litellm": 10,
+    "models.dev": 12
+   },
+   "api": "https://api.morphllm.com/v1",
+   "doc": "https://docs.morphllm.com/api-reference/introduction",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "motif-technologies",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "munito",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://api.munito.ai/inference/v1",
+   "doc": "https://docs.munito.ai/models",
+   "probe": {
+    "status": 200,
+    "models": 10
+   }
+  },
+  {
+   "id": "munito-eu",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://api.eu.munito.ai/inference/v1",
+   "doc": "https://docs.munito.ai/regions",
+   "probe": {
+    "status": 200,
+    "models": 10
+   }
+  },
+  {
+   "id": "nace",
+   "sources": {
+    "litellm": 6
+   }
+  },
+  {
+   "id": "nan",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.nan.builders/v1",
+   "doc": "https://nan.builders/docs/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "nano-gpt",
+   "sources": {
+    "models.dev": 617
+   },
+   "api": "https://nano-gpt.com/api/v1",
+   "doc": "https://docs.nano-gpt.com",
+   "probe": {
+    "status": 200,
+    "models": 618
+   }
+  },
+  {
+   "id": "nearai",
+   "sources": {
+    "models.dev": 60
+   },
+   "api": "https://cloud-api.near.ai/v1",
+   "doc": "https://docs.near.ai/",
+   "probe": {
+    "status": 200,
+    "models": 64
+   }
+  },
+  {
+   "id": "nebius",
+   "sources": {
+    "litellm": 67,
+    "models.dev": 21
+   },
+   "api": "https://api.tokenfactory.nebius.com/v1",
+   "doc": "https://docs.tokenfactory.nebius.com/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "neon",
+   "sources": {
+    "models.dev": 58
+   },
+   "api": "${NEON_AI_GATEWAY_BASE_URL}/v1",
+   "doc": "https://neon.com/docs"
+  },
+  {
+   "id": "neosmith",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://router.neosmith.ai/v1",
+   "doc": "https://neosmith.ai/docs",
+   "probe": {
+    "status": 0
+   }
+  },
+  {
+   "id": "neuralwatt",
+   "sources": {
+    "models.dev": 23
+   },
+   "api": "https://api.neuralwatt.com/v1",
+   "doc": "https://portal.neuralwatt.com/docs",
+   "probe": {
+    "status": 200,
+    "models": 23
+   }
+  },
+  {
+   "id": "nex-agi",
+   "sources": {
+    "openrouter": 3
+   }
+  },
+  {
+   "id": "nexusflow",
+   "sources": {
+    "arena": 1
+   }
+  },
+  {
+   "id": "nimble",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "nlp_cloud",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "nousresearch",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "nova",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://api.nova.amazon.com/v1",
+   "doc": "https://nova.amazon.com/dev/documentation",
+   "probe": {
+    "status": 500
+   }
+  },
+  {
+   "id": "novita",
+   "sources": {
+    "litellm": 135
+   }
+  },
+  {
+   "id": "novita-ai",
+   "sources": {
+    "models.dev": 91
+   },
+   "api": "https://api.novita.ai/openai",
+   "doc": "https://novita.ai/docs/guides/introduction",
+   "probe": {
+    "status": 200,
+    "models": 99
+   }
+  },
+  {
+   "id": "nscale",
+   "sources": {
+    "litellm": 16
+   }
+  },
+  {
+   "id": "nvidia",
+   "sources": {
+    "arena": 12,
+    "openrouter": 11,
+    "models.dev": 52
+   },
+   "api": "https://integrate.api.nvidia.com/v1",
+   "doc": "https://docs.api.nvidia.com/nim/",
+   "probe": {
+    "status": 200,
+    "models": 83
+   }
+  },
+  {
+   "id": "nvidia_nim",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "oci",
+   "sources": {
+    "litellm": 50,
+    "models.dev": 9
+   },
+   "api": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/openai/v1",
+   "doc": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/pretrained-models.htm",
+   "probe": {
+    "status": 404
+   }
+  },
+  {
+   "id": "ofox",
+   "sources": {
+    "models.dev": 151
+   },
+   "api": "https://api.ofox.ai/v1",
+   "doc": "https://ofox.ai/docs",
+   "probe": {
+    "status": 200,
+    "models": 125
+   }
+  },
+  {
+   "id": "ollama",
+   "sources": {
+    "litellm": 29
+   }
+  },
+  {
+   "id": "ollama-cloud",
+   "sources": {
+    "models.dev": 26
+   },
+   "api": "https://ollama.com/v1",
+   "doc": "https://docs.ollama.com/cloud",
+   "probe": {
+    "status": 200,
+    "models": 24
+   }
+  },
+  {
+   "id": "one of https://docs.litellm.ai/docs/providers",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "openai",
+   "sources": {
+    "arena": 48,
+    "openrouter": 98,
+    "litellm": 223,
+    "models.dev": 51
+   },
+   "doc": "https://platform.openai.com/docs/models"
+  },
+  {
+   "id": "opencode",
+   "sources": {
+    "models.dev": 139
+   },
+   "api": "https://opencode.ai/inference/openai/v1",
+   "doc": "https://opencode.ai/v2/docs/console/models/",
+   "probe": {
+    "status": 200,
+    "models": 86
+   }
+  },
+  {
+   "id": "opencode_go",
+   "sources": {
+    "litellm": 30
+   }
+  },
+  {
+   "id": "opencode-go",
+   "sources": {
+    "models.dev": 40
+   },
+   "api": "https://opencode.ai/inference/go/openai/v1",
+   "doc": "https://opencode.ai/v2/docs/console/go/",
+   "probe": {
+    "status": 200,
+    "models": 30
+   }
+  },
+  {
+   "id": "openinfer",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "openreason",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://api.openreason.app/v1",
+   "doc": "https://openreason.app/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "openrouter",
+   "sources": {
+    "openrouter": 7,
+    "models.dev": 378
+   },
+   "api": "https://openrouter.ai/api/v1",
+   "doc": "https://openrouter.ai/models",
+   "probe": {
+    "status": 200,
+    "models": 471
+   }
+  },
+  {
+   "id": "opper",
+   "sources": {
+    "models.dev": 55
+   },
+   "api": "https://api.opper.ai/v3/compat",
+   "doc": "https://opper.ai/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "orcarouter",
+   "sources": {
+    "models.dev": 117
+   },
+   "api": "https://api.orcarouter.ai/v1",
+   "doc": "https://docs.orcarouter.ai",
+   "probe": {
+    "status": 200,
+    "models": 215
+   }
+  },
+  {
+   "id": "ovhcloud",
+   "sources": {
+    "litellm": 15,
+    "models.dev": 11
+   },
+   "api": "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1",
+   "doc": "https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog//",
+   "probe": {
+    "status": 200,
+    "models": 21
+   }
+  },
+  {
+   "id": "parallel_ai",
+   "sources": {
+    "litellm": 5
+   }
+  },
+  {
+   "id": "pareto",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://api.paretoinference.com/v1",
+   "doc": "https://docs.paretoinference.com/",
+   "probe": {
+    "status": 200,
+    "models": 4
+   }
+  },
+  {
+   "id": "particle-ai",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "pendra",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://api.pendra.ai/api/v1",
+   "doc": "https://pendra.ai/docs/integrations/opencode",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "perceptron",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "perplexity",
+   "sources": {
+    "openrouter": 5,
+    "litellm": 100,
+    "models.dev": 4
+   },
+   "doc": "https://docs.perplexity.ai"
+  },
+  {
+   "id": "perplexity-agent",
+   "sources": {
+    "models.dev": 45
+   },
+   "api": "https://api.perplexity.ai/v1",
+   "doc": "https://docs.perplexity.ai/docs/agent-api/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "pinstripes",
+   "sources": {
+    "litellm": 6
+   }
+  },
+  {
+   "id": "pioneer",
+   "sources": {
+    "models.dev": 25
+   },
+   "api": "https://api.fastino.ai/v1",
+   "doc": "https://agent.pioneer.ai/llms.txt",
+   "probe": {
+    "status": 200,
+    "models": 14
+   }
+  },
+  {
+   "id": "poe",
+   "sources": {
+    "models.dev": 139
+   },
+   "api": "https://api.poe.com/v1",
+   "doc": "https://creator.poe.com/docs/external-applications/openai-compatible-api",
+   "probe": {
+    "status": 200,
+    "models": 302
+   }
+  },
+  {
+   "id": "poolside",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://inference.poolside.ai/v1",
+   "doc": "https://platform.poolside.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "prime",
+   "sources": {
+    "models.dev": 70
+   },
+   "api": "https://api.pinference.ai/api/v1",
+   "doc": "https://docs.primeintellect.ai/inference/overview",
+   "probe": {
+    "status": 200,
+    "models": 130
+   }
+  },
+  {
+   "id": "prism",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "prism-ml",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "privatemode-ai",
+   "sources": {
+    "models.dev": 11
+   },
+   "api": "http://localhost:8080/v1",
+   "doc": "https://docs.privatemode.ai/api/overview"
+  },
+  {
+   "id": "publicai",
+   "sources": {
+    "litellm": 9
+   }
+  },
+  {
+   "id": "qihang-ai",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://api.qhaigc.net/v1",
+   "doc": "https://www.qhaigc.net/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "qiniu-ai",
+   "sources": {
+    "models.dev": 87
+   },
+   "api": "https://api.qnaigc.com/v1",
+   "doc": "https://developer.qiniu.com/aitokenapi",
+   "probe": {
+    "status": 200,
+    "models": 89
+   }
+  },
+  {
+   "id": "qvac",
+   "sources": {
+    "models.dev": 9
+   },
+   "doc": "https://www.npmjs.com/package/@qvac/ai-sdk-provider"
+  },
+  {
+   "id": "qwen",
+   "sources": {
+    "openrouter": 43
+   }
+  },
+  {
+   "id": "qwen_ai_platform",
+   "sources": {
+    "litellm": 58
+   }
+  },
+  {
+   "id": "qwencloud",
+   "sources": {
+    "litellm": 56
+   }
+  },
+  {
+   "id": "recraft",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "recursive",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "reducto",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "reflection",
+   "sources": {
+    "arena": 1,
+    "openrouter": 1,
+    "models.dev": 1
+   },
+   "api": "https://api.reflection.ai/openai/v1",
+   "doc": "https://developers.reflection.ai/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "refuseless",
+   "sources": {
+    "litellm": 5
+   }
+  },
+  {
+   "id": "regolo-ai",
+   "sources": {
+    "models.dev": 18
+   },
+   "api": "https://api.regolo.ai/v1",
+   "doc": "https://docs.regolo.ai/",
+   "probe": {
+    "status": 200,
+    "models": 16
+   }
+  },
+  {
+   "id": "rekaai",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "relace",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "replicate",
+   "sources": {
+    "litellm": 323
+   }
+  },
+  {
+   "id": "requesty",
+   "sources": {
+    "models.dev": 185
+   },
+   "api": "https://router.requesty.ai/v1",
+   "doc": "https://requesty.ai/solution/llm-routing/models",
+   "probe": {
+    "status": 200,
+    "models": 750
+   }
+  },
+  {
+   "id": "ricursiveai",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "routing-run",
+   "sources": {
+    "models.dev": 15
+   },
+   "api": "https://api.routing.run/v1",
+   "doc": "https://docs.routing.run/api-reference/models",
+   "probe": {
+    "status": 503
+   }
+  },
+  {
+   "id": "runinfra",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.runinfra.ai/v1",
+   "doc": "https://runinfra.ai/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "runwayml",
+   "sources": {
+    "litellm": 39
+   }
+  },
+  {
+   "id": "sagemaker",
+   "sources": {
+    "litellm": 6
+   }
+  },
+  {
+   "id": "sail",
+   "sources": {
+    "litellm": 12
+   }
+  },
+  {
+   "id": "sakana",
+   "sources": {
+    "openrouter": 4,
+    "models.dev": 4
+   },
+   "api": "https://api.sakana.ai/v1",
+   "doc": "https://console.sakana.ai/models",
+   "probe": {
+    "status": 403
+   }
+  },
+  {
+   "id": "salad-cloud",
+   "sources": {
+    "models.dev": 1
+   },
+   "doc": "https://docs.salad.com/ai-gateway/explanation/overview"
+  },
+  {
+   "id": "sambanova",
+   "sources": {
+    "litellm": 8,
+    "models.dev": 5
+   },
+   "api": "https://api.sambanova.ai/v1",
+   "doc": "https://docs.sambanova.ai/cloud/docs/get-started/supported-models",
+   "probe": {
+    "status": 200,
+    "models": 5
+   }
+  },
+  {
+   "id": "sao10k",
+   "sources": {
+    "openrouter": 2
+   }
+  },
+  {
+   "id": "sap-ai-core",
+   "sources": {
+    "models.dev": 51
+   },
+   "doc": "https://help.sap.com/docs/sap-ai-core"
+  },
+  {
+   "id": "sarvam",
+   "sources": {
+    "litellm": 1,
+    "models.dev": 2
+   },
+   "api": "https://api.sarvam.ai/v1",
+   "doc": "https://docs.sarvam.ai/api-reference-docs/getting-started/models",
+   "probe": {
+    "status": 200,
+    "models": 2
+   }
+  },
+  {
+   "id": "scaledown",
+   "sources": {
+    "openrouter": 2,
+    "litellm": 5
+   }
+  },
+  {
+   "id": "scaleway",
+   "sources": {
+    "litellm": 15,
+    "models.dev": 17
+   },
+   "api": "https://api.scaleway.ai/v1",
+   "doc": "https://www.scaleway.com/en/docs/generative-apis/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "scnet-token-plan",
+   "sources": {
+    "models.dev": 19
+   },
+   "api": "https://api.scnet.cn/api/llm/v1",
+   "doc": "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/plans/token-plan.html",
+   "probe": {
+    "status": 400
+   }
+  },
+  {
+   "id": "scx-ai",
+   "sources": {
+    "litellm": 5,
+    "models.dev": 4
+   },
+   "api": "https://api.scx.ai/v1",
+   "doc": "https://platform.scx.ai/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "searxng",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "sensenova",
+   "sources": {
+    "models.dev": 6
+   },
+   "api": "https://token.sensenova.cn/v1",
+   "doc": "https://platform.sensenova.cn/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "serper",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "siliconflow",
+   "sources": {
+    "models.dev": 57
+   },
+   "api": "https://api.siliconflow.com/v1",
+   "doc": "https://cloud.siliconflow.com/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "siliconflow-cn",
+   "sources": {
+    "models.dev": 45
+   },
+   "api": "https://api.siliconflow.cn/v1",
+   "doc": "https://cloud.siliconflow.com/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "snowflake",
+   "sources": {
+    "litellm": 37
+   }
+  },
+  {
+   "id": "snowflake-cortex",
+   "sources": {
+    "models.dev": 25
+   },
+   "api": "https://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com/api/v2/cortex/v1",
+   "doc": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api",
+   "probe": {
+    "status": 0
+   }
+  },
+  {
+   "id": "soniox",
+   "sources": {
+    "litellm": 10
+   }
+  },
+  {
+   "id": "spacexai",
+   "sources": {
+    "arena": 18
+   }
+  },
+  {
+   "id": "stability",
+   "sources": {
+    "litellm": 23
+   }
+  },
+  {
+   "id": "stackit",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.openai-compat.model-serving.eu01.onstackit.cloud/v1",
+   "doc": "https://docs.stackit.cloud/products/data-and-ai/ai-model-serving/basics/available-shared-models",
+   "probe": {
+    "status": 403
+   }
+  },
+  {
+   "id": "standardcompute",
+   "sources": {
+    "models.dev": 40
+   },
+   "api": "https://api.stdcmpt.com/v1",
+   "doc": "https://docs.standardcompute.com/models",
+   "probe": {
+    "status": 200,
+    "models": 75
+   }
+  },
+  {
+   "id": "stepfun",
+   "sources": {
+    "arena": 5,
+    "openrouter": 3,
+    "models.dev": 7
+   },
+   "api": "https://api.stepfun.com/v1",
+   "doc": "https://platform.stepfun.com/docs/zh/overview/concept",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "stepfun-ai",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://api.stepfun.ai/v1",
+   "doc": "https://platform.stepfun.ai/docs/en/overview/concept",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "stepfun-ai-step-plan",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://api.stepfun.ai/step_plan/v1",
+   "doc": "https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "stepfun-step-plan",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://api.stepfun.com/step_plan/v1",
+   "doc": "https://platform.stepfun.com/docs/zh/step-plan/integrations/reasoning-api",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "strands_decider",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "streamlake",
+   "sources": {
+    "litellm": 26
+   }
+  },
+  {
+   "id": "subconscious",
+   "sources": {
+    "models.dev": 2
+   },
+   "api": "https://api.subconscious.dev/v1",
+   "doc": "https://docs.subconscious.dev",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "submodel",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://llm.submodel.ai/v1",
+   "doc": "https://submodel.gitbook.io",
+   "probe": {
+    "status": 200,
+    "models": 0
+   }
+  },
+  {
+   "id": "synthetic",
+   "sources": {
+    "models.dev": 12
+   },
+   "api": "https://api.synthetic.new/openai/v1",
+   "doc": "https://synthetic.new/pricing",
+   "probe": {
+    "status": 200,
+    "models": 12
+   }
+  },
+  {
+   "id": "tavily",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "tempr",
+   "sources": {
+    "models.dev": 82
+   },
+   "api": "https://api.temprhq.io/v1",
+   "doc": "https://temprhq.io/docs/gateway-reference.html",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "tencent",
+   "sources": {
+    "arena": 11,
+    "openrouter": 8,
+    "litellm": 18
+   }
+  },
+  {
+   "id": "tencent-coding-plan",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.lkeap.cloud.tencent.com/coding/v3",
+   "doc": "https://cloud.tencent.com/document/product/1772/128947",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "tencent-token-plan",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://api.lkeap.cloud.tencent.com/plan/v3",
+   "doc": "https://cloud.tencent.com/document/product/1823/130060",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "tencent-tokenhub",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://tokenhub.tencentmaas.com/v1",
+   "doc": "https://cloud.tencent.com/document/product/1823/130050",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "tensormesh",
+   "sources": {
+    "litellm": 10
+   }
+  },
+  {
+   "id": "tensorx",
+   "sources": {
+    "models.dev": 25
+   },
+   "api": "https://api.tensorx.ai/v1",
+   "doc": "https://docs.tensorx.ai/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "text-completion-codestral",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "text-completion-inception",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "text-completion-openai",
+   "sources": {
+    "litellm": 6
+   }
+  },
+  {
+   "id": "the-grid-ai",
+   "sources": {
+    "models.dev": 17
+   },
+   "api": "https://api.thegrid.ai/v1",
+   "doc": "https://thegrid.ai/docs",
+   "probe": {
+    "status": 200,
+    "models": 17
+   }
+  },
+  {
+   "id": "thedrummer",
+   "sources": {
+    "openrouter": 3
+   }
+  },
+  {
+   "id": "thinkingmachines",
+   "sources": {
+    "openrouter": 5,
+    "models.dev": 38
+   },
+   "api": "https://tinker.thinkingmachines.dev/services/tinker-prod/anthropic/api/v1",
+   "doc": "https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/",
+   "probe": {
+    "status": 404
+   }
+  },
+  {
+   "id": "thinky",
+   "sources": {
+    "arena": 3
+   }
+  },
+  {
+   "id": "tinfoil",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://inference.tinfoil.sh/v1",
+   "doc": "https://docs.tinfoil.sh",
+   "probe": {
+    "status": 200,
+    "models": 19
+   }
+  },
+  {
+   "id": "tinyfish",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "together_ai",
+   "sources": {
+    "litellm": 84
+   }
+  },
+  {
+   "id": "togetherai",
+   "sources": {
+    "models.dev": 33
+   },
+   "doc": "https://docs.together.ai/docs/serverless-models"
+  },
+  {
+   "id": "tokengo",
+   "sources": {
+    "models.dev": 13
+   },
+   "api": "https://api.tokengo.com/v1",
+   "doc": "https://www.tokengo.com/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "tokenrouter",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://api.tokenrouter.com/v1",
+   "doc": "https://www.tokenrouter.com/docs/tokenrouter-feature-guide/",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "transcribe",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "trustedrouter",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://api.trustedrouter.com/v1",
+   "doc": "https://trustedrouter.com/docs",
+   "probe": {
+    "status": 200,
+    "models": 678
+   }
+  },
+  {
+   "id": "typesafe",
+   "sources": {
+    "openrouter": 1,
+    "litellm": 4
+   }
+  },
+  {
+   "id": "umans-ai",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://api.code.umans.ai/v1",
+   "doc": "https://app.umans.ai/offers/code/docs/orgs",
+   "probe": {
+    "status": 200,
+    "models": 7
+   }
+  },
+  {
+   "id": "umans-ai-coding-plan",
+   "sources": {
+    "models.dev": 9
+   },
+   "api": "https://api.code.umans.ai/v1",
+   "doc": "https://app.umans.ai/offers/code/docs",
+   "probe": {
+    "status": 200,
+    "models": 7
+   }
+  },
+  {
+   "id": "unbiased",
+   "sources": {
+    "openrouter": 3
+   }
+  },
+  {
+   "id": "undi95",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "unorouter",
+   "sources": {
+    "models.dev": 23
+   },
+   "api": "https://api.unorouter.com/v1",
+   "doc": "https://unorouter.com/models",
+   "probe": {
+    "status": 200,
+    "models": 319
+   }
+  },
+  {
+   "id": "upstage",
+   "sources": {
+    "arena": 2,
+    "openrouter": 2,
+    "models.dev": 5
+   },
+   "api": "https://api.upstage.ai/v1/solar",
+   "doc": "https://developers.upstage.ai/docs/apis/chat",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "v0",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "vancine",
+   "sources": {
+    "models.dev": 8
+   },
+   "api": "https://vancine.com/v1",
+   "doc": "https://vancine.com/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "venice",
+   "sources": {
+    "models.dev": 128
+   },
+   "doc": "https://docs.venice.ai"
+  },
+  {
+   "id": "vercel",
+   "sources": {
+    "models.dev": 419
+   },
+   "doc": "https://github.com/vercel/ai/tree/5eb85cc45a259553501f535b8ac79a77d0e79223/packages/gateway"
+  },
+  {
+   "id": "vercel_ai_gateway",
+   "sources": {
+    "litellm": 103
+   }
+  },
+  {
+   "id": "vertex_ai",
+   "sources": {
+    "litellm": 62
+   }
+  },
+  {
+   "id": "vertex_ai-ai21_models",
+   "sources": {
+    "litellm": 5
+   }
+  },
+  {
+   "id": "vertex_ai-anthropic_models",
+   "sources": {
+    "litellm": 40
+   }
+  },
+  {
+   "id": "vertex_ai-deepseek_models",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "vertex_ai-embedding-models",
+   "sources": {
+    "litellm": 10
+   }
+  },
+  {
+   "id": "vertex_ai-language-models",
+   "sources": {
+    "litellm": 45
+   }
+  },
+  {
+   "id": "vertex_ai-llama_models",
+   "sources": {
+    "litellm": 12
+   }
+  },
+  {
+   "id": "vertex_ai-minimax_models",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "vertex_ai-mistral_models",
+   "sources": {
+    "litellm": 19
+   }
+  },
+  {
+   "id": "vertex_ai-moonshot_models",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "vertex_ai-openai_models",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "vertex_ai-qwen_models",
+   "sources": {
+    "litellm": 4
+   }
+  },
+  {
+   "id": "vertex_ai-text-models",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "vertex_ai-video-models",
+   "sources": {
+    "litellm": 8
+   }
+  },
+  {
+   "id": "vertex_ai-zai_models",
+   "sources": {
+    "litellm": 3
+   }
+  },
+  {
+   "id": "vispark",
+   "sources": {
+    "models.dev": 3
+   },
+   "api": "https://api.lab.vispark.in/v1",
+   "doc": "https://lab.vispark.in/#vision",
+   "probe": {
+    "status": 200,
+    "models": 3
+   }
+  },
+  {
+   "id": "vivgrid",
+   "sources": {
+    "models.dev": 38
+   },
+   "api": "https://api.vivgrid.com/v1",
+   "doc": "https://docs.vivgrid.com/models",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "volcengine",
+   "sources": {
+    "litellm": 20,
+    "models.dev": 16
+   },
+   "api": "https://ark.cn-beijing.volces.com/api/v3",
+   "doc": "https://www.volcengine.com/docs/82379/1330310",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "volcengine-coding-plan",
+   "sources": {
+    "models.dev": 10
+   },
+   "api": "https://ark.cn-beijing.volces.com/api/coding/v3",
+   "doc": "https://www.volcengine.com/docs/82379/1928261",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "voyage",
+   "sources": {
+    "litellm": 31
+   }
+  },
+  {
+   "id": "vultr",
+   "sources": {
+    "models.dev": 15
+   },
+   "api": "https://api.vultrinference.com/v1",
+   "doc": "https://api.vultrinference.com/",
+   "probe": {
+    "status": 200,
+    "models": 33
+   }
+  },
+  {
+   "id": "wafer.ai",
+   "sources": {
+    "models.dev": 5
+   },
+   "api": "https://pass.wafer.ai/v1",
+   "doc": "https://docs.wafer.ai/wafer-pass",
+   "probe": {
+    "status": 200,
+    "models": 13
+   }
+  },
+  {
+   "id": "wallaby",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://api.wallabytoken.com/v1",
+   "doc": "https://wallabytoken.com/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "wally",
+   "sources": {
+    "litellm": 10,
+    "models.dev": 8
+   },
+   "api": "https://inference.runanywhere.ai/v1",
+   "doc": "https://docs.runanywhere.ai/wally-cloud/api",
+   "probe": {
+    "status": 200,
+    "models": 9
+   }
+  },
+  {
+   "id": "wandb",
+   "sources": {
+    "litellm": 34,
+    "models.dev": 24
+   },
+   "api": "https://api.inference.wandb.ai/v1",
+   "doc": "https://docs.wandb.ai/inference",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "watsonx",
+   "sources": {
+    "litellm": 31,
+    "models.dev": 5
+   },
+   "doc": "https://www.ibm.com/docs/en/watsonx/saas?topic=solutions-supported-foundation-models"
+  },
+  {
+   "id": "webiq",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "writer",
+   "sources": {
+    "openrouter": 1
+   }
+  },
+  {
+   "id": "x-ai",
+   "sources": {
+    "openrouter": 10
+   }
+  },
+  {
+   "id": "xai",
+   "sources": {
+    "litellm": 61,
+    "models.dev": 12
+   },
+   "doc": "https://docs.x.ai/docs/models"
+  },
+  {
+   "id": "xiaomi",
+   "sources": {
+    "arena": 8,
+    "openrouter": 5,
+    "models.dev": 6
+   },
+   "api": "https://api.xiaomimimo.com/v1",
+   "doc": "https://platform.xiaomimimo.com/#/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "xiaomi_mimo",
+   "sources": {
+    "litellm": 2
+   }
+  },
+  {
+   "id": "xiaomi-token-plan-ams",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://token-plan-ams.xiaomimimo.com/v1",
+   "doc": "https://platform.xiaomimimo.com/#/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "xiaomi-token-plan-cn",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://token-plan-cn.xiaomimimo.com/v1",
+   "doc": "https://platform.xiaomimimo.com/#/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "xiaomi-token-plan-sgp",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://token-plan-sgp.xiaomimimo.com/v1",
+   "doc": "https://platform.xiaomimimo.com/#/docs",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "xpersona",
+   "sources": {
+    "models.dev": 13
+   },
+   "api": "https://www.xpersona.co/v1",
+   "doc": "https://www.xpersona.co/docs",
+   "probe": {
+    "status": 200,
+    "models": 19
+   }
+  },
+  {
+   "id": "you_com",
+   "sources": {
+    "litellm": 1
+   }
+  },
+  {
+   "id": "z-ai",
+   "sources": {
+    "arena": 15,
+    "openrouter": 20
+   }
+  },
+  {
+   "id": "zai",
+   "sources": {
+    "litellm": 17,
+    "models.dev": 18
+   },
+   "api": "https://api.z.ai/api/paas/v4",
+   "doc": "https://docs.z.ai/guides/overview/pricing",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "zai-coding-plan",
+   "sources": {
+    "models.dev": 7
+   },
+   "api": "https://api.z.ai/api/coding/paas/v4",
+   "doc": "https://docs.z.ai/devpack/overview",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "zeldoc",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://api.zeldoc.ai/v1",
+   "doc": "https://docs.zeldoc.ai",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "zenifra",
+   "sources": {
+    "models.dev": 1
+   },
+   "api": "https://ai.zenifra.com/v1",
+   "doc": "https://docs.zenifra.com",
+   "probe": {
+    "status": 200,
+    "models": 14
+   }
+  },
+  {
+   "id": "zenmux",
+   "sources": {
+    "models.dev": 110
+   },
+   "api": "https://zenmux.ai/api/v1",
+   "doc": "https://docs.zenmux.ai",
+   "probe": {
+    "status": 200,
+    "models": 219
+   }
+  },
+  {
+   "id": "zerogpu",
+   "sources": {
+    "litellm": 13
+   }
+  },
+  {
+   "id": "zhipuai",
+   "sources": {
+    "models.dev": 17
+   },
+   "api": "https://open.bigmodel.cn/api/paas/v4",
+   "doc": "https://docs.bigmodel.cn/cn/guide/start/pricing",
+   "probe": {
+    "status": 401
+   }
+  },
+  {
+   "id": "zhipuai-coding-plan",
+   "sources": {
+    "models.dev": 4
+   },
+   "api": "https://open.bigmodel.cn/api/coding/paas/v4",
+   "doc": "https://docs.bigmodel.cn/cn/coding-plan/overview",
+   "probe": {
+    "status": 401
+   }
+  }
+ ]
+}

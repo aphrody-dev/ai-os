@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { mkdtempSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { handle as acpHandle } from "../src/relay/acp.ts";
@@ -12,6 +12,9 @@ import {
 import { createTermTools } from "../src/term/mcp-tools.ts";
 import { TermManager } from "../src/term/pty.ts";
 import { startTermServer } from "../src/term/server.ts";
+
+// The daemon serves aysys.wasm, a build output of the OS repository (not part of this one): the test runs where it exists.
+const HAS_WASM = existsSync(join(Bun.env.SRC_ROOT ?? join(import.meta.dir, "..", "..", ".."), "target", "sys", "aysys.wasm"));
 
 describe("@aphrody/ai-os AI-First WebGPU Terminal", () => {
   test("TermManager spawns real ConPTY shell, tracks VTerm text & captures OSC-133 errors", async () => {
@@ -174,7 +177,7 @@ describe("@aphrody/ai-os AI-First WebGPU Terminal", () => {
     expect(out[0]?.result?.sessionId).toBeTruthy();
   });
 
-  test("HTTP + WebSocket daemon serves aysys.wasm/WGSL & renders in real headless Chrome", async () => {
+  test.skipIf(!HAS_WASM)("HTTP + WebSocket daemon serves aysys.wasm/WGSL & renders in real headless Chrome", async () => {
     const mgr = new TermManager();
     const srv = await startTermServer({
       port: 0,

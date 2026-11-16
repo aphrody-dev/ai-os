@@ -275,6 +275,46 @@ map_identity = "allow"
 # (rust-toolchain.toml) ships no Cranelift backend.
 # Measurements and rejected levers: docs/BUILD_SPEED.md.
 
+# The extracted crates resolve each other from this tree, not from the registry.
+[patch.crates-io]
+aphrody-a2a = { path = "frameworks/a2a" }
+aphrody-a2a-client = { path = "frameworks/a2a-client" }
+aphrody-a2a-coord = { path = "frameworks/a2a-coord" }
+aphrody-a2a-grpc = { path = "frameworks/a2a-grpc" }
+aphrody-a2a-pb = { path = "frameworks/a2a-pb" }
+aphrody-a2a-server = { path = "frameworks/a2a-server" }
+aphrody-accounts = { path = "frameworks/accounts" }
+aphrody-agent-home = { path = "frameworks/agent-home" }
+aphrody-agent-proto = { path = "frameworks/agent-proto" }
+aphrody-agent-runtime = { path = "frameworks/agent-runtime" }
+aphrody-agent-tools = { path = "frameworks/agent-tools" }
+agent-context = { path = "frameworks/agent/context" }
+aphrody-antigravity = { path = "frameworks/antigravity" }
+aphrody-boq = { path = "frameworks/boq" }
+aphrody-embed = { path = "frameworks/embed" }
+aphrody-gateway = { path = "frameworks/gateway" }
+aphrody-gemini-runtime = { path = "frameworks/gemini-runtime" }
+aphrody-gemini-web = { path = "frameworks/gemini-web" }
+aphrody-google = { path = "frameworks/google" }
+aphrody-infer = { path = "frameworks/infer" }
+aphrody-llama = { path = "frameworks/llama" }
+aphrody-llama-server = { path = "frameworks/llama-server" }
+aphrody-llama-sys = { path = "frameworks/llama-sys" }
+aphrody-mcp-client = { path = "frameworks/mcp-client" }
+aphrody-memory = { path = "frameworks/memory" }
+aphrody-ml-config = { path = "frameworks/ml-config" }
+aphrody-ml-runtime = { path = "frameworks/ml-runtime" }
+aphrody-model-antigravity = { path = "frameworks/model-antigravity" }
+aphrody-model-client = { path = "frameworks/model-client" }
+aphrody-models = { path = "frameworks/models" }
+aphrody-rag = { path = "frameworks/rag" }
+aphrody-rag-core = { path = "frameworks/rag-core" }
+ring3-agent = { path = "frameworks/ring3-agent" }
+aphrody-config = { path = "system/config" }
+aphrody-core = { path = "system/core" }
+aphrody-jev = { path = "system/jev" }
+aphrody-vault = { path = "system/vault" }
+
 [profile.dev]
 opt-level = 0
 debug = "line-tables-only"

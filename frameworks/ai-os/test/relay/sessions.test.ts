@@ -29,7 +29,7 @@ test("SessionStart hook registers and names the session", () => {
   const o = runHook("start", { session_id: "aaaa1111", cwd: "C:/aphrody" });
   expect(o.hookSpecificOutput.hookEventName).toBe("SessionStart");
   expect(o.hookSpecificOutput.additionalContext).toContain(
-    'this session is "claude-code-src-aaaa11"',
+    'this session is "claude-code-aphrody-aaaa11"',
   );
   runHook("start", { session_id: "bbbb2222", cwd: "C:/aphrody" });
   S.resetStore();
@@ -37,13 +37,13 @@ test("SessionStart hook registers and names the session", () => {
     S.list()
       .map((s) => s.name)
       .sort(),
-  ).toEqual(["claude-code-src-aaaa11", "claude-code-src-bbbb22"]);
+  ).toEqual(["claude-code-aphrody-aaaa11", "claude-code-aphrody-bbbb22"]);
 });
 
 test("send, hook delivery, threaded synchronous reply", async () => {
   const pending = join(home, "sessions", "bbbb2222.pending");
   const ask = tool("session_send").run({
-    from: "claude-code-src-aaaa11",
+    from: "claude-code-aphrody-aaaa11",
     to: "bbbb",
     text: "ping?",
     wait_s: 10,
@@ -62,13 +62,13 @@ test("send, hook delivery, threaded synchronous reply", async () => {
   )![1]!;
   await tool("session_send").run({
     from: "bbbb2222",
-    to: "claude-code-src-aaaa11",
+    to: "claude-code-aphrody-aaaa11",
     text: "pong",
     reply_to: msgId,
   });
   const r = (await ask) as any;
   expect(r.reply.text).toBe("pong");
-  expect(r.reply.from).toBe("claude-code-src-bbbb22");
+  expect(r.reply.from).toBe("claude-code-aphrody-bbbb22");
 });
 
 test("Stop hook blocks while mail is pending, then lets the session stop", async () => {
@@ -85,5 +85,5 @@ test("Stop hook blocks while mail is pending, then lets the session stop", async
 
 test("unknown and ambiguous recipients are errors", () => {
   expect(() => S.send("aaaa1111", "zzzz", "x")).toThrow(/unknown session/);
-  expect(() => S.send("aaaa1111", "claude-code-src", "x")).toThrow(/ambiguous/);
+  expect(() => S.send("aaaa1111", "claude-code-aphrody", "x")).toThrow(/ambiguous/);
 });

@@ -1,0 +1,153 @@
+{
+ "source": "https://arena.ai/leaderboard/chat/text",
+ "captured": "2026-11-14",
+ "method": "Claude in Chrome (owner session); arena.ai answers HTTP 403 to non-browser clients and has no public leaderboard API",
+ "rows_total": 421,
+ "orgs": [
+  {
+   "org": "Google",
+   "models": 43,
+   "best_rank": 1
+  },
+  {
+   "org": "Meta",
+   "models": 23,
+   "best_rank": 3
+  },
+  {
+   "org": "Anthropic",
+   "models": 34,
+   "best_rank": 4
+  },
+  {
+   "org": "Moonshot",
+   "models": 8,
+   "best_rank": 20
+  },
+  {
+   "org": "OpenAI",
+   "models": 48,
+   "best_rank": 23
+  },
+  {
+   "org": "Alibaba",
+   "models": 42,
+   "best_rank": 25
+  },
+  {
+   "org": "Z.ai",
+   "models": 15,
+   "best_rank": 28
+  },
+  {
+   "org": "Xiaomi",
+   "models": 8,
+   "best_rank": 31
+  },
+  {
+   "org": "DeepSeek",
+   "models": 22,
+   "best_rank": 38
+  },
+  {
+   "org": "SpaceXAI",
+   "models": 18,
+   "best_rank": 40
+  },
+  {
+   "org": "Baidu",
+   "models": 4,
+   "best_rank": 53
+  },
+  {
+   "org": "Bytedance",
+   "models": 1,
+   "best_rank": 70
+  },
+  {
+   "org": "Tencent",
+   "models": 11,
+   "best_rank": 77
+  },
+  {
+   "org": "StepFun",
+   "models": 5,
+   "best_rank": 84
+  },
+  {
+   "org": "Thinky",
+   "models": 3,
+   "best_rank": 95
+  },
+  {
+   "org": "Meituan",
+   "models": 2,
+   "best_rank": 104
+  },
+  {
+   "org": "MiniMax",
+   "models": 6,
+   "best_rank": 106
+  },
+  {
+   "org": "Reflection",
+   "models": 1,
+   "best_rank": 109
+  },
+  {
+   "org": "Amazon",
+   "models": 10,
+   "best_rank": 120
+  },
+  {
+   "org": "Mistral",
+   "models": 18,
+   "best_rank": 121
+  },
+  {
+   "org": "Nvidia",
+   "models": 12,
+   "best_rank": 123
+  },
+  {
+   "org": "Upstage",
+   "models": 2,
+   "best_rank": 185
+  },
+  {
+   "org": "Cohere",
+   "models": 7,
+   "best_rank": 217
+  },
+  {
+   "org": "Inception AI",
+   "models": 2,
+   "best_rank": 233
+  },
+  {
+   "org": "Ant Group",
+   "models": 2,
+   "best_rank": 236
+  },
+  {
+   "org": "IBM",
+   "models": 9,
+   "best_rank": 240
+  },
+  {
+   "org": "Ai2",
+   "models": 8,
+   "best_rank": 251
+  },
+  {
+   "org": "NexusFlow",
+   "models": 1,
+   "best_rank": 275
+  },
+  {
+   "org": "Microsoft",
+   "models": 8,
+   "best_rank": 325
+  }
+ ]
+}
