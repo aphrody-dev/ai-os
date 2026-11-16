@@ -1,0 +1,12 @@
+name = "docker"
+version = "1.0.1"
+kind = "source"
+entry = "docker.plugin.niu"
+summary = "Docker aliases, completions, and shell helpers."
+permissions = ["shell:source", "cwd:read", "process:run:docker"]
+required_binaries = ["docker"]
+
+[exports]
+aliases = true
+functions = ["dsh", "dclean"]
+completions = ["docker"]

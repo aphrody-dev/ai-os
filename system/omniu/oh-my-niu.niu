@@ -1,0 +1,153 @@
+# Oh My Niu framework entry point.
+#
+# Source this file from an interactive Niubash rc file after setting NIUBASH to
+# this repository or installed bundle root:
+#
+#   NIUBASH=C:/Users/me/.niubash/oh-my-niu
+#   NIU_PLUGINS=(prompt-core git docker zoxide)
+#   NIU_THEME=minimal
+#   source "$NIUBASH/oh-my-niu.niu"
+#
+# The entry point is re-entrant within one shell: sourcing it again in the
+# same process is a no-op. The loaded marker is deliberately NOT exported, so
+# nested shells and child processes run the full load for themselves. Force a
+# full reload in the current shell with:
+#
+#   source "$NIUBASH/oh-my-niu.niu" --reload
+
+if [ -z "${NIUBASH:-}" ]; then
+  if [ -n "${BASH_SOURCE:-}" ]; then
+    __omw_entry="${BASH_SOURCE[0]}"
+    NIUBASH="$(cd "$(dirname "$__omw_entry")" 2>/dev/null && pwd)"
+  else
+    # Since niubash#546 the host no longer fabricates a HOME on POSIX
+    # when the caller provided none, so an unset HOME here is real:
+    # leave NIUBASH empty (handled below) instead of deriving the
+    # root-anchored path "/.oh-my-niu" from it.
+    NIUBASH="${HOME:+$HOME/.oh-my-niu}"
+  fi
+  export NIUBASH
+fi
+
+if [ -z "${NIUBASH:-}" ]; then
+  echo "oh-my-niu: could not locate the bundle root; set NIUBASH (or HOME, for the default ~/.oh-my-niu)" >&2
+  return 1
+fi
+
+# Re-entrancy guard: remember which tree is loaded in THIS shell only. The
+# here-marker is a fresh process-local name that is never exported, so a
+# NIU_OMW_LOADED value inherited from a parent shell can never convince this
+# child it has already loaded; child shells always run the full load for
+# themselves. `--reload` (or pointing NIUBASH at a different checkout) forces
+# a full load.
+if [ -n "${__omw_loaded_here:-}" ] && [ "${NIU_OMW_LOADED:-}" = "$NIUBASH" ] && [ "${1:-}" != "--reload" ]; then
+  return 0
+fi
+NIU_OMW_LOADED="$NIUBASH"
+__omw_loaded_here=1
+
+: "${NIU_CUSTOM:=${HOME:+$HOME/.niubash/custom}}"
+if [ -z "${NIU_THEME+x}" ]; then
+  NIU_THEME=minimal
+fi
+if [ -z "${NIU_THEME_PLUGIN+x}" ] && [ -n "${NIU_THEME:-}" ]; then
+  NIU_THEME_PLUGIN="theme-$NIU_THEME"
+fi
+
+if [ -z "${NIU_DISABLE_DEFAULT_PLUGINS:-}" ]; then
+  if [ "${#NIU_PLUGINS[@]}" -eq 0 ] 2>/dev/null; then
+    NIU_PLUGINS=(prompt-core git)
+  fi
+fi
+
+# Load the framework libs relative to THIS entry file, not $NIUBASH: a
+# stale NIUBASH inherited from the environment (or a bundle layout whose
+# NIUBASH points at the app root) used to make these `[ -f ]` checks fail
+# silently, after which every plugin's niubash_add_*_hook call spammed
+# "command not found" (most visible in non-interactive -C sessions).
+__omw_lib_root="$NIUBASH"
+if [ -n "${BASH_SOURCE[0]:-}" ]; then
+  __omw_entry_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+  if [ -n "$__omw_entry_dir" ]; then
+    __omw_lib_root="$__omw_entry_dir"
+  fi
+fi
+[ -f "$__omw_lib_root/lib/hooks.niu" ] && . "$__omw_lib_root/lib/hooks.niu"
+[ -f "$__omw_lib_root/lib/aliases.niu" ] && . "$__omw_lib_root/lib/aliases.niu"
+[ -f "$__omw_lib_root/lib/prompt.niu" ] && . "$__omw_lib_root/lib/prompt.niu"
+[ -f "$__omw_lib_root/lib/git.niu" ] && . "$__omw_lib_root/lib/git.niu"
+[ -f "$__omw_lib_root/lib/moo.niu" ] && . "$__omw_lib_root/lib/moo.niu"
+[ -f "$__omw_lib_root/lib/env.niu" ] && . "$__omw_lib_root/lib/env.niu"
+unset __omw_lib_root __omw_entry_dir
+
+# Safety net: if the hook registry could not be loaded (slim bundle layout,
+# non-interactive -C tree), degrade to no-op registration and runners so
+# plugin initialization stays silent instead of erroring per plugin.
+if [ "$(command -v niubash_add_precmd_hook 2>/dev/null)" = "" ] ||
+  [ "$(command -v niubash_run_precmd_hooks 2>/dev/null)" = "" ]; then
+  __niubash_hook_list_add() { :; }
+  for __omw_phase in startup precmd preexec postcmd chpwd period \
+    zshaddhistory zshexit greeting title trapdebug traperr trapint \
+    trapwinch trapusr1 trapusr2 trappipe trapterm trapchld trapzerr; do
+    eval "niubash_add_${__omw_phase}_hook() { :; }"
+    eval "niubash_run_${__omw_phase}_hooks() { :; }"
+  done
+  unset __omw_phase
+fi
+
+__omw_loaded_plugins=" "
+
+for __omw_plugin in "${NIU_PLUGINS[@]}"; do
+  if [ -n "$__omw_plugin" ]; then
+    __omw_plugin_custom="$NIU_CUSTOM/plugins/$__omw_plugin/$__omw_plugin.plugin.niu"
+    __omw_plugin_bundle="$NIUBASH/plugins/$__omw_plugin/$__omw_plugin.plugin.niu"
+
+    if [ -f "$__omw_plugin_custom" ]; then
+      . "$__omw_plugin_custom"
+    else
+      if [ -f "$__omw_plugin_bundle" ]; then
+        . "$__omw_plugin_bundle"
+      fi
+    fi
+    __omw_loaded_plugins="$__omw_loaded_plugins$__omw_plugin "
+  fi
+done
+
+if [ -n "${NIU_THEME:-}" ] && [ -n "${NIU_THEME_PLUGIN:-}" ]; then
+  case "$__omw_loaded_plugins" in
+    *" $NIU_THEME_PLUGIN "*) ;;
+    *)
+      __omw_theme_plugin_custom="$NIU_CUSTOM/plugins/$NIU_THEME_PLUGIN/$NIU_THEME_PLUGIN.plugin.niu"
+      __omw_theme_plugin_bundle="$NIUBASH/plugins/$NIU_THEME_PLUGIN/$NIU_THEME_PLUGIN.plugin.niu"
+
+      if [ -f "$__omw_theme_plugin_custom" ]; then
+        . "$__omw_theme_plugin_custom"
+      else
+        if [ -f "$__omw_theme_plugin_bundle" ]; then
+          . "$__omw_theme_plugin_bundle"
+        else
+          echo "oh-my-niu: theme plugin '$NIU_THEME_PLUGIN' not found for theme '$NIU_THEME'" >&2
+        fi
+      fi
+      ;;
+  esac
+fi
+
+niubash_run_startup_hooks 2>/dev/null || true
+
+# Wire the lifecycle dispatchers onto the prompt surface the host
+# actually fires (PROMPT_COMMAND for precmd/chpwd, the DEBUG trap for
+# preexec). Current Niubash never calls the framework's hook runners
+# itself; see "Shell wiring" in lib/hooks.niu. Skipped when
+# NIU_FRAMEWORK_HOOKS=off.
+if command -v niubash_install_shell_hooks >/dev/null 2>&1; then
+  niubash_install_shell_hooks
+fi
+
+# Optional startup banner: set NIU_BANNER=1 in .niubashrc to greet with the
+# block-letter mark and the niubash bull. niu_moo is always available.
+if [ "${NIU_BANNER:-0}" = "1" ]; then
+  niu_banner
+fi
+
+unset __omw_lib __omw_plugin __omw_plugin_custom __omw_plugin_bundle __omw_entry __omw_theme_plugin_custom __omw_theme_plugin_bundle __omw_loaded_plugins

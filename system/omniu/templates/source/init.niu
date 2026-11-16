@@ -1,0 +1,22 @@
+# example-source plugin
+# Niubash sources this file in the current interactive shell.
+# Use NIU_PLUGIN_HOOK to distinguish startup/precmd/preexec/chpwd.
+
+example_source_hello() {
+  echo "hello from a sourced Niubash plugin"
+}
+
+case "$NIU_PLUGIN_HOOK" in
+  startup)
+    alias example-source-hello='example_source_hello'
+    ;;
+  precmd)
+    export EXAMPLE_SOURCE_LAST_EXIT="$NIU_LAST_EXIT_CODE"
+    ;;
+  preexec)
+    export EXAMPLE_SOURCE_LAST_COMMAND="$NIU_PREEXEC_COMMAND"
+    ;;
+  chpwd)
+    export EXAMPLE_SOURCE_LAST_DIR="$NIU_PWD"
+    ;;
+esac

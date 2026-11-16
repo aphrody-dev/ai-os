@@ -1,0 +1,12 @@
+# Oh My Niu direnv plugin.
+
+[ -f "$NIUBASH/lib/hooks.niu" ] && . "$NIUBASH/lib/hooks.niu"
+
+__niubash_direnv_apply() {
+  command -v direnv >/dev/null 2>&1 || return 0
+  eval "$(direnv export bash 2>/dev/null)" || true
+}
+
+niubash_add_startup_hook __niubash_direnv_apply
+niubash_add_precmd_hook __niubash_direnv_apply
+niubash_add_chpwd_hook __niubash_direnv_apply

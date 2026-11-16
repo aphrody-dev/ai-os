@@ -1,0 +1,66 @@
+{
+  "name": "proof-fleet",
+  "limits": {
+    "maxSteps": 16,
+    "budgetUsd": 12,
+    "tokenBudget": 200000,
+    "deadlineMs": 1800000
+  },
+  "steps": [
+    {
+      "id": "pc-gemini",
+      "do": "agent",
+      "role": "reviewer",
+      "hosts": ["pc"],
+      "needs": { "models": ["agy:gemini-4-carbon-high"], "only": ["^agy"] },
+      "prompt": "En une phrase, sans préambule : à quoi sert un graphe de tâches dans un orchestrateur d'agents ?"
+    },
+    {
+      "id": "pc-claude",
+      "do": "agent",
+      "role": "reviewer",
+      "hosts": ["pc"],
+      "needs": { "only": ["^claude$"] },
+      "prompt": "En une phrase, sans préambule : à quoi sert une bascule de fournisseur sur erreur 429 ?"
+    },
+    {
+      "id": "prd-agent",
+      "do": "agent",
+      "role": "reviewer",
+      "hosts": ["prd", "pc"],
+      "needs": { "ignore": ["^agy", "^ollama/"] },
+      "prompt": "Réponds exactement : relu"
+    },
+    {
+      "id": "prd-sys",
+      "do": "cmd",
+      "hosts": ["prd"],
+      "repo": false,
+      "run": "echo host=$(hostname) nproc=$(nproc) nice=$(nice); tmux -V; bun --version"
+    },
+    {
+      "id": "fr2-sys",
+      "do": "cmd",
+      "hosts": ["fr2"],
+      "repo": false,
+      "run": "echo host=$(hostname) nproc=$(nproc) nice=$(nice); tmux -V; bun --version"
+    },
+    {
+      "id": "plan",
+      "do": "agent",
+      "role": "reviewer",
+      "hosts": ["pc"],
+      "needs": { "only": ["^claude$"] },
+      "expand": true,
+      "prompt": "Recopie exactement ce bloc, sans rien d'autre :\n```json\n{\"steps\":[{\"id\":\"disk-prd\",\"do\":\"cmd\",\"hosts\":[\"prd\"],\"repo\":false,\"run\":\"df -h / | tail -1\"},{\"id\":\"disk-fr2\",\"do\":\"cmd\",\"hosts\":[\"fr2\"],\"repo\":false,\"run\":\"df -h / | tail -1\"}]}\n```"
+    },
+    {
+      "id": "publish",
+      "do": "agent",
+      "role": "growth",
+      "deps": ["pc-gemini"],
+      "effect": "external",
+      "prompt": "Publier : {{pc-gemini}}"
+    }
+  ]
+}

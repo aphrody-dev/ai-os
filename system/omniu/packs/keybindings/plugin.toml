@@ -1,0 +1,22 @@
+name = "keybindings"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "builtin"
+api = "niubash:plugin@0.1.0"
+category = "ux"
+summary = "Niubash keybinding presets mapped to native ruline actions."
+default = true
+permissions = []
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = ["common", "emacs", "vi"]
+themes = []
+
+[notes]
+zle = "This pack is not ZLE support and does not execute ZLE widget bodies."

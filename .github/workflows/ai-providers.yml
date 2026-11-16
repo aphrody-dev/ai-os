@@ -1,0 +1,32 @@
+# Weekly LLM provider inventory (ai-os providers: frameworks/ai-os/src/providers, sources in sources.toml): commits
+# docs/ai/providers.json and docs/ai/PROVIDERS.md on main when they changed.
+name: ai-providers
+on:
+  schedule:
+    - cron: "41 5 * * 1"
+  workflow_dispatch:
+concurrency:
+  group: ai-providers
+  cancel-in-progress: false
+permissions: { contents: write }
+jobs:
+  inventory:
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun frameworks/ai-os/src/providers/cli.ts
+      - name: Commit inventory
+        run: |
+          git config user.name aphrody-dev
+          git config user.email contact@aphrody.com
+          git add docs/ai/providers.json docs/ai/PROVIDERS.md
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git commit -m "docs(ai): provider inventory regenerated (ai-providers)"
+          git pull --rebase origin main
+          git push origin HEAD:main

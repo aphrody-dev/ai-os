@@ -1,0 +1,2 @@
+# Registers every plugin of plugins/ that declares a [bun] entry (the ay module among them).
+preload = ["./src/preload.ts"]

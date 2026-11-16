@@ -1,0 +1,11 @@
+name = "git-fetch-reminder"
+version = "1.0.0"
+kind = "source"
+entry = "git-fetch-reminder.plugin.niu"
+summary = "Periodic reminder when the git branch diverged from its upstream."
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = ["git"]
+
+[exports]
+functions = ["__niu_git_fetch_remind"]
+hooks = ["period"]

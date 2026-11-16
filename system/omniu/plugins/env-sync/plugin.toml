@@ -1,0 +1,10 @@
+name = "env-sync"
+version = "1.0.1"
+kind = "source"
+entry = "env-sync.plugin.niu"
+summary = "Sync the WPM package manifest and shell config through any rclone remote (WebDAV/Nutstore/OneDrive/S3)."
+permissions = ["shell:source", "process:run:rclone", "process:run:wpm"]
+required_binaries = ["rclone", "wpm"]
+
+[exports]
+functions = ["env-push", "env-pull"]

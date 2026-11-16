@@ -1,0 +1,12 @@
+name = "kubectl"
+version = "1.0.1"
+kind = "source"
+entry = "kubectl.plugin.niu"
+summary = "Kubectl aliases, completions, and context helpers."
+permissions = ["shell:source", "cwd:read", "process:run:kubectl"]
+required_binaries = ["kubectl"]
+
+[exports]
+aliases = true
+functions = ["kns", "kctx"]
+completions = ["kubectl"]

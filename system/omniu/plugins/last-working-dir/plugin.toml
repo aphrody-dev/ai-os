@@ -1,0 +1,11 @@
+name = "last-working-dir"
+version = "1.0.1"
+kind = "source"
+entry = "last-working-dir.plugin.niu"
+summary = "Restore and save the last interactive working directory."
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "fs:read:cache", "fs:write:cache"]
+required_binaries = []
+
+[exports]
+functions = ["lwd"]
+hooks = ["startup", "chpwd"]

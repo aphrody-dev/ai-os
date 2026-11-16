@@ -1,0 +1,44 @@
+{
+  "name": "@aphrody/env-kit",
+  "version": "1.0.0",
+  "description": "Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for C:/aphrody",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "check": "bun check",
+    "fmt": "bun fmt",
+    "fmt:check": "bun fmt --check",
+    "test": "bun test",
+    "doctor": "bun run src/cli.ts doctor",
+    "accounts": "bun run src/cli.ts accounts status"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphrody-dev/ai-os.git",
+    "directory": "system/env-kit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./github-app": "./src/github-app.ts",
+    "./spawn": "./src/spawn.ts",
+    "./vault": "./vault/src/index.ts",
+    "./vault/sync": "./vault/src/sync-store.ts",
+    "./paths": "./paths/src/index.ts",
+    "./identity": "./identity/src/index.ts",
+    "./identity/brand": "./identity/src/brand.ts",
+    "./identity/theme": "./identity/src/theme.ts",
+    "./identity/atlas": "./identity/src/atlas.ts",
+    "./identity/pet": "./identity/src/pet.ts",
+    "./identity/runtime": "./identity/src/runtime.ts",
+    "./identity/element": "./identity/src/element.ts",
+    "./identity/load": "./identity/src/load.ts"
+  }
+}

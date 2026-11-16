@@ -1,0 +1,117 @@
+// fr2 integration: bun scripts/parity/run.ts   (needs GHIDRA_INSTALL_DIR, uv venv with pyghidra, gcc, java)
+// Builds test inputs, runs pyghidra (parity_py.py) and bun-ghidra (parity.ts) on the same binary, diffs, writes PARITY.md.
+import { mkdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+
+const install = process.env.GHIDRA_INSTALL_DIR ?? "/srv/ghidra-release/ghidra_12.2_PUBLIC";
+const venvPy = process.env.PYGHIDRA_PYTHON ?? "/srv/ghidra-release/venv/bin/python";
+const work = process.env.PARITY_WORK ?? "/tmp/ghidra-parity";
+const here = import.meta.dir;
+const pkg = resolve(here, "../..");
+if (process.env.PARITY_REUSE !== "1") rmSync(work, { recursive: true, force: true });
+mkdirSync(work, { recursive: true });
+
+const sh = (cmd: string[], opts: { env?: Record<string, string>; cwd?: string } = {}) => {
+  const p = Bun.spawnSync(cmd, { env: { ...process.env, GHIDRA_INSTALL_DIR: install, ...opts.env }, cwd: opts.cwd, stdout: "pipe", stderr: "pipe" });
+  return { code: p.exitCode, out: p.stdout.toString(), err: p.stderr.toString() };
+};
+
+writeFileSync(join(work, "tiny.c"), `
+static int add(int a, int b) { return a + b; }
+static int mul(int a, int b) { return a * b; }
+int compute(int x) { return add(x, 2) * mul(x, 3); }
+void _start(void) {
+  volatile int r = compute(5);
+  (void)r;
+  __asm__ volatile("mov $60, %eax\\n xor %edi, %edi\\n syscall");
+}
+`);
+let r = sh(["gcc", "-O0", "-fno-pie", "-no-pie", "-fno-stack-protector", "-fno-asynchronous-unwind-tables", "-nostdlib", "-static", "-o", join(work, "tiny"), join(work, "tiny.c")]);
+if (r.code !== 0) throw new Error("gcc: " + r.err);
+writeFileSync(join(work, "plain.txt"), "not an archive\n");
+r = sh(["zip", "-q", join(work, "tiny.zip"), join(work, "plain.txt")]);
+if (r.code !== 0) throw new Error("zip: " + r.err);
+writeFileSync(join(work, "Hello.java"), `//@category Test
+import ghidra.app.script.GhidraScript;
+public class Hello extends GhidraScript {
+  @Override public void run() throws Exception {
+    println("hello " + getScriptArgs().length);
+  }
+}
+`);
+writeFileSync(join(work, "extension.properties"), "name=Parity\ndescription=desc\nauthor=me\nversion=12.2\nplugin_version=0.0.2\n");
+writeFileSync(join(work, "run_script.py"), "print(currentProgram.getName(), len(list(currentProgram.getFunctionManager().getFunctions(True))))\n");
+writeFileSync(join(work, "run_script.ts"), `import { currentProgram, println } from ${JSON.stringify(join(pkg, "src/script.ts"))};
+const fm = await currentProgram!.getFunctionManager();
+const n = (await (await fm.getFunctions(true)).$list()).length;
+await println(\`\${await currentProgram!.getName()} \${n}\`);
+`);
+
+const reuse = process.env.PARITY_REUSE === "1";
+console.log("== pyghidra");
+const t0 = performance.now();
+const py = reuse ? { out: "reused", code: 0, err: "" } : sh([venvPy, join(here, "parity_py.py"), work, join(work, "py.json")]);
+console.log(py.out.split("\n").slice(-3).join("\n"), py.code === 0 ? "" : py.err.slice(-2000));
+if (py.code !== 0) throw new Error("pyghidra run failed (code " + py.code + ")");
+const tPy = performance.now() - t0;
+console.log("== bun-ghidra");
+const t1 = performance.now();
+const bn = reuse ? { out: "reused", code: 0, err: "" } : sh(["bun", join(here, "parity.ts"), work, join(work, "bun.json")]);
+console.log(bn.out.split("\n").slice(-3).join("\n"), bn.code === 0 ? "" : bn.err.slice(-2000));
+if (bn.code !== 0) throw new Error("bun-ghidra run failed (code " + bn.code + ")");
+const tBun = performance.now() - t1;
+
+const A = JSON.parse(readFileSync(join(work, "py.json"), "utf8")) as Record<string, unknown>;
+const B = JSON.parse(readFileSync(join(work, "bun.json"), "utf8")) as Record<string, unknown>;
+const canon = (v: unknown): string => JSON.stringify(v, (_k, x) => (x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort(([a], [b]) => (a < b ? -1 : 1))) : x));
+const EA = JSON.parse(readFileSync(join(work, "py.json.err"), "utf8")) as Record<string, string>;
+const EB = JSON.parse(readFileSync(join(work, "bun.json.err"), "utf8")) as Record<string, string>;
+const keys = [...new Set([...Object.keys(A), ...Object.keys(B)])].sort();
+const same: string[] = [], diff: Array<{ k: string; py: unknown; bun: unknown }> = [];
+for (const k of keys) {
+  if (canon(A[k]) === canon(B[k])) same.push(k);
+  else diff.push({ k, py: A[k], bun: B[k] });
+}
+const all: string[] = JSON.parse(readFileSync(join(work, "all.json"), "utf8"));
+
+const isErr = (v: unknown) => typeof v === "object" && v !== null && "error" in (v as object);
+const bothErr = same.filter((k) => isErr(A[k]) && isErr(B[k]));
+const clip = (v: unknown) => { const s = JSON.stringify(v) ?? "undefined"; return s.length > 160 ? s.slice(0, 157) + "..." : s; };
+const ver = sh([venvPy, "-c", "import importlib.metadata as m;print(m.version('pyghidra'))"]).out.trim();
+let md = `# pyghidra parity (frameworks/re-ts/ghidra)
+
+Generated by \`scripts/parity/run.ts\` on fr2 (pyghidra ${ver}, ${install.split("/").pop()}). Same ELF (\`tiny\`, gcc -nostdlib -static), same Ghidra install, both runtimes driven by the scripts in \`scripts/parity/\`.
+Values are compared as JSON after normalisation (sorted sets, str() of Java objects). Nothing below is claimed beyond the diff output.
+
+| metric | count |
+|---|---|
+| public pyghidra API names (\`pyghidra.__all__\`) | ${all.length} |
+| parity entries total | ${keys.length} |
+| implemented in frameworks/re-ts/ghidra (entry runs to a value on the bun side) | ${keys.filter((k) => B[k] !== undefined && !isErr(B[k])).length} |
+| of the identical entries, identical only because both runtimes raise the same error | ${bothErr.length} |
+| diff-identical (pyghidra value == bun-ghidra value) | ${same.length} |
+| differing | ${diff.length} |
+${reuse ? "" : `| wall time pyghidra / bun-ghidra (JVM start + analysis + all entries) | ${(tPy / 1000).toFixed(0)}s / ${(tBun / 1000).toFixed(0)}s |\n`}
+
+## pyghidra \`__all__\` (${all.length})
+
+${all.map((n) => `- \`${n}\``).join("\n")}
+
+Name mapping: snake_case becomes camelCase (\`open_program\` -> \`openProgram\`), classes keep their names. Context managers become callbacks/\`await using\`, calls crossing the JVM bridge are async (separate JVM process), local helpers such as \`ApplicationInfo.fromFile\` are synchronous.
+
+## Entries
+
+| id | status |
+|---|---|
+${keys.map((k) => `| \`${k}\` | ${same.includes(k) ? (bothErr.includes(k) ? "BOTH_ERROR" : "identical") : "DIFFERS"} |`).join("\n")}
+`;
+if (bothErr.length) {
+  md += "\n## Identical errors (not a functional proof)\n\n" + bothErr.map((k) => `- \`${k}\`: ${JSON.stringify(A[k])} in both runtimes (${EA[k] || "no message"})`).join("\n") + "\n";
+}
+md += `\n## Scope and limits\n\n- One x86-64 ELF (4 functions) plus one zip; not a corpus. Both runs use the same Ghidra install, so identity shows the bridge does not alter results, not that analysis is correct.\n- `api.launchers` compares class names only (`DeferredPyGhidraLauncher` behaves like the headless launcher, `GuiPyGhidraLauncher` always throws).\n- Error entries map JS errors to Python names by hand in `parity.ts` (`ValueError`, `TypeError`): the mapping is part of the harness, not of the runtimes.\n- Time-dependent values (analysis log) are normalised to shape (api.analyze.log_nonempty).\n- The two runtimes ran sequentially in separate processes with separate projects created from the same binary.\n`;
+if (diff.length) {
+  md += "\n## Differences (pyghidra vs bun-ghidra)\n\n" + diff.map((d) => `- \`${d.k}\`\n  - pyghidra: \`${clip(d.py)}\`\n  - bun-ghidra: \`${clip(d.bun)}\``).join("\n") + "\n";
+}
+writeFileSync(join(pkg, "PARITY.md"), md);
+console.log(`total=${keys.length} identical=${same.length} differing=${diff.length}`);
+for (const d of diff) console.log("DIFF", d.k, "py=", clip(d.py), "bun=", clip(d.bun), "| pyerr:", EA[d.k] ?? "", "| buneer:", EB[d.k] ?? "");

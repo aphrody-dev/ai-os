@@ -1,0 +1,22 @@
+name = "npm"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "devtools"
+summary = "npm aliases and runtime completion shape detection."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:npm"]
+required_binaries = ["npm"]
+
+[exports]
+aliases = true
+completions = ["npm"]
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/npm/init.niu"

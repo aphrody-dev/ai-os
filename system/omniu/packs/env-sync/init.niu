@@ -1,0 +1,68 @@
+# oh-my-niu env-sync plugin
+# Push/pull the WinuxCmd package manifest and the interactive shell config
+# through any rclone remote, so a fresh machine can be restored with one
+# command. Binaries are never synced; packages are replayed via `wpm restore`.
+#
+# Setup (once):
+#   rclone config create nutstore webdav url https://dav.jianguoyun.com/dav/ \
+#     vendor other user <email> pass <app-password>
+#   export NIU_SYNC_REMOTE=nutstore:niubash-env
+
+env_sync_remote() {
+  if [ -z "${NIU_SYNC_REMOTE:-}" ]; then
+    echo "env-sync: NIU_SYNC_REMOTE is not set." >&2
+    echo "env-sync: configure an rclone remote first, for example:" >&2
+    echo "  rclone config create nutstore webdav url https://dav.jianguoyun.com/dav/ vendor other user <email> pass <app-password>" >&2
+    echo "  export NIU_SYNC_REMOTE=nutstore:niubash-env" >&2
+    return 1
+  fi
+  printf '%s\n' "$NIU_SYNC_REMOTE"
+}
+
+env-push() {
+  local remote manifest rcfile
+  remote="$(env_sync_remote)" || return 1
+  manifest="${HOME}/.niubash/wpm-packages.txt"
+  rcfile="${HOME}/.niubashrc"
+  mkdir -p "$(dirname "$manifest")" || return 1
+
+  # WebDAV backends (e.g. Nutstore) reject copyto when the ancestor is absent.
+  rclone mkdir "$remote" 2>/dev/null
+
+  wpm export --plain >"$manifest" || {
+    echo "env-sync: wpm export failed." >&2
+    return 1
+  }
+  rclone copyto "$manifest" "${remote}/wpm-packages.txt" || return 1
+
+  local pushed="package manifest"
+  if [ -f "$rcfile" ]; then
+    rclone copyto "$rcfile" "${remote}/niubashrc" || return 1
+    pushed="$pushed + niubashrc"
+  fi
+  echo "env-sync: pushed $pushed to ${remote}"
+}
+
+env-pull() {
+  local remote manifest rcfile
+  remote="$(env_sync_remote)" || return 1
+  manifest="${HOME}/.niubash/wpm-packages.txt"
+  rcfile="${HOME}/.niubashrc"
+  mkdir -p "$(dirname "$manifest")" || return 1
+
+  rclone copyto "${remote}/wpm-packages.txt" "$manifest" || {
+    echo "env-sync: no wpm-packages.txt on ${remote}." >&2
+    return 1
+  }
+
+  if rclone copyto "${remote}/niubashrc" "${rcfile}.pull" 2>/dev/null; then
+    if [ -f "$rcfile" ]; then
+      cp "$rcfile" "${rcfile}.bak-envsync" || return 1
+    fi
+    mv "${rcfile}.pull" "$rcfile"
+    echo "env-sync: restored ~/.niubashrc (previous copy kept as ~/.niubashrc.bak-envsync)"
+  fi
+
+  echo "env-sync: installing packages from manifest (already-installed ones are skipped)..."
+  wpm restore "$manifest"
+}

@@ -1,0 +1,13 @@
+# oh-my-niu direnv plugin
+# Applies direnv's bash export output in the current shell.
+
+__niubash_direnv_apply() {
+  command -v direnv >/dev/null 2>&1 || return 0
+  eval "$(direnv export bash 2>/dev/null)" || true
+}
+
+case "$NIU_PLUGIN_HOOK" in
+  startup|precmd|chpwd)
+    __niubash_direnv_apply
+    ;;
+esac

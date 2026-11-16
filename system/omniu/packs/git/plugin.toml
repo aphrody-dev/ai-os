@@ -1,0 +1,26 @@
+name = "git"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "devtools"
+summary = "Git aliases, completions, and prompt segments."
+default = true
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = ["git"]
+
+[exports]
+aliases = true
+completions = ["git"]
+prompt_segments = ["git"]
+hooks = []
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/git/init.niu"
+
+[settings]
+show_dirty = true
+show_ahead_behind = true

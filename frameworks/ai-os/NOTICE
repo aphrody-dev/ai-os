@@ -1,0 +1,7 @@
+agent - Copyright (c) 2026 Aphrody contributors. Dual-licensed MIT OR Apache-2.0.
+
+Portions derived from (all MIT, full texts in licenses/):
+- OpenClaw  (c) 2026 OpenClaw Foundation   - fork aphrody-labs/openclaw
+- Hermes Agent (c) 2025 Nous Research      - fork aphrody-labs/hermes-agent
+- pi (c) 2025 Mario Zechner                - third_party/pi
+- opencode (c) 2025 opencode               - third_party/opencode

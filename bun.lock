@@ -1,0 +1,115 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@aphrody/ai-os-monorepo",
+      "devDependencies": {
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "frameworks/ai-os": {
+      "name": "@aphrody/ai-os",
+      "version": "0.2.0",
+      "bin": {
+        "ai-os": "./src/cli.ts",
+      },
+      "dependencies": {
+        "@aphrody/ai-router": "https://github.com/aphrody-labs/open/releases/download/libraries-v0.4.0/aphrody-ai-router-0.4.0.tgz",
+        "@aphrody/automate": "workspace:*",
+        "@aphrody/core": "workspace:*",
+      },
+    },
+    "frameworks/automate": {
+      "name": "@aphrody/automate",
+      "version": "0.1.0",
+      "dependencies": {
+        "zod": "^4",
+      },
+    },
+    "frameworks/re-ts/ghidra": {
+      "name": "@aphrody/ghidra",
+      "version": "0.1.0",
+      "bin": {
+        "bun-ghidra": "./src/cli.ts",
+      },
+    },
+    "system/core-ts": {
+      "name": "@aphrody/core",
+      "version": "0.1.0",
+    },
+    "system/env-kit": {
+      "name": "@aphrody/env-kit",
+      "version": "1.0.0",
+    },
+    "system/gnu-ts": {
+      "name": "@aphrody/gnu",
+      "version": "0.1.0",
+      "bin": {
+        "gnu": "./src/cli.ts",
+      },
+    },
+    "system/omniu": {
+      "name": "@aphrody/omniu",
+      "version": "0.1.0",
+      "bin": {
+        "omniu": "./src/cli.ts",
+      },
+    },
+    "system/py2bun-ts": {
+      "name": "@aphrody/py2bun",
+      "version": "0.1.0",
+      "bin": {
+        "py2bun": "./src/cli.ts",
+      },
+      "peerDependencies": {
+        "@aphrody/ghidra": "workspace:*",
+      },
+    },
+    "system/wck": {
+      "name": "@aphrody/wck",
+      "version": "1.0.0",
+      "bin": {
+        "wck": "./src/cli.ts",
+      },
+    },
+  },
+  "catalog": {
+    "@types/bun": "1.4.4",
+    "typescript": "6.0.3",
+  },
+  "packages": {
+    "@aphrody/ai-os": ["@aphrody/ai-os@workspace:frameworks/ai-os"],
+
+    "@aphrody/ai-router": ["@aphrody/ai-router@https://github.com/aphrody-labs/open/releases/download/libraries-v0.4.0/aphrody-ai-router-0.4.0.tgz", {}, "sha512-HGlJ1vIFHb1je2hOnTleGINnEpuTpaIpdq9knrrOTOwnwGUsBLIKAya4XRr/Sroy/ht8qFruJ65L4jGpIMkn9A=="],
+
+    "@aphrody/automate": ["@aphrody/automate@workspace:frameworks/automate"],
+
+    "@aphrody/core": ["@aphrody/core@workspace:system/core-ts"],
+
+    "@aphrody/env-kit": ["@aphrody/env-kit@workspace:system/env-kit"],
+
+    "@aphrody/ghidra": ["@aphrody/ghidra@workspace:frameworks/re-ts/ghidra"],
+
+    "@aphrody/gnu": ["@aphrody/gnu@workspace:system/gnu-ts"],
+
+    "@aphrody/omniu": ["@aphrody/omniu@workspace:system/omniu"],
+
+    "@aphrody/py2bun": ["@aphrody/py2bun@workspace:system/py2bun-ts"],
+
+    "@aphrody/wck": ["@aphrody/wck@workspace:system/wck"],
+
+    "@types/bun": ["@types/bun@1.4.4", "", { "dependencies": { "bun-types": "1.4.4" } }, "sha512-9wkRDXUXK124pEnAutE6n/l18j+i9GC5IAHK8TmX/2nlySETmky0OU6yL5U8pW1AoKh++AN9auDCr647BfurjQ=="],
+
+    "@types/node": ["@types/node@26.6.6", "", { "dependencies": { "undici-types": "~8.9.0" } }, "sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog=="],
+
+    "bun-types": ["bun-types@1.4.4", "", { "dependencies": { "@types/node": "*", "undici-types": "*" } }, "sha512-yjrJh5oGX7mMPKGd19YXyIjmEuj4G4zNC30bs7PM9Az7NQ3ndF3j6hbeRdvJTRQEhJ/FYQwW0a2moweEi2hMxQ=="],
+
+    "typescript": ["typescript@6.0.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
+
+    "undici-types": ["undici-types@8.9.0", "", {}, "sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg=="],
+
+    "zod": ["zod@4.6.7", "", {}, "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg=="],
+  }
+}

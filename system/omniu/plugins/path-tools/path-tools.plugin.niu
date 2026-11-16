@@ -1,0 +1,98 @@
+# PATH helpers inspired by fish's path ergonomics, using Niubash's Windows
+# process PATH separator by default.
+
+__niubash_path_sep() {
+  case "$PATH" in
+    *";"*) printf "%s" ";" ;;
+    *) printf "%s" ":" ;;
+  esac
+}
+
+__niubash_path_contains() {
+  __niubash_path_target="$1"
+  [ -n "$__niubash_path_target" ] || return 1
+  __niubash_path_sep_value="$(__niubash_path_sep)"
+  case "${__niubash_path_sep_value}${PATH}${__niubash_path_sep_value}" in
+    *"${__niubash_path_sep_value}${__niubash_path_target}${__niubash_path_sep_value}"*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+path_list() {
+  __niubash_path_sep_value="$(__niubash_path_sep)"
+  __niubash_old_ifs="$IFS"
+  IFS="$__niubash_path_sep_value"
+  for __niubash_path_entry in $PATH; do
+    [ -n "$__niubash_path_entry" ] && printf "%s\n" "$__niubash_path_entry"
+  done
+  IFS="$__niubash_old_ifs"
+}
+
+path_prepend() {
+  [ -n "$1" ] || {
+    echo "usage: path_prepend <directory>" >&2
+    return 2
+  }
+  __niubash_path_target="$1"
+  __niubash_path_contains "$__niubash_path_target" && return 0
+  __niubash_path_sep_value="$(__niubash_path_sep)"
+  PATH="$__niubash_path_target${PATH:+$__niubash_path_sep_value$PATH}"
+  export PATH
+}
+
+path_append() {
+  [ -n "$1" ] || {
+    echo "usage: path_append <directory>" >&2
+    return 2
+  }
+  __niubash_path_target="$1"
+  __niubash_path_contains "$__niubash_path_target" && return 0
+  __niubash_path_sep_value="$(__niubash_path_sep)"
+  PATH="${PATH:+$PATH$__niubash_path_sep_value}$__niubash_path_target"
+  export PATH
+}
+
+path_remove() {
+  [ -n "$1" ] || {
+    echo "usage: path_remove <directory>" >&2
+    return 2
+  }
+  __niubash_path_target="$1"
+  __niubash_path_sep_value="$(__niubash_path_sep)"
+  __niubash_old_ifs="$IFS"
+  __niubash_new_path=""
+  IFS="$__niubash_path_sep_value"
+  for __niubash_path_entry in $PATH; do
+    [ "$__niubash_path_entry" = "$__niubash_path_target" ] && continue
+    if [ -z "$__niubash_new_path" ]; then
+      __niubash_new_path="$__niubash_path_entry"
+    else
+      __niubash_new_path="$__niubash_new_path$__niubash_path_sep_value$__niubash_path_entry"
+    fi
+  done
+  IFS="$__niubash_old_ifs"
+  PATH="$__niubash_new_path"
+  export PATH
+}
+
+path_dedupe() {
+  __niubash_path_sep_value="$(__niubash_path_sep)"
+  __niubash_old_ifs="$IFS"
+  __niubash_new_path=""
+  IFS="$__niubash_path_sep_value"
+  for __niubash_path_entry in $PATH; do
+    [ -n "$__niubash_path_entry" ] || continue
+    case "$__niubash_path_sep_value$__niubash_new_path$__niubash_path_sep_value" in
+      *"$__niubash_path_sep_value$__niubash_path_entry$__niubash_path_sep_value"*) continue ;;
+    esac
+    if [ -z "$__niubash_new_path" ]; then
+      __niubash_new_path="$__niubash_path_entry"
+    else
+      __niubash_new_path="$__niubash_new_path$__niubash_path_sep_value$__niubash_path_entry"
+    fi
+  done
+  IFS="$__niubash_old_ifs"
+  PATH="$__niubash_new_path"
+  export PATH
+}
+

@@ -1,0 +1,50 @@
+# Declarative source of this repository's content: the AI surface of the legacy monorepo, extracted by `bun tools/extract.ts`.
+# The extraction is reproducible: same rev and same selection give the same tree. `extract.lock.json` records what was taken.
+
+[source]
+repo = "aphrody-labs/legacy"
+checkout = "../legacy"                 # local checkout of the legacy repository, relative to this repository
+rev = "cf409c1643e8cf2765740453f47752a745957f4b"
+
+[select]
+# Units (a directory with a package.json or Cargo.toml) taken with everything they depend on inside the legacy repository.
+seeds = [
+  "frameworks/ai-os",
+  "frameworks/a2a", "frameworks/a2a-client", "frameworks/a2a-coord", "frameworks/a2a-grpc", "frameworks/a2a-pb", "frameworks/a2a-server",
+  "frameworks/agent/context", "frameworks/agent-home", "frameworks/agent-proto", "frameworks/agent-runtime", "frameworks/agent-tools",
+  "frameworks/accounts", "frameworks/antigravity", "frameworks/automate", "frameworks/embed", "frameworks/gateway",
+  "frameworks/gemini-runtime", "frameworks/gemini-web", "frameworks/infer",
+  "frameworks/llama", "frameworks/llama-server", "frameworks/llama-sys",
+  "frameworks/mcp-client", "frameworks/memory", "frameworks/ml-config", "frameworks/ml-runtime",
+  "frameworks/model-antigravity", "frameworks/model-client", "frameworks/models",
+  "frameworks/rag", "frameworks/rag-core", "frameworks/ring3-agent",
+  "system/core",
+]
+# Reached but neither followed nor taken: other products (design assets, brand), consumed here only as an optional dependency.
+stop = ["frameworks/design", "frameworks/assets"]
+# Directories and files taken as they are (tooling and CI of the AI surface).
+paths = [
+  "tools/ai",
+  "tools/agents",
+  "tools/build-model",
+  ".github/workflows/ai-os.yml",
+  ".github/workflows/ai-providers.yml",
+  ".github/workflows/jules.yml",
+  ".github/workflows/claude.yml",
+  "docs/ai",
+  "docs/proofs/ai-os-interop-2026-11-13.md",
+]
+# Removed after extraction: binaries and build outputs that are not reproducible sources.
+exclude = [
+  "**/*.dll",
+  "**/*.exe",
+  "**/bin/**",
+  "**/obj/**",
+  "frameworks/*/Cargo.lock",
+  "frameworks/*/Cargo.toml.orig",
+]
+
+[package-json]
+# Dependencies on units that are not taken (other products); the code reaching them is optional.
+drop-dependencies = ["@aphrody/design"]
+repository = "https://github.com/aphrody-dev/ai-os"

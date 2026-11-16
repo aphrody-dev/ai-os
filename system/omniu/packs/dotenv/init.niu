@@ -1,0 +1,50 @@
+# oh-my-niu dotenv plugin
+# Loads simple KEY=VALUE lines from .env into the current shell.
+
+__niubash_dotenv_load() {
+  [ -f .env ] || return 0
+
+  while IFS= read -r __niubash_dotenv_line || [ -n "$__niubash_dotenv_line" ]; do
+    case "$__niubash_dotenv_line" in
+      ""|\#*)
+        continue
+        ;;
+      export\ *)
+        __niubash_dotenv_line=${__niubash_dotenv_line#export }
+        ;;
+    esac
+
+    case "$__niubash_dotenv_line" in
+      *=*) ;;
+      *) continue ;;
+    esac
+
+    __niubash_dotenv_key=${__niubash_dotenv_line%%=*}
+    __niubash_dotenv_value=${__niubash_dotenv_line#*=}
+
+    case "$__niubash_dotenv_key" in
+      ""|[0-9]*|*[!A-Za-z0-9_]*)
+        continue
+        ;;
+    esac
+
+    case "$__niubash_dotenv_value" in
+      \"*\")
+        __niubash_dotenv_value=${__niubash_dotenv_value#\"}
+        __niubash_dotenv_value=${__niubash_dotenv_value%\"}
+        ;;
+      \'*\')
+        __niubash_dotenv_value=${__niubash_dotenv_value#\'}
+        __niubash_dotenv_value=${__niubash_dotenv_value%\'}
+        ;;
+    esac
+
+    export "$__niubash_dotenv_key=$__niubash_dotenv_value"
+  done < .env
+}
+
+case "$NIU_PLUGIN_HOOK" in
+  startup|precmd|chpwd)
+    __niubash_dotenv_load
+    ;;
+esac

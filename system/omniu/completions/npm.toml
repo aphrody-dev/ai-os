@@ -1,0 +1,87 @@
+command = "npm"
+description = "JavaScript package manager"
+
+[[flags]]
+short = "-v"
+long = "--version"
+description = "print npm version"
+
+[[flags]]
+short = "-g"
+long = "--global"
+description = "operate in global mode"
+
+[[flags]]
+long = "--prefix"
+description = "prefix folder"
+takes_value = true
+values_from = "path"
+
+[[subcommands]]
+name = "install"
+description = "install a package"
+
+[[subcommands.flags]]
+short = "-g"
+long = "--global"
+description = "install globally"
+
+[[subcommands.flags]]
+short = "-D"
+long = "--save-dev"
+description = "save to devDependencies"
+
+[[subcommands.flags]]
+short = "-S"
+long = "--save"
+description = "save to dependencies"
+
+[[subcommands]]
+name = "run"
+description = "run a package script"
+
+[[subcommands.flags]]
+long = "--if-present"
+description = "do not error if the script is missing"
+
+[[subcommands]]
+name = "test"
+description = "run the test script"
+
+[[subcommands]]
+name = "start"
+description = "run the start script"
+
+[[subcommands]]
+name = "init"
+description = "create a package.json file"
+
+[[subcommands.flags]]
+short = "-y"
+long = "--yes"
+description = "automatically answer yes to prompts"
+
+[[subcommands]]
+name = "publish"
+description = "publish a package"
+
+[[subcommands.flags]]
+long = "--dry-run"
+description = "show what would be published"
+
+[[subcommands]]
+name = "outdated"
+description = "check for outdated packages"
+
+[[subcommands]]
+name = "update"
+description = "update packages"
+
+[[subcommands]]
+name = "list"
+description = "list installed packages"
+
+[[subcommands.flags]]
+long = "--depth"
+description = "max display depth"
+takes_value = true

@@ -1,0 +1,13 @@
+# Common Oh My-style aliases that stay small, predictable, and editable.
+
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -F'
+alias md='mkdir -p'
+alias rd='rmdir'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../../../packages'
+alias c='clear'
+alias h='history'
+

@@ -1,0 +1,18 @@
+name = "common"
+summary = "Core Niubash keybindings shared by Emacs and Vi modes."
+keymap = "all"
+
+[[bindings]]
+key = "Tab"
+action = "complete-word"
+description = "Open completion menu, then complete word."
+
+[[bindings]]
+key = "Shift+Tab"
+action = "menu-previous"
+description = "Move to the previous completion menu entry."
+
+[[bindings]]
+key = "Ctrl+R"
+action = "history-incremental-search-backward"
+description = "Search interactive command history."

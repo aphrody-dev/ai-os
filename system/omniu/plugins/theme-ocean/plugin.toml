@@ -1,0 +1,10 @@
+name = "theme-ocean"
+version = "1.0.1"
+kind = "source"
+entry = "theme-ocean.plugin.niu"
+summary = "Ocean official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["ocean"]

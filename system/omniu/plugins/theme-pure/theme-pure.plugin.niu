@@ -1,0 +1,10 @@
+# Pure-inspired official theme plugin.
+
+[ -f "$NIUBASH/lib/prompt.niu" ] && . "$NIUBASH/lib/prompt.niu"
+
+NIU_ACTIVE_THEME=pure
+NIU_THEME_FILE="$NIUBASH/themes/pure.toml"
+NIU_PROMPT_SYMBOL="${NIU_PROMPT_SYMBOL:-%}"
+export NIU_ACTIVE_THEME NIU_THEME_FILE NIU_PROMPT_SYMBOL
+
+niubash_prompt_use_template "{cwd} {git}{newline}{prompt_char} " ""

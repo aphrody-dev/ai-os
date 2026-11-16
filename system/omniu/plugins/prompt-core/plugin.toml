@@ -1,0 +1,33 @@
+name = "prompt-core"
+version = "1.0.1"
+kind = "source"
+entry = "prompt-core.plugin.niu"
+summary = "Prompt API, segment registry, and shared prompt data helpers."
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = []
+
+[exports]
+functions = [
+  "niubash_prompt_use_template",
+  "niubash_prompt_register_segment",
+  "niubash_prompt_segment_value",
+  "niubash_prompt_render_template",
+  "niubash_prompt_render_left",
+  "niubash_prompt_render_right",
+  "niubash_prompt_use_starship_git",
+  "niubash_prompt_refresh_starship_git",
+  "niubash_prompt_git_info",
+  "niubash_prompt_refresh_git_snapshot",
+  "niubash_prompt_mark_git_snapshot_dirty",
+]
+hooks = ["startup", "precmd", "preexec", "chpwd"]
+prompt_segments = [
+  "cwd",
+  "git",
+  "status",
+  "time",
+  "user_host",
+  "prompt_char",
+  "newline",
+  "command_execution_time",
+]

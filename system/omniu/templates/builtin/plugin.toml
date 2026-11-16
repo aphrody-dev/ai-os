@@ -1,0 +1,20 @@
+name = "example-builtin"
+bundle = "oh-my-niu"
+version = "1.0.1"
+kind = "builtin"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "First-party builtin pack template."
+default = false
+permissions = ["cwd:read"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+providers = []

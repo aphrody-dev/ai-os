@@ -1,0 +1,9 @@
+# Keeps the runner checkout on origin/main (fast-forward only; never touches local changes).
+[Unit]
+Description=Aphrody agent checkout fast-forward
+
+[Service]
+Type=oneshot
+# Stale index.lock (> 10 min, left by a killed git) blocks every later pull.
+ExecStartPre=-/usr/bin/env find @SRC@/.git -maxdepth 1 -name index.lock -mmin +10 -delete
+ExecStart=/usr/bin/env git -C @SRC@ pull --ff-only --quiet origin main

@@ -1,0 +1,19 @@
+{
+  "name": "@aphrody/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "bun:ffi bridge to system/core/capi: tree-sitter parse/query, BLAKE3, recursive index (sqlite + JSON)",
+  "exports": {
+    ".": "./src/index.ts",
+    "./ffi": "./src/ffi.ts",
+    "./depot": "./src/depot.ts",
+    "./re": "./src/re.ts",
+    "./store": "./src/store.ts",
+    "./sys": "./src/sys.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "check": "bun check"
+  }
+}

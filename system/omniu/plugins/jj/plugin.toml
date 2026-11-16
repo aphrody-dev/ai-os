@@ -1,0 +1,12 @@
+name = "jj"
+version = "1.0.0"
+kind = "source"
+entry = "jj.plugin.niu"
+summary = "Jujutsu (jj) completions, aliases, and a cached prompt segment."
+permissions = ["shell:source", "cwd:read", "process:run:jj"]
+required_binaries = ["jj"]
+
+[exports]
+aliases = false
+functions = ["jj_prompt_segment", "jjroot"]
+completions = ["jj"]

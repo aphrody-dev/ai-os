@@ -1,0 +1,6 @@
+{
+  "role": "growth",
+  "host": "prd",
+  "approval": "owner",
+  "prompt": "Draft release notes for main since the last tag (`git describe --tags --abbrev=0`, or the last 7 days if there is no tag). Inputs: `git log --no-merges`, commit trailers Agent-Task/Agent-Role, CHANGELOG files if any. Output: drafts/growth/release-notes.md grouped by unit (apps/*, packages/*, crates/*, infra/*), one line per user-visible change, breaking changes first, reverted commits omitted. Also drafts/growth/changelog-entry.md in Keep a Changelog format. Do not tag, release, publish or send anything."
+}

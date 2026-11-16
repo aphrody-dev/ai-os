@@ -1,0 +1,265 @@
+schema = "niubash:plugin-index@0.1.0"
+bundle = "oh-my-niu"
+version = "2.1.0"
+bundle_api = "niubash:plugin-bundle@0.1.0"
+min_niubash = "1.0.0"
+
+[release]
+artifact = "oh-my-niu-2.1.0.zip"
+checksum = "oh-my-niu-2.1.0.zip.sha256"
+checksum_algorithm = "sha256"
+checksum_required = true
+signature = "unsupported"
+
+[[packs]]
+name = "git"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "devtools"
+summary = "Git aliases, completions, and prompt segments."
+default = true
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = ["git"]
+
+[[packs]]
+name = "winuxcmd-core"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "builtin"
+category = "devtools"
+summary = "Static completions for WinuxCmd core command links."
+default = true
+permissions = []
+required_binaries = []
+
+[[packs]]
+name = "jj"
+version = "1.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "devtools"
+summary = "Jujutsu (jj) completions and a cached prompt segment."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:jj"]
+required_binaries = ["jj"]
+
+[[packs]]
+name = "docker"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "devtools"
+summary = "Docker aliases and completion hints."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:docker"]
+required_binaries = ["docker"]
+
+[[packs]]
+name = "kubectl"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "devtools"
+summary = "Kubectl aliases and completion hints."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:kubectl"]
+required_binaries = ["kubectl"]
+
+[[packs]]
+name = "npm"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "devtools"
+summary = "npm aliases and runtime completion shape detection."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:npm"]
+required_binaries = ["npm"]
+
+[[packs]]
+name = "zoxide"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "z command shim plus directory tracking."
+default = false
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "process:run:zoxide"]
+required_binaries = ["zoxide"]
+
+[[packs]]
+name = "direnv"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "environment"
+summary = "direnv environment export on Niubash lifecycle hooks."
+default = false
+permissions = ["shell:source", "cwd:read", "env:write", "process:run:direnv"]
+required_binaries = ["direnv"]
+
+[[packs]]
+name = "dotenv"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "environment"
+summary = "Safe .env loader on Niubash lifecycle hooks."
+default = false
+permissions = ["shell:source", "cwd:read", "fs:read:.env", "env:write"]
+required_binaries = []
+
+[[packs]]
+name = "fzf"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Interactive directory selector commands."
+default = false
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "process:run:fzf", "process:run:find", "process:run:fd"]
+required_binaries = ["fzf"]
+
+[[packs]]
+name = "command-not-found"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "builtin"
+category = "hints"
+summary = "Interactive missing-command hints for native Windows."
+default = false
+permissions = ["command:diagnose"]
+required_binaries = []
+
+[[packs]]
+name = "last-working-dir"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Last working directory cache and restore command."
+default = false
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "fs:read:cache", "fs:write:cache"]
+required_binaries = []
+
+[[packs]]
+name = "thefuck"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Correction shim for the previous interactive command."
+default = false
+permissions = ["shell:source", "history:read", "shell:execute:suggested-command", "process:run:thefuck"]
+required_binaries = ["thefuck"]
+
+[[packs]]
+name = "keybindings"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "builtin"
+category = "ux"
+summary = "Niubash keybinding presets mapped to native ruline actions."
+default = true
+permissions = []
+required_binaries = []
+
+[[packs]]
+name = "prompts"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "builtin"
+category = "ux"
+summary = "Prompt presets and reusable prompt segments."
+default = true
+permissions = []
+required_binaries = []
+
+[[packs]]
+name = "starship"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "ux"
+summary = "Full Starship prompt integration for Niubash."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:starship"]
+required_binaries = ["starship"]
+
+[[packs]]
+name = "themes"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "builtin"
+category = "ux"
+summary = "Official Niubash color themes for prompt and Git status styling."
+default = true
+permissions = []
+required_binaries = []
+
+[[packs]]
+name = "env-sync"
+version = "2.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Push/pull the WPM package manifest and shell config via any rclone remote."
+default = false
+permissions = ["shell:source", "process:run:rclone", "process:run:wpm"]
+required_binaries = ["rclone", "wpm"]
+
+[[packs]]
+name = "command-timer"
+version = "1.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Report duration and exit code after every interactive command."
+default = false
+permissions = ["shell:source"]
+required_binaries = []
+
+[[packs]]
+name = "auto-env"
+version = "1.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "environment"
+summary = "Activate the local .venv when entering a directory, deactivate on leave."
+default = false
+permissions = ["shell:source", "cwd:read", "env:write"]
+required_binaries = []
+
+[[packs]]
+name = "dirmarks"
+version = "1.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Bookmark directories (mark/jump/marks/unmark) and jump back anywhere."
+default = false
+permissions = ["shell:source", "cwd:read", "fs:write:~/.niubash/marks"]
+required_binaries = []
+
+[[packs]]
+name = "git-fetch-reminder"
+version = "1.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "workflow"
+summary = "Periodic reminder when the git branch diverged from its upstream."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = ["git"]
+
+[[packs]]
+name = "modern-cli"
+version = "1.0.0"
+api = "niubash:plugin@0.1.0"
+kind = "source"
+category = "ux"
+summary = "Modern CLI replacements (eza, bat, dust, duf, fd, erd) as aliases; from unixwin/winuxsh-profiles modern-cli."
+default = false
+permissions = ["shell:source", "cwd:read"]
+required_binaries = []

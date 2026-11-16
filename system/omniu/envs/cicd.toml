@@ -1,0 +1,28 @@
+# Oh My Niu environment: CI/CD toolkit for niubash.
+#
+# Usage: niu env use cicd
+# See lib/env.niu for the schema.
+
+[meta]
+description = "Build and release toolkit: JSON/YAML, archives, CMake, linting"
+
+[packages]
+wpm = [
+  "jq",
+  "yq",
+  "curl",
+  "7zip",
+  "zip",
+  "zstd",
+  "cmake",
+  "shellcheck",
+  "shfmt",
+  "actionlint",
+  "gitleaks",
+]
+
+[plugins]
+# CI shells usually run non-interactive; keep the plugin surface empty.
+enable = []
+
+[env]

@@ -1,0 +1,12 @@
+name = "auto-env"
+version = "1.0.0"
+kind = "source"
+entry = "auto-env.plugin.niu"
+summary = "Activate the local .venv when entering a directory, deactivate on leave."
+category = "environment"
+permissions = ["shell:source", "cwd:read", "env:write"]
+required_binaries = []
+
+[exports]
+functions = ["__niu_auto_env_chpwd", "__niu_auto_env_deactivate"]
+hooks = ["chpwd", "startup"]

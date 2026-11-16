@@ -1,0 +1,10 @@
+name = "theme-dracula"
+version = "1.0.1"
+kind = "source"
+entry = "theme-dracula.plugin.niu"
+summary = "Dracula Nerd Font prompt theme plugin inspired by Oh My Posh."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["dracula"]

@@ -1,0 +1,58 @@
+[segments.cwd]
+id = "dir"
+description = "Current working directory, shortened for prompt display."
+
+[segments.git]
+id = "vcs"
+description = "Git branch and compact repository status."
+
+[segments.status]
+id = "status"
+description = "Last command exit status when non-zero."
+
+[segments.time]
+id = "time"
+description = "Current local time."
+
+[segments.user_host]
+id = "context"
+description = "User and host context."
+
+[segments.prompt_char]
+id = "prompt_char"
+description = "Mode-neutral prompt symbol."
+
+[segments.newline]
+id = "newline"
+description = "Prompt line break."
+
+[segments.command_execution_time]
+id = "command_execution_time"
+description = "Previous command duration."
+
+[presets.lean]
+left = ["cwd", "git", "newline", "prompt_char"]
+right = []
+separator = " "
+
+[presets.classic]
+left = ["cwd", "git", "newline"]
+right = ["status", "time"]
+separator = ""
+git_prompt_format = "git:({git_branch})"
+
+[presets.rainbow]
+left = ["cwd", "git", "newline"]
+right = ["status", "time"]
+separator = ""
+git_prompt_format = "git:({git_branch})"
+
+[presets.pure]
+left = ["user_host", "cwd", "git", "command_execution_time", "newline", "prompt_char"]
+right = []
+separator = " "
+
+[presets.robbyrussell]
+left = ["user_host", "cwd", "git", "newline", "prompt_char"]
+right = []
+separator = " "

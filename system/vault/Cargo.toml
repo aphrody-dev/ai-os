@@ -1,0 +1,36 @@
+# aphrody-vault: Rust side of @aphrody/vault. Same on-disk formats as the TS
+# package: DPAPI blobs (entropy v1) / systemd-creds credentials, AYV1 envelopes, age X25519.
+# Member of the root workspace (explicit entry in the root Cargo.toml), built in CI or on fr1.
+[package]
+name = "aphrody-vault"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+age = { workspace = true }
+aes-gcm = { workspace = true }
+tokio = { workspace = true, features = [
+  "rt",
+  "rt-multi-thread",
+  "process",
+  "fs",
+  "io-util",
+  "macros",
+] }
+zeroize = { workspace = true }
+getrandom = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+windows = { workspace = true, features = [
+  "Win32_Foundation",
+  "Win32_Security_Cryptography",
+] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

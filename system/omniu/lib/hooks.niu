@@ -1,0 +1,414 @@
+# Hook registry for framework-loaded plugins.
+#
+# The runners in this file are framework-internal. Current Niubash does not
+# call them: the host's niu-native named-hook registry is not implemented
+# (the Niubash hooks documentation says so explicitly) and the host loads
+# an empty hook configuration at startup. The framework therefore wires
+# its own dispatchers onto the prompt surface the host does fire —
+# PROMPT_COMMAND and the DEBUG trap; see "Shell wiring" below.
+#
+# Supported hooks (comprehensive, matching ZSH/FISH capabilities):
+#
+# Lifecycle hooks:
+#   startup       - shell startup (after rc loaded)
+#   precmd        - before each prompt display
+#   preexec       - before command execution
+#   postcmd       - after command execution (FISH fish_postcmd)
+#   chpwd         - directory change
+#   period        - periodic timer (every NIU_PERIOD_SECONDS seconds)
+#   zshaddhistory - after command added to history
+#   zshexit       - shell exit
+#   greeting      - startup greeting (FISH fish_greeting)
+#   title         - terminal title update (FISH fish_title)
+#
+# Trap hooks (signal-based):
+#   trapdebug     - debug trap (ZSH TRAPDEBUG)
+#   traperr       - error trap (ZSH TRAPERR)
+#   trapint       - interrupt trap (ZSH TRAPINT)
+#   trapwinch     - window resize (ZSH TRAPWINCH)
+#   trapusr1      - user signal 1 (ZSH TRAPUSR1)
+#   trapusr2      - user signal 2 (ZSH TRAPUSR2)
+#   trappipe      - pipe error (ZSH TRAPPIPE)
+#   trapterm      - termination (ZSH TRAPTERM)
+#   trapchld      - child process exit (ZSH TRAPCHLD)
+#   trapzerr      - ZSH error trap
+
+__niubash_hook_list_add() {
+  __omw_hook_var="$1"
+  __omw_hook_name="$2"
+  eval "__omw_hook_current=\${$__omw_hook_var:-}"
+  case " $__omw_hook_current " in
+    *" $__omw_hook_name "*) ;;
+    *)
+      if [ -n "$__omw_hook_current" ]; then
+        eval "export ${__omw_hook_var}=\"\${__omw_hook_current} \${__omw_hook_name}\""
+      else
+        eval "export ${__omw_hook_var}=\"\${__omw_hook_name}\""
+      fi
+      ;;
+  esac
+}
+
+# --- Lifecycle hook registration ---
+
+niubash_add_startup_hook() {
+  __niubash_hook_list_add NIU_STARTUP_HOOKS "$1"
+}
+
+niubash_add_precmd_hook() {
+  __niubash_hook_list_add NIU_PRECMD_HOOKS "$1"
+}
+
+niubash_add_preexec_hook() {
+  __niubash_hook_list_add NIU_PREEXEC_HOOKS "$1"
+}
+
+niubash_add_postcmd_hook() {
+  __niubash_hook_list_add NIU_POSTCMD_HOOKS "$1"
+}
+
+niubash_add_chpwd_hook() {
+  __niubash_hook_list_add NIU_CHPWD_HOOKS "$1"
+}
+
+niubash_add_period_hook() {
+  __niubash_hook_list_add NIU_PERIOD_HOOKS "$1"
+}
+
+niubash_add_zshaddhistory_hook() {
+  __niubash_hook_list_add NIU_ZSHADDHISTORY_HOOKS "$1"
+}
+
+niubash_add_zshexit_hook() {
+  __niubash_hook_list_add NIU_ZSHEXIT_HOOKS "$1"
+}
+
+niubash_add_greeting_hook() {
+  __niubash_hook_list_add NIU_GREETING_HOOKS "$1"
+}
+
+niubash_add_title_hook() {
+  __niubash_hook_list_add NIU_TITLE_HOOKS "$1"
+}
+
+# --- Trap hook registration ---
+
+niubash_add_trapdebug_hook() {
+  __niubash_hook_list_add NIU_TRAPDEBUG_HOOKS "$1"
+}
+
+niubash_add_traperr_hook() {
+  __niubash_hook_list_add NIU_TRAPERR_HOOKS "$1"
+}
+
+niubash_add_trapint_hook() {
+  __niubash_hook_list_add NIU_TRAPINT_HOOKS "$1"
+}
+
+niubash_add_trapwinch_hook() {
+  __niubash_hook_list_add NIU_TRAPWINCH_HOOKS "$1"
+}
+
+niubash_add_trapusr1_hook() {
+  __niubash_hook_list_add NIU_TRAPUSR1_HOOKS "$1"
+}
+
+niubash_add_trapusr2_hook() {
+  __niubash_hook_list_add NIU_TRAPUSR2_HOOKS "$1"
+}
+
+niubash_add_trappipe_hook() {
+  __niubash_hook_list_add NIU_TRAPPIPE_HOOKS "$1"
+}
+
+niubash_add_trapterm_hook() {
+  __niubash_hook_list_add NIU_TRAPTERM_HOOKS "$1"
+}
+
+niubash_add_trapchld_hook() {
+  __niubash_hook_list_add NIU_TRAPCHLD_HOOKS "$1"
+}
+
+niubash_add_trappzerr_hook() {
+  __niubash_hook_list_add NIU_TRAPZERR_HOOKS "$1"
+}
+
+# --- Hook runner functions ---
+
+niubash_run_hooks() {
+  __omw_hook_list="$1"
+  for __omw_hook_name in $__omw_hook_list; do
+    "$__omw_hook_name"
+  done
+}
+
+# Lifecycle runners
+niubash_run_startup_hooks() {
+  niubash_run_hooks "$NIU_STARTUP_HOOKS"
+}
+
+niubash_run_precmd_hooks() {
+  niubash_run_hooks "$NIU_PRECMD_HOOKS"
+}
+
+niubash_run_preexec_hooks() {
+  niubash_run_hooks "$NIU_PREEXEC_HOOKS"
+}
+
+niubash_run_postcmd_hooks() {
+  niubash_run_hooks "$NIU_POSTCMD_HOOKS"
+}
+
+niubash_run_chpwd_hooks() {
+  niubash_run_hooks "$NIU_CHPWD_HOOKS"
+}
+
+niubash_run_period_hooks() {
+  niubash_run_hooks "$NIU_PERIOD_HOOKS"
+}
+
+niubash_run_zshaddhistory_hooks() {
+  niubash_run_hooks "$NIU_ZSHADDHISTORY_HOOKS"
+}
+
+niubash_run_zshexit_hooks() {
+  niubash_run_hooks "$NIU_ZSHEXIT_HOOKS"
+}
+
+niubash_run_greeting_hooks() {
+  niubash_run_hooks "$NIU_GREETING_HOOKS"
+}
+
+niubash_run_title_hooks() {
+  niubash_run_hooks "$NIU_TITLE_HOOKS"
+}
+
+# Trap runners
+niubash_run_trapdebug_hooks() {
+  niubash_run_hooks "$NIU_TRAPDEBUG_HOOKS"
+}
+
+niubash_run_traperr_hooks() {
+  niubash_run_hooks "$NIU_TRAPERR_HOOKS"
+}
+
+niubash_run_trapint_hooks() {
+  niubash_run_hooks "$NIU_TRAPINT_HOOKS"
+}
+
+niubash_run_trapwinch_hooks() {
+  niubash_run_hooks "$NIU_TRAPWINCH_HOOKS"
+}
+
+niubash_run_trapusr1_hooks() {
+  niubash_run_hooks "$NIU_TRAPUSR1_HOOKS"
+}
+
+niubash_run_trapusr2_hooks() {
+  niubash_run_hooks "$NIU_TRAPUSR2_HOOKS"
+}
+
+niubash_run_trappipe_hooks() {
+  niubash_run_hooks "$NIU_TRAPPIPE_HOOKS"
+}
+
+niubash_run_trapterm_hooks() {
+  niubash_run_hooks "$NIU_TRAPTERM_HOOKS"
+}
+
+niubash_run_trapchld_hooks() {
+  niubash_run_hooks "$NIU_TRAPCHLD_HOOKS"
+}
+
+niubash_run_trappzerr_hooks() {
+  niubash_run_hooks "$NIU_TRAPZERR_HOOKS"
+}
+
+# --- Periodic timer ---
+# Set NIU_PERIOD_SECONDS to enable periodic hooks (default: 60)
+: "${NIU_PERIOD_SECONDS:=60}"
+__niubash_last_period=0
+
+__niubash_period_check() {
+  __niubash_now=$(date +%s 2>/dev/null || echo 0)
+  if [ $(($__niubash_now - __niubash_last_period)) -ge "$NIU_PERIOD_SECONDS" ]; then
+    __niubash_last_period=$__niubash_now
+    niubash_run_period_hooks
+  fi
+}
+
+# Auto-register period check in precmd
+niubash_add_precmd_hook __niubash_period_check
+
+# --- Trap handlers ---
+# Framework-internal runners for the signal-trap registries above. No
+# host calls these; wire them to real traps yourself if you need them.
+
+__niubash_handle_trapdebug() {
+  niubash_run_trapdebug_hooks
+}
+
+__niubash_handle_traperr() {
+  niubash_run_traperr_hooks
+}
+
+__niubash_handle_trapint() {
+  niubash_run_trapint_hooks
+}
+
+__niubash_handle_trapwinch() {
+  niubash_run_trapwinch_hooks
+}
+
+__niubash_handle_trapusr1() {
+  niubash_run_trapusr1_hooks
+}
+
+__niubash_handle_trapusr2() {
+  niubash_run_trapusr2_hooks
+}
+
+__niubash_handle_trappipe() {
+  niubash_run_trappipe_hooks
+}
+
+__niubash_handle_trapterm() {
+  niubash_run_trapterm_hooks
+}
+
+__niubash_handle_trapchld() {
+  niubash_run_trapchld_hooks
+}
+
+__niubash_handle_trappzerr() {
+  niubash_run_trappzerr_hooks
+}
+
+# --- Shell wiring -----------------------------------------------------------
+#
+# The runners above are framework-internal: current Niubash does not call
+# them. The host's niu-native named-hook registry is not implemented (the
+# Niubash hooks documentation says so explicitly) and the host loads an
+# empty hook configuration at startup. What the host does fire is the
+# bash prompt surface:
+#
+#   - PROMPT_COMMAND entries run before each prompt, after the host sets
+#     NIU_LAST_EXIT_CODE;
+#   - PS1 / PS2 / PS0 assignments are read back by the host renderer;
+#   - traps, including the DEBUG trap set with `trap ... DEBUG`.
+#
+# So the entry point finishes loading by installing framework dispatchers
+# on that surface:
+#
+#   precmd  <- niubash_hook_dispatch_precmd (prepended to PROMPT_COMMAND,
+#              so it sees the previous command's exit status untouched)
+#   chpwd   <- working-directory check inside the precmd dispatcher
+#   preexec <- niubash_hook_dispatch_preexec (DEBUG trap; installed only
+#              when no DEBUG trap exists yet, so an existing user or
+#              debugger trap is never silently replaced)
+#
+# startup hooks need no wiring: the entry point runs them synchronously
+# after plugins load. Phases with no host surface (postcmd, greeting,
+# title, zshaddhistory, zshexit, the signal-trap registries; period is
+# already folded into precmd) stay manual: call their runners from your
+# own PROMPT_COMMAND entries or traps if you need them.
+#
+# The precmd dispatcher also records NIU_LAST_STATUS from $? before any
+# hook runs: the host prompt reads that variable but never sets it (only
+# NIU_LAST_EXIT_CODE is host-maintained), and prompt segments such as
+# {status} are documented against it.
+#
+# Set NIU_FRAMEWORK_HOOKS=off in the rc file, before sourcing the entry
+# point, to skip the wiring entirely.
+
+__NIU_HOOK_LAST_PWD=${__NIU_HOOK_LAST_PWD:-$PWD}
+__NIU_HOOK_PREEXEC_ACTIVE=${__NIU_HOOK_PREEXEC_ACTIVE:-}
+
+niubash_hook_dispatch_precmd() {
+  __niubash_dispatch_status=$?
+  NIU_LAST_STATUS=$__niubash_dispatch_status
+  if [ "$PWD" != "${__NIU_HOOK_LAST_PWD:-}" ]; then
+    __NIU_HOOK_LAST_PWD="$PWD"
+    niubash_run_chpwd_hooks
+  fi
+  ( exit $__niubash_dispatch_status )
+  niubash_run_precmd_hooks
+}
+
+niubash_hook_dispatch_preexec() {
+  if [ -n "${__NIU_HOOK_PREEXEC_ACTIVE:-}" ]; then
+    return 0
+  fi
+  case "${BASH_COMMAND:-}" in
+    niubash_hook_dispatch_*|niubash_run_*_hooks|__niubash_*|__omw_*)
+      return 0
+      ;;
+  esac
+  __NIU_HOOK_PREEXEC_ACTIVE=1
+  NIU_PREEXEC_COMMAND="${BASH_COMMAND:-}"
+  niubash_run_preexec_hooks "${BASH_COMMAND:-}"
+  __NIU_HOOK_PREEXEC_ACTIVE=
+  return 0
+}
+
+niubash_install_shell_hooks() {
+  if [ "${NIU_FRAMEWORK_HOOKS:-}" = "off" ]; then
+    return 0
+  fi
+  case ";${PROMPT_COMMAND:-};" in
+    *";niubash_hook_dispatch_precmd;"*) ;;
+    *)
+      if [ -n "${PROMPT_COMMAND:-}" ]; then
+        PROMPT_COMMAND="niubash_hook_dispatch_precmd;$PROMPT_COMMAND"
+      else
+        PROMPT_COMMAND="niubash_hook_dispatch_precmd"
+      fi
+      ;;
+  esac
+  if [ -z "$(trap -p DEBUG 2>/dev/null)" ]; then
+    trap 'niubash_hook_dispatch_preexec' DEBUG
+  fi
+}
+
+# --- Hook introspection ---
+# Usage: niubash_hook_list
+# Prints all registered hooks grouped by lifecycle phase.
+# Useful for debugging plugin registration order and duplicates.
+
+niubash_hook_list() {
+  echo ""
+  echo "  [Lifecycle hooks]"
+
+  __niubash_hl_print_if_nonempty startup     "$NIU_STARTUP_HOOKS"
+  __niubash_hl_print_if_nonempty precmd      "$NIU_PRECMD_HOOKS"
+  __niubash_hl_print_if_nonempty preexec     "$NIU_PREEXEC_HOOKS"
+  __niubash_hl_print_if_nonempty postcmd     "$NIU_POSTCMD_HOOKS"
+  __niubash_hl_print_if_nonempty chpwd       "$NIU_CHPWD_HOOKS"
+  __niubash_hl_print_if_nonempty period      "$NIU_PERIOD_HOOKS"
+  __niubash_hl_print_if_nonempty zshaddhistory "$NIU_ZSHADDHISTORY_HOOKS"
+  __niubash_hl_print_if_nonempty zshexit     "$NIU_ZSHEXIT_HOOKS"
+  __niubash_hl_print_if_nonempty greeting    "$NIU_GREETING_HOOKS"
+  __niubash_hl_print_if_nonempty title       "$NIU_TITLE_HOOKS"
+
+  echo ""
+  echo "  [Signal traps]"
+
+  __niubash_hl_print_if_nonempty trapdebug   "$NIU_TRAPDEBUG_HOOKS"
+  __niubash_hl_print_if_nonempty traperr     "$NIU_TRAPERR_HOOKS"
+  __niubash_hl_print_if_nonempty trapint     "$NIU_TRAPINT_HOOKS"
+  __niubash_hl_print_if_nonempty trapwinch   "$NIU_TRAPWINCH_HOOKS"
+  __niubash_hl_print_if_nonempty trapusr1    "$NIU_TRAPUSR1_HOOKS"
+  __niubash_hl_print_if_nonempty trapusr2    "$NIU_TRAPUSR2_HOOKS"
+  __niubash_hl_print_if_nonempty trappipe    "$NIU_TRAPPIPE_HOOKS"
+  __niubash_hl_print_if_nonempty trapterm    "$NIU_TRAPTERM_HOOKS"
+  __niubash_hl_print_if_nonempty trapchld    "$NIU_TRAPCHLD_HOOKS"
+  __niubash_hl_print_if_nonempty trappzerr   "$NIU_TRAPZERR_HOOKS"
+
+  echo ""
+}
+
+__niubash_hl_print_if_nonempty() {
+  if [ -n "$2" ]; then
+    echo "    $1: $2"
+  fi
+}

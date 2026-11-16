@@ -1,0 +1,22 @@
+name = "command-timer"
+bundle = "oh-my-niu"
+version = "1.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "Report duration and exit code after every interactive command."
+default = false
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["preexec", "postcmd"]
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/command-timer/init.niu"

@@ -1,0 +1,30 @@
+{
+  "name": "@aphrody/automate",
+  "version": "0.1.0",
+  "description": "Workflow automation engine: definitions (zod schema), node catalog, expression language, executor with injected services, templates, n8n import/export. No outside access of its own.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "check": "bun check",
+    "fmt": "bun fmt",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "zod": "^4"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphrody-dev/ai-os.git",
+    "directory": "frameworks/automate"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

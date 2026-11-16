@@ -1,0 +1,16 @@
+name = "ay"
+version = "1.0.0"
+kind = "source"
+entry = "ay.plugin.niu"
+summary = "ay, the Aphrody multicall CLI, as a niu plugin and a Bun plugin: one manifest from `ay plugin manifest`."
+permissions = ["shell:source", "cwd:read", "process:run:ay"]
+required_binaries = ["ay"]
+
+[exports]
+functions = ["ay_plugin_names", "ay_plugin_manifest", "ay_sh"]
+
+# Bun host entry of the same plugin: read by @aphrody/omniu (`loadBunPlugins`), which registers
+# it with Bun.plugin so `import { run, sh, manifest } from "ay"` resolves in any script.
+[bun]
+entry = "ay.plugin.ts"
+module = "ay"

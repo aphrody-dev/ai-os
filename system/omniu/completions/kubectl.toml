@@ -1,0 +1,123 @@
+command = "kubectl"
+description = "Kubernetes command-line tool"
+
+[[flags]]
+short = "-n"
+long = "--namespace"
+description = "namespace scope for this request"
+takes_value = true
+
+[[flags]]
+long = "--context"
+description = "name of the kubeconfig context to use"
+takes_value = true
+
+[[flags]]
+long = "--kubeconfig"
+description = "path to the kubeconfig file"
+takes_value = true
+
+[[flags]]
+short = "-o"
+long = "--output"
+description = "output format"
+takes_value = true
+values = ["json", "yaml", "wide", "name"]
+
+[[subcommands]]
+name = "get"
+description = "display one or many resources"
+
+[[subcommands.flags]]
+short = "-A"
+long = "--all-namespaces"
+description = "list resources across all namespaces"
+
+[[subcommands.flags]]
+short = "-w"
+long = "--watch"
+description = "watch changes"
+
+[[subcommands.flags]]
+short = "-o"
+long = "--output"
+description = "output format"
+takes_value = true
+values = ["json", "yaml", "wide", "name"]
+
+[[subcommands]]
+name = "describe"
+description = "show details of a resource"
+
+[[subcommands]]
+name = "apply"
+description = "apply a configuration to a resource"
+
+[[subcommands.flags]]
+short = "-f"
+long = "--filename"
+description = "file, directory, or URL to files to use"
+takes_value = true
+values_from = "path"
+
+[[subcommands.flags]]
+short = "-k"
+long = "--kustomize"
+description = "process a kustomization directory"
+takes_value = true
+values_from = "path"
+
+[[subcommands]]
+name = "delete"
+description = "delete resources by file names, stdin, resources and names"
+
+[[subcommands.flags]]
+short = "-f"
+long = "--filename"
+description = "file, directory, or URL to files to use"
+takes_value = true
+values_from = "path"
+
+[[subcommands]]
+name = "logs"
+description = "print the logs for a container in a pod"
+
+[[subcommands.flags]]
+short = "-f"
+long = "--follow"
+description = "stream logs"
+
+[[subcommands.flags]]
+long = "--since"
+description = "return logs newer than a relative duration"
+takes_value = true
+
+[[subcommands]]
+name = "exec"
+description = "execute a command in a container"
+
+[[subcommands.flags]]
+short = "-i"
+long = "--stdin"
+description = "pass stdin to the container"
+
+[[subcommands.flags]]
+short = "-t"
+long = "--tty"
+description = "allocate a TTY"
+
+[[subcommands]]
+name = "config"
+description = "modify kubeconfig files"
+
+[[subcommands]]
+name = "rollout"
+description = "manage rollout of a resource"
+
+[[subcommands]]
+name = "scale"
+description = "set a new size for a deployment, replica set, or replication controller"
+
+[[subcommands]]
+name = "port-forward"
+description = "forward local ports to a pod"

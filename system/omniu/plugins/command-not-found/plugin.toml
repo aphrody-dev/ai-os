@@ -1,0 +1,11 @@
+name = "command-not-found"
+version = "1.0.1"
+kind = "bridge"
+entry = "command-not-found.plugin.niu"
+summary = "Bridge marker for the command-not-found provider."
+permissions = ["command:diagnose"]
+required_binaries = []
+
+[exports]
+providers = ["command-not-found"]
+host_bridge = "command-not-found-provider"

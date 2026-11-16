@@ -1,0 +1,144 @@
+command = "docker"
+description = "Docker CLI"
+
+[[flags]]
+short = "-v"
+long = "--version"
+description = "show Docker version information"
+
+[[flags]]
+short = "-H"
+long = "--host"
+description = "daemon socket to connect to"
+takes_value = true
+
+[[flags]]
+long = "--context"
+description = "docker context to use"
+takes_value = true
+
+[[flags]]
+long = "--config"
+description = "location of client config files"
+takes_value = true
+
+[[flags]]
+short = "-D"
+long = "--debug"
+description = "enable debug mode"
+
+[[subcommands]]
+name = "build"
+description = "build an image from a Dockerfile"
+
+[[subcommands.flags]]
+short = "-t"
+long = "--tag"
+description = "name and optionally tag an image"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-f"
+long = "--file"
+description = "name of the Dockerfile"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--pull"
+description = "always attempt to pull newer base images"
+
+[[subcommands]]
+name = "run"
+description = "run a command in a new container"
+
+[[subcommands.flags]]
+short = "-i"
+long = "--interactive"
+description = "keep STDIN open"
+
+[[subcommands.flags]]
+short = "-t"
+long = "--tty"
+description = "allocate a pseudo-TTY"
+
+[[subcommands.flags]]
+short = "-d"
+long = "--detach"
+description = "run container in background"
+
+[[subcommands.flags]]
+long = "--name"
+description = "assign a name to the container"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-p"
+long = "--publish"
+description = "publish a container port to the host"
+takes_value = true
+
+[[subcommands]]
+name = "ps"
+description = "list containers"
+
+[[subcommands.flags]]
+short = "-a"
+long = "--all"
+description = "show all containers"
+
+[[subcommands.flags]]
+short = "-q"
+long = "--quiet"
+description = "only display container IDs"
+
+[[subcommands]]
+name = "exec"
+description = "execute a command in a running container"
+
+[[subcommands.flags]]
+short = "-i"
+long = "--interactive"
+description = "keep STDIN open"
+
+[[subcommands.flags]]
+short = "-t"
+long = "--tty"
+description = "allocate a pseudo-TTY"
+
+[[subcommands]]
+name = "logs"
+description = "fetch logs of a container"
+
+[[subcommands.flags]]
+short = "-f"
+long = "--follow"
+description = "follow log output"
+
+[[subcommands.flags]]
+long = "--tail"
+description = "number of lines to show from the end"
+takes_value = true
+
+[[subcommands]]
+name = "pull"
+description = "pull an image or repository"
+
+[[subcommands]]
+name = "push"
+description = "push an image or repository"
+
+[[subcommands]]
+name = "images"
+description = "list images"
+
+[[subcommands]]
+name = "network"
+description = "manage networks"
+
+[[subcommands]]
+name = "volume"
+description = "manage volumes"
+
+[[subcommands]]
+name = "system"
+description = "manage Docker"

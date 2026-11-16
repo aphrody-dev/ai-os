@@ -1,0 +1,12 @@
+name = "git"
+version = "1.0.1"
+kind = "source"
+entry = "git.plugin.niu"
+summary = "Git aliases, completions, and workflow helper functions."
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = ["git"]
+
+[exports]
+aliases = true
+functions = ["groot", "gbranch", "gmain"]
+completions = ["git"]

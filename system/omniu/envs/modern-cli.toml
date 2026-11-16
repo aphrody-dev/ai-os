@@ -1,0 +1,77 @@
+# Oh My Niu environment: the modern-cli profile of unixwin/winuxsh-profiles.
+#
+# Usage: niu env use modern-cli
+# A practical interactive setup around the default WinuxCmd command set: modern replacements for ls, cat, du, df and tree
+# (aliases in aliases/modern-cli.toml, none for grep and find so scripts keep working), rclone as the transport of optional profile sync.
+# The packages are the wpm catalog entries `ay up` installs (prebuilts/up/tools.d/wpm.toml).
+
+[meta]
+description = "Modern CLI toolkit: eza, bat, fd, ripgrep, dust, duf, fzf, starship, zoxide, lazygit and more"
+
+[packages]
+wpm = [
+  "awk",
+  "jq",
+  "yq",
+  "zstd",
+  "ripgrep",
+  "sig",
+  "fd",
+  "fzf",
+  "bat",
+  "glow",
+  "hexyl",
+  "delta",
+  "difftastic",
+  "sd",
+  "hyperfine",
+  "just",
+  "dust",
+  "duf",
+  "procs",
+  "bottom",
+  "aria2",
+  "rclone",
+  "eza",
+  "lsd",
+  "zoxide",
+  "starship",
+  "gum",
+  "zellij",
+  "chezmoi",
+  "lazygit",
+  "gitui",
+  "duckdb",
+  "pandoc",
+  "tealdeer",
+  "shellcheck",
+  "shfmt",
+  "hadolint",
+  "scc",
+  "watchexec",
+  "miniserve",
+  "xh",
+  "doggo",
+  "grpcurl",
+  "age",
+  "sops",
+  "cosign",
+  "trivy",
+  "syft",
+  "grype",
+  "oras",
+  "restic",
+  "yazi",
+  "ouch",
+  "erdtree",
+  "micro",
+]
+
+[plugins]
+enable = ["prompt-core", "git", "starship", "common-aliases", "path-tools", "extract", "zoxide", "fzf", "command-not-found", "keybindings", "modern-cli"]
+
+[env]
+NIU_THEME = "spaceship"
+NIU_THEME_PLUGIN = "theme-spaceship"
+NIU_PROMPT_SYMBOL = ">"
+NIU_PROMPT_CWD_STYLE = "home"

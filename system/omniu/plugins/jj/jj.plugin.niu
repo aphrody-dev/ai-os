@@ -1,0 +1,47 @@
+# Oh My Niu jj plugin: Jujutsu VCS helpers.
+#
+# - completions/jj.toml is generated from the official
+#   `jj util completion bash` output (see tools/convert_jj_completions.py)
+#   and regenerated per jj release, so it tracks upstream flags.
+# - jj_prompt_segment renders a VCS segment for PS1/PROMPT_COMMAND wiring.
+#   The cache is the oplog head file compared with `test -nt` (a builtin:
+#   one stat, zero subprocesses), so a prompt with no new jj operation
+#   spawns nothing — matching the native git segment's steady state.
+
+jjroot() {
+  __niu_jj_root="$(jj root 2>/dev/null)" || return
+  cd "$__niu_jj_root"
+}
+
+# Render the jj segment: "<change-id> [empty|dirty][ CONFLICT]".
+# Outside a jj repo prints nothing after one `test -d`.
+#
+# The cache key is the op_heads directory: jj 0.45 keeps per-op files there,
+# so its mtime changes exactly when a new operation lands. Compared with
+# `test -nt` (a builtin stat) a steady-state prompt spawns nothing.
+jj_prompt_segment() {
+  [ -d .jj ] || return 0
+  __niu_jj_key=".jj/repo/op_heads"
+  [ -d "$__niu_jj_key" ] || return 0
+
+  __niu_jj_mark="${TMPDIR:-/tmp}/niubash-jj-${PWD//[^A-Za-z0-9]/_}"
+  if [ -n "${NIU_JJ_CACHE:-}" ] \
+     && [ "${NIU_JJ_CACHE_DIR:-}" = "$PWD" ] \
+     && ! [ "$__niu_jj_key" -nt "$__niu_jj_mark" ]; then
+    printf '%s' "$NIU_JJ_CACHE"
+    return 0
+  fi
+
+  __niu_jj_out="$(jj log -r @ --no-graph --color never -T \
+    'change_id.short() ++ " " ++ if(empty, "empty", "dirty") ++ if(conflict, " CONFLICT", "")' \
+    2>/dev/null)"
+  [ -n "$__niu_jj_out" ] || return 0
+
+  : > "$__niu_jj_mark" 2>/dev/null
+  NIU_JJ_CACHE="$__niu_jj_out"
+  NIU_JJ_CACHE_DIR="$PWD"
+  printf '%s' "$__niu_jj_out"
+}
+
+# Optional PS1 wiring (set NIU_JJ_PROMPT=1 in ~/.niubashrc):
+#   PS1="$(jj_prompt_segment) $PS1"   # or append inside PROMPT_COMMAND

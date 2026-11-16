@@ -1,0 +1,22 @@
+# Oh My Niu thefuck plugin.
+# Usage: type a wrong command, then run fuck to correct it.
+# Note: fc -ln -1 doesn't work inside $() subshell (no history context),
+# so we use history + sed to extract the previous command.
+
+fuck() {
+  command -v thefuck >/dev/null 2>&1 || {
+    echo "thefuck is not installed or not on PATH" >&2
+    return 127
+  }
+  export TF_ALIAS=fuck PYTHONIOENCODING=utf-8
+  eval "$(TF_ALIAS=fuck PYTHONIOENCODING=utf-8 thefuck "$(history | tail -2 | head -1 | sed -E 's/^[[:space:]]*[0-9]+[[:space:]]+//')")"
+}
+
+afuck() {
+  command -v thefuck >/dev/null 2>&1 || {
+    echo "thefuck is not installed or not on PATH" >&2
+    return 127
+  }
+  export TF_ALIAS=fuck PYTHONIOENCODING=utf-8
+  eval "$(TF_ALIAS=fuck PYTHONIOENCODING=utf-8 thefuck -a "$(history | tail -2 | head -1 | sed -E 's/^[[:space:]]*[0-9]+[[:space:]]+//')")"
+}

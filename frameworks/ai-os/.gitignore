@@ -1,0 +1,9 @@
+node_modules/
+.venv/
+__pycache__/
+*.sqlite
+*.sqlite-*
+.env
+bench/.cache/
+bin/
+obj/

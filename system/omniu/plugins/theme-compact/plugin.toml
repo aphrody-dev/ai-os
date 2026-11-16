@@ -1,0 +1,10 @@
+name = "theme-compact"
+version = "1.0.1"
+kind = "source"
+entry = "theme-compact.plugin.niu"
+summary = "Compact single-line official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["compact"]

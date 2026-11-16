@@ -1,0 +1,34 @@
+# bun install for the whole monorepo: one hoisted node_modules at the root,
+# one bun.lock, packages hardlinked from the shared global cache (~/.bun/install/cache).
+# Keys per bun.com/docs/runtime/bunfig (read 2026-11-14).
+telemetry = false
+
+[install]
+linker = "hoisted"
+exact = true
+saveTextLockfile = true
+
+[run]
+# Same Bun shell on Linux, macOS and Windows for package.json scripts (Windows default is already "bun").
+shell = "bun"
+# `node` resolves to bun inside `bun run`.
+bun = true
+# Agents read outputs: no echo of the command line.
+silent = true
+# Children die with their parent (no orphaned servers left by agent runs).
+noOrphans = true
+
+[test]
+pathIgnorePatterns = ["var/**", "third_party/**", "node_modules/**"]
+# Agent-sized output: only failing tests are printed.
+onlyFailures = true
+
+[fmt]
+ignorePatterns = [
+  "third_party/**",
+  "var/**",
+  "node_modules/**",
+  "target/**",
+  "graphify-out/**",
+  "tools/lore/contrib/helm/templates/**",
+]

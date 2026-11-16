@@ -1,0 +1,9 @@
+[project]
+name = "aphrody-ghidra-parity"
+version = "0.1.0"
+description = "Reference run of the Ghidra Python API (pyghidra) against which frameworks/re-ts/ghidra is compared"
+requires-python = ">=3.10"
+dependencies = ["pyghidra>=3.2"]
+
+[tool.uv]
+package = false

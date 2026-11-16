@@ -1,0 +1,22 @@
+name = "git-fetch-reminder"
+bundle = "oh-my-niu"
+version = "1.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "Periodic reminder when the git branch diverged from its upstream."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:git"]
+required_binaries = ["git"]
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["period"]
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/git-fetch-reminder/init.niu"

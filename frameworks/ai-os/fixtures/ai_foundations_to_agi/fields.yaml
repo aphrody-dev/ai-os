@@ -1,0 +1,41 @@
+schema_version: "1.0"
+required_fields:
+  - name: name
+    type: string
+    description: "Canonical name of the research item."
+  - name: source_url
+    type: string
+    description: "Primary URL provided in the research prompt."
+  - name: category
+    type: string
+    description: "Conceptual or technical classification within the history and architecture of AI."
+  - name: era_and_date
+    type: string
+    description: "Key historical period, publication date, or active timeframe."
+  - name: authors_or_protagonists
+    type: list[string]
+    description: "Primary authors, pioneers, or key researchers associated with the item."
+  - name: core_thesis_or_definition
+    type: string
+    description: "Rigorous summary of the core scientific contribution, biography, or paradigm definition."
+  - name: key_mathematical_or_architectural_mechanisms
+    type: list[string]
+    description: "Exact formalisms, equations, hardware/software designs, or cognitive mechanisms."
+  - name: computational_complexity_and_expressivity
+    type: string
+    description: "Analysis of decidability, Turing-completeness, asymptotic FLOP/path complexity, or formal expressivity."
+  - name: historical_milestones_and_benchmarks
+    type: list[string]
+    description: "Chronological breakthroughs, empirical scores (e.g., WMT 2014 BLEU, ARC-AGI), or institutional milestones."
+  - name: bridge_to_agi
+    type: string
+    description: "Direct causal and theoretical role connecting computability, Transformers, and general intelligence."
+  - name: fundamental_limitations_and_open_problems
+    type: list[string]
+    description: "Intrinsic mathematical, algorithmic, physical, or alignment bottlenecks."
+  - name: status_in_2026
+    type: string
+    description: "State of consensus, deployment, or open debate as of November 2026."
+  - name: primary_references
+    type: list[string]
+    description: "Foundational papers, archival sources, and contemporary 2025-2026 literature."

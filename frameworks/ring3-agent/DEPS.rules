@@ -1,0 +1,2 @@
+# checkdeps layer rules (see docs/ARCHITECTURE.md). Inherited by subdirectories.
+layer = 4

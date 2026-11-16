@@ -1,0 +1,57 @@
+# oh-my-niu auto-env plugin
+# Activates the local Python virtual environment (.venv) when entering a
+# directory and deactivates it again on leave. Handles both Windows
+# (.venv/Scripts) and POSIX (.venv/bin) layouts. Set NIU_AUTO_ENV_DISABLE=1
+# to turn the whole thing off.
+
+__niu_auto_env_deactivate() {
+  [ -n "${__niu_auto_env_active:-}" ] || return 0
+  __niu_auto_env_new_path=
+  __niu_auto_env_IFS=$IFS
+  IFS=':'
+  for __niu_auto_env_entry in $PATH; do
+    case "$__niu_auto_env_entry" in
+      "$__niu_auto_env_active"|"$__niu_auto_env_active"/*) ;;
+      *)
+        if [ -z "$__niu_auto_env_new_path" ]; then
+          __niu_auto_env_new_path=$__niu_auto_env_entry
+        else
+          __niu_auto_env_new_path="$__niu_auto_env_new_path:$__niu_auto_env_entry"
+        fi
+        ;;
+    esac
+  done
+  IFS=$__niu_auto_env_IFS
+  PATH=$__niu_auto_env_new_path
+  export PATH
+  unset VIRTUAL_ENV __niu_auto_env_active
+  unset __niu_auto_env_IFS __niu_auto_env_entry __niu_auto_env_new_path
+}
+
+__niu_auto_env_apply() {
+  [ "${NIU_AUTO_ENV_DISABLE:-0}" = "1" ] && return 0
+  __niu_auto_env_found=
+  for __niu_auto_env_candidate in .venv/Scripts .venv/bin; do
+    if [ -d "$__niu_auto_env_candidate" ]; then
+      __niu_auto_env_found=$PWD/${__niu_auto_env_candidate}
+      break
+    fi
+  done
+  case "${__niu_auto_env_active:-}" in
+    "$__niu_auto_env_found") return 0 ;;
+  esac
+  __niu_auto_env_deactivate
+  [ -n "$__niu_auto_env_found" ] || return 0
+  __niu_auto_env_active=$__niu_auto_env_found
+  PATH=$__niu_auto_env_active:$PATH
+  export PATH
+  VIRTUAL_ENV=${__niu_auto_env_active%/Scripts}
+  VIRTUAL_ENV=${VIRTUAL_ENV%/bin}
+  export VIRTUAL_ENV
+}
+
+case "$NIU_PLUGIN_HOOK" in
+  startup|chpwd)
+    __niu_auto_env_apply
+    ;;
+esac

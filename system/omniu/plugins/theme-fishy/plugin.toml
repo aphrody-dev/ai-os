@@ -1,0 +1,10 @@
+name = "theme-fishy"
+version = "1.0.1"
+kind = "source"
+entry = "theme-fishy.plugin.niu"
+summary = "Fish-like prompt theme plugin inspired by Oh My Zsh fishy and fish-shell."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["fishy"]

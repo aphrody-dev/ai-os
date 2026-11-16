@@ -1,0 +1,122 @@
+# Distributed inference fabric (llama.cpp RPC): a coordinator llama-server on the PC's GPU, ggml-rpc-server on
+# the other hosts, reached only over WireGuard. Read by frameworks/ai-os/src/fabric
+# (`ai-os fabric up|status|down`, `ay ai fabric ...`).
+#
+# [release]  official ggml-org/llama.cpp binaries, fingerprints = `digest` of the GitHub assets API
+#            (gh api repos/ggml-org/llama.cpp/releases/tags/b<tag>), surveyed on 2026-11-13. Never
+#            compiled on the PC; on prd only through device/fleet/bin/heavy.sh.
+# [model.*]  GGUFs served by the coordinator; `path` relative to the model cache (deduplicated, hard links).
+# [[node]]   compute host: `bind` = WireGuard listen address (never 0.0.0.0), `reach` = address seen
+#            from the coordinator, `gate` = admission condition (checked at startup then every
+#            `watch_s` seconds by the watchdog: the node withdraws on its own), systemd caps.
+
+[coordinator]
+node = "pc"
+host = "127.0.0.1"
+port = 8090
+model = "gemma4-e2b"
+ctx = 8192
+cache = "~/.local/share/ay/ai"
+# WireGuard addresses of the coordinator: only sources admitted on the nodes' RPC port (nft).
+mesh = ["@@hosts.pc.mesh_ip@@", "@@hosts.pc.extra_mesh_ip@@"]
+
+# Opportunistic admission (`ai-os fabric ensure`, scheduled task `ai-os fabric timer`): as soon as a listed node passes its
+# condition, short distributed trial (one remote layer, `tokens` tokens) then return to the previous state; result in
+# ~/.local/share/ay/ai/fabric-trials.jsonl (`ai-os fabric trials`). A node already tried successfully is no longer probed.
+[trial]
+nodes = ["prd"]
+model = "qwen3-0.6b"
+split = [1, 27]
+tokens = 16
+
+[release]
+tag = "b12340"
+commit = "8954f194837d2ec4d5f67f20c81b84abe63883ba"
+windows-x86_64 = { asset = "llama-b12340-bin-win-cuda-13.5-x64.zip", sha256 = "31013c2a0d7ed93489862613a08f34658861996741b310ee3fa9e27ec139642b" }
+windows-x86_64-cudart = { asset = "cudart-llama-bin-win-cuda-13.5-x64.zip", sha256 = "c2bf4cc202bfbaaa7a0b75f5082457c3811326947bb216059b72839d844e9cba" }
+linux-x86_64 = { asset = "llama-b12340-bin-ubuntu-x64.tar.gz", sha256 = "5bc0276548147e56aa03f97b201b1cb3b43cbda6e388f1f2f4c8d82b56313856" }
+
+[model.gemma4-e2b]
+# unsloth/gemma-4-E2B-it-GGUF, Q4_K_M: sha256 = LFS oid of the Hugging Face API (surveyed 2026-11-13), identical
+# on the PC and on each node (`warm`) so that rpc-server's tensor cache serves the same fingerprints.
+path = "gemma-4-E2B-it-Q4_K_M.gguf"
+bytes = 3106738272
+sha256 = "740185b21d22ceb83a11c3aa62ad5842ef32c70f6096d756bbee85a1e4ec34b8"
+url = "https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_K_M.gguf"
+
+[model."qwen3-0.6b"]
+# unsloth/Qwen3-0.6B-GGUF, Q4_K_M (LFS oid, 2026-11-13). Architecture without KV sharing between layers: fabric
+# measurement model (9.5 MiB per layer, a remote layer loads in a few minutes over the PC's uplink).
+path = "Qwen3-0.6B-Q4_K_M.gguf"
+bytes = 396705472
+sha256 = "ac2d97712095a558e31573f62f466a3f9d93990898b0ec79d7c974c1780d524a"
+url = "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf"
+
+# --- Nodes ------------------------------------------------------------------------------------
+
+[[node]]
+id = "pc"
+os = "windows"
+role = "coordinator"
+# Relative layer shares (-ts, llama.cpp order: RPC nodes then CUDA0). Without a share on each admitted node,
+# llama.cpp splits by free memory and would give most to a VPS CPU (47 GiB free on fr1).
+share = 7
+# Main engine: RTX 4070 12 GB (CUDA 13.5, driver 621.14, nvidia-smi survey 2026-11-13).
+
+[[node]]
+id = "fr1"
+ssh = "fr1"
+os = "linux"
+bind = "@@hosts.fr1.mesh_ip@@"
+reach = "@@hosts.fr1.mesh_ip@@"
+port = 50052
+threads = 8
+share = 1
+cpu_quota = "800%"
+memory_max = "24G"
+# Chromium/LLVM host: admitted only without a build in progress (no ninja/siso/clang/rustc, no loaded build.slice).
+gate = "no-build"
+watch_s = 15
+
+[[node]]
+id = "prd"
+ssh = "prd"
+os = "linux"
+# Direct PC <-> prd link (`prod` interface, @@network.mesh_cidr@@): only the PC can reach this port.
+bind = "@@hosts.prd.link_ip@@"
+reach = "@@hosts.prd.link_ip@@"
+port = 50052
+threads = 2
+share = 1
+cpu_quota = "200%"
+memory_max = "6G"
+# Production: load < nproc/2, heavy lock free (flock -n), shenron-chat-v2 healthy, memory available.
+gate = "prd"
+heavy_lock = "/var/lock/aphrody-heavy.lock"
+priority_url = "http://127.0.0.1:8799/health"
+watch_s = 10
+
+[[node]]
+id = "fr2"
+ssh = "fr2"
+os = "linux"
+bind = "@@hosts.fr2.mesh_ip@@"
+reach = "@@hosts.fr2.mesh_ip@@"
+port = 50052
+threads = 2
+cpu_quota = "100%"
+memory_max = "2G"
+# Proxy prioritaire : nginx actif et charge < nproc/2 ; 11 Go de RAM, contribution marginale.
+gate = "proxy"
+watch_s = 10
+enabled = false
+
+[[node]]
+# Second Windows host with an NVIDIA GPU: absent from the inventory as of 2026-11-13 (deploy.toml, fleet.toml,
+# docs/infra, ~/.ssh/config, WireGuard peers). It joins the fabric as soon as `reach` answers on `port`
+# (nothing else to configure: the node is read from this table).
+id = "gpu2"
+os = "windows"
+reach = ""
+port = 50052
+gate = "reachable"

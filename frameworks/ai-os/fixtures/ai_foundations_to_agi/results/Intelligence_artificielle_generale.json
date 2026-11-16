@@ -1,0 +1,43 @@
+{
+  "name": "Intelligence artificielle generale",
+  "source_url": "https://fr.wikipedia.org/wiki/Intelligence_artificielle_g%C3%A9n%C3%A9rale",
+  "category": "Frontier AI Paradigm & Cognitive Horizon",
+  "era_and_date": "1950s–Present (Term 'Artificial General Intelligence' popularized 1997 by Mark Gubrud & mid-2000s by Goertzel/Shane Legg; active frontier target in 2026)",
+  "authors_or_protagonists": [
+    "Alan Turing, John McCarthy, Marvin Minsky, Herbert Simon, I. J. Good (early pioneers & intelligence explosion theory)",
+    "Mark Gubrud (1997 early usage), Shane Legg, Marcus Hutter, Ben Goertzel (formalization of AGI / AIXI)",
+    "Demis Hassabis (Google DeepMind), Sam Altman / Ilya Sutskever (OpenAI), Dario Amodei (Anthropic), Mark Zuckerberg / Yann LeCun (Meta)",
+    "François Chollet (ARC-AGI & fluid skill-acquisition efficiency)",
+    "Geoffrey Hinton, Yoshua Bengio, Stuart Russell (existential risk, alignment & control)"
+  ],
+  "core_thesis_or_definition": "Artificial General Intelligence (AGI) denotes an autonomous artificial system capable of learning, adapting to, and performing virtually any cognitive or economically valuable intellectual task at or above human level across open-ended domains—contrasted with Narrow AI (task-specific systems), Strong AI (philosophically tied to phenomenal consciousness/sentience per Searle's Chinese Room), and Artificial Superintelligence (ASI, vastly surpassing collective human cognition).",
+  "key_mathematical_or_architectural_mechanisms": [
+    "Pre-training Scaling Laws (Kaplan et al.; Hoffmann et al. / Chinchilla): predictable power-law loss reduction as a function of model parameters, dataset tokens, and training FLOPs.",
+    "Test-Time Compute & Inference-Time Search (2024–2026 paradigm, e.g., o1/o3, Gemini 3/4 thinking & refinement harnesses): allocating dynamic reinforcement-learned chain-of-thought and program search at inference time.",
+    "Multimodal & Agentic Loops: coupling foundation models with tool execution, code interpreters, persistent memory, and environment feedback (e.g., MuZero, Gato, Nemotron Coalition / OpenClaw ecosystems).",
+    "Competing Non-LLM Paradigms: Joint-Embedding Predictive Architectures (JEPA / World Models advocated by Yann LeCun) and Neuro-Symbolic Program Synthesis (explored on ARC-AGI-2 by François Chollet)."
+  ],
+  "computational_complexity_and_expressivity": "Unbounded optimal general intelligence (e.g., Hutter's AIXI combining Solomonoff induction with sequential decision theory) is Turing-uncomputable and must be approximated under bounded resources. Practical AGI requires combining parallel pattern recognition (fast constant-depth intuition, System 1) with unbounded iterative memory/computation (Turing-complete System 2 deliberation and environment interaction).",
+  "historical_milestones_and_benchmarks": [
+    "1956 & 1965: Dartmouth Workshop births AI; Herbert Simon over-optimistically predicts full human-level machine capability within 20 years, preceding the 1970s/1980s AI Winters.",
+    "1965: I. J. Good formulates the 'Intelligence Explosion' hypothesis via recursive self-improvement toward an ultraintelligent machine.",
+    "2016–2022: DeepMind progresses from domain-specific RL (AlphaGo, 2016) to rule-free planning (MuZero, 2020) and multi-task generalist sequence modeling (Gato, 2022).",
+    "2023–2024: Multimodal GPT-4 ('Sparks of AGI' debate), Meta's open AGI initiative (Jan 2024), and OpenAI o1-preview (Sep 2024) inaugurating test-time reasoning scaling.",
+    "2025–2026: ARC-AGI-2 challenges pure memorization via fluid abstraction tasks (with test-time refinement harnesses lifting frontier models like Gemini 3 Pro significantly while human parity on novel synthesis remains contested); on 23 March 2026, Jensen Huang claims functional/benchmark AGI has arrived while emphasizing modular agentic systems, though scientific consensus still holds that true AGI has not yet been achieved."
+  ],
+  "bridge_to_agi": "Represents the convergence point where Turing's 1936/1950 vision of a universal learning machine meets the parallel representational power of the 2017 Transformer—revealing both what statistical sequence scaling has conquered (language, coding, standardized exams) and what remains contested (sample-efficient fluid abstraction, continual learning, physical world modeling, and provable alignment).",
+  "fundamental_limitations_and_open_problems": [
+    "Fluid Abstraction & Out-of-Distribution Generalization: High training sample complexity vs. human few-shot skill acquisition on novel tasks (ARC-AGI-2 / Chollet critique).",
+    "Continual Learning & Catastrophic Forgetting: Inability of frozen-weight models to permanently and reliably update internal skills on the fly without full retraining.",
+    "Existential Alignment & Control Problem: Instrumental convergence, specification gaming, mass labor displacement, autonomous cyber-proliferation, and systemic disinformation warned of by Bengio, Hinton, and Russell.",
+    "Definitional Divergence [uncertain]: Absence of a single falsifiable threshold separating advanced multimodal agentic AI from true AGI, with arrival timelines and intelligence-explosion speeds (<1 hour to decades) remaining deeply disputed."
+  ],
+  "status_in_2026": "No AI system in November 2026 enjoys scientific consensus as true AGI, despite executive declarations (e.g., Jensen Huang, March 2026) under narrow economic/benchmark definitions [uncertain] exact timeline to consensus human-level AGI and whether recursive self-improvement triggers a rapid intelligence explosion or gradual economic diffusion.",
+  "primary_references": [
+    "Wikipedia FR (2026). Intelligence artificielle générale — https://fr.wikipedia.org/wiki/Intelligence_artificielle_g%C3%A9n%C3%A9rale",
+    "Good, I. J. (1965). Speculations Concerning the First Ultraintelligent Machine. Advances in Computers, 6, 31-88.",
+    "Chollet, F. (2019 / 2025-2026). On the Measure of Intelligence & ARC Prize Technical Reports (arXiv:2601.10904).",
+    "Bengio, Y., Hinton, G., Russell, S., et al. (2024–2026). International Scientific Reports on the Safety of Advanced AI."
+  ],
+  "uncertain": ["fundamental_limitations_and_open_problems", "status_in_2026"]
+}

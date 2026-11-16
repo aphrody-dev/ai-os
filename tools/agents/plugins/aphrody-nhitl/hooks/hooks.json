@@ -1,0 +1,33 @@
+{
+  "description": "aphrody-nhitl: learn capture + session digest (zero PreToolUse overhead)",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/src/learn-capture.ts"
+            ],
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/src/learn-auto.ts"
+            ],
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

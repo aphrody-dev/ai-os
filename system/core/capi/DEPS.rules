@@ -1,0 +1,3 @@
+# checkdeps layer rules. Inherited by subdirectories.
+layer = 3
+!frameworks/agent/context # unified C ABI cdylib optionally exposes ai_os_* (feature ai-os)

@@ -1,0 +1,6 @@
+{
+  "role": "growth",
+  "host": "prd",
+  "approval": "owner",
+  "prompt": "SEO and web-quality check of the public sites listed in tools/identity.toml (aphrody.com, aphrody.app, shenron and rosegriffon domains). For each origin: fetch / and the sitemap with curl (status, redirects, <title>, meta description, canonical, hreflang, robots.txt, sitemap.xml validity, structured data, Cache-Control, compression), and run `bunx lighthouse <url> --output=json --quiet --chrome-flags=--headless` when Chromium is available. Output: drafts/growth/seo-report.md (table per origin, findings ordered by impact, each with the exact file in src to change) and drafts/growth/seo-fixes.patch when a fix is a pure content/meta change. Read-only on the sites; do not deploy."
+}

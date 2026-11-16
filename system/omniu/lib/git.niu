@@ -1,0 +1,41 @@
+# Git helpers shared by git-aware plugins and themes.
+
+git_current_branch() {
+  __omw_git_branch="$(git branch --show-current)" || __omw_git_branch=""
+  if [ -z "$__omw_git_branch" ]; then
+    __omw_git_branch="$(git rev-parse --short HEAD)" || return
+  fi
+  printf "%s" "$__omw_git_branch"
+}
+
+parse_git_dirty() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 1
+
+  git diff --quiet --ignore-submodules -- 2>/dev/null || return 0
+  git diff --cached --quiet --ignore-submodules -- 2>/dev/null || return 0
+
+  __omw_git_untracked="$(git ls-files --others --exclude-standard)"
+  [ -n "$__omw_git_untracked" ] && return 0
+
+  return 1
+}
+
+git_prompt_info() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
+
+  __omw_git_branch="$(git_current_branch)" || return
+  [ -n "$__omw_git_branch" ] || return
+
+  __omw_git_prefix="${NIU_THEME_GIT_PROMPT_PREFIX:-git:(}"
+  __omw_git_suffix="${NIU_THEME_GIT_PROMPT_SUFFIX:-)}"
+  __omw_git_dirty="${NIU_THEME_GIT_PROMPT_DIRTY:- *}"
+  __omw_git_clean="${NIU_THEME_GIT_PROMPT_CLEAN:-}"
+
+  if parse_git_dirty; then
+    __omw_git_state="$__omw_git_dirty"
+  else
+    __omw_git_state="$__omw_git_clean"
+  fi
+
+  printf "%s%s%s%s" "$__omw_git_prefix" "$__omw_git_branch" "$__omw_git_state" "$__omw_git_suffix"
+}

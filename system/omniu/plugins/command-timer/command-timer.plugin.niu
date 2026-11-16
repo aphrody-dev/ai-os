@@ -1,0 +1,38 @@
+# Oh My Niu command-timer plugin.
+#
+# Times every interactive command via preexec/postcmd and reports the
+# duration and exit code after it finishes. Quiet by default: commands that
+# finish in under one second with a zero exit status print nothing.
+#
+# Note: SECONDS is copied into a plain variable before arithmetic. Fixed
+# upstream in rubash 821612ca (arithmetic now resolves SECONDS), but the
+# copy keeps the plugin working with older rubash builds too.
+
+[ -f "$NIUBASH/lib/hooks.niu" ] && . "$NIUBASH/lib/hooks.niu"
+
+NIU_TIMER_THRESHOLD=${NIU_TIMER_THRESHOLD:-1}
+export NIU_TIMER_THRESHOLD
+
+__niu_timer_start() {
+  __niu_timer_start_value=$SECONDS
+  NIU_TIMER_ACTIVE=1
+}
+
+__niu_timer_stop() {
+  [ "${NIU_TIMER_ACTIVE:-0}" = "1" ] || return 0
+  NIU_TIMER_ACTIVE=0
+  __niu_timer_now=$SECONDS
+  __niu_timer_start_value=${__niu_timer_start_value:-$__niu_timer_now}
+  __niu_timer_duration=$((__niu_timer_now - __niu_timer_start_value))
+  if [ "$__niu_timer_duration" -lt "$NIU_TIMER_THRESHOLD" ] && [ "${NIU_LAST_EXIT_CODE:-0}" -eq 0 ]; then
+    return 0
+  fi
+  if [ "${NIU_LAST_EXIT_CODE:-0}" -ne 0 ]; then
+    printf '\033[33m⏱ %ss · exit %s\033[0m\n' "$__niu_timer_duration" "$NIU_LAST_EXIT_CODE"
+  else
+    printf '\033[2m⏱ %ss\033[0m\n' "$__niu_timer_duration"
+  fi
+}
+
+niubash_add_preexec_hook __niu_timer_start
+niubash_add_postcmd_hook __niu_timer_stop

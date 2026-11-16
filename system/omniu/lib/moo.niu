@@ -1,0 +1,36 @@
+# lib/moo.niu — niubash mascot helpers (startup banner + moo).
+#
+# Safe to re-source: everything here is a function definition.
+#   niu_banner    print the NIUBASH block-letter banner + tagline
+#   niu_moo[msg]  cowsay-style bubble spoken by the niubash bull
+#
+# Enable the one-time startup banner from .niubashrc:
+#   NIU_BANNER=1
+
+niu_banner() {
+  cat <<'NIU_BANNER'
+███╗   ██╗ ██╗ ██╗   ██╗ ██████╗   █████╗  ███████╗ ██╗  ██╗
+████╗  ██║ ██║ ██║   ██║ ██╔══██╗ ██╔══██╗ ██╔════╝ ██║  ██║
+██╔██╗ ██║ ██║ ██║   ██║ ██████╔╝ ███████║ ███████╗ ███████║
+██║╚██╗██║ ██║ ██║   ██║ ██╔══██╗ ██╔══██║ ╚════██║ ██╔══██║
+██║ ╚████║ ██║ ╚██████╔╝ ██████╔╝ ██║  ██║ ███████║ ██║  ██║
+╚═╝  ╚═══╝ ╚═╝  ╚═════╝ ╚═════╝  ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
+NIU_BANNER
+  printf '  Bash, native on Windows. No WSL. Mo-o-o!\n\n'
+}
+
+niu_moo() {
+  local msg="${*:-Bash, native on Windows. No WSL.}"
+  local pad
+  pad=$(printf '%*s' "${#msg}" '' | tr ' ' '_')
+  printf ' __%s__\n' "$pad"
+  printf '< %s >\n' "$msg"
+  printf ' --%s--\n' "$pad"
+  cat <<'NIU_COW'
+        \   ^___^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+NIU_COW
+}

@@ -1,0 +1,10 @@
+name = "theme-forest"
+version = "1.0.1"
+kind = "source"
+entry = "theme-forest.plugin.niu"
+summary = "Forest official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["forest"]

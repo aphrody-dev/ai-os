@@ -1,0 +1,8 @@
+# command-not-found bridge plugin.
+#
+# The current provider is still implemented by the Niubash host. This plugin is
+# the directory-first ownership marker so the feature can migrate behind the
+# plugin API instead of remaining an invisible builtin.
+
+NIU_COMMAND_NOT_FOUND_PROVIDER=command-not-found
+export NIU_COMMAND_NOT_FOUND_PROVIDER

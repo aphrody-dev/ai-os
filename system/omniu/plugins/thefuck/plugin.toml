@@ -1,0 +1,10 @@
+name = "thefuck"
+version = "1.0.1"
+kind = "source"
+entry = "thefuck.plugin.niu"
+summary = "Correction shim for the previous command."
+permissions = ["shell:source", "history:read", "shell:execute:suggested-command", "process:run:thefuck"]
+required_binaries = ["thefuck"]
+
+[exports]
+functions = ["fuck"]

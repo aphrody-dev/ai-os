@@ -1,0 +1,26 @@
+{
+  "name": "@aphrody/pi-opencode",
+  "version": "1.0.0",
+  "description": "Minimalist modular autonomous coding harness fusing Pi (4-tool core), OpenCode + OpenTUI (Bun & Rust libs/UI), Locally Uncensored + Heretic + Ring3-Agent (open-weights local inference), and Symphony + Ralph NHITL worktree loops",
+  "bin": {
+    "pi-opencode": "./src/cli.ts"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "serve": "bun run src/cli.ts serve",
+    "tui": "bun run src/cli.ts tui",
+    "models": "bun run src/cli.ts models",
+    "test": "bun test",
+    "check": "bun check",
+    "fmt": "bun fmt",
+    "fmt:check": "bun fmt --check",
+    "build:rust": "cargo build --release --manifest-path rust-core/Cargo.toml",
+    "test:rust": "cargo test --manifest-path rust-core/Cargo.toml",
+    "compile": "bun build --compile --minify src/cli.ts --outfile dist/pi-opencode.exe",
+    "nhitl": "bun run src/cli.ts nhitl"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "packageManager": "bun@1.4.4"
+}

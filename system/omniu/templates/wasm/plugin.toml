@@ -1,0 +1,28 @@
+name = "example-wasm"
+bundle = "oh-my-niu"
+version = "1.0.1"
+kind = "wasm"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "WASM command plugin pack template."
+default = false
+permissions = ["cwd:read"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = ["example-wasm"]
+keybindings = []
+themes = []
+providers = []
+
+[wasm]
+protocol = "niubash:wasm-plugin@0.1.0"
+module = "wasm/example-wasm.wasm"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+wit_world = "niubash:plugin/example"
+timeout_millis = 1000
+max_memory_pages = 16

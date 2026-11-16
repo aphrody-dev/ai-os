@@ -1,0 +1,393 @@
+# Manifeste versionné de l'outillage agent (Claude Code, Codex, agy, OpenCode, Pi, Gemini CLI ; PC et flotte). Toute installation passe ici ;
+# applier : system/machine-ts/src/toolchain.ts (`ay agents install|sync|check|list`).
+# Nettoyé le 2026-11-14 : plugins de skills tiers désinstallés ; les skills utiles (dont android-*, issues de android/skills) sont versionnées dans .agents/skills et servies par `aphrody-skills`. Outils AI : `relay`, `agent-desktop`, `agent-browser`.
+
+# Global Claude Code config, versioned in tools/agents/claude ({src} and {home} substituted).
+# settings.json: merge of the managed keys only (model, effort, fast mode and plugins stay at the workstation's choice).
+[[claude.home]]
+src = "tools/agents/claude/CLAUDE.md"
+dest = "{home}/.claude/CLAUDE.md"
+
+[[claude.home]]
+src = "tools/agents/claude/output-styles/autonome.md"
+dest = "{home}/.claude/output-styles/autonome.md"
+
+[[claude.home]]
+src = "tools/agents/claude/settings.json"
+dest = "{home}/.claude/settings.json"
+merge = true
+hosts = ["pc"]
+
+[[claude.marketplace]]
+name = "aphrody"
+path = "."
+
+# Marketplaces with no plugin installed anymore (useless clones and update checks).
+[[claude.marketplace]]
+name = "anthropic-agent-skills"
+state = "absent"
+
+[[claude.marketplace]]
+name = "google-plugins"
+state = "absent"
+
+[[claude.marketplace]]
+name = "googlechrome"
+state = "absent"
+
+[[claude.marketplace]]
+name = "gemini-skills"
+state = "absent"
+
+[[claude.marketplace]]
+name = "android-skills"
+state = "absent"
+
+[[claude.marketplace]]
+name = "rosegriffon-plugins"
+path = "../rosegriffon"
+hosts = ["pc"]
+
+# --- Aphrody plugins (kept) ---
+[[claude.plugin]]
+id = "aphrody-skills@aphrody"
+refresh = true
+
+[[claude.plugin]]
+id = "aphrody-nhitl@aphrody"
+refresh = true
+
+# Workshop plugins (creating plugins, skills, MCP servers): installed but disabled, their skills and agents
+# loaded in every session; `claude plugin enable <id>` for as long as needed.
+[[claude.plugin]]
+id = "plugin-dev@anthropic-plugin-directory"
+hosts = ["pc"]
+state = "disabled"
+
+[[claude.plugin]]
+id = "mcp-server-dev@anthropic-plugin-directory"
+hosts = ["pc"]
+state = "disabled"
+
+[[claude.plugin]]
+id = "skill-creator@anthropic-plugin-directory"
+hosts = ["pc"]
+state = "disabled"
+
+# --- External / third-party plugins (uninstalled) ---
+[[claude.plugin]]
+id = "document-skills@anthropic-agent-skills"
+scope = "user"
+state = "absent"
+
+[[claude.plugin]]
+id = "google-cloud-developer@google-plugins"
+scope = "user"
+state = "absent"
+
+[[claude.plugin]]
+id = "modern-web-guidance@googlechrome"
+scope = "user"
+state = "absent"
+
+[[claude.plugin]]
+id = "gemini-skills@gemini-skills"
+scope = "user"
+state = "absent"
+
+[[claude.plugin]]
+id = "android-skills@android-skills"
+scope = "user"
+state = "absent"
+
+# figma and cloudflare: installed by the owner on the PC on 2026-11-14; absent from the fleet.
+[[claude.plugin]]
+id = "figma@claude-plugins-official"
+hosts = ["pc"]
+
+[[claude.plugin]]
+id = "figma@claude-plugins-official"
+hosts = ["prd", "fr1", "fr2"]
+state = "absent"
+
+[[claude.plugin]]
+id = "figma-to-code-design-to-react-vue-and-html@anthropic-plugin-directory"
+scope = "user"
+state = "absent"
+
+[[claude.plugin]]
+id = "vercel-agent-skills@aphrody"
+state = "absent"
+
+[[claude.plugin]]
+id = "web-quality-skills@aphrody"
+state = "absent"
+
+[[claude.plugin]]
+id = "unreal-engine-skills-for-claude-code@aphrody"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.plugin]]
+id = "github@claude-plugins-official"
+state = "absent"
+
+[[claude.plugin]]
+id = "clangd-lsp@claude-plugins-official"
+state = "absent"
+
+[[claude.plugin]]
+id = "rust-analyzer-lsp@claude-plugins-official"
+state = "absent"
+
+[[claude.plugin]]
+id = "typescript-lsp@claude-plugins-official"
+state = "absent"
+
+[[claude.plugin]]
+id = "math-proof@claude-plugins-official"
+state = "absent"
+
+[[claude.plugin]]
+id = "cloudflare@anthropic-plugin-directory"
+hosts = ["pc"]
+
+[[claude.plugin]]
+id = "cloudflare@anthropic-plugin-directory"
+hosts = ["prd", "fr1", "fr2"]
+state = "absent"
+
+[[claude.plugin]]
+id = "microsoft-docs@anthropic-plugin-directory"
+state = "absent"
+
+[[claude.plugin]]
+id = "context7@anthropic-plugin-directory"
+state = "absent"
+
+[[claude.plugin]]
+id = "resend@anthropic-plugin-directory"
+hosts = ["pc"]
+state = "absent"
+
+# --- Aphrody MCP / AI Tools (kept) ---
+# ~/.claude.json is the only list of MCP servers: the relay aggregates them (<server>__<tool>) for the other agents.
+# Claude Code already declares them: it takes the relay without aggregate (/mcp/core); shared_url = full route of the others.
+[[claude.mcp]]
+name = "relay"
+url = "http://127.0.0.1:8790/mcp/core"
+shared_url = "http://127.0.0.1:8790/mcp"
+headers_helper = "bun {src}/frameworks/ai-os/src/relay/headers.ts"
+# agy has neither verifiable OAuth nor a header without a plaintext secret: same server over stdio, without authorization.
+stdio_command = ["bun", "{src}/frameworks/ai-os/src/relay/cli.ts", "mcp-stdio"]
+hosts = ["pc"]
+
+[[claude.mcp]]
+name = "cloudflare"
+url = "https://mcp.cloudflare.com/mcp"
+hosts = ["pc"]
+
+[[claude.mcp]]
+name = "cloudflare-docs"
+url = "https://docs.mcp.cloudflare.com/mcp"
+hosts = ["pc"]
+
+# vercel (230 tools, team blocked since 2026-06) and rea (250 tools) are no longer declared in Claude Code:
+# their tool names loaded in every session. rea stays reachable through the relay (hub_tools / hub_call).
+[[claude.mcp]]
+name = "vercel"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.mcp]]
+name = "rea"
+hosts = ["pc"]
+state = "absent"
+
+# Servers reserved for the relay (<relay folder>/hub.json): no tool in the clients' context.
+[[hub.mcp]]
+name = "rea"
+# by package name through bun x, on Bun (--bun overrides the node shebang): no install path, no Node.js
+command = ["bun", "x", "--bun", "rea-agents", "mcp"]
+# JAVA_HOME comes from the user environment (no JDK patch path pinned here).
+env = { GHIDRA_INSTALL_DIR = "{home}/AppData/Local/ghidra" }
+install = ["bun", "add", "-g", "rea-agents"]
+hosts = ["pc"]
+
+# agent-desktop (67 tools) and agent-browser (33): also behind the relay (hub_tools / hub_call, desktop_use, browser_use).
+[[claude.mcp]]
+name = "agent-desktop"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.mcp]]
+name = "agent-browser"
+hosts = ["pc"]
+state = "absent"
+
+# Context7 MCP (tools resolve-library-id, query-docs). Anonymous use has a monthly quota; the CTX7_API_KEY vault entry lifts it.
+[[hub.mcp]]
+name = "context7"
+url = "https://mcp.context7.com/mcp"
+headers = { CONTEXT7_API_KEY = "CTX7_API_KEY" }
+
+# Package registries, read live (crates.io v1 API, docs.rs links, registry.npmjs.org): versions, dist-tags, MSRV, features,
+# yanked releases, search. hub_call registry__crates_search | registry__crate_info | registry__crate_readme |
+# registry__npm_search | registry__npm_info. Library docs come from context7; every host runs it with its own bun.
+[[hub.mcp]]
+name = "registry"
+command = ["bun", "{src}/frameworks/ai-os/src/relay/registry-mcp.ts"]
+
+# GNU upstream tracker (system/gnu-ts feed: ftp.gnu.org, info-gnu, Savannah, GSRC, Guix, Rust equivalents, Linux kernel).
+# hub_call gnu__gnu_status | gnu__gnu_search | gnu__gnu_package | gnu__gnu_feed | gnu__gnu_kernel; feed from GNU_FEED, GNU_HOME or https://gnu.aphrody.com/feed.json.
+[[hub.mcp]]
+name = "gnu"
+command = ["{home}/.bun/bin/bun.exe", "{src}/frameworks/ai-os/src/relay/gnu-mcp.ts"]
+hosts = ["pc"]
+
+# Electron migration toolkit (system/electron-migrate through `ay electron`): analyze, migrate to Tauri v3 or GPUI, optimize, bench.
+# hub_call electron__electron_analyze | electron__electron_migrate | electron__electron_optimize | electron__electron_bench; AY_BIN overrides `ay`.
+[[hub.mcp]]
+name = "electron"
+command = ["{home}/.bun/bin/bun.exe", "{src}/frameworks/ai-os/src/relay/electron-mcp.ts"]
+hosts = ["pc"]
+
+# py2bun: Python to Bun TypeScript transpiler (system/py2bun-ts, crate system/py2bun). hub_call py2bun__py2bun_transpile.
+[[hub.mcp]]
+name = "py2bun"
+command = ["{home}/.bun/bin/bun.exe", "{src}/frameworks/ai-os/src/relay/py2bun-mcp.ts"]
+hosts = ["pc"]
+
+# unixwin fusion: applet providers, the ay plugin manifest, the oh-my-niu bundle validator, the embedded Bash engine.
+# hub_call unixwin__unixwin_applets | unixwin__unixwin_plugin_manifest | unixwin__unixwin_validate_bundle | unixwin__unixwin_sh; AY_BIN overrides `ay`.
+[[hub.mcp]]
+name = "unixwin"
+command = ["{home}/.bun/bin/bun.exe", "{src}/frameworks/ai-os/src/relay/unixwin-mcp.ts"]
+hosts = ["pc"]
+
+# Hardcode and slop scanner (scripts/hygiene.ts). hub_call hygiene__hygiene_scan | hygiene__hygiene_rules.
+[[hub.mcp]]
+name = "hygiene"
+command = ["{home}/.bun/bin/bun.exe", "{src}/scripts/hygiene-mcp.ts"]
+hosts = ["pc"]
+
+[[hub.mcp]]
+name = "agent-desktop"
+command = ["{bin}/agent-desktop.exe", "mcp"]
+hosts = ["pc"]
+
+[[hub.mcp]]
+name = "agent-browser"
+command = ["{bin}/agent-browser.exe", "mcp"]
+hosts = ["pc"]
+
+# Chrome DevTools MCP (ChromeDevTools/chrome-devtools-mcp 1.13.0, 33 outils; skills chrome-*): hub_call chrome-devtools__<tool>.
+# Headless + disposable profile (the relay is a service without a desktop); Google usage statistics off; probe 2026-11-15: initialize + tools/list OK.
+[[hub.mcp]]
+name = "chrome-devtools"
+# by package name through bun x, on Bun (--bun overrides the node shebang): no install path, no Node.js
+command = ["bun", "x", "--bun", "chrome-devtools-mcp", "--headless", "--isolated", "--memoryDebugging", "--categoryExtensions", "--categoryNetworkMocks"]
+env = { CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1" }
+install = ["bun", "add", "-g", "chrome-devtools-mcp"]
+hosts = ["pc"]
+
+# --- External / third-party MCP (removed) ---
+[[claude.mcp]]
+name = "chrome-devtools"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.mcp]]
+name = "firebase"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.mcp]]
+name = "figma"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.mcp]]
+name = "developer-knowledge"
+hosts = ["pc"]
+state = "absent"
+
+[[claude.mcp]]
+name = "hostinger-api"
+hosts = ["pc"]
+state = "absent"
+
+# Machine-specific skills (outside the public repository): presence check only.
+[[skill.private]]
+name = "windows-machine"
+hosts = ["pc"]
+
+[[skill.private]]
+name = "chrome"
+hosts = ["pc"]
+
+[[skill.private]]
+name = "shell"
+hosts = ["pc"]
+
+# Other agents: same plugins from the root marketplace (copy into their own cache, no link).
+# mcp = exclusive list: any other MCP server of the agent is removed (the relay already exposes it).
+[codex]
+marketplace = "aphrody"
+plugins = ["aphrody-skills@aphrody"]
+mcp = ["relay"]
+
+[agy]
+plugins = ["aphrody-skills@aphrody"]
+mcp = ["relay"]
+
+# Agents configured by file: the MCP key is rewritten (other keys are kept, JSONC comments are not).
+# Missing file = agent not installed, ignored.
+[[mcpfile]]
+agent = "opencode"
+path = "{home}/.config/opencode/opencode.jsonc"
+key = "mcp"
+shape = "opencode"
+mcp = ["relay"]
+
+# Claude Desktop: stdio servers only; the stdio relay replaces the servers with a plaintext API key.
+[[mcpfile]]
+agent = "claude-desktop"
+path = "{appdata}/Claude/claude_desktop_config.json"
+key = "mcpServers"
+shape = "stdio"
+mcp = ["relay"]
+
+[[mcpfile]]
+agent = "pi"
+path = "{home}/.pi/agent/mcp.json"
+key = "mcpServers"
+shape = "claude"
+mcp = ["relay"]
+
+[[mcpfile]]
+agent = "gemini"
+path = "{home}/.gemini/settings.json"
+key = "mcpServers"
+shape = "gemini"
+mcp = ["relay"]
+
+[gemini]
+extensions = [".agents"]
+
+# Links and copies forbidden: any link (symlink, junction) or same-name copy of a src skill in these folders is removed,
+# the aphrody-skills plugin already provides it.
+[cleanup]
+link_dirs = [
+  "{home}/.claude/skills",
+  "{home}/.gemini/skills",
+  "{home}/.agents/skills",
+  "{home}/.codex/skills",
+]
+drop_copies = true
+drop_skills = [
+  "web-design-guidelines",
+  "gpui-kit",
+  "gpui-kit-design-guides",
+  "webui-reference",
+]

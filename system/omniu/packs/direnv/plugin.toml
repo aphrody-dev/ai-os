@@ -1,0 +1,22 @@
+name = "direnv"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "environment"
+summary = "direnv environment export on Niubash lifecycle hooks."
+default = false
+permissions = ["shell:source", "cwd:read", "env:write", "process:run:direnv"]
+required_binaries = ["direnv"]
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["startup", "precmd", "chpwd"]
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/direnv/init.niu"

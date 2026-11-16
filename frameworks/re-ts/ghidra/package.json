@@ -1,0 +1,21 @@
+{
+  "name": "@aphrody/ghidra",
+  "version": "0.1.0",
+  "description": "Ghidra API for Bun (pyghidra parity), Bun plugin and native onBeforeParse plugin",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./script": "./src/script.ts",
+    "./flat": "./src/flat.ts",
+    "./plugin": "./src/plugin.ts",
+    "./preload": "./src/preload.ts",
+    "./analysis": "./src/analysis.ts"
+  },
+  "scripts": {
+    "test": "bun test test"
+  },
+  "bin": {
+    "bun-ghidra": "./src/cli.ts"
+  }
+}

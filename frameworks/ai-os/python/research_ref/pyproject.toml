@@ -1,0 +1,5 @@
+[project]
+name = "research-ref"
+version = "0.1.0"
+description = "Reference validator for agent research results (TS port in frameworks/ai-os/src/research)."
+requires-python = ">=3.14"

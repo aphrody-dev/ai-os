@@ -1,0 +1,22 @@
+name = "zoxide"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "z command shim plus directory tracking."
+default = false
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "process:run:zoxide"]
+required_binaries = ["zoxide"]
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["startup", "precmd", "chpwd"]
+commands = ["z"]
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/zoxide/init.niu"

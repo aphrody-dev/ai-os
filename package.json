@@ -1,0 +1,39 @@
+{
+  "name": "@aphrody/ai-os-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@canary",
+  "workspaces": {
+    "packages": [
+      "frameworks/ai-os",
+      "frameworks/automate",
+      "frameworks/re-ts/ghidra",
+      "system/core-ts",
+      "system/env-kit",
+      "system/gnu-ts",
+      "system/omniu",
+      "system/py2bun-ts",
+      "system/wck"
+    ],
+    "catalog": {
+      "@types/bun": "1.4.4",
+      "typescript": "6.0.3"
+    }
+  },
+  "scripts": {
+    "extract": "bun tools/extract.ts",
+    "closure": "bun tools/closure.ts ../legacy",
+    "test": "bun test frameworks/ai-os/test",
+    "check": "bun check",
+    "fmt": "bun fmt"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  },
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphrody-dev/ai-os.git"
+  }
+}

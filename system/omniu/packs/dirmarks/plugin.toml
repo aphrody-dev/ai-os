@@ -1,0 +1,22 @@
+name = "dirmarks"
+bundle = "oh-my-niu"
+version = "1.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "Bookmark directories (mark/jump/marks/unmark) and jump back anywhere."
+default = false
+permissions = ["shell:source", "cwd:read", "fs:write:~/.niubash/marks"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/dirmarks/init.niu"

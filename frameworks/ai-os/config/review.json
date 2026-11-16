@@ -1,0 +1,208 @@
+{
+  "$comment": "ai-os review (src/review, docs/reviews/README.md). No model or provider here: voices only declare engine families (regular expressions on registry ids: agent CLIs + llm_models) and task classes of config/model-routing.json; the real order comes from orch/select.ts (health, cooldowns). The gemini voice runs gemini-web first (gemini.google.com in the relay's headless Chrome, web block: mode and thinking are regexes on the mode picker texts, timeouts in seconds, max_message_bytes splits longer prompts into several messages, headful for debugging, login_wait_s: how long a review waits for the owner to click the sign-in toast before reporting health login), then the ranked engines. Optional keys, all overridable by CLI flags: sampling (temperature, seed), output.schema (inline or file relative to this file) and output.strict, thinking (low, medium, high), rubric (text or .md file), prompt (template file with {{label}} {{stance}} {{rules}} {{judge}} {{rubric}} {{contract}} {{grounding}} {{pleas}} {{subject}}), files.include and files.exclude (git glob pathspecs); per voice: model (family regex tried first inside a prefer tier), prefer (ordered tiers), fallback (engines after the family), thinking, rubric, prompt.",
+  "sampling": { "temperature": 0, "seed": 20261115 },
+  "output": { "strict": true },
+  "web": {
+    "base": "https://gemini.google.com",
+    "mode": "carbon",
+    "mode_fallback": ["argon"],
+    "thinking": "high",
+    "strict_mode": true,
+    "timeout_s": 600,
+    "stop_wait_s": 20,
+    "max_message_bytes": 90000,
+    "headful": false,
+    "lang": "en",
+    "login_wait_s": 600
+  },
+  "threshold": 16,
+  "timeout_s": 420,
+  "max_bytes": 120000,
+  "grounding_chars": 24000,
+  "rounds": 4,
+  "stale_rounds": 2,
+  "voices": {
+    "gemini": {
+      "label": "Gemini",
+      "stance": "Google voice: Chromium (styleguide, depot_tools, gn), Google eng-practices, Google style guides, Python, Go, Android, ChromiumOS, Bazel. You defend Google practices and cite the official rule that grounds each grievance.",
+      "tasks": ["ci-review", "judge"],
+      "only": ["^agy(:|$)", "gemini", "gemma"],
+      "engines": ["gemini-web"],
+      "ignore": ["^google/"],
+      "prefer": ["^agy(:|$)"],
+      "model": "gemini-4-carbon",
+      "fallback": ["^codex(:|$)", "^opencode(:|$)"]
+    },
+    "claude": {
+      "label": "Claude",
+      "stance": "Rust and bun voice: memory safety, types, explicit errors, native bun (no tool that bun replaces), bun tests, windows-rs. You defend Rust and bun and verify every claim in the diff.",
+      "tasks": ["ci-review", "judge"],
+      "only": ["^claude(:|$)", "anthropic", "claude"]
+    },
+    "judge": {
+      "label": "Juge",
+      "stance": "neutral judge for C, C++, assembly and native code, hostile to the code and never to people. You cross-check each grievance of both voices against the diff, correct the accusation as well as the pleaders, and your decision prevails.",
+      "tasks": ["judge"],
+      "prefer": ["^claude(:|$)", "^codex(:|$)"],
+      "after": ["gemini", "claude"]
+    }
+  },
+  "topics": {
+    "bun-ts": "\\.(ts|tsx|js|mjs|cjs)$|(^|/)(package\\.json|bunfig\\.toml|bun\\.lock)$",
+    "rust": "\\.rs$|(^|/)Cargo\\.(toml|lock)$|rust-toolchain",
+    "cpp": "\\.(c|cc|cpp|cxx|h|hh|hpp|ixx|cppm|asm|S)$",
+    "python": "\\.py$",
+    "go": "\\.go$|(^|/)go\\.(mod|sum)$",
+    "shell-justfile": "\\.(sh|bash|ps1)$|(^|/)justfile$",
+    "ci": "^\\.github/workflows/",
+    "infra-fleet": "^infra/|docs/infra/",
+    "cloudflare": "cloudflare|wrangler\\.(toml|jsonc?)$",
+    "security": "auth|oauth|token|secret|vault|crypto|tls|gateway|relay/",
+    "nhitl-agents": "agents?|nhitl|orch/|relay/|\\.claude/|AGENTS\\.md|CLAUDE\\.md",
+    "docs-facts": "\\.md$",
+    "chromium-google": "chromium|depot_tools|\\.gn$|\\.gni$|DEPS$|PRESUBMIT",
+    "bazel": "(^|/)(BUILD|BUILD\\.bazel|WORKSPACE|MODULE\\.bazel)$|\\.bzl$",
+    "android": "android|Android\\.bp$|\\.kt$|\\.kts$",
+    "chromiumos": "chromiumos|ebuild$"
+  },
+  "sources": [
+    {
+      "id": "eng-practices-looking-for",
+      "topics": ["*"],
+      "github": "google/eng-practices",
+      "path": "review/reviewer/looking-for.md"
+    },
+    {
+      "id": "eng-practices-standard",
+      "topics": ["*"],
+      "github": "google/eng-practices",
+      "path": "review/reviewer/standard.md"
+    },
+    {
+      "id": "eng-practices-small-cls",
+      "topics": ["*"],
+      "github": "google/eng-practices",
+      "path": "review/developer/small-cls.md"
+    },
+    {
+      "id": "chromium-code-reviews",
+      "topics": ["chromium-google", "cpp", "ci"],
+      "github": "chromium/chromium",
+      "path": "docs/code_reviews.md"
+    },
+    {
+      "id": "chromium-cpp-style",
+      "topics": ["cpp", "chromium-google"],
+      "github": "chromium/chromium",
+      "path": "styleguide/c++/c++.md"
+    },
+    {
+      "id": "chromium-cpp-dos-donts",
+      "topics": ["cpp"],
+      "github": "chromium/chromium",
+      "path": "styleguide/c++/c++-dos-and-donts.md"
+    },
+    {
+      "id": "chromium-python-style",
+      "topics": ["python", "chromium-google"],
+      "github": "chromium/chromium",
+      "path": "styleguide/python/python.md"
+    },
+    {
+      "id": "chromium-web-style",
+      "topics": ["bun-ts"],
+      "github": "chromium/chromium",
+      "path": "styleguide/web/web.md"
+    },
+    {
+      "id": "chromium-rule-of-2",
+      "topics": ["security", "cpp", "rust"],
+      "github": "chromium/chromium",
+      "path": "docs/security/rule-of-2.md"
+    },
+    {
+      "id": "google-ts-style",
+      "topics": ["bun-ts"],
+      "github": "google/styleguide",
+      "path": "tsguide.md"
+    },
+    {
+      "id": "google-cpp-style",
+      "topics": ["cpp"],
+      "github": "google/styleguide",
+      "path": "cppguide.md"
+    },
+    {
+      "id": "google-rust-style",
+      "topics": ["rust"],
+      "github": "google/styleguide",
+      "path": "rustguide.md"
+    },
+    {
+      "id": "google-shell-style",
+      "topics": ["shell-justfile", "ci"],
+      "github": "google/styleguide",
+      "path": "shellguide.md"
+    },
+    {
+      "id": "google-python-style",
+      "topics": ["python"],
+      "github": "google/styleguide",
+      "path": "pyguide.md"
+    },
+    {
+      "id": "google-go-best-practices",
+      "topics": ["go"],
+      "github": "google/styleguide",
+      "path": "go/best-practices.md"
+    },
+    {
+      "id": "google-markdown-style",
+      "topics": ["docs-facts"],
+      "github": "google/styleguide",
+      "path": "docguide/style.md"
+    },
+    {
+      "id": "depot-tools-readme",
+      "topics": ["chromium-google"],
+      "gitiles": "https://chromium.googlesource.com/chromium/tools/depot_tools",
+      "path": "README.md"
+    },
+    {
+      "id": "depot-tools-git-cl",
+      "topics": ["chromium-google", "ci"],
+      "gitiles": "https://chromium.googlesource.com/chromium/tools/depot_tools",
+      "path": "README.git-cl.md"
+    },
+    {
+      "id": "chromiumos-shell-style",
+      "topics": ["chromiumos", "shell-justfile"],
+      "gitiles": "https://chromium.googlesource.com/chromiumos/docs",
+      "path": "styleguide/shell.md"
+    },
+    {
+      "id": "chromiumos-python-style",
+      "topics": ["chromiumos"],
+      "gitiles": "https://chromium.googlesource.com/chromiumos/docs",
+      "path": "styleguide/python.md"
+    },
+    {
+      "id": "android-soong",
+      "topics": ["android"],
+      "gitiles": "https://android.googlesource.com/platform/build/soong",
+      "path": "README.md"
+    },
+    {
+      "id": "bazel-bzl-style",
+      "topics": ["bazel"],
+      "github": "bazelbuild/bazel",
+      "path": "docs/rules/bzl-style.mdx"
+    },
+    {
+      "id": "bazel-build-style",
+      "topics": ["bazel"],
+      "github": "bazelbuild/bazel",
+      "path": "docs/build/style-guide.mdx"
+    }
+  ]
+}

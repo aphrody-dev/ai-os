@@ -1,0 +1,105 @@
+{
+  "useAutoModeDuringPlan": true,
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "deny": [
+      "AskUserQuestion",
+      "ScheduleWakeup",
+      "ReportFindings",
+      "NotebookEdit"
+    ]
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bun {src}/tools/agents/plugins/aphrody-nhitl/src/statusline.ts"
+  },
+  "verbose": false,
+  "fileCheckpointingEnabled": false,
+  "outputStyle": "Autonome",
+  "awaySummaryEnabled": false,
+  "env": {
+    "BASH_MAX_OUTPUT_LENGTH": "12000",
+    "MAX_MCP_OUTPUT_TOKENS": "8000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_GIT_BASH_PATH": "{home}/AppData/Local/Programs/Niubash/winuxcmd/bin/bash.exe",
+    "CLAUDE_CODE_USE_POWERSHELL_TOOL": "0",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "IFS= read -r -d '' j; case \"$j\" in *\"git commit\"*) printf %s \"$j\" | bun {src}/frameworks/ai-os/src/relay/hook.ts;; esac",
+            "timeout": 900,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "IFS= read -r -d '' j; s=${j#*\\\"session_id\\\":\\\"}; s=${s%%\\\"*}; d=${RELAY_HOME:-${LOCALAPPDATA:+$LOCALAPPDATA/aphrody/relay}}; d=${d:-${XDG_STATE_HOME:-$HOME/.local/state}/aphrody/relay}; [ -e \"$d/sessions/$s.pending\" ] && printf %s \"$j\" | bun {src}/frameworks/ai-os/src/relay/session-hook.ts deliver; exit 0",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "IFS= read -r -d \"\" j; case \"$j\" in *.env.example*) ;; *\"git add\"*\".env\"*|*\"git commit\"*\".env\"*) printf %s \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"the .env vault is never staged or committed\\\"}}\";; esac; exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun {src}/frameworks/ai-os/src/relay/session-hook.ts start",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "IFS= read -r -d '' j; s=${j#*\\\"session_id\\\":\\\"}; s=${s%%\\\"*}; d=${RELAY_HOME:-${LOCALAPPDATA:+$LOCALAPPDATA/aphrody/relay}}; d=${d:-${XDG_STATE_HOME:-$HOME/.local/state}/aphrody/relay}; [ -e \"$d/sessions/$s.pending\" ] && printf %s \"$j\" | bun {src}/frameworks/ai-os/src/relay/session-hook.ts deliver; exit 0",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "IFS= read -r -d '' j; s=${j#*\\\"session_id\\\":\\\"}; s=${s%%\\\"*}; d=${RELAY_HOME:-${LOCALAPPDATA:+$LOCALAPPDATA/aphrody/relay}}; d=${d:-${XDG_STATE_HOME:-$HOME/.local/state}/aphrody/relay}; [ -e \"$d/sessions/$s.pending\" ] && printf %s \"$j\" | bun {src}/frameworks/ai-os/src/relay/session-hook.ts stop; exit 0",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "spinnerTipsEnabled": false,
+  "skillListingBudgetFraction": 0.003
+}

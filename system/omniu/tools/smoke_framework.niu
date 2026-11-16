@@ -1,0 +1,149 @@
+# Smoke test the directory-first Oh My Niu framework with Niubash.
+#
+# Usage:
+#   niubash tools/smoke_framework.niu C:/path/to/oh-my-niu
+
+ROOT="${1:-$PWD}"
+failures=0
+
+fail() {
+  echo "error: $*" >&2
+  failures=$((failures + 1))
+}
+
+expect_eq() {
+  label="$1"
+  actual="$2"
+  expected="$3"
+  if [ "$actual" != "$expected" ]; then
+    fail "$label: expected '$expected', got '$actual'"
+  fi
+}
+
+expect_nonempty() {
+  label="$1"
+  value="$2"
+  if [ -z "$value" ]; then
+    fail "$label: expected non-empty value"
+  fi
+}
+
+expect_type() {
+  name="$1"
+  type "$name" >/dev/null 2>&1 || fail "missing command/function: $name"
+}
+
+expect_alias() {
+  name="$1"
+  alias "$name" >/dev/null 2>&1 || fail "missing alias: $name"
+}
+
+source_framework() {
+  NIUBASH="$ROOT"
+  NIU_CUSTOM="$ROOT/.smoke-custom"
+  export NIUBASH NIU_CUSTOM
+  . "$NIUBASH/oh-my-niu.niu" --reload
+}
+
+cd $ROOT || {
+  echo "error: cannot cd to $ROOT" >&2
+  exit 2
+}
+
+NIU_THEME=minimal
+NIU_THEME_PLUGIN=theme-minimal
+NIU_PLUGINS=(prompt-core git)
+source_framework
+expect_eq "default plugins" "${NIU_PLUGINS[*]}" "prompt-core git"
+expect_eq "default theme" "$NIU_ACTIVE_THEME" "minimal"
+expect_type niubash_prompt_render_left
+expect_type niubash_prompt_git_info
+expect_nonempty "minimal prompt" "$(niubash_prompt_render_left)"
+NIU_PROMPT_GIT="git:(framework-smoke)"
+export NIU_PROMPT_GIT
+expect_eq "git prompt reads host snapshot" "$(niubash_prompt_git_info)" "$NIU_PROMPT_GIT"
+
+# B1: under the default native backend the framework itself maintains
+# the snapshot — in a framework session no host renderer populates it.
+# Inside a git work tree, a dirty-flagged precmd must refresh it from
+# lib/git.niu; the manual value above must not be the only way the
+# segment ever gets populated. Skipped when the bundle tree is not a
+# git checkout (e.g. an unpacked release zip).
+if git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  NIU_PROMPT_GIT=""
+  export NIU_PROMPT_GIT
+  niubash_prompt_mark_git_snapshot_dirty
+  niubash_prompt_precmd
+  expect_nonempty "native backend refresh populates git snapshot" "$(niubash_prompt_git_info)"
+fi
+
+for theme in default dark light colorful minimal classic pure compact cyberpunk forest ocean agnoster avit bira clean fishy lambda p10-lean p10-classic p10-rainbow p10-pure robbyrussell dracula catppuccin-mocha gruvbox spaceship tokyonight; do
+  NIU_THEME="$theme"
+  NIU_THEME_PLUGIN="theme-$theme"
+  NIU_PLUGINS=(prompt-core git)
+  source_framework
+  expect_eq "theme $theme active" "$NIU_ACTIVE_THEME" "$theme"
+  expect_nonempty "theme $theme prompt" "$(niubash_prompt_render_left)"
+done
+
+NIU_THEME=minimal
+NIU_THEME_PLUGIN=theme-minimal
+NIU_PLUGINS=(prompt-core git common-aliases docker kubectl npm path-tools extract)
+source_framework
+expect_alias ll
+expect_alias gst
+expect_alias dps
+expect_alias k
+expect_alias npmR
+expect_eq "git alias strips CRLF TOML quotes" "$(alias gl)" "alias gl='git pull'"
+expect_eq "quoted docker alias strips CRLF TOML quotes" "$(alias 'drm!')" "alias drm!='docker container rm -f'"
+expect_type groot
+expect_type dsh
+expect_type kns
+expect_type nr
+expect_type path_list
+expect_type path_prepend
+expect_type path_append
+expect_type path_remove
+expect_type path_dedupe
+expect_type extract
+
+smoke_parent="${TMPDIR:-${TEMP:-${TMP:-C:/tmp}}}"
+smoke_dir="$smoke_parent/omw-framework-smoke-$$"
+mkdir -p "$smoke_dir" || exit 2
+printf "OMW_FRAMEWORK_SMOKE=ok\n" > "$smoke_dir/.env"
+cd $smoke_dir || exit 2
+
+NIU_THEME=minimal
+NIU_THEME_PLUGIN=theme-minimal
+NIU_PLUGINS=(prompt-core dotenv)
+source_framework
+expect_eq "dotenv hook" "$OMW_FRAMEWORK_SMOKE" "ok"
+
+cd $ROOT || exit 2
+rm -rf "$smoke_dir"
+
+# Hook wiring: sourcing the entry must install the precmd dispatcher on
+# PROMPT_COMMAND, the dispatcher must run registered precmd hooks and
+# record NIU_LAST_STATUS, and prompt-core must publish the rendered
+# prompt to PS1 (current Niubash never consumes NIU_PROMPT_LEFT itself).
+case ";${PROMPT_COMMAND:-};" in
+  *";niubash_hook_dispatch_precmd;"*) ;;
+  *) fail "hook wiring: PROMPT_COMMAND missing niubash_hook_dispatch_precmd" ;;
+esac
+
+__smoke_precmd_marker() { SMOKE_PRECMD_RAN=1; }
+niubash_add_precmd_hook __smoke_precmd_marker
+SMOKE_PRECMD_RAN=
+( exit 7 )
+niubash_hook_dispatch_precmd
+expect_eq "precmd dispatch runs registered hooks" "${SMOKE_PRECMD_RAN:-}" "1"
+expect_eq "precmd dispatch records NIU_LAST_STATUS" "${NIU_LAST_STATUS:-}" "7"
+expect_nonempty "prompt-core publishes PS1" "${PS1:-}"
+
+if [ "$failures" -ne 0 ]; then
+  echo "framework smoke failed: $failures failure(s)" >&2
+  exit 1
+fi
+
+echo "framework smoke ok"

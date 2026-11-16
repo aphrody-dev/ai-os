@@ -1,0 +1,29 @@
+# User unit: tmux session "agents", one window per role of this host (tools/agents/fleet.toml).
+# Installed by tools/agents/install.sh (@SRC@ / @BUN@ substituted). Doc: docs/agents/AGENT-FIRST.md.
+[Unit]
+Description=Aphrody agent runner (tmux session "agents")
+After=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=10
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# tmux server must outlive ExecStart.
+KillMode=process
+# A worker killed by the OOM killer must not fail the unit (tmux session stays; health timer repairs windows).
+OOMPolicy=continue
+Restart=on-failure
+RestartSec=30s
+# Workers (tmux server children) stay in this cgroup: bounded so builds cannot OOM the host.
+MemoryHigh=45%
+MemoryMax=60%
+CPUWeight=50
+Nice=10
+Environment=PATH=%h/.bun/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=SRC_ROOT=@SRC@
+ExecStart=@BUN@ --no-env-file @SRC@/tools/agents/runner.ts up
+ExecStop=/usr/bin/env tmux kill-session -t agents
+
+[Install]
+WantedBy=default.target

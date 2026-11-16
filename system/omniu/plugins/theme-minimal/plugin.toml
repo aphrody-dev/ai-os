@@ -1,0 +1,10 @@
+name = "theme-minimal"
+version = "1.0.1"
+kind = "source"
+entry = "theme-minimal.plugin.niu"
+summary = "Minimal official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["minimal"]

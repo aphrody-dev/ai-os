@@ -1,0 +1,10 @@
+name = "theme-agnoster"
+version = "1.0.1"
+kind = "source"
+entry = "theme-agnoster.plugin.niu"
+summary = "Agnoster-style Nerd Font prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["agnoster"]

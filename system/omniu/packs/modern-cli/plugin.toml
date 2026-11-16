@@ -1,0 +1,22 @@
+name = "modern-cli"
+bundle = "oh-my-niu"
+version = "1.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "ux"
+summary = "Modern CLI replacements (eza, bat, dust, duf, fd, erd) as aliases; from unixwin/winuxsh-profiles modern-cli."
+default = false
+permissions = ["shell:source", "cwd:read"]
+required_binaries = []
+
+[exports]
+aliases = true
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/modern-cli/init.niu"

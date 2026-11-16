@@ -1,0 +1,22 @@
+# Oh My Niu kubectl plugin.
+
+[ -f "$NIUBASH/lib/aliases.niu" ] && . "$NIUBASH/lib/aliases.niu"
+
+niubash_load_alias_asset kubectl
+
+kns() {
+  if [ -z "$1" ]; then
+    kubectl config view --minify --output 'jsonpath={..namespace}'
+    echo
+    return
+  fi
+  kubectl config set-context --current --namespace "$1"
+}
+
+kctx() {
+  if [ -z "$1" ]; then
+    kubectl config current-context
+    return
+  fi
+  kubectl config use-context "$1"
+}

@@ -1,0 +1,28 @@
+name = "emacs"
+summary = "Native Emacs-style editing defaults inherited from the ruline (GNU readline-compatible) defaults."
+keymap = "emacs"
+
+[[bindings]]
+key = "Ctrl+A"
+action = "beginning-of-line"
+description = "Move cursor to the beginning of the line."
+
+[[bindings]]
+key = "Ctrl+E"
+action = "end-of-line"
+description = "Move cursor to the end of the line."
+
+[[bindings]]
+key = "Alt+B"
+action = "backward-word"
+description = "Move cursor backward by one word."
+
+[[bindings]]
+key = "Alt+F"
+action = "forward-word"
+description = "Move cursor forward by one word."
+
+[[bindings]]
+key = "Ctrl+K"
+action = "kill-line"
+description = "Cut from cursor to end of line."

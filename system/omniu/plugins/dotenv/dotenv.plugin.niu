@@ -1,0 +1,49 @@
+# Oh My Niu dotenv plugin.
+
+[ -f "$NIUBASH/lib/hooks.niu" ] && . "$NIUBASH/lib/hooks.niu"
+
+__niubash_dotenv_load() {
+  [ -f .env ] || return 0
+
+  while IFS= read -r __niubash_dotenv_line || [ -n "$__niubash_dotenv_line" ]; do
+    case "$__niubash_dotenv_line" in
+      ""|\#*)
+        continue
+        ;;
+      export\ *)
+        __niubash_dotenv_line=${__niubash_dotenv_line#export }
+        ;;
+    esac
+
+    case "$__niubash_dotenv_line" in
+      *=*) ;;
+      *) continue ;;
+    esac
+
+    __niubash_dotenv_key=${__niubash_dotenv_line%%=*}
+    __niubash_dotenv_value=${__niubash_dotenv_line#*=}
+
+    case "$__niubash_dotenv_key" in
+      ""|[0-9]*|*[!A-Za-z0-9_]*)
+        continue
+        ;;
+    esac
+
+    case "$__niubash_dotenv_value" in
+      \"*\")
+        __niubash_dotenv_value=${__niubash_dotenv_value#\"}
+        __niubash_dotenv_value=${__niubash_dotenv_value%\"}
+        ;;
+      \'*\')
+        __niubash_dotenv_value=${__niubash_dotenv_value#\'}
+        __niubash_dotenv_value=${__niubash_dotenv_value%\'}
+        ;;
+    esac
+
+    export "$__niubash_dotenv_key=$__niubash_dotenv_value"
+  done < .env
+}
+
+niubash_add_startup_hook __niubash_dotenv_load
+niubash_add_precmd_hook __niubash_dotenv_load
+niubash_add_chpwd_hook __niubash_dotenv_load

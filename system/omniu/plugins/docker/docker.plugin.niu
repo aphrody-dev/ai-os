@@ -1,0 +1,20 @@
+# Oh My Niu docker plugin.
+
+[ -f "$NIUBASH/lib/aliases.niu" ] && . "$NIUBASH/lib/aliases.niu"
+
+niubash_load_alias_asset docker
+
+dsh() {
+  if [ -z "$1" ]; then
+    echo "usage: dsh <container> [shell]" >&2
+    return 2
+  fi
+  container="$1"
+  shift
+  shell_name="${1:-sh}"
+  docker exec -it "$container" "$shell_name"
+}
+
+dclean() {
+  docker system prune "$@"
+}

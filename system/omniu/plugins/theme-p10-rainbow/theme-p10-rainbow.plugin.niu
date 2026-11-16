@@ -1,0 +1,10 @@
+# Powerlevel-style rainbow official theme plugin.
+
+[ -f "$NIUBASH/lib/prompt.niu" ] && . "$NIUBASH/lib/prompt.niu"
+
+NIU_ACTIVE_THEME=p10-rainbow
+NIU_THEME_FILE="$NIUBASH/themes/p10-rainbow.toml"
+NIU_PROMPT_SYMBOL="${NIU_PROMPT_SYMBOL:-❯}"
+export NIU_ACTIVE_THEME NIU_THEME_FILE NIU_PROMPT_SYMBOL
+
+niubash_prompt_use_template "{user_host} {cwd} {git}{newline}{prompt_char} " "{status}{time} "

@@ -1,0 +1,28 @@
+{
+  "name": "@aphrody/agy",
+  "version": "2.0.0",
+  "description": "Keyless Local-First Google AI Ecosystem Hub (5-Org Depot + Gitingest, Gemma 4 JAX/CUDA/Torch, DeepMind Notebooks, Open NotebookLM, Google AI Ultra FinOps Rentabilisation, Dual Mode minimal/fullstack, Web App & Native Rust Desktop) consuming sole AI owner @aphrody/ai-os",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./depot": "./src/depot-orgs.ts",
+    "./gemma4": "./src/gemma4-lab.ts",
+    "./notebook": "./src/notebook-engine.ts",
+    "./ultra": "./src/ultra-finops.ts",
+    "./modes": "./src/modes-and-collections.ts",
+    "./web": "./src/web-app.ts"
+  },
+  "bin": {
+    "agy-studio": "./src/cli.ts"
+  },
+  "scripts": {
+    "start": "bun run src/cli.ts web",
+    "build": "bun build --compile --minify src/cli.ts --outfile %USERPROFILE%/.local/bin/agy-studio.exe",
+    "build:desktop": "cargo build --manifest-path rust-desktop/Cargo.toml --release",
+    "test": "bun test ./tests/",
+    "check": "bun check",
+    "fmt": "bun fmt"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

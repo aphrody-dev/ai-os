@@ -1,0 +1,82 @@
+# oh-my-niu dirmarks plugin
+# Bookmark directories and jump back to them from anywhere.
+#
+#   mark <name>     bookmark the current directory
+#   jump <name>     cd to a bookmark
+#   marks           list all bookmarks
+#   unmark <name>   delete a bookmark
+#
+# Bookmarks live in $NIU_MARKS_HOME (default ~/.niubash/marks), one file
+# per bookmark containing the target path.
+
+NIU_MARKS_HOME=${NIU_MARKS_HOME:-$HOME/.niubash/marks}
+export NIU_MARKS_HOME
+
+__niu_dirmark_safe_name() {
+  case "$1" in
+    *[!A-Za-z0-9_-]*|"") return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+mark() {
+  if [ $# -lt 1 ]; then
+    echo "usage: mark <name>" >&2
+    return 2
+  fi
+  if ! __niu_dirmark_safe_name "$1"; then
+    echo "mark: invalid name '$1' (use letters, digits, '-' and '_')" >&2
+    return 2
+  fi
+  mkdir -p "$NIU_MARKS_HOME" 2>/dev/null || return 1
+  printf '%s\n' "$PWD" > "$NIU_MARKS_HOME/$1"
+  echo "marked '$1' -> $PWD"
+}
+
+jump() {
+  if [ $# -lt 1 ]; then
+    echo "usage: jump <name>" >&2
+    return 2
+  fi
+  if ! __niu_dirmark_safe_name "$1"; then
+    echo "jump: invalid name '$1'" >&2
+    return 2
+  fi
+  if [ ! -f "$NIU_MARKS_HOME/$1" ]; then
+    echo "jump: no bookmark '$1' (see: marks)" >&2
+    return 1
+  fi
+  IFS= read -r __niu_dirmark_target < "$NIU_MARKS_HOME/$1"
+  if [ -d "$__niu_dirmark_target" ]; then
+    cd "$__niu_dirmark_target"
+  else
+    echo "jump: bookmark '$1' points to a missing directory: $__niu_dirmark_target" >&2
+    return 1
+  fi
+}
+
+marks() {
+  if [ ! -d "$NIU_MARKS_HOME" ]; then
+    echo "no bookmarks yet (use: mark <name>)"
+    return 0
+  fi
+  for __niu_dirmark_file in "$NIU_MARKS_HOME"/*; do
+    [ -f "$__niu_dirmark_file" ] || continue
+    IFS= read -r __niu_dirmark_target < "$__niu_dirmark_file"
+    printf '%-16s %s\n' "${__niu_dirmark_file##*/}" "$__niu_dirmark_target"
+  done
+  unset __niu_dirmark_file __niu_dirmark_target
+}
+
+unmark() {
+  if [ $# -lt 1 ]; then
+    echo "usage: unmark <name>" >&2
+    return 2
+  fi
+  if ! __niu_dirmark_safe_name "$1"; then
+    echo "unmark: invalid name '$1'" >&2
+    return 2
+  fi
+  rm -f "$NIU_MARKS_HOME/$1"
+  echo "unmarked '$1'"
+}

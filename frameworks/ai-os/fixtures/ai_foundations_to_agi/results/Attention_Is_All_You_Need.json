@@ -1,0 +1,45 @@
+{
+  "name": "Attention Is All You Need",
+  "source_url": "https://research.google/pubs/attention-is-all-you-need/",
+  "category": "Foundational Deep Learning Architecture",
+  "era_and_date": "June 2017 (arXiv:1706.03762) / December 2017 (NIPS 2017, Long Beach)",
+  "authors_or_protagonists": [
+    "Ashish Vaswani",
+    "Noam Shazeer",
+    "Niki Parmar",
+    "Jakob Uszkoreit",
+    "Llion Jones",
+    "Aidan N. Gomez",
+    "Lukasz Kaiser",
+    "Illia Polosukhin"
+  ],
+  "core_thesis_or_definition": "Proposes the Transformer, a sequence transduction neural network architecture that dispenses entirely with recurrence (RNN/LSTM/GRU) and convolutions, relying solely on stacked self-attention, encoder-decoder cross-attention, and position-wise feed-forward networks to achieve massive training parallelization and O(1) interaction path length between arbitrary sequence positions.",
+  "key_mathematical_or_architectural_mechanisms": [
+    "Scaled Dot-Product Attention: Attention(Q, K, V) = softmax((Q K^T) / sqrt(d_k)) V, where scaling by 1/sqrt(d_k) prevents large dot products from pushing softmax into vanishing-gradient saturation.",
+    "Multi-Head Attention (MHA): h = 8 parallel projections (d_model = 512, d_k = d_v = 64) concatenated and projected via W^O, allowing joint attendance to distinct syntactic/semantic representation subspaces.",
+    "Encoder-Decoder Stack: N = 6 identical encoder layers (bi-directional self-attention + FFN) and N = 6 decoder layers (masked causal self-attention with -infinity upper-triangular mask + cross-attention + FFN), wrapped with residual connections and LayerNorm.",
+    "Position-Wise Feed-Forward Network: FFN(x) = max(0, x W_1 + b_1) W_2 + b_2 with d_model = 512 and inner dimension d_ff = 2048.",
+    "Sinusoidal Positional Encoding: PE_(pos, 2i) = sin(pos / 10000^(2i/d_model)) and PE_(pos, 2i+1) = cos(pos / 10000^(2i/d_model)), enabling linear relative-position transformations without recurrence."
+  ],
+  "computational_complexity_and_expressivity": "Per layer (sequence length n, dimension d): O(n^2 * d) total FLOPs (faster than recurrent O(n * d^2) whenever n < d), O(1) sequential operations (vs O(n) for RNNs), and O(1) maximum path length between any two tokens (vs O(n) for RNNs and O(log_k(n)) for dilated/stacked CNNs). In formal expressivity, fixed-depth finite-precision Transformers without chain-of-thought sit within log-space uniform TC^0 (non-Turing-complete in a single forward pass), whereas autoregressive decoding with unbounded scratchpad/chain-of-thought or agentic memory restores Turing completeness.",
+  "historical_milestones_and_benchmarks": [
+    "WMT 2014 English-to-German: Transformer (big) achieves 28.4 BLEU, outperforming all prior single models and ensembles by >2.0 BLEU.",
+    "WMT 2014 English-to-French: Establishes single-model SOTA of 41.0 BLEU trained in 3.5 days on 8 NVIDIA P100 GPUs (base model trained in 12 hours), at a small fraction of prior ConvS2S/GNMT FLOP budgets.",
+    "English Constituency Parsing (WSJ): Generalizes beyond translation to achieve 91.3 F1 (WSJ only) and 92.7 F1 (semi-supervised).",
+    "2018–2026 Paradigm Shift: Directly spawns BERT (encoder-only), GPT/Claude/Llama/Mistral/Gemini (decoder-only / multimodal Mixture-of-Experts), Vision Transformers (ViT), AlphaFold 2/3 Evoformer, and reasoning models."
+  ],
+  "bridge_to_agi": "Unlocked the modern scaling era by aligning neural sequence modeling with dense matrix-multiplication hardware (GPUs/TPUs). By collapsing sequential training dependencies from O(n) to O(1), Transformers enabled pre-training over trillions of multimodal tokens, giving rise to emergent in-context learning, code synthesis, cross-domain transfer, and autoregressive chain-of-thought reasoning.",
+  "fundamental_limitations_and_open_problems": [
+    "Quadratic Context Bottleneck: Exact full self-attention scales as O(n^2) in compute and KV-cache interactions, motivating FlashAttention, Ring Attention, sparse/linear attention, and hybrid state-space models (Mamba/SSM).",
+    "Bounded Depth per Token (TC^0 barrier): Without intermediate reasoning tokens (test-time compute / chain-of-thought), a fixed-layer Transformer performs a constant-depth circuit computation per token and cannot solve arbitrarily deep sequential state-tracking problems.",
+    "Static Weights Post-Training & Hallucination: Standard Transformers lack continuous online synaptic plasticity during deployment and optimize next-token likelihood rather than causal world-model consistency."
+  ],
+  "status_in_2026": "Remains the dominant architectural backbone of frontier multimodal and agentic AI systems in 2026 (augmented with RoPE, GQA/MLA, SwiGLU, Sparse MoE, FlashAttention-3, and RL-trained test-time reasoning loops), while facing active research competition and hybridization from state-space models and latent world models [uncertain] whether pure autoregressive Transformer scaling plus test-time search is sufficient for full AGI without architectural successors.",
+  "primary_references": [
+    "Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention Is All You Need. Advances in Neural Information Processing Systems (NIPS), 30.",
+    "Google Research Publication Page — https://research.google/pubs/attention-is-all-you-need/",
+    "Merrill, W., & Sabharwal, A. (2023/2024). The Parallelism Tradeoff: Limitations of Log-Precision Transformers. TACL.",
+    "Qiao, Y., Yu, L., Qiu, R., & Gao, X.-S. (2026). On the Turing Completeness of Transformers and Agents. arXiv:2609.20335."
+  ],
+  "uncertain": ["status_in_2026"]
+}

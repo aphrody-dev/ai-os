@@ -1,0 +1,10 @@
+name = "theme-colorful"
+version = "1.0.1"
+kind = "source"
+entry = "theme-colorful.plugin.niu"
+summary = "Colorful official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["colorful"]

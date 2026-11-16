@@ -1,0 +1,11 @@
+# Full Starship prompt integration for Niubash.
+#
+# Legacy pack entry kept in sync with plugins/starship. Use Starship's official
+# Bash init path so Starship owns PROMPT_COMMAND, PS1, PS2, and PS0.
+
+if ! command -v starship >/dev/null 2>&1; then
+  echo "oh-my-niu: starship pack requires 'starship' on PATH" >&2
+  return 127 2>/dev/null || exit 127
+fi
+
+eval "$(starship init bash)"

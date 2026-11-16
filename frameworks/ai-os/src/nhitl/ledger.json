@@ -1,0 +1,339 @@
+{
+  "$comment": "Registre versionné des points NHITL relevés à la main (rapports du 2026-11-13, docs/infra/AUTH.md, docs/agents/AGENT-FIRST.md). Indexé par `ai-os nhitl scan` (source ledger). Aucune valeur secrète.",
+  "entries": [
+    {
+      "location": "prd:agent claude",
+      "category": "cli_login",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "OAuth Claude Code expiré pour agent sur prd",
+      "fix": "claude setup-token sur le PC -> coffre DPAPI CLAUDE_CODE_OAUTH_TOKEN -> systemd-creds --user chez agent (ai-os nhitl login claude)",
+      "reason": "2026-11-13 : jeton longue durée chiffré, claude -p répond ok"
+    },
+    {
+      "location": "fr2:ubuntu claude",
+      "category": "cli_login",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "OAuth Claude Code expiré sur fr2",
+      "fix": "même jeton longue durée, systemd-creds --user chez ubuntu",
+      "reason": "2026-11-13 : claude -p répond ok"
+    },
+    {
+      "location": "prd:agent codex",
+      "category": "cli_login",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "codex non connecté pour agent sur prd",
+      "fix": "codex login --device-auth en tmux (ai-os nhitl login codex), code d'appareil écrit dans <RELAY_HOME>/device-code.txt",
+      "reason": "2026-11-13 : codex login status = Logged in using ChatGPT"
+    },
+    {
+      "location": "fr2:ubuntu codex",
+      "category": "cli_login",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "le lien ~/.local/bin/codex pointait vers le multicall aphrody",
+      "fix": "lien retiré, bun add -g @openai/codex@0.167.2 (~/.bun/bin/codex)",
+      "reason": "codex login status = Logged in using ChatGPT"
+    },
+    {
+      "location": "pc codex",
+      "category": "cli_login",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "codex.cmd (~/.local/bin) pointait vers un codex.exe absent",
+      "fix": "shim retiré, bun add -g @openai/codex@0.167.2 ; ai-os nhitl login codex --hosts pc : code d appareil dans <RELAY_HOME>/device-code.txt, page ouverte ; validation du propriétaire",
+      "reason": "2026-11-13 : codex login status = Logged in using ChatGPT (bun add -g @openai/codex 0.167.2, device-auth)"
+    },
+    {
+      "location": "prd/fr2 gh",
+      "category": "cli_login",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "gh sur prd et fr2",
+      "fix": "GH_TOKEN en systemd-creds --user (prd), hosts.yml (fr2)",
+      "reason": "gh auth status OK sur les deux hôtes"
+    },
+    {
+      "location": "pc gcloud org-contact",
+      "category": "owner_click",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "gcloud auth login contact@aphrody.com : trois consentements reçus pour <owner-google> (profil Chrome par défaut), BROWSER de gcloud non honoré sous Windows",
+      "fix": "login utilisateur abandonné : configuration org-contact = <owner-google> + impersonation de yolo-automation@aphrody",
+      "reason": "2026-11-13 : gcloud projects describe aphrody --configuration org-contact = ACTIVE ; contact@aphrody.com n a aucun rôle sur le projet"
+    },
+    {
+      "location": "pc npm",
+      "category": "owner_click",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "NPM_TOKEN E401 (révoqué ou expiré)",
+      "fix": "npm login --auth-type=web relancé dans un PTY (Entrée envoyée), clic propriétaire ; puis jeton recopié dans le coffre"
+    },
+    {
+      "location": "github org bunx-sh",
+      "category": "owner_click",
+      "severity": "low",
+      "status": "fixed",
+      "excerpt": "création de l'organisation bunx-sh (nom libre au 2026-11-13)",
+      "fix": "aucun : page de création fermée",
+      "reason": "abandonné par le propriétaire"
+    },
+    {
+      "location": "github SUBMODULES_TOKEN",
+      "category": "owner_click",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "PAT des sous-modules aphrody-labs sans source locale ; remplacé par une GitHub App (jetons d'installation de 1 h)",
+      "fix": "aucun PAT : App GitHub aphrody-labs (id 5738700, docs/infra/GITHUB-APP.md) pour checkouts, releases, agents et webhooks ; miroir steam-depot tiré par steam-depot lui-même ; aphrody-labs-submodules supprimée le 2026-11-13",
+      "reason": "remplacé par l App aphrody-labs"
+    },
+    {
+      "location": "prd rg-steam-depot",
+      "category": "owner_click",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "dépôts de l'app 2799860 refusés en anonyme ; image reconstruite avec steam-depot d098b41 (login-qr)",
+      "fix": "bun scripts/steam-login.ts --qr (../rosegriffon) : QR affiché dans Chrome",
+      "reason": "2026-11-13 : QR approuvé par le propriétaire (image d098b41)"
+    },
+    {
+      "location": "pc wireguard wg-win",
+      "category": "owner_click",
+      "severity": "high",
+      "status": "inevitable",
+      "excerpt": "clé WireGuard révoquée encore active sur le PC",
+      "fix": "bash device/fleet/wg/rotate-wg-win.sh",
+      "reason": "invite UAC (service Windows), hors de portée d'un agent"
+    },
+    {
+      "location": "pc WARP",
+      "category": "owner_click",
+      "severity": "low",
+      "status": "inevitable",
+      "excerpt": "WARP absent du PC (chemin ssh Cloudflare Access)",
+      "fix": "installation WARP",
+      "reason": "invite UAC ; contourné par le rebond fr2 sur le mesh WireGuard"
+    },
+    {
+      "location": "gcp admin-sa@<gcp-project-2>",
+      "category": "secret_leak",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "clé 31555a22 de GCP_ADMIN_SA_KEY affichée dans une session d'agent",
+      "fix": "nouvelle clé 5de55ed8 (coffre DPAPI, .env, rg-website/.env.local, config gcloud rosegriffon) ; ancienne supprimée",
+      "reason": "2026-11-13 : jeton OAuth refusé avec l'ancienne clé (invalid_grant, Invalid JWT Signature)"
+    },
+    {
+      "location": "pc env CLOUDFLARE_API_TOKEN",
+      "category": "stale_secret",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "jeton Cloudflare périmé (401) dans l'environnement des sessions",
+      "fix": "variable utilisateur égale au coffre (vérifié) ; les processus lancés avant la rotation gardent l'ancienne copie jusqu'à leur redémarrage"
+    },
+    {
+      "location": "prd ay-ai-litellm",
+      "category": "stale_secret",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "LiteLLM de prd sans fournisseur valide (Cloudflare 401, vLLM et mistral.rs arrêtés)",
+      "fix": "tools/ai/litellm-serve.ts + drop-in 10-creds.conf : identifiants systemd-creds, routes vllm/mistralrs retirées, Vertex litellm-prd@aphrody (aiplatform.user), Anthropic avec anthropic-workspace-id et plafond 2 USD/j (5 USD/j global)",
+      "reason": "2026-11-13 : appels réels OK pour anthropic et google-vertex-aphrody"
+    },
+    {
+      "location": "prd cloudflare-workers-ai",
+      "category": "quota",
+      "severity": "low",
+      "status": "inevitable",
+      "excerpt": "quota gratuit quotidien Workers AI épuisé (10 000 neurones, code 4006)",
+      "fix": "attendre la remise à zéro UTC ; routage relais sur la route gratuite en premier",
+      "reason": "plafond du plan gratuit, pas d'achat sans le propriétaire"
+    },
+    {
+      "location": "prd vertex federation",
+      "category": "keyless",
+      "severity": "low",
+      "status": "inevitable",
+      "excerpt": "Vertex sans clé impossible depuis prd",
+      "fix": "clé du compte litellm-prd@aphrody (aiplatform.user seul) en systemd-creds VERTEX_APHRODY_SA_KEY",
+      "reason": "prd (VPS Hostinger) n'a pas d'émetteur OIDC ni d'identité cloud pour la fédération d'identité de charge de travail"
+    },
+    {
+      "location": "prd anthropic-proxy",
+      "category": "ad_hoc_service",
+      "severity": "medium",
+      "status": "fixed",
+      "excerpt": "proxy tmux hors dépôt 127.0.0.1:8793 ajoutant anthropic-workspace-id",
+      "fix": "route anthropic de LiteLLM (extra_headers), relais repointé (RELAY_OPENAI_ENDPOINTS=litellm=…, clé en systemd-creds --user), session tmux arrêtée, script supprimé"
+    },
+    {
+      "location": "prd commons-relay.service",
+      "category": "secret_argv",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "jeton du relais commons passé en argv (--token, visible par ps)",
+      "fix": "LoadCredentialEncrypted=commons-relay-token, jeton lu en Python depuis $CREDENTIALS_DIRECTORY (device/fleet/prd/systemd/commons-relay.service) ; fichier en clair supprimé ; clients PC et fr2 mis à jour et repointés sur <prd-mesh-ip>:8766",
+      "reason": "2026-11-13 : jeton tourné ; nouveau accepté, ancien refusé (401) ; plus de --token dans ps"
+    },
+    {
+      "location": "system/ay/src/ai.rs routes()",
+      "category": "config_drift",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "un runtime local déclaré sans `serve` garde sa route LiteLLM (vllm/*, mistralrs/* sur prd)",
+      "fix": "ignorer local_declared quand serve est vide ; d'ici là [drop] de tools/ai/litellm-overlay.toml"
+    },
+    {
+      "location": "system/ay agents|secret|auth",
+      "category": "missing_command",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "ay sans `agents` (alias de ai-os orch) ; `ay secret` et `ay auth` absents du binaire installé",
+      "fix": "refonte de ay (autre agent) : routes agents -> ai-os orch, secret/auth -> env-kit ; en attendant `bun run --cwd system/env-kit src/cli.ts secret …`"
+    },
+    {
+      "location": ".github/workflows/ci.yml runner",
+      "category": "blocked_ci",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "ci.yml cible le runner fr1 arrêté : runs annulés",
+      "fix": "porter les étapes vers judge.yml (runner GitHub hébergé) ou un runner prd"
+    },
+    {
+      "location": "tools/agents deps-update",
+      "category": "queue_failed",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "deps-update, release-notes, seo-check en échec sur prd (no_cli_provider)",
+      "fix": "nommer les fournisseurs CLI dans les modèles de tâches, puis remettre en file"
+    },
+    {
+      "location": "prd ssh public",
+      "category": "host_unreachable",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "ssh prd (IP publique) : timeout de bannière sous charge (load 206 à 02:56 UTC)",
+      "fix": "rebond fr2 -> <prd-mesh-ip> (HostKeyAlias) utilisé par le scanner et login ; limiter la charge des builds"
+    },
+    {
+      "location": "chromium-review.googlesource.com (CL amont)",
+      "category": "upstream_review",
+      "severity": "info",
+      "status": "inevitable",
+      "excerpt": "Chromium agents/ai_policy.md : une réponse humaine appelle une réponse humaine ; le propriétaire relit, envoie la CL et répond lui-même aux relecteurs",
+      "fix": "ay upstream pr chromium prépare la CL sur fr1 ; le propriétaire fait « Start review » et répond dans Gerrit",
+      "reason": "2026-11-13 : exigence de la politique IA de Chromium, non automatisable (docs/upstream/STRATEGY.md section 6)"
+    },
+    {
+      "location": "cla.developers.google.com",
+      "category": "cla",
+      "severity": "info",
+      "status": "inevitable",
+      "excerpt": "CLA individuel Google requis avant la première CL Chromium",
+      "fix": "page ouverte dans le Chrome du propriétaire, clic final de sa part",
+      "reason": "2026-11-13 : signature d un contrat au nom du propriétaire"
+    },
+    {
+      "location": "npmjs.com <npm-owner> (2FA)",
+      "category": "npm_2fa",
+      "severity": "info",
+      "status": "fixed",
+      "excerpt": "2FA du compte npm (security key ou authenticator) et défi 2FA de npm trust / npm access set / création de jeton / approbation npm stage",
+      "fix": "page https://www.npmjs.com/settings/<npm-owner>/tfa ouverte chez le propriétaire ; ensuite just npm login (un clic) puis just npm trust (skip 2FA 5 min) ; publication en CI par trusted publishing OIDC",
+      "reason": "2026-11-13 : security key aphrody-pc-win11-2026-11-13 enregistrée (page tfa), npm trust github configuré pour les 33 paquets publiés (npm-publish.yml) ; les 12 nouveaux attendent leur premier publish"
+    },
+    {
+      "location": "flotte:gpu2",
+      "category": "inventaire",
+      "severity": "medium",
+      "status": "inevitable",
+      "excerpt": "Second hôte Windows à GPU NVIDIA demandé pour le tissu d inférence, absent de deploy.toml, fleet.toml, docs/infra, ~/.ssh/config et des pairs WireGuard",
+      "fix": "nœud gpu2 prêt dans tools/ai/fabric.toml (reach vide), admis dès que son port 50052 répond ; étapes dans docs/ai/DISTRIBUTED-INFERENCE.md §4",
+      "reason": "2026-11-13 : hôte non déclaré par le propriétaire"
+    },
+    {
+      "location": "agents (toutes sessions)",
+      "category": "login_spam",
+      "severity": "high",
+      "status": "fixed",
+      "excerpt": "relances répétées de connexions (gcloud org-contact x3, codex, npm, setup-token) et états d authentification périmés dans les rapports",
+      "fix": "ay auth daemon seul : sonde réelle toutes les 5 min, refresh sans humain, au plus un signalement groupé par identifiant et par 24 h, aucune page ouverte, --ack pour une seule connexion",
+      "reason": "règle du propriétaire du 2026-11-13 ; toute relance hors du service est une violation"
+    },
+    {
+      "location": "orch:pc",
+      "category": "orch_etat",
+      "severity": "low",
+      "status": "fixed",
+      "excerpt": "runner PC : psmux session agents (health, coder, reviewer, designer, growth), tâches planifiées Aphrody\\AgentsHealth (5 min) et AgentsLogon (ouverture de session), file vide (done 12, failed 3), CLI claude/codex/opencode/agy OK, pi absent",
+      "fix": "tools/agents/install-pc.sh",
+      "reason": "2026-11-13 04:50 : relevé merge+sync"
+    },
+    {
+      "location": "orch:prd",
+      "category": "orch_etat",
+      "severity": "low",
+      "status": "fixed",
+      "excerpt": "runner prd : aphrody-agents.service enabled+active (systemd --user, linger agent), timers pull/health actifs, tmux agents 8 fenêtres recréées après le reboot de 03:41 UTC, file vide (done 3, failed 22)",
+      "fix": "tools/agents/install.sh",
+      "reason": "2026-11-13 04:50 : survie au reboot constatée (uptime 0, unités remontées seules)"
+    },
+    {
+      "location": "orch:fr1",
+      "category": "orch_etat",
+      "severity": "low",
+      "status": "fixed",
+      "excerpt": "runner fr1 (rôle chromium seul, tâches lourdes) : aphrody-agents enabled+active, linger agent, tmux agents 2 fenêtres",
+      "fix": "tools/agents/fleet.toml [hosts.fr1]",
+      "reason": "2026-11-13 04:50 : relevé merge+sync"
+    },
+    {
+      "location": "orch:fr2",
+      "category": "orch_etat",
+      "severity": "low",
+      "status": "fixed",
+      "excerpt": "runner fr2 (linter, sre) : aphrody-agents enabled+active, linger agent, tmux agents 3 fenêtres",
+      "fix": "tools/agents/fleet.toml [hosts.fr2]",
+      "reason": "2026-11-13 04:50 : relevé merge+sync"
+    },
+    {
+      "location": "prd:tools/agents/runner.ts ciWatch",
+      "category": "queue_failed",
+      "severity": "high",
+      "status": "open",
+      "excerpt": "19 tâches prd (ci-fix-* sre, deps-update) en échec immédiat reason=no_cli_provider : ciWatch() et le gabarit deps-update.json n'écrivent pas `providers`, runTaskLocked refuse alors tout rôle d'édition",
+      "fix": "ciWatch et tasks/deps-update.json doivent nommer les CLI (ou passer par ai-os orch) ; runner.ts en cours d'édition par une autre session (GitHub App), non modifié ici",
+      "reason": "2026-11-13 04:50 : constaté dans var/agents/results/*/result.json sur prd"
+    },
+    {
+      "location": "github:aphrody-labs/.github, aphrody-dev/aphrody-dev",
+      "category": "held_effect",
+      "severity": "medium",
+      "status": "open",
+      "excerpt": "README de profil prêts dans docs/native/profile/github ; dépôts de profil publics absents, publication non autorisée (.agents/owner-rules.json absent)",
+      "fix": "owner-rules.json autorisant la publication, puis créer les dépôts de profil et y pousser docs/native/profile/github/*",
+      "reason": "2026-11-13 : effet externe public retenu par contrat"
+    },
+    {
+      "location": "docs/native/profile (CV.md, README de profil)",
+      "category": "owner_todo",
+      "severity": "low",
+      "status": "open",
+      "excerpt": "Discord, X, expérience et formation publiques non vérifiables dans les dépôts : champs TODO(owner)",
+      "fix": "renseigner les liens publics Discord et X d Aphrody, puis bun docs/native/profile/cv.ts --pdf sur fr1",
+      "reason": "2026-11-13 : aucune source vérifiable dans les dépôts"
+    },
+    {
+      "location": "../rosegriffon/plugins/steam + frameworks/gaming",
+      "category": "coordination",
+      "severity": "info",
+      "status": "fixed",
+      "excerpt": "MCP steam : parseurs TypeScript retirés, local_apps/read_vdf/app_paths passent par ay steam (frameworks/steam) ; un ay antérieur au commit gaming répond « no steam command »",
+      "fix": "ay à jour (CI) ou AY_BIN ; stack rosegriffon-stack (rg-steam-depot, rg-steam-initial) et son jeton non modifiés ; carte docs/gaming/OWNERSHIP.md",
+      "reason": "2026-11-13 : couche gaming unifiée, commits séparés de ceux de l agent rosegriffon"
+    }
+  ]
+}

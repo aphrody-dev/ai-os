@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Aphrody Term · WebGPU + AI-OS</title>
+    <style>
+      :root {
+        --term-bg: #0c141b;
+        --term-fg: #e2f1f8;
+        --surface-bar: #101a24;
+        --surface-card: #152330;
+        --outline: #263b4d;
+        --accent: #8bceff;
+        --accent-dark: #135b82;
+        --error: #ff5e7e;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--term-bg);
+        color: var(--term-fg);
+        font-family: "Google Sans Flex", "Segoe UI", system-ui, sans-serif;
+      }
+      .app {
+        display: grid;
+        grid-template-rows: 44px 1fr;
+        width: 100%;
+        height: 100%;
+      }
+      header.topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 0 10px;
+        background: var(--surface-bar);
+        border-bottom: 1px solid var(--outline);
+        user-select: none;
+        overflow: hidden;
+      }
+      .left-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .left-group::-webkit-scrollbar {
+        display: none;
+      }
+      .right-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 auto;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        color: var(--accent);
+        padding-right: 4px;
+        white-space: nowrap;
+        flex: 0 0 auto;
+      }
+      #pane-tabs,
+      #profile-bar,
+      .split-controls {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
+      }
+      .tab-wrap {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--outline);
+        border-radius: 999px;
+        background: var(--surface-card);
+        overflow: hidden;
+        flex: 0 0 auto;
+        max-width: 190px;
+      }
+      .tab-wrap.active {
+        background: var(--accent-dark);
+        border-color: var(--accent);
+      }
+      .tab-wrap button {
+        border: 0;
+        background: transparent;
+        border-radius: 0;
+        padding: 4px 8px;
+      }
+      .tab-wrap button:first-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .tab-wrap.active button {
+        color: #fff;
+      }
+      .tab-wrap .tab-close {
+        padding: 4px 7px 4px 2px;
+        opacity: 0.72;
+        font-size: 12px;
+      }
+      .tab-wrap .tab-close:hover {
+        opacity: 1;
+        color: #ff9eb2;
+      }
+      button,
+      select,
+      input,
+      textarea {
+        font-family: inherit;
+        font-size: 12px;
+        color: var(--term-fg);
+        background: var(--surface-card);
+        border: 1px solid var(--outline);
+        border-radius: 999px;
+        padding: 4px 10px;
+      }
+      button {
+        cursor: pointer;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      button:hover {
+        border-color: var(--accent);
+      }
+      button.primary {
+        background: var(--accent-dark);
+        border-color: var(--accent);
+        color: #ffffff;
+      }
+      .badge {
+        font-family: "Google Sans Code", monospace;
+        font-size: 11px;
+        color: #9ac5de;
+        padding: 2px 8px;
+        border: 1px solid var(--outline);
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .workspace {
+        display: flex;
+        min-height: 0;
+        min-width: 0;
+        position: relative;
+      }
+      .term-stage {
+        flex: 1 1 auto;
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        background: var(--term-bg);
+      }
+      #term-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      #split-stage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        min-width: 0;
+        min-height: 0;
+        pointer-events: none;
+      }
+      .split-branch {
+        display: flex;
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 0;
+      }
+      .split-branch.dir-h {
+        flex-direction: row;
+      }
+      .split-branch.dir-v {
+        flex-direction: column;
+      }
+      .split-divider {
+        flex: 0 0 4px;
+        background: var(--outline);
+        pointer-events: auto;
+        cursor: col-resize;
+        transition: background 120ms ease;
+      }
+      .split-branch.dir-v > .split-divider {
+        cursor: row-resize;
+      }
+      .split-divider:hover {
+        background: var(--accent);
+      }
+      .pane-leaf {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 0;
+        border: 1px solid transparent;
+      }
+      .pane-leaf.focused {
+        border-color: rgba(139, 206, 255, 0.42);
+      }
+      .pane-head {
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 0 8px;
+        font-family: "Google Sans Code", monospace;
+        font-size: 11px;
+        color: #9ac5de;
+        background: rgba(16, 26, 36, 0.86);
+        border-bottom: 1px solid rgba(38, 59, 77, 0.7);
+        pointer-events: auto;
+        user-select: none;
+        overflow: hidden;
+      }
+      .pane-head-title {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .pane-head-actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
+      }
+      .pane-head-actions button {
+        padding: 1px 6px;
+        font-size: 10.5px;
+        border-radius: 6px;
+      }
+      .pane-body {
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        position: relative;
+        pointer-events: auto;
+      }
+      .pane-scroll-track {
+        position: absolute;
+        top: 4px;
+        right: 3px;
+        bottom: 4px;
+        width: 5px;
+        border-radius: 999px;
+        background: rgba(139, 206, 255, 0.12);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 150ms ease;
+      }
+      .pane-scroll-track.visible {
+        opacity: 1;
+      }
+      .pane-scroll-thumb {
+        position: absolute;
+        left: 0;
+        right: 0;
+        min-height: 22px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+      #term-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 4px;
+        opacity: 0;
+        border: 0;
+        padding: 0;
+        resize: none;
+        pointer-events: none;
+      }
+      #error-pill {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        z-index: 6;
+        background: #3a1220;
+        color: #ffd7df;
+        border: 1px solid var(--error);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      }
+      #sb-pill {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      #link-tooltip {
+        position: absolute;
+        left: 14px;
+        bottom: 12px;
+        z-index: 6;
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: var(--surface-bar);
+        border: 1px solid var(--accent);
+        font-family: "Google Sans Code", monospace;
+        font-size: 11px;
+        color: var(--accent);
+        pointer-events: none;
+      }
+      #inline-ai-bar {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        z-index: 8;
+        max-width: 720px;
+        margin: 0 auto;
+        display: none;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: rgba(16, 26, 36, 0.96);
+        border: 1px solid var(--accent);
+        border-radius: 14px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      }
+      #inline-ai-bar.open {
+        display: flex;
+      }
+      #inline-ai-input {
+        flex: 1 1 auto;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-family: "Google Sans Code", monospace;
+      }
+      aside#ai-panel {
+        display: none;
+        width: 400px;
+        min-width: 300px;
+        flex-direction: column;
+        background: var(--surface-bar);
+        border-left: 1px solid var(--outline);
+      }
+      aside#ai-panel.open {
+        display: flex;
+      }
+      .ai-header {
+        padding: 10px;
+        border-bottom: 1px solid var(--outline);
+        display: grid;
+        gap: 6px;
+      }
+      .ai-selectors {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .ai-quick {
+        display: flex;
+        gap: 6px;
+      }
+      #ai-feed {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .ai-msg {
+        padding: 8px 10px;
+        border-radius: 12px;
+        font-size: 12.5px;
+        line-height: 1.45;
+        border: 1px solid var(--outline);
+        background: var(--surface-card);
+      }
+      .ai-msg.user {
+        align-self: flex-end;
+        background: var(--accent-dark);
+        color: #fff;
+        max-width: 88%;
+      }
+      .ai-meta {
+        font-size: 10.5px;
+        color: var(--accent);
+        margin-bottom: 4px;
+        font-family: "Google Sans Code", monospace;
+      }
+      pre.ai-text {
+        margin: 0;
+        white-space: pre-wrap;
+        font-family: "Google Sans Flex", sans-serif;
+      }
+      .ai-cmd-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        padding: 5px 8px;
+        border-radius: 8px;
+        background: #0a1117;
+        border: 1px solid var(--outline);
+      }
+      .ai-cmd-bar code {
+        flex: 1 1 auto;
+        font-family: "Google Sans Code", monospace;
+        font-size: 12px;
+        overflow-x: auto;
+      }
+      .ai-compose {
+        padding: 10px;
+        border-top: 1px solid var(--outline);
+        display: flex;
+        gap: 6px;
+      }
+      #ai-prompt {
+        flex: 1 1 auto;
+        border-radius: 12px;
+        padding: 8px 10px;
+        min-height: 38px;
+        resize: none;
+      }
+      dialog#cmd-palette {
+        width: min(560px, 90vw);
+        background: var(--surface-bar);
+        color: var(--term-fg);
+        border: 1px solid var(--accent);
+        border-radius: 16px;
+        padding: 12px;
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.55);
+      }
+      #palette-input {
+        width: 100%;
+        border-radius: 10px;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+      }
+      #palette-list {
+        display: grid;
+        gap: 4px;
+        max-height: 320px;
+        overflow-y: auto;
+      }
+      #palette-list button {
+        text-align: left;
+        border-radius: 8px;
+        padding: 7px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="left-group">
+          <span class="brand">APHRODY TERM</span>
+          <div id="pane-tabs" role="tablist" aria-label="Terminal tabs"></div>
+          <div class="split-controls">
+            <button id="btn-split-h" type="button" title="Split Right">
+              Split H
+            </button>
+            <button id="btn-split-v" type="button" title="Split Down">
+              Split V
+            </button>
+          </div>
+          <div id="profile-bar"></div>
+        </div>
+        <div class="right-group">
+          <button id="sb-pill" type="button" hidden>Bottom</button>
+          <span id="gpu-badge" class="badge">Initializing WebGPU...</span>
+          <select id="theme-select" aria-label="Terminal theme"></select>
+          <button
+            id="btn-inline-ai"
+            type="button"
+            title="Inline Command (Ctrl+K)"
+          >
+            Ctrl+K
+          </button>
+          <button id="btn-palette" type="button">Palette</button>
+          <button id="btn-toggle-ai" class="primary" type="button">
+            AI Agent
+          </button>
+        </div>
+      </header>
+      <div class="workspace">
+        <div class="term-stage">
+          <canvas
+            id="term-canvas"
+            aria-label="Aphrody WebGPU terminal"
+          ></canvas>
+          <div id="split-stage"></div>
+          <textarea
+            id="term-input"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          ></textarea>
+          <div id="link-tooltip" hidden></div>
+          <div id="inline-ai-bar" role="dialog" aria-label="Inline AI prompt">
+            <span class="badge">?</span>
+            <input
+              id="inline-ai-input"
+              type="text"
+              placeholder="Ask AI for a command to insert into active pane..."
+            />
+            <button id="inline-ai-run" class="primary" type="button">
+              Generate
+            </button>
+            <button id="inline-ai-close" type="button">Esc</button>
+          </div>
+          <button id="error-pill" type="button" hidden></button>
+        </div>
+        <aside id="ai-panel" aria-label="AI First Side Panel">
+          <div class="ai-header">
+            <div class="ai-selectors">
+              <select id="ai-engine" aria-label="AI Engine">
+                <option value="auto">Auto</option>
+                <option value="openrouter">OpenRouter</option>
+                <option value="acp">ACP v1.31.0</option>
+                <option value="opencode">OpenCode</option>
+                <option value="mcp">MCP Agent</option>
+                <option value="a2a">A2A 1.0.1</option>
+              </select>
+              <select id="ai-model" aria-label="AI Model">
+                <option value="">Auto model</option>
+              </select>
+            </div>
+            <div class="ai-quick">
+              <button id="btn-diagnose" type="button">
+                Diagnose Screen / Error
+              </button>
+            </div>
+          </div>
+          <div id="ai-feed"></div>
+          <div class="ai-compose">
+            <textarea
+              id="ai-prompt"
+              rows="2"
+              placeholder="Stream via OpenRouter SSE, ACP v1.31.0, OpenCode, MCP or A2A..."
+            ></textarea>
+            <button id="ai-send" class="primary" type="button">Send</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <dialog id="cmd-palette">
+      <input
+        id="palette-input"
+        type="search"
+        placeholder="Search themes, shells, splits, AI actions..."
+      />
+      <div id="palette-list"></div>
+    </dialog>
+    <script type="module" src="./term-host.js"></script>
+  </body>
+</html>

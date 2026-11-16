@@ -1,0 +1,12 @@
+name = "starship"
+version = "1.0.1"
+kind = "source"
+entry = "starship.plugin.niu"
+summary = "Full Starship prompt integration for Niubash."
+permissions = ["shell:source", "cwd:read", "process:run:starship"]
+required_binaries = ["starship"]
+
+[exports]
+functions = []
+hooks = []
+prompt_segments = []

@@ -1,0 +1,23 @@
+# Oh My Niu fzf plugin.
+
+fzf-cd() {
+  command -v fzf >/dev/null 2>&1 || {
+    echo "fzf is not installed or not on PATH" >&2
+    return 127
+  }
+
+  if command -v fd >/dev/null 2>&1; then
+    __niubash_fzf_target=$(fd -t d . 2>/dev/null | fzf "$@") || return
+  elif command -v find >/dev/null 2>&1; then
+    __niubash_fzf_target=$(find . -type d 2>/dev/null | fzf "$@") || return
+  else
+    echo "fzf-cd requires fd or find on PATH" >&2
+    return 127
+  fi
+
+  [ -n "$__niubash_fzf_target" ] && cd "$__niubash_fzf_target"
+}
+
+cdf() {
+  fzf-cd "$@"
+}

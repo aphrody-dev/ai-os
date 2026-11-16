@@ -1,0 +1,3552 @@
+# jj completions for niubash / oh-my-niu.
+# Generated from the official `jj util completion bash` output (jj 0.45.1)
+# via tools/convert_jj_completions.py; flags that take values are
+# derived from the script's prev-case entries.
+command = "jj"
+description = "Jujutsu VCS (Git-compatible)"
+
+[[flags]]
+long = "--at-op"
+takes_value = true
+
+[[flags]]
+long = "--at-operation"
+takes_value = true
+
+[[flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[flags]]
+long = "--config"
+takes_value = true
+
+[[flags]]
+long = "--config-file"
+
+[[flags]]
+long = "--debug"
+
+[[flags]]
+long = "--help"
+
+[[flags]]
+long = "--ignore-immutable"
+
+[[flags]]
+long = "--ignore-working-copy"
+
+[[flags]]
+long = "--no-integrate-operation"
+
+[[flags]]
+long = "--no-pager"
+
+[[flags]]
+long = "--quiet"
+
+[[flags]]
+long = "--repository"
+
+[[flags]]
+long = "--version"
+
+[[flags]]
+short = "-R"
+
+[[flags]]
+short = "-V"
+
+[[flags]]
+short = "-h"
+
+[[subcommands]]
+name = "abandon"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--restore-descendants"
+
+[[subcommands.flags]]
+long = "--retain-bookmarks"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "absorb"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--from"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--interactive"
+
+[[subcommands.flags]]
+long = "--into"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--to"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-f"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-i"
+
+[[subcommands.flags]]
+short = "-t"
+
+[[subcommands]]
+name = "arrange"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "bisect"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "bookmark"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "commit"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--editor"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--interactive"
+
+[[subcommands.flags]]
+long = "--message"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-i"
+
+[[subcommands.flags]]
+short = "-m"
+
+[[subcommands]]
+name = "config"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "converge"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--interactive"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-interactive"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-i"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "debug"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "describe"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--editor"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--message"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--stdin"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-m"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "diff"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--color-words"
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--context"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--from"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--git"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-all-space"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-space-change"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--name-only"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revisions"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--stat"
+
+[[subcommands.flags]]
+long = "--summary"
+
+[[subcommands.flags]]
+long = "--template"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--to"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--types"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-T"
+
+[[subcommands.flags]]
+short = "-b"
+
+[[subcommands.flags]]
+short = "-f"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands.flags]]
+short = "-t"
+
+[[subcommands.flags]]
+short = "-w"
+
+[[subcommands]]
+name = "diffedit"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--from"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--restore-descendants"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--to"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-f"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-t"
+
+[[subcommands]]
+name = "duplicate"
+
+[[subcommands.flags]]
+long = "--after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--destination"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--insert-after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--insert-before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--onto"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-A"
+
+[[subcommands.flags]]
+short = "-B"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-d"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-o"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "edit"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "evolog"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--color-words"
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--context"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--git"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-all-space"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-space-change"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--limit"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--name-only"
+
+[[subcommands.flags]]
+long = "--no-graph"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--patch"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--reversed"
+
+[[subcommands.flags]]
+long = "--revisions"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--stat"
+
+[[subcommands.flags]]
+long = "--summary"
+
+[[subcommands.flags]]
+long = "--template"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--types"
+
+[[subcommands.flags]]
+short = "-G"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-T"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-n"
+
+[[subcommands.flags]]
+short = "-p"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands]]
+name = "file"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "fix"
+
+[[subcommands.flags]]
+long = "--all-lines"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--include-unchanged-files"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--source"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-a"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands]]
+name = "gerrit"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "git"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "help"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--keyword"
+takes_value = true
+values = ["bookmarks", "config", "filesets", "glossary", "revsets", "templates", "tutorial"]
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-k"
+
+[[subcommands]]
+name = "interdiff"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--color-words"
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--context"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--from"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--git"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-all-space"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-space-change"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--name-only"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--stat"
+
+[[subcommands.flags]]
+long = "--summary"
+
+[[subcommands.flags]]
+long = "--to"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--types"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-b"
+
+[[subcommands.flags]]
+short = "-f"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands.flags]]
+short = "-t"
+
+[[subcommands.flags]]
+short = "-w"
+
+[[subcommands]]
+name = "log"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--color-words"
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--context"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--count"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--git"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-all-space"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-space-change"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--limit"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--name-only"
+
+[[subcommands.flags]]
+long = "--no-graph"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--patch"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--reversed"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--stat"
+
+[[subcommands.flags]]
+long = "--summary"
+
+[[subcommands.flags]]
+long = "--template"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--types"
+
+[[subcommands.flags]]
+short = "-G"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-T"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-n"
+
+[[subcommands.flags]]
+short = "-p"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands]]
+name = "metaedit"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--author"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--author-timestamp"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--force-rewrite"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--message"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--update-author"
+
+[[subcommands.flags]]
+long = "--update-author-timestamp"
+
+[[subcommands.flags]]
+long = "--update-change-id"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-m"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "new"
+
+[[subcommands.flags]]
+long = "--after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--edit"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--insert-after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--insert-before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--message"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-edit"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-A"
+
+[[subcommands.flags]]
+short = "-B"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-m"
+
+[[subcommands.flags]]
+short = "-o"
+
+[[subcommands]]
+name = "next"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--conflict"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--edit"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-edit"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-e"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-n"
+
+[[subcommands]]
+name = "operation"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "parallelize"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "prev"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--conflict"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--edit"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-edit"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-e"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-n"
+
+[[subcommands]]
+name = "rebase"
+
+[[subcommands.flags]]
+long = "--after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--branch"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--destination"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--insert-after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--insert-before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--keep-divergent"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--onto"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--simplify-parents"
+
+[[subcommands.flags]]
+long = "--skip-emptied"
+
+[[subcommands.flags]]
+long = "--source"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-A"
+
+[[subcommands.flags]]
+short = "-B"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-b"
+
+[[subcommands.flags]]
+short = "-d"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-o"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands]]
+name = "redo"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "resolve"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--list"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-l"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "restore"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--changes-in"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--from"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--interactive"
+
+[[subcommands.flags]]
+long = "--into"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--restore-descendants"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--to"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-c"
+
+[[subcommands.flags]]
+short = "-f"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-i"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-t"
+
+[[subcommands]]
+name = "revert"
+
+[[subcommands.flags]]
+long = "--after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--destination"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--insert-after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--insert-before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--onto"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-A"
+
+[[subcommands.flags]]
+short = "-B"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-d"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-o"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "root"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "run"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--clean"
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-changes"
+
+[[subcommands.flags]]
+long = "--ignore-errors"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--jobs"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--passthrough"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--restore-descendants"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--root"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-j"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-x"
+
+[[subcommands]]
+name = "show"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--color-words"
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--context"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--git"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-all-space"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-space-change"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--name-only"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--no-patch"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--reversed"
+
+[[subcommands.flags]]
+long = "--stat"
+
+[[subcommands.flags]]
+long = "--summary"
+
+[[subcommands.flags]]
+long = "--template"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--types"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-T"
+
+[[subcommands.flags]]
+short = "-b"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-s"
+
+[[subcommands.flags]]
+short = "-w"
+
+[[subcommands]]
+name = "sign"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--key"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "sparse"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "split"
+
+[[subcommands.flags]]
+long = "--after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--destination"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--editor"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--insert-after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--insert-before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--interactive"
+
+[[subcommands.flags]]
+long = "--message"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--onto"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--parallel"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-A"
+
+[[subcommands.flags]]
+short = "-B"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-d"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-i"
+
+[[subcommands.flags]]
+short = "-m"
+
+[[subcommands.flags]]
+short = "-o"
+
+[[subcommands.flags]]
+short = "-p"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "squash"
+
+[[subcommands.flags]]
+long = "--after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--destination"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--editor"
+
+[[subcommands.flags]]
+long = "--from"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--insert-after"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--insert-before"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--interactive"
+
+[[subcommands.flags]]
+long = "--into"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--keep-emptied"
+
+[[subcommands.flags]]
+long = "--message"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--onto"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--to"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--tool"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--use-destination-message"
+
+[[subcommands.flags]]
+short = "-A"
+
+[[subcommands.flags]]
+short = "-B"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-d"
+
+[[subcommands.flags]]
+short = "-f"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-i"
+
+[[subcommands.flags]]
+short = "-k"
+
+[[subcommands.flags]]
+short = "-m"
+
+[[subcommands.flags]]
+short = "-o"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands.flags]]
+short = "-t"
+
+[[subcommands.flags]]
+short = "-u"
+
+[[subcommands]]
+name = "status"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "tag"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "undo"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "unsign"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+long = "--revision"
+takes_value = true
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands.flags]]
+short = "-r"
+
+[[subcommands]]
+name = "util"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "version"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"
+
+[[subcommands]]
+name = "workspace"
+
+[[subcommands.flags]]
+long = "--at-op"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--at-operation"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--color"
+takes_value = true
+values = ["always", "never", "debug", "auto"]
+
+[[subcommands.flags]]
+long = "--config"
+takes_value = true
+
+[[subcommands.flags]]
+long = "--config-file"
+
+[[subcommands.flags]]
+long = "--debug"
+
+[[subcommands.flags]]
+long = "--help"
+
+[[subcommands.flags]]
+long = "--ignore-immutable"
+
+[[subcommands.flags]]
+long = "--ignore-working-copy"
+
+[[subcommands.flags]]
+long = "--no-integrate-operation"
+
+[[subcommands.flags]]
+long = "--no-pager"
+
+[[subcommands.flags]]
+long = "--quiet"
+
+[[subcommands.flags]]
+long = "--repository"
+
+[[subcommands.flags]]
+short = "-R"
+
+[[subcommands.flags]]
+short = "-h"

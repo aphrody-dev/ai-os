@@ -1,0 +1,42 @@
+# oh-my-niu zoxide plugin
+# Defines z/zi helpers and tracks the current directory on lifecycle hooks.
+
+__niubash_zoxide_available() {
+  command -v zoxide >/dev/null 2>&1
+}
+
+__niubash_zoxide_track() {
+  __niubash_zoxide_available || return 0
+  zoxide add "$PWD" >/dev/null 2>&1 || true
+}
+
+z() {
+  __niubash_zoxide_available || {
+    echo "zoxide is not installed or not on PATH" >&2
+    return 127
+  }
+
+  if [ "$#" -eq 0 ]; then
+    cd "$HOME"
+    return
+  fi
+
+  __niubash_zoxide_target=$(zoxide query "$@") || return
+  [ -n "$__niubash_zoxide_target" ] && cd "$__niubash_zoxide_target"
+}
+
+zi() {
+  __niubash_zoxide_available || {
+    echo "zoxide is not installed or not on PATH" >&2
+    return 127
+  }
+
+  __niubash_zoxide_target=$(zoxide query -i "$@") || return
+  [ -n "$__niubash_zoxide_target" ] && cd "$__niubash_zoxide_target"
+}
+
+case "$NIU_PLUGIN_HOOK" in
+  startup|precmd|chpwd)
+    __niubash_zoxide_track
+    ;;
+esac

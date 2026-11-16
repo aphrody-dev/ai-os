@@ -1,0 +1,23 @@
+# Oh My Niu git plugin.
+
+[ -f "$NIUBASH/lib/git.niu" ] && . "$NIUBASH/lib/git.niu"
+[ -f "$NIUBASH/lib/aliases.niu" ] && . "$NIUBASH/lib/aliases.niu"
+
+niubash_load_alias_asset git
+
+groot() {
+  __omw_git_root="$(git rev-parse --show-toplevel 2>/dev/null)" || return
+  cd "$__omw_git_root"
+}
+
+gbranch() {
+  git branch --show-current "$@"
+}
+
+gmain() {
+  if git rev-parse --verify main >/dev/null 2>&1; then
+    git switch main "$@"
+  else
+    git switch master "$@"
+  fi
+}

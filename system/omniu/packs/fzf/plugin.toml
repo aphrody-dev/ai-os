@@ -1,0 +1,22 @@
+name = "fzf"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "Interactive directory selector commands."
+default = false
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "process:run:fzf", "process:run:find", "process:run:fd"]
+required_binaries = ["fzf"]
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["startup"]
+commands = ["cdf", "fzf-cd"]
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/fzf/init.niu"

@@ -1,0 +1,70 @@
+# Prompt helpers used by theme plugins.
+
+niubash_prompt_use_template() {
+  NIU_PROMPT_LEFT="$1"
+  NIU_PROMPT_RIGHT="${2:-}"
+  export NIU_PROMPT_LEFT NIU_PROMPT_RIGHT
+}
+
+niubash_prompt_use_starship_git() {
+  if ! command -v starship >/dev/null 2>&1; then
+    return 127
+  fi
+
+  NIU_PROMPT_GIT_BACKEND=starship
+  NIU_PROMPT_GIT_SOURCE=starship
+  export NIU_PROMPT_GIT_BACKEND NIU_PROMPT_GIT_SOURCE
+  niubash_prompt_refresh_starship_git
+}
+
+niubash_prompt_refresh_starship_git() {
+  if [ "${NIU_PROMPT_GIT_BACKEND:-}" != "starship" ]; then
+    return 0
+  fi
+  if ! command -v starship >/dev/null 2>&1; then
+    return 127
+  fi
+
+  __omw_starship_status="${NIU_LAST_EXIT_CODE:-${NIU_LAST_STATUS:-0}}"
+  __omw_starship_width="${COLUMNS:-80}"
+  if [ -z "${STARSHIP_SESSION_KEY:-}" ]; then
+    STARSHIP_SESSION_KEY="niubash-$$"
+    export STARSHIP_SESSION_KEY
+  fi
+  __omw_starship_git_branch="$(STARSHIP_SHELL=niubash starship module git_branch --status "$__omw_starship_status" --terminal-width "$__omw_starship_width" 2>/dev/null)" || __omw_starship_git_branch=""
+  __omw_starship_git_status="$(STARSHIP_SHELL=niubash starship module git_status --status "$__omw_starship_status" --terminal-width "$__omw_starship_width" 2>/dev/null)" || __omw_starship_git_status=""
+
+  # Starship's default git_branch format includes "on "; Niubash themes own
+  # connective words around {git}, so keep this provider to branch/status only.
+  case "$__omw_starship_git_branch" in
+    on\ *) __omw_starship_git_branch="${__omw_starship_git_branch#on }" ;;
+  esac
+
+  NIU_PROMPT_GIT="$__omw_starship_git_branch$__omw_starship_git_status"
+  NIU_PROMPT_GIT_SOURCE=starship
+  NIU_PROMPT_GIT_DIRTY=0
+  export NIU_PROMPT_GIT NIU_PROMPT_GIT_SOURCE NIU_PROMPT_GIT_DIRTY
+}
+
+niubash_use_theme() {
+  __omw_theme_name="$1"
+
+  if [ -f "$NIU_CUSTOM/themes/$__omw_theme_name/$__omw_theme_name.theme.niu" ]; then
+    . "$NIU_CUSTOM/themes/$__omw_theme_name/$__omw_theme_name.theme.niu"
+    return $?
+  fi
+
+  if [ -f "$NIUBASH/themes/$__omw_theme_name/$__omw_theme_name.theme.niu" ]; then
+    . "$NIUBASH/themes/$__omw_theme_name/$__omw_theme_name.theme.niu"
+    return $?
+  fi
+
+  if [ -f "$NIUBASH/themes/$__omw_theme_name.toml" ]; then
+    NIU_ACTIVE_THEME="$__omw_theme_name"
+    NIU_THEME_FILE="$NIUBASH/themes/$__omw_theme_name.toml"
+    export NIU_ACTIVE_THEME NIU_THEME_FILE
+    return 0
+  fi
+
+  return 1
+}

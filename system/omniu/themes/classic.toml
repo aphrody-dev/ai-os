@@ -1,0 +1,39 @@
+[prompt_user]
+fg = "green"
+bold = true
+
+[prompt_host]
+fg = "green"
+bold = false
+
+[prompt_dir]
+fg = "blue"
+bold = true
+
+[prompt_symbol]
+fg = "white"
+bold = false
+
+[error]
+fg = "red"
+bold = true
+
+[warning]
+fg = "yellow"
+bold = false
+
+[success]
+fg = "green"
+bold = false
+
+[git_clean]
+fg = "green"
+bold = false
+
+[git_dirty]
+fg = "yellow"
+bold = true
+
+[git_status_detail]
+fg = "light gray"
+bold = false

@@ -1,0 +1,22 @@
+name = "jj"
+bundle = "oh-my-niu"
+version = "1.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "devtools"
+summary = "Jujutsu (jj) completions and a cached prompt segment."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:jj"]
+required_binaries = ["jj"]
+
+[exports]
+aliases = false
+completions = ["jj"]
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/jj/init.niu"

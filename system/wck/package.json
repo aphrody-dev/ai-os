@@ -1,0 +1,30 @@
+{
+  "name": "@aphrody/wck",
+  "version": "1.0.0",
+  "description": "Compile-Time Web Validator (Google SEO + AI Mode SEO + Modern Web Guidelines + Core Web Vitals + Lighthouse 100 + WASM + WebGPU Chromium Spec)",
+  "type": "module",
+  "bin": {
+    "wck": "./src/cli.ts"
+  },
+  "scripts": {
+    "build": "bun build --compile src/cli.ts --outfile dist/wck",
+    "test": "bun test",
+    "check": "bun check",
+    "fmt": "bun fmt"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphrody-dev/ai-os.git",
+    "directory": "system/wck"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

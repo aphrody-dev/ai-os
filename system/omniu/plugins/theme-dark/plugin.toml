@@ -1,0 +1,10 @@
+name = "theme-dark"
+version = "1.0.1"
+kind = "source"
+entry = "theme-dark.plugin.niu"
+summary = "Dark official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["dark"]

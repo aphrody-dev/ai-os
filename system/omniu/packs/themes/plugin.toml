@@ -1,0 +1,46 @@
+name = "themes"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "builtin"
+api = "niubash:plugin@0.1.0"
+category = "ux"
+summary = "Official Niubash color themes for prompt and Git status styling."
+default = true
+permissions = []
+required_binaries = []
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = [
+  "agnoster",
+  "avit",
+  "bira",
+  "catppuccin-mocha",
+  "classic",
+  "clean",
+  "colorful",
+  "compact",
+  "cyberpunk",
+  "dark",
+  "default",
+  "dracula",
+  "fishy",
+  "forest",
+  "gruvbox",
+  "lambda",
+  "light",
+  "minimal",
+  "ocean",
+  "p10-classic",
+  "p10-lean",
+  "p10-pure",
+  "p10-rainbow",
+  "pure",
+  "robbyrussell",
+  "spaceship",
+  "tokyonight",
+]

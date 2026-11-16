@@ -1,0 +1,37 @@
+[prompt_user]
+fg = "#7aa2f7"
+bold = true
+
+[prompt_host]
+fg = "#7aa2f7"
+bold = true
+
+[prompt_dir]
+fg = "#bb9af7"
+bold = true
+
+[prompt_symbol]
+fg = "#9ece6a"
+bold = true
+
+[error]
+fg = "#f7768e"
+bold = true
+
+[warning]
+fg = "#e0af68"
+bold = true
+
+[success]
+fg = "#9ece6a"
+
+[git_clean]
+fg = "#7dcfff"
+bold = true
+
+[git_dirty]
+fg = "#f7768e"
+bold = true
+
+[git_status_detail]
+fg = "#b4f9f8"

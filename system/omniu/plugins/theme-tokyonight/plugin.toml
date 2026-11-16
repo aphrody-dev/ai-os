@@ -1,0 +1,10 @@
+name = "theme-tokyonight"
+version = "1.0.1"
+kind = "source"
+entry = "theme-tokyonight.plugin.niu"
+summary = "Tokyo Night Nerd Font prompt theme plugin inspired by Oh My Posh."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["tokyonight"]

@@ -1,0 +1,10 @@
+# Powerlevel-style pure official theme plugin.
+
+[ -f "$NIUBASH/lib/prompt.niu" ] && . "$NIUBASH/lib/prompt.niu"
+
+NIU_ACTIVE_THEME=p10-pure
+NIU_THEME_FILE="$NIUBASH/themes/p10-pure.toml"
+NIU_PROMPT_SYMBOL="${NIU_PROMPT_SYMBOL:-❯}"
+export NIU_ACTIVE_THEME NIU_THEME_FILE NIU_PROMPT_SYMBOL
+
+niubash_prompt_use_template "{cwd} {git} {command_execution_time}{newline}{prompt_char} " ""

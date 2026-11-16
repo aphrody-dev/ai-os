@@ -1,0 +1,22 @@
+name = "auto-env"
+bundle = "oh-my-niu"
+version = "1.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "environment"
+summary = "Activate the local .venv when entering a directory, deactivate on leave."
+default = false
+permissions = ["shell:source", "cwd:read", "env:write"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["startup", "chpwd"]
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/auto-env/init.niu"

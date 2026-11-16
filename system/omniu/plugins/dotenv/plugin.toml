@@ -1,0 +1,11 @@
+name = "dotenv"
+version = "1.0.1"
+kind = "source"
+entry = "dotenv.plugin.niu"
+summary = "Safe .env loader for project directories."
+permissions = ["shell:source", "cwd:read", "fs:read:.env", "env:write"]
+required_binaries = []
+
+[exports]
+functions = ["__niubash_dotenv_load"]
+hooks = ["startup", "precmd", "chpwd"]

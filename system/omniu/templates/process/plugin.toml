@@ -1,0 +1,26 @@
+name = "example-process"
+bundle = "oh-my-niu"
+version = "1.0.1"
+kind = "process"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "Process plugin pack template."
+default = false
+permissions = ["cwd:read", "process:run:example-tool"]
+required_binaries = ["example-tool"]
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = ["example-process"]
+keybindings = []
+themes = []
+providers = []
+
+[process]
+protocol = "niubash:process-plugin@0.1.0"
+command = "example-tool"
+args = ["--json"]
+timeout_millis = 1000

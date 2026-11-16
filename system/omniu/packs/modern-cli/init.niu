@@ -1,0 +1,5 @@
+# oh-my-niu modern-cli pack: aliases of the modern-cli profile. Aliases live in aliases/modern-cli.toml.
+
+[ -f "$NIUBASH/lib/aliases.niu" ] && . "$NIUBASH/lib/aliases.niu"
+
+niubash_load_alias_asset modern-cli

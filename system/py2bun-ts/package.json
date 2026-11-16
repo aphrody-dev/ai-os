@@ -1,0 +1,29 @@
+{
+  "name": "@aphrody/py2bun",
+  "version": "0.1.0",
+  "description": "Python 3 to Bun TypeScript transpiler: runtime and CLI wrapper (Rust crate at system/py2bun)",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./runtime": "./src/runtime/index.ts",
+    "./runtime/math": "./src/runtime/math.ts",
+    "./runtime/json": "./src/runtime/json.ts",
+    "./runtime/os": "./src/runtime/os.ts",
+    "./runtime/sys": "./src/runtime/sys.ts",
+    "./runtime/re": "./src/runtime/re.ts",
+    "./runtime/time": "./src/runtime/time.ts",
+    "./runtime/string": "./src/runtime/string.ts",
+    "./runtime/struct": "./src/runtime/struct.ts",
+    "./runtime/random": "./src/runtime/random.ts"
+  },
+  "bin": {
+    "py2bun": "./src/cli.ts"
+  },
+  "scripts": {
+    "test": "bun test test"
+  },
+  "peerDependencies": {
+    "@aphrody/ghidra": "workspace:*"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+loaders/rust/target/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.dev.vars
+*.pem
+*.key

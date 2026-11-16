@@ -1,0 +1,14 @@
+# oh-my-niu npm plugin
+# Static aliases and completion metadata stay in bundle assets.
+
+nr() {
+  npm run "$@"
+}
+
+nrd() {
+  npm run dev "$@"
+}
+
+nrb() {
+  npm run build "$@"
+}

@@ -1,0 +1,17 @@
+name = "path-tools"
+version = "1.0.1"
+kind = "source"
+entry = "path-tools.plugin.niu"
+summary = "PATH inspection and edit helpers for interactive shells."
+permissions = ["shell:source", "env:write"]
+required_binaries = []
+
+[exports]
+functions = [
+  "path_list",
+  "path_prepend",
+  "path_append",
+  "path_remove",
+  "path_dedupe",
+]
+

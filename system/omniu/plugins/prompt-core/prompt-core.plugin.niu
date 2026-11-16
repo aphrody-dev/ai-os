@@ -1,0 +1,233 @@
+# Official prompt core plugin.
+#
+# This is the public prompt/plugin API layer. Git status reaches the
+# renderer as the NIU_PROMPT_GIT snapshot string so prompt rendering
+# never runs git or repaints the active input line after a late async
+# result. No host daemon supplies that snapshot on current Niubash (the
+# gitstatus-daemon design was never shipped and the built-in plugin
+# stack that consumed these variables was retired, niubash#145): the
+# snapshot is maintained by the framework itself — the legacy/shell
+# backend refreshes it from lib/git.niu, the starship backend from
+# Starship modules, and the native backend (the default) renders the
+# snapshot that this plugin refreshes from lib/git.niu whenever the
+# dirty flag is set (the chpwd hook and git commands set it), so the
+# segment appears without a host renderer ever running. Any other
+# backend value leaves the snapshot entirely to the user or another
+# tool: niubash_prompt_git_info prints it verbatim and refreshes never
+# overwrite it.
+
+[ -f "$NIUBASH/lib/prompt.niu" ] && . "$NIUBASH/lib/prompt.niu"
+
+: "${NIU_PROMPT_GIT_BACKEND:=native}"
+: "${NIU_PROMPT_LEFT:={cwd} {git}{prompt_char} }"
+: "${NIU_PROMPT_RIGHT:=}"
+: "${NIU_PROMPT_GIT_DIRTY:=0}"
+
+case "${NIU_PROMPT_GIT_BACKEND:-native}" in
+  legacy|shell|native|snapshot)
+    [ -f "$NIUBASH/lib/git.niu" ] && . "$NIUBASH/lib/git.niu"
+    ;;
+esac
+
+niubash_prompt_register_segment() {
+  __omw_segment_name="$1"
+  __omw_segment_function="$2"
+
+  [ -n "$__omw_segment_name" ] || return 1
+  [ -n "$__omw_segment_function" ] || return 1
+  case "$__omw_segment_name" in
+    *[!A-Za-z0-9_]*)
+      return 1
+      ;;
+  esac
+
+  eval "NIU_PROMPT_SEGMENT_$__omw_segment_name=\"$__omw_segment_function\""
+  case " ${NIU_PROMPT_SEGMENTS:-} " in
+    *" $__omw_segment_name "*) ;;
+    *)
+      NIU_PROMPT_SEGMENTS="${NIU_PROMPT_SEGMENTS:+$NIU_PROMPT_SEGMENTS }$__omw_segment_name"
+      export NIU_PROMPT_SEGMENTS
+      ;;
+  esac
+}
+
+niubash_prompt_segment_value() {
+  __omw_segment_name="$1"
+  case "$__omw_segment_name" in
+    ""|*[!A-Za-z0-9_]*)
+      return 1
+      ;;
+  esac
+
+  eval "__omw_segment_function=\${NIU_PROMPT_SEGMENT_$__omw_segment_name:-}"
+  [ -n "$__omw_segment_function" ] || return 1
+  "$__omw_segment_function"
+}
+
+niubash_prompt_cwd() {
+  printf "%s" "$PWD"
+}
+
+niubash_prompt_cwd_base() {
+  __omw_cwd_base="${PWD##*/}"
+  [ -n "$__omw_cwd_base" ] || __omw_cwd_base="$PWD"
+  printf "%s" "$__omw_cwd_base"
+}
+
+niubash_prompt_user_host() {
+  __omw_user="${USER:-${USERNAME:-}}"
+  __omw_host="${HOSTNAME:-${COMPUTERNAME:-}}"
+  if [ -n "$__omw_user" ] && [ -n "$__omw_host" ]; then
+    printf "%s@%s" "$__omw_user" "$__omw_host"
+  else
+    printf "%s%s" "$__omw_user" "$__omw_host"
+  fi
+}
+
+niubash_prompt_git_info() {
+  case "${NIU_PROMPT_GIT_BACKEND:-native}" in
+    native|snapshot)
+      printf "%s" "${NIU_PROMPT_GIT:-}"
+      ;;
+    legacy|shell)
+      git_prompt_info
+      ;;
+    *)
+      printf "%s" "${NIU_PROMPT_GIT:-}"
+      ;;
+  esac
+}
+
+niubash_prompt_refresh_git_snapshot() {
+  case "${NIU_PROMPT_GIT_BACKEND:-native}" in
+    legacy|shell|native|snapshot)
+      # The native backend has no host renderer behind it in a
+      # framework session (prompt-core owns PS1), so the framework
+      # maintains the snapshot itself. Refresh stays gated on the
+      # dirty flag by the precmd caller, so rendering never runs git;
+      # this function only recomputes after a cwd change, a git
+      # command, or at plugin load.
+      if ! command -v git_prompt_info >/dev/null 2>&1; then
+        [ -f "$NIUBASH/lib/git.niu" ] && . "$NIUBASH/lib/git.niu"
+      fi
+      NIU_PROMPT_GIT="$(git_prompt_info)" || NIU_PROMPT_GIT=""
+      export NIU_PROMPT_GIT
+      ;;
+  esac
+  NIU_PROMPT_GIT_DIRTY=0
+  export NIU_PROMPT_GIT_DIRTY
+}
+
+niubash_prompt_mark_git_snapshot_dirty() {
+  NIU_PROMPT_GIT_DIRTY=1
+  export NIU_PROMPT_GIT_DIRTY
+}
+
+niubash_prompt_preexec() {
+  case "${NIU_PREEXEC_COMMAND:-}" in
+    git|git\ *|*/git|*/git\ *|git.exe|git.exe\ *|*/git.exe|*/git.exe\ *)
+      niubash_prompt_mark_git_snapshot_dirty
+      ;;
+  esac
+}
+
+niubash_prompt_precmd() {
+  if [ "${NIU_PROMPT_GIT_DIRTY:-0}" != "0" ]; then
+    niubash_prompt_refresh_git_snapshot
+  fi
+  niubash_prompt_apply
+}
+
+niubash_prompt_status() {
+  __omw_status="${NIU_LAST_STATUS:-0}"
+  if [ "$__omw_status" != "0" ] && [ -n "$__omw_status" ]; then
+    printf "status:%s " "$__omw_status"
+  fi
+}
+
+niubash_prompt_time() {
+  date "+%H:%M" 2>/dev/null || true
+}
+
+niubash_prompt_command_execution_time() {
+  [ -n "${NIU_LAST_COMMAND_DURATION:-}" ] && printf "%s" "$NIU_LAST_COMMAND_DURATION"
+}
+
+niubash_prompt_char() {
+  printf "%s" "${NIU_PROMPT_SYMBOL:-%}"
+}
+
+niubash_prompt_render_template() {
+  __omw_template="$1"
+  __omw_newline="
+"
+
+  for __omw_segment_name in ${NIU_PROMPT_SEGMENTS:-}; do
+    case "$__omw_template" in
+      *"{$__omw_segment_name}"*)
+        if [ "$__omw_segment_name" = "newline" ]; then
+          __omw_segment_value="$__omw_newline"
+        else
+          __omw_segment_value="$(niubash_prompt_segment_value "$__omw_segment_name")" || __omw_segment_value=""
+        fi
+        __omw_template="${__omw_template//\{$__omw_segment_name\}/$__omw_segment_value}"
+        ;;
+    esac
+  done
+
+  # Compatibility tokens for early theme plugins and host TOML examples.
+  case "$__omw_template" in
+    *"{git_prompt}"*)
+      __omw_git_prompt_compat="$(niubash_prompt_git_info)" || __omw_git_prompt_compat=""
+      __omw_template="${__omw_template//\{git_prompt\}/$__omw_git_prompt_compat}"
+      ;;
+  esac
+  case "$__omw_template" in
+    *"{symbol}"*)
+      __omw_symbol_compat="${NIU_PROMPT_SYMBOL:-%}"
+      __omw_template="${__omw_template//\{symbol\}/$__omw_symbol_compat}"
+      ;;
+  esac
+  case "$__omw_template" in
+    *"{cwd_base}"*)
+      __omw_cwd_base_compat="$(niubash_prompt_cwd_base)" || __omw_cwd_base_compat=""
+      __omw_template="${__omw_template//\{cwd_base\}/$__omw_cwd_base_compat}"
+      ;;
+  esac
+  printf "%s" "$__omw_template"
+}
+
+niubash_prompt_render_left() {
+  niubash_prompt_render_template "$NIU_PROMPT_LEFT"
+}
+
+niubash_prompt_render_right() {
+  niubash_prompt_render_template "$NIU_PROMPT_RIGHT"
+}
+
+# Publish the rendered prompt. Earlier Niubash builds consumed
+# NIU_PROMPT_LEFT / NIU_PROMPT_RIGHT through a host prompt bridge; that
+# bridge was retired with the built-in plugin stack (niubash#145) and
+# current hosts only read PS1, so the framework renders its templates
+# itself and assigns PS1 from its precmd hook (driven by the
+# PROMPT_COMMAND dispatch in lib/hooks.niu). NIU_PROMPT_RIGHT has no
+# bash-surface equivalent and remains a framework-level value.
+niubash_prompt_apply() {
+  PS1="$(niubash_prompt_render_left)"
+}
+
+niubash_prompt_register_segment cwd niubash_prompt_cwd
+niubash_prompt_register_segment cwd_base niubash_prompt_cwd_base
+niubash_prompt_register_segment user_host niubash_prompt_user_host
+niubash_prompt_register_segment git niubash_prompt_git_info
+niubash_prompt_register_segment status niubash_prompt_status
+niubash_prompt_register_segment time niubash_prompt_time
+niubash_prompt_register_segment command_execution_time niubash_prompt_command_execution_time
+niubash_prompt_register_segment prompt_char niubash_prompt_char
+niubash_prompt_register_segment newline niubash_prompt_char
+
+niubash_prompt_refresh_git_snapshot
+
+niubash_add_preexec_hook niubash_prompt_preexec
+niubash_add_chpwd_hook niubash_prompt_mark_git_snapshot_dirty
+niubash_add_precmd_hook niubash_prompt_precmd

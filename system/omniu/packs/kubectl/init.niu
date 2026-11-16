@@ -1,0 +1,19 @@
+# oh-my-niu kubectl plugin
+# Static aliases and completion metadata stay in bundle assets.
+
+kns() {
+  if [ -z "$1" ]; then
+    kubectl config view --minify --output 'jsonpath={..namespace}'
+    echo
+    return
+  fi
+  kubectl config set-context --current --namespace "$1"
+}
+
+kctx() {
+  if [ -z "$1" ]; then
+    kubectl config current-context
+    return
+  fi
+  kubectl config use-context "$1"
+}

@@ -1,0 +1,45 @@
+# Tests of the AI surface (Bun packages on Windows and Linux, Rust workspace on Linux) and the reproducibility of the extraction.
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions: { contents: read }
+jobs:
+  bun:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun test frameworks/ai-os/test
+  rust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - run: rustup show active-toolchain
+      - run: cargo check --workspace --all-targets --locked
+  extract:
+    # The tree is the output of tools/extract.ts at the rev pinned in extract.toml: running it again must change nothing.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with: { path: ai-os }
+      - uses: actions/checkout@v7
+        with: { repository: aphrody-labs/legacy, path: legacy, fetch-depth: 0 }
+      - uses: oven-sh/setup-bun@v2
+      - run: bun tools/extract.ts
+        working-directory: ai-os
+      - run: git diff --exit-code
+        working-directory: ai-os

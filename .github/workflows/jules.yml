@@ -1,0 +1,53 @@
+# Google Jules (cloud coding agent, ends with a PR) from GitHub events, through the fork of google-labs-code/jules-action
+# pinned by commit (aphrody-labs/jules-action: upstream + script injection fix, PR google-labs-code/jules-action#21).
+# Triggers: `@jules` in an issue comment, an issue labelled `jules`, or a manual run with a prompt.
+# Needs the repository secret JULES_API_KEY; without it the job is skipped. From a shell: `ay jules run`.
+name: jules
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Task for Jules
+        required: true
+      starting_branch:
+        description: Branch Jules starts from
+        default: main
+permissions:
+  contents: read
+jobs:
+  jules:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.label.name == 'jules') ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@jules') &&
+       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HAS_KEY: ${{ secrets.JULES_API_KEY != '' }}
+    steps:
+      - name: Prompt
+        id: prompt
+        if: env.HAS_KEY == 'true'
+        env:
+          INPUT: ${{ github.event.inputs.prompt }}
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ github.event.issue.body }}
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          eof="JULES_$(openssl rand -hex 16)"
+          {
+            echo "text<<$eof"
+            if [ -n "$INPUT" ]; then echo "$INPUT"; else printf '%s\n\n%s\n\n%s\n' "$TITLE" "$BODY" "$COMMENT"; fi
+            echo "$eof"
+          } >> "$GITHUB_OUTPUT"
+      - uses: aphrody-labs/jules-action@8be62dd5901b324059a02c6cc45d3ac054bcf155 # main, 2026-11-13
+        if: env.HAS_KEY == 'true'
+        with:
+          prompt: ${{ steps.prompt.outputs.text }}
+          starting_branch: ${{ github.event.inputs.starting_branch || 'main' }}
+          jules_api_key: ${{ secrets.JULES_API_KEY }}

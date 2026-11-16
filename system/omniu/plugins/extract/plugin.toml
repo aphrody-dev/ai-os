@@ -1,0 +1,22 @@
+name = "extract"
+version = "1.0.1"
+kind = "source"
+entry = "extract.plugin.niu"
+summary = "Archive extraction helper for common compressed formats."
+permissions = [
+  "shell:source",
+  "cwd:read",
+  "fs:read:archives",
+  "fs:write:cwd",
+  "process:run:tar",
+  "process:run:unzip",
+  "process:run:7z",
+  "process:run:gzip",
+  "process:run:bzip2",
+  "process:run:xz",
+]
+required_binaries = []
+
+[exports]
+functions = ["extract"]
+

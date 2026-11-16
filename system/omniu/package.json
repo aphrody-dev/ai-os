@@ -1,0 +1,22 @@
+{
+  "name": "@aphrody/omniu",
+  "version": "0.1.0",
+  "description": "oh-my-niu for Bun: plugin bundle as data, validator, packager and scaffolder, and the host that loads the ay plugin into both Bun and niu",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./ay": "./src/ay.ts",
+    "./host": "./src/host.ts",
+    "./preload": "./src/preload.ts"
+  },
+  "bin": {
+    "omniu": "./src/cli.ts"
+  },
+  "scripts": {
+    "test": "bun test test",
+    "validate": "bun src/cli.ts validate"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

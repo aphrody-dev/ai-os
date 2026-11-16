@@ -1,0 +1,5 @@
+# Oh My Niu modern-cli plugin: aliases of the modern-cli profile (unixwin/winuxsh-profiles).
+
+[ -f "$NIUBASH/lib/aliases.niu" ] && . "$NIUBASH/lib/aliases.niu"
+
+niubash_load_alias_asset modern-cli

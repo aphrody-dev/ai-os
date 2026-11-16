@@ -1,0 +1,19 @@
+topic: ai_foundations_to_agi
+description: "Deep research synthesis bridging theoretical computability (Alan Turing), parallel neural sequence transduction (Attention Is All You Need / Transformer), and Artificial General Intelligence (AGI) in 2026."
+execution:
+  batch_size: 3
+  items_per_agent: 1
+  output_dir: "./results"
+items:
+  - name: "Alan Turing"
+    category: "Theoretical Foundations of Computation & AI"
+    source_url: "https://fr.wikipedia.org/wiki/Alan_Turing"
+    description: "British mathematician, logician, and cryptanalyst (1912-1954); creator of the Universal Turing Machine (1936), Enigma Bombe cryptanalysis, ACE architecture, and the Turing Test / Imitation Game (1950)."
+  - name: "Attention Is All You Need"
+    category: "Foundational Deep Learning Architecture"
+    source_url: "https://research.google/pubs/attention-is-all-you-need/"
+    description: "Seminal NIPS 2017 paper by Vaswani et al. (Google Brain / Google Research) introducing the Transformer architecture based solely on scaled dot-product and multi-head attention, eliminating recurrence and convolutions."
+  - name: "Intelligence artificielle generale"
+    category: "Frontier AI Paradigm & Cognitive Horizon"
+    source_url: "https://fr.wikipedia.org/wiki/Intelligence_artificielle_g%C3%A9n%C3%A9rale"
+    description: "Artificial General Intelligence (AGI): autonomous systems capable of performing or learning virtually any human-level cognitive task, encompassing scaling laws, test-time compute, world models, agentic architectures, and existential safety."

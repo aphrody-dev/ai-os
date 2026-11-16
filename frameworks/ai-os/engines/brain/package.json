@@ -1,0 +1,17 @@
+{
+  "name": "@aphrody/brain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Autonomous-agent memory: AGY sessions merged into a redacted Obsidian vault, graphify code graph, Google Drive sync for NotebookLM sources",
+  "bin": {
+    "brain": "./src/cli.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "check": "bun check",
+    "fmt": "bun fmt"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

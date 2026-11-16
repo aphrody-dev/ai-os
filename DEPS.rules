@@ -1,0 +1,9 @@
+# checkdeps root rules (see docs/ARCHITECTURE.md, scripts/checkdeps.ts).
+# Per-directory DEPS.rules set `layer = N` and +allow / !ticketed / -forbid rules, inherited downward.
+# `sub/dir: directive` lines below cover gitlinked submodules that src does not write into.
+
+# Confined units, forbidden everywhere (crates, packages, plugins, apps) and re-allowed by `+` only
+# where listed: FFmpeg linkage (licence review, docs/ARCHITECTURE.md §11) and Lore's error crates.
+-src/tv/ffmpeg
+-src/lore/error-set
+-src/lore/error-set-macro

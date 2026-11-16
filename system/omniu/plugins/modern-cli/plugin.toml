@@ -1,0 +1,11 @@
+name = "modern-cli"
+version = "1.0.0"
+kind = "source"
+entry = "modern-cli.plugin.niu"
+summary = "Modern CLI replacements (eza, bat, dust, duf, fd, erd) as aliases; from unixwin/winuxsh-profiles modern-cli."
+permissions = ["shell:source", "cwd:read"]
+required_binaries = []
+
+[exports]
+aliases = true
+completions = []

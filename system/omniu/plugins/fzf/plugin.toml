@@ -1,0 +1,10 @@
+name = "fzf"
+version = "1.0.1"
+kind = "source"
+entry = "fzf.plugin.niu"
+summary = "fzf directory selector helpers."
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "process:run:fzf", "process:run:find", "process:run:fd"]
+required_binaries = ["fzf"]
+
+[exports]
+functions = ["fzf-cd", "cdf"]

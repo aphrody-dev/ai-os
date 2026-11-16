@@ -1,0 +1,130 @@
+# Keybindings plugin.
+#
+# The host's rc-level keybinding surface is the NIU_BINDKEYS variable:
+# newline-separated `keyspec:widget` entries that Niubash parses after
+# the rc is sourced and layers over every keymap when it builds the
+# line editor (niubash-runtime: parse_user_bindkeys /
+# add_user_widget_keybindings). There is no host "reedline-keybindings"
+# bridge; earlier revisions of this plugin only exported the preset
+# paths and changed nothing.
+#
+# At load, this plugin translates the presets whose keymap scope is
+# "all" (keybindings/common.toml) into NIU_BINDKEYS entries, prepended
+# ahead of any entries already present so the user's own bindings keep
+# the final word on a shared key. The translation is data-driven:
+# editing common.toml changes what gets installed.
+#
+# The mode-scoped presets (keybindings/emacs.toml, keybindings/vi.toml)
+# are NOT installed, deliberately. NIU_BINDKEYS has no per-keymap
+# scoping, so their entries would land in every keymap: the vi
+# preset's plain-character motions (h, l, 0) would break text entry in
+# emacs mode, and its mode-switch actions (vi-normal-mode,
+# vi-insert-mode) are not host widgets at all — the editor delivers vi
+# mode switching natively. Both files remain reference data describing
+# bindings the host's default keymaps already deliver; see
+# keybindings/README.md.
+
+NIU_KEYBINDINGS_PLUGIN=keybindings
+NIU_KEYBINDING_ASSETS="$NIUBASH/keybindings/common.toml $NIUBASH/keybindings/emacs.toml $NIUBASH/keybindings/vi.toml"
+export NIU_KEYBINDINGS_PLUGIN NIU_KEYBINDING_ASSETS
+
+# Print the value of a `name = "value"` TOML line with surrounding
+# whitespace and one pair of double quotes removed.
+__omw_keybindings_toml_value() {
+  __omw_kb_value="${1#*=}"
+  __omw_kb_value="${__omw_kb_value#"${__omw_kb_value%%[![:space:]]*}"}"
+  __omw_kb_value="${__omw_kb_value%"${__omw_kb_value##*[![:space:]]}"}"
+  if [ "${__omw_kb_value#\"}" != "$__omw_kb_value" ]; then
+    __omw_kb_value="${__omw_kb_value#\"}"
+    __omw_kb_value="${__omw_kb_value%\"}"
+  fi
+  printf "%s" "$__omw_kb_value"
+}
+
+# Print one preset file's bindings as `keyspec:widget` lines when the
+# preset is scoped to all keymaps; print nothing for mode-scoped
+# presets or unreadable files.
+__omw_keybindings_preset_entries() {
+  __omw_kb_file="$1"
+  [ -f "$__omw_kb_file" ] || return 1
+
+  __omw_kb_keymap=""
+  __omw_kb_key=""
+  __omw_kb_entries=""
+  __omw_kb_sep=""
+  while IFS= read -r __omw_kb_line || [ -n "$__omw_kb_line" ]; do
+    __omw_kb_line="${__omw_kb_line%$'\r'}"
+    case "$__omw_kb_line" in
+      ""|\#*) continue ;;
+      *=*) ;;
+      *) continue ;;
+    esac
+    __omw_kb_name="${__omw_kb_line%%=*}"
+    __omw_kb_name="${__omw_kb_name#"${__omw_kb_name%%[![:space:]]*}"}"
+    __omw_kb_name="${__omw_kb_name%"${__omw_kb_name##*[![:space:]]}"}"
+    case "$__omw_kb_name" in
+      keymap)
+        __omw_kb_keymap="$(__omw_keybindings_toml_value "$__omw_kb_line")"
+        ;;
+      key)
+        __omw_kb_key="$(__omw_keybindings_toml_value "$__omw_kb_line")"
+        ;;
+      action)
+        __omw_kb_action="$(__omw_keybindings_toml_value "$__omw_kb_line")"
+        if [ -n "$__omw_kb_key" ] && [ -n "$__omw_kb_action" ]; then
+          __omw_kb_entries="$__omw_kb_entries$__omw_kb_sep$__omw_kb_key:$__omw_kb_action"
+          __omw_kb_sep="
+"
+        fi
+        __omw_kb_key=""
+        ;;
+    esac
+  done < "$__omw_kb_file"
+
+  [ "$__omw_kb_keymap" = "all" ] || return 1
+  [ -n "$__omw_kb_entries" ] || return 1
+  printf "%s" "$__omw_kb_entries"
+}
+
+# Install the all-keymap presets into NIU_BINDKEYS, ahead of any
+# entries already present so user-declared bindings win on a shared
+# key. Entries already present are not duplicated, so framework
+# reloads re-sourcing this plugin stay idempotent.
+__omw_keybindings_apply() {
+  __omw_kb_fresh=""
+  for __omw_kb_preset in common emacs vi; do
+    __omw_kb_entries="$(__omw_keybindings_preset_entries "$NIUBASH/keybindings/$__omw_kb_preset.toml")" || continue
+    __omw_kb_rest="$__omw_kb_entries"
+    while [ -n "$__omw_kb_rest" ]; do
+      __omw_kb_entry="${__omw_kb_rest%%$'\n'*}"
+      if [ "$__omw_kb_entry" = "$__omw_kb_rest" ]; then
+        __omw_kb_rest=""
+      else
+        __omw_kb_rest="${__omw_kb_rest#*$'\n'}"
+      fi
+      [ -n "$__omw_kb_entry" ] || continue
+      case "
+${NIU_BINDKEYS:-}
+$__omw_kb_fresh
+" in
+        *"
+$__omw_kb_entry
+"*) continue ;;
+      esac
+      __omw_kb_fresh="${__omw_kb_fresh:+$__omw_kb_fresh
+}$__omw_kb_entry"
+    done
+  done
+
+  if [ -n "$__omw_kb_fresh" ]; then
+    if [ -n "${NIU_BINDKEYS:-}" ]; then
+      NIU_BINDKEYS="$__omw_kb_fresh
+$NIU_BINDKEYS"
+    else
+      NIU_BINDKEYS="$__omw_kb_fresh"
+    fi
+    export NIU_BINDKEYS
+  fi
+}
+
+__omw_keybindings_apply

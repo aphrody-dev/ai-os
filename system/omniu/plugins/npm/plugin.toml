@@ -1,0 +1,12 @@
+name = "npm"
+version = "1.0.1"
+kind = "source"
+entry = "npm.plugin.niu"
+summary = "npm aliases, completions, and run-script helpers."
+permissions = ["shell:source", "cwd:read", "process:run:npm"]
+required_binaries = ["npm"]
+
+[exports]
+aliases = true
+functions = ["nr", "nrd", "nrb"]
+completions = ["npm"]

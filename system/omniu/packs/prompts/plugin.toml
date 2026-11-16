@@ -1,0 +1,19 @@
+name = "prompts"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "builtin"
+api = "niubash:plugin@0.1.0"
+category = "ux"
+summary = "Prompt presets and reusable prompt segments."
+default = true
+permissions = []
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = ["cwd", "git", "status", "time", "user_host"]
+hooks = []
+commands = []
+keybindings = []
+themes = []

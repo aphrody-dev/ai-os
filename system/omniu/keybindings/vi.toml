@@ -1,0 +1,28 @@
+name = "vi"
+summary = "Native Vi insert/normal editing presets inherited from the ruline (GNU readline-compatible) defaults."
+keymap = "vi"
+
+[[bindings]]
+key = "Esc"
+action = "vi-normal-mode"
+description = "Switch from insert mode to normal mode."
+
+[[bindings]]
+key = "i"
+action = "vi-insert-mode"
+description = "Switch from normal mode to insert mode."
+
+[[bindings]]
+key = "h"
+action = "backward-char"
+description = "Move cursor left in normal mode."
+
+[[bindings]]
+key = "l"
+action = "forward-char"
+description = "Move cursor right in normal mode."
+
+[[bindings]]
+key = "0"
+action = "beginning-of-line"
+description = "Move to the beginning of the line in normal mode."

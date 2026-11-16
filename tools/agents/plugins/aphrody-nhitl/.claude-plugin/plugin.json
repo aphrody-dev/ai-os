@@ -1,0 +1,9 @@
+{
+  "name": "aphrody-nhitl",
+  "version": "0.1.6",
+  "description": "No human in the loop: bun hooks that auto-approve tool calls except a hardcoded deny list, log notifications, continue unfinished goals/todos, inject a local session digest, plus a status line and a headless launcher.",
+  "author": { "name": "aphrody-dev" },
+  "repository": "https://github.com/aphrody-labs/src",
+  "license": "MIT OR Apache-2.0",
+  "keywords": ["hooks", "autonomy", "headless", "bun"]
+}

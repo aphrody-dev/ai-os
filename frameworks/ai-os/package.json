@@ -1,0 +1,45 @@
+{
+  "name": "@aphrody/ai-os",
+  "version": "0.2.0",
+  "description": "Aphrody AI OS: Unix/GNU-like agent OS distribution unifying LLM, RAG, World Model, and System 1 decision under one C ABI (aphrody_core_capi)",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "ai-os": "./src/cli.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./core": "./src/core/index.ts",
+    "./llm": "./src/llm/index.ts",
+    "./llm/testing": "./src/llm/testing.ts",
+    "./gateway": "./src/gateway/index.ts",
+    "./research": "./src/research/index.ts",
+    "./relay": "./src/relay/protocols.ts",
+    "./relay/server": "./src/relay/server.ts",
+    "./term": "./src/term/index.ts",
+    "./stitch": "./src/google/stitch/src/index.ts",
+    "./stitch/tools": "./src/google/stitch/src/tools.ts",
+    "./jules": "./src/google/jules/index.ts",
+    "./google": "./src/google/cli.ts",
+    "./relay/mcp-http": "./src/relay/mcp-http.ts",
+    "./llm/agents": "./src/llm/agents.ts",
+    "./relay/cdp": "./src/relay/cdp.ts"
+  },
+  "scripts": {
+    "test": "bun test test",
+    "check": "bun check src/cli.ts",
+    "relay": "bun src/relay/cli.ts serve"
+  },
+  "dependencies": {
+    "@aphrody/core": "workspace:*",
+    "@aphrody/automate": "workspace:*",
+    "@aphrody/ai-router": "https://github.com/aphrody-labs/open/releases/download/libraries-v0.4.0/aphrody-ai-router-0.4.0.tgz"
+  },
+  "devDependencies": {},
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphrody-dev/ai-os.git",
+    "directory": "frameworks/ai-os"
+  }
+}

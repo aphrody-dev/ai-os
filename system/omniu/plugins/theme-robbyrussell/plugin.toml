@@ -1,0 +1,10 @@
+name = "theme-robbyrussell"
+version = "1.0.1"
+kind = "source"
+entry = "theme-robbyrussell.plugin.niu"
+summary = "Robby Russell-style official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["robbyrussell"]

@@ -1,0 +1,9 @@
+#!/bin/sh
+# Runner checkouts: refuse history rewrites (force push, branch deletion). Installed by install.sh.
+z=0000000000000000000000000000000000000000
+while read -r lref lsha rref rsha; do
+  [ "$lsha" = "$z" ] && { echo "pre-push: deleting $rref is not allowed" >&2; exit 1; }
+  [ "$rsha" = "$z" ] && continue
+  git merge-base --is-ancestor "$rsha" "$lsha" || { echo "pre-push: non fast-forward push to $rref refused" >&2; exit 1; }
+done
+exit 0

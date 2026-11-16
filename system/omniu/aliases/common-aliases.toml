@@ -1,0 +1,11 @@
+[aliases]
+ll = 'ls -alF'
+la = 'ls -A'
+l = 'ls -F'
+md = 'mkdir -p'
+rd = 'rmdir'
+".." = 'cd ..'
+"..." = 'cd ../../../packages'
+"...." = 'cd ../../..'
+c = 'clear'
+h = 'history'

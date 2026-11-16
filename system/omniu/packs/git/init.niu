@@ -1,0 +1,19 @@
+# oh-my-niu git plugin
+# Aliases and completions live in bundle assets; this file adds shell functions.
+
+groot() {
+  repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || return
+  cd "$repo_root"
+}
+
+gbranch() {
+  git branch --show-current "$@"
+}
+
+gmain() {
+  if git rev-parse --verify main >/dev/null 2>&1; then
+    git switch main "$@"
+  else
+    git switch master "$@"
+  fi
+}

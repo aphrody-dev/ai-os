@@ -1,0 +1,30 @@
+# Oh My Niu ay plugin.
+#
+# One plugin surface for two hosts: niu sources this file, Bun registers plugins/ay/ay.plugin.ts. Both read
+# the manifest that the `ay` binary emits itself (`ay plugin manifest`), so the command table cannot drift.
+
+AY_PLUGIN_HOST=niu
+export AY_PLUGIN_HOST
+
+# One `ay` subcommand name per line.
+ay_plugin_names() {
+  command ay plugin names
+}
+
+# The manifest as JSON.
+ay_plugin_manifest() {
+  command ay plugin manifest
+}
+
+# Run a command string through the Bash engine embedded in ay (`ay sh -c`); extra arguments become $0, $1...
+ay_sh() {
+  command ay sh -c "$@"
+}
+
+_ay_complete() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  if [ "$COMP_CWORD" -eq 1 ]; then
+    COMPREPLY=($(compgen -W "$(ay_plugin_names)" -- "$cur"))
+  fi
+}
+complete -F _ay_complete ay

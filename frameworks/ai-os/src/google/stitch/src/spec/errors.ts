@@ -1,0 +1,107 @@
+// Copyright 2026 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * Exhaustive error codes for Stitch operations.
+ * Add new codes here as needed.
+ */
+export const StitchErrorCode = {
+  options: [
+    "AUTH_FAILED",
+    "NOT_FOUND",
+    "PERMISSION_DENIED",
+    "RATE_LIMITED",
+    "SERVICE_UNAVAILABLE",
+    "NETWORK_ERROR",
+    "VALIDATION_ERROR",
+    "CLIENT_CLOSED",
+    /**
+     * A generative tool answered with a question instead of screens. Not a
+     * failure: reply by calling the same method again with a prompt that
+     * answers `clarification.question` (e.g. one of its `suggestions`).
+     */
+    "CLARIFICATION_REQUIRED",
+    "UNKNOWN_ERROR",
+  ] as const,
+};
+
+export type StitchErrorCode = (typeof StitchErrorCode.options)[number];
+
+/** The question a generative tool asked instead of producing screens. */
+export interface StitchClarification {
+  /** The agent's question, joined from every `outputComponents[].text`. */
+  question: string;
+  /** Replies the agent proposed, from `outputComponents[].suggestion`. */
+  suggestions: string[];
+}
+
+/**
+ * Structured error data for internal Result types.
+ */
+export interface StitchErrorData {
+  code: StitchErrorCode;
+  message: string;
+  suggestion?: string;
+  recoverable: boolean;
+  /** HTTP status, when the failure came from an HTTP response. */
+  status?: number;
+  /** MCP tool name, when the failure came from a tool call. */
+  toolName?: string;
+  /** Delay in milliseconds requested by the server before retrying. */
+  retryAfter?: number;
+  /** Present when `code` is `CLARIFICATION_REQUIRED`. */
+  clarification?: StitchClarification;
+}
+
+/**
+ * Throwable error class for the public API.
+ * Extends Error so it works with try/catch and instanceof checks.
+ */
+export class StitchError extends Error {
+  public readonly code: StitchErrorCode;
+  public readonly suggestion?: string;
+  public readonly recoverable: boolean;
+  /** HTTP status, when the failure came from an HTTP response. */
+  public readonly status?: number;
+  /** MCP tool name, when the failure came from a tool call. */
+  public readonly toolName?: string;
+  /** Delay in milliseconds requested by the server before retrying. */
+  public readonly retryAfter?: number;
+  /** Present when `code` is `CLARIFICATION_REQUIRED`. */
+  public readonly clarification?: StitchClarification;
+
+  constructor(data: StitchErrorData) {
+    super(data.message);
+    this.name = "StitchError";
+    this.code = data.code;
+    this.suggestion = data.suggestion;
+    this.recoverable = data.recoverable;
+    this.status = data.status;
+    this.toolName = data.toolName;
+    this.retryAfter = data.retryAfter;
+    this.clarification = data.clarification;
+  }
+
+  /**
+   * Create a StitchError from an unknown caught error.
+   */
+  static fromUnknown(error: unknown): StitchError {
+    if (error instanceof StitchError) return error;
+    return new StitchError({
+      code: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : String(error),
+      recoverable: false,
+    });
+  }
+}

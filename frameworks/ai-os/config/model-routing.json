@@ -1,0 +1,305 @@
+{
+  "fetched": "2026-11-13",
+  "currency": "USD per MTok",
+  "tasks": {
+    "pre-commit": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "thinking": { "effort": "low" }
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-3.5-flash-lite",
+          "thinking": { "thinking_level": "minimal" }
+        }
+      ],
+      "estUsd": 0.001
+    },
+    "ci-review": {
+      "primary": {
+        "provider": "google",
+        "model": "gemini-4-hydrogen",
+        "thinking": { "thinking_level": "medium" }
+      },
+      "fallback": [
+        {
+          "provider": "anthropic",
+          "model": "claude-sonnet-5-5",
+          "thinking": { "effort": "medium" }
+        }
+      ],
+      "estUsd": 0.09
+    },
+    "judge": {
+      "primary": {
+        "provider": "google",
+        "model": "gemini-4-carbon",
+        "thinking": { "thinking_level": "high" }
+      },
+      "fallback": [
+        {
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "thinking": { "effort": "high" }
+        }
+      ],
+      "estUsd": 0.19
+    },
+    "test-gen": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-sonnet-5-5",
+        "thinking": { "effort": "medium" }
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-4-hydrogen",
+          "thinking": { "thinking_level": "medium" }
+        }
+      ],
+      "estUsd": 0.12
+    },
+    "flaky-triage": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "thinking": { "effort": "medium" }
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-3.5-flash-lite",
+          "thinking": { "thinking_level": "low" }
+        }
+      ],
+      "estUsd": 0.004
+    },
+    "replic": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-sonnet-5-5",
+        "thinking": { "effort": "high" }
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-4-hydrogen",
+          "thinking": { "thinking_level": "high" }
+        }
+      ],
+      "estUsd": 0.2
+    },
+    "orchestration": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "thinking": { "effort": "low" }
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-3.5-flash-lite",
+          "thinking": { "thinking_level": "minimal" }
+        }
+      ],
+      "estUsd": 0.0005
+    },
+    "repo-digest": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "thinking": { "effort": "medium" }
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-4-hydrogen",
+          "thinking": { "thinking_level": "low" }
+        }
+      ],
+      "estUsd": 0.17
+    },
+    "batch": {
+      "primary": {
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "thinking": { "effort": "low" },
+        "mode": "batch+cache"
+      },
+      "fallback": [
+        {
+          "provider": "google",
+          "model": "gemini-3.5-flash-lite",
+          "thinking": { "thinking_level": "minimal" },
+          "mode": "batch"
+        }
+      ]
+    }
+  },
+  "prices": {
+    "anthropic": {
+      "claude-haiku-5-5": {
+        "in": 0.1,
+        "out": 0.5,
+        "cacheHit": 0.01,
+        "batchIn": 0.05,
+        "batchOut": 0.25,
+        "over100k": { "in": 0.5, "out": 2.5, "cacheHit": 0.05 },
+        "context": 1000000
+      },
+      "claude-haiku-4-5": {
+        "in": 1,
+        "out": 5,
+        "cacheHit": 0.1,
+        "batchIn": 0.5,
+        "batchOut": 2.5,
+        "context": 200000
+      },
+      "claude-sonnet-5-5": {
+        "in": 2,
+        "out": 10,
+        "cacheHit": 0.1,
+        "batchIn": 1,
+        "batchOut": 5,
+        "context": 1000000
+      },
+      "claude-sonnet-5": {
+        "in": 2,
+        "out": 10,
+        "cacheHit": 0.2,
+        "batchIn": 1,
+        "batchOut": 5,
+        "context": 1000000
+      },
+      "claude-sonnet-4-6": {
+        "in": 3,
+        "out": 15,
+        "cacheHit": 0.3,
+        "batchIn": 1.5,
+        "batchOut": 7.5,
+        "context": 1000000
+      },
+      "claude-opus-5-5": {
+        "in": 4,
+        "out": 20,
+        "cacheHit": 0.2,
+        "batchIn": 2,
+        "batchOut": 10,
+        "context": 1000000
+      },
+      "claude-opus-5": {
+        "in": 5,
+        "out": 25,
+        "cacheHit": 0.5,
+        "batchIn": 2.5,
+        "batchOut": 12.5,
+        "context": 1000000
+      },
+      "claude-fable-5-2": {
+        "in": 8,
+        "out": 40,
+        "cacheHit": 0.2,
+        "batchIn": 4,
+        "batchOut": 20,
+        "context": 1000000
+      },
+      "claude-fable-5-1": {
+        "in": 10,
+        "out": 50,
+        "cacheHit": 0.25,
+        "batchIn": 5,
+        "batchOut": 25,
+        "context": 1000000
+      }
+    },
+    "google": {
+      "gemini-2.5-flash-lite": {
+        "in": 0.1,
+        "out": 0.4,
+        "cache": 0.01,
+        "batchIn": 0.05,
+        "batchOut": 0.2
+      },
+      "gemini-3.1-flash-lite": {
+        "in": 0.25,
+        "out": 1.5,
+        "cache": 0.025,
+        "batchIn": 0.125,
+        "batchOut": 0.75
+      },
+      "gemini-3.5-flash-lite": {
+        "in": 0.3,
+        "out": 2.5,
+        "cache": 0.03,
+        "batchIn": 0.15,
+        "batchOut": 1.25
+      },
+      "gemini-3-flash-preview": {
+        "in": 0.5,
+        "out": 3,
+        "cache": 0.05,
+        "batchIn": 0.25,
+        "batchOut": 1.5
+      },
+      "gemini-3.8-flash": {
+        "in": 0.75,
+        "out": 3.75,
+        "cache": 0.075,
+        "batchIn": 0.375,
+        "batchOut": 1.875,
+        "from2027-01-01": { "in": 1.5, "out": 7.5 }
+      },
+      "gemini-4-hydrogen": {
+        "in": 1.5,
+        "out": 7.5,
+        "cache": 0.075,
+        "batchIn": 0.75,
+        "batchOut": 3.75,
+        "context": 1000000
+      },
+      "gemini-4-argon": {
+        "in": 2,
+        "out": 10,
+        "cache": 0.1,
+        "batchIn": 1,
+        "batchOut": 5,
+        "context": 1000000,
+        "from2026-12-01": { "in": 4, "out": 20, "cache": 0.2 }
+      },
+      "gemini-4-carbon": {
+        "in": 2,
+        "out": 10,
+        "cache": 0.1,
+        "batchIn": 1,
+        "batchOut": 5,
+        "context": 1000000,
+        "from2026-12-01": { "in": 4, "out": 20, "cache": 0.2 }
+      },
+      "gemini-3.1-pro-preview": {
+        "in": 2,
+        "out": 12,
+        "cache": 0.2,
+        "batchIn": 1,
+        "batchOut": 6,
+        "over200k": { "in": 4, "out": 18 }
+      }
+    }
+  },
+  "webPicker": {
+    "Flash-Lite 3.5": "gemini-3.5-flash-lite",
+    "Hydrogen 4": "gemini-4-hydrogen",
+    "Argon 4": "gemini-4-argon",
+    "Carbon 4": "gemini-4-carbon"
+  },
+  "sources": [
+    "https://platform.claude.com/docs/en/about-claude/pricing",
+    "claude-api skill (cached 2026-11-03)",
+    "https://aistudio.google.com/docs/pricing",
+    "https://aistudio.google.com/docs/models",
+    "https://aistudio.google.com/docs/thinking",
+    "relay llm_models, claude --help, agy --help"
+  ]
+}

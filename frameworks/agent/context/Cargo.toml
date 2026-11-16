@@ -1,0 +1,20 @@
+[package]
+name = "agent-context"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Native reader/writer for the agent Context store (same SQLite schema as frameworks/ai-os/src/core/context.ts), with an optional pyo3 module `agent_core` for Python."
+
+[lib]
+# The crate and the Python module share one name: maturin loads `PyInit_agent_core` from this cdylib.
+name = "agent_core"
+crate-type = ["rlib", "cdylib"]
+
+[features]
+# pyo3 (abi3-py310) extension module `agent_core`, built by maturin (pyproject.toml next to this file).
+python = ["dep:pyo3"]
+
+[dependencies]
+rusqlite = { workspace = true, features = ["bundled"] }
+pyo3 = { workspace = true, features = ["abi3-py310", "extension-module"], optional = true }

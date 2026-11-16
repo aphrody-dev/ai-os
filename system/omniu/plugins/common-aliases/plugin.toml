@@ -1,0 +1,11 @@
+name = "common-aliases"
+version = "1.0.1"
+kind = "source"
+entry = "common-aliases.plugin.niu"
+summary = "Common shell navigation and listing aliases."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+aliases = true
+

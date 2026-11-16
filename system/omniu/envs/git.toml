@@ -1,0 +1,16 @@
+# Oh My Niu environment: native Git for niubash.
+#
+# Usage: niu env use git
+# See lib/env.niu for the schema.
+
+[meta]
+description = "Native Git toolchain with pager, diff, and fetch reminders"
+
+[packages]
+wpm = ["git", "delta"]
+
+[plugins]
+enable = ["git", "git-fetch-reminder"]
+
+[env]
+GIT_PAGER = "less -R"

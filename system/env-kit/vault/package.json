@@ -1,0 +1,20 @@
+{
+  "name": "@aphrody/vault",
+  "version": "0.1.0",
+  "description": "Async secret vault for src: DPAPI / Windows Hello (NCrypt Passport KSP) / systemd-creds locally, age envelopes per host for sync, sealed json/xml/csv/toml documents, row-encrypted bun:sqlite, Chromium password CSV and agent profiles",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "bun test",
+    "bench": "bun bench/bench.ts",
+    "check": "bun check"
+  },
+  "dependencies": {},
+  "license": "MIT OR Apache-2.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./sync": "./src/sync-store.ts"
+  }
+}

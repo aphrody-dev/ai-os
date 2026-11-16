@@ -1,0 +1,112 @@
+# Agent fleet: which roles run on which host, with per-role timeout and budget.
+# No provider list here: ai-os (frameworks/ai-os) names the CLI/model in each task (`providers`),
+# otherwise the runner asks the relay (llm_models). growth tasks are drafts only (approval = owner).
+# heavy = true: builds/tests/training, fr1 only (enforced by runner.ts at enqueue and claim; prd and fr2
+# never run them, tasks landing there are forwarded to fr1 by health). prd keeps light prod roles only.
+# Read by tools/agents/runner.ts. Doc: docs/agents/AGENT-FIRST.md.
+
+[roles.coder]
+heavy = true
+timeout_s = 3600
+budget_usd = 5
+
+[roles.reviewer]
+timeout_s = 1200
+budget_usd = 2
+
+[roles.tester]
+heavy = true
+timeout_s = 2400
+budget_usd = 3
+
+[roles.linter]
+heavy = true
+timeout_s = 1200
+budget_usd = 1
+
+[roles.designer]
+timeout_s = 2400
+budget_usd = 3
+
+[roles.deployer]
+timeout_s = 1800
+budget_usd = 2
+
+[roles.sre]
+timeout_s = 1200
+budget_usd = 2
+
+[roles.chromium]
+# Chromium/LLVM factory tasks.
+heavy = true
+timeout_s = 21600
+budget_usd = 5
+
+[roles.build]
+# Images, release artefacts, toolchains (aphrody-heavy).
+heavy = true
+timeout_s = 21600
+budget_usd = 5
+
+[roles.training]
+heavy = true
+timeout_s = 43200
+budget_usd = 10
+
+[roles.growth]
+timeout_s = 1800
+budget_usd = 2
+
+# Hosts. `src` = git checkout (main) the runner works in; `ssh` = targets tried in order
+# (<host>-mesh = sshd through the cluster mTLS mesh, TCP 7444, fleet IPs only (device/cluster, docs/infra/CLUSTER.md);
+# then PC aliases, WireGuard @@network.mesh_cidr@@, public IP). `ship` = where every host sends log.jsonl.
+[hosts.prd]
+# Production backends only: light prod roles (deploy, health, text-only growth drafts).
+roles = ["deployer", "sre", "growth"]
+# Every host: user `agent` (systemd --user + linger, sudo NOPASSWD, docker), never uid 0.
+src = "/home/agent/agents/src"
+ssh = ["agent@prd-mesh", "agent@prd", "agent@@@hosts.prd.mesh_ip@@", "agent@@@hosts.prd.public_ip@@"]
+
+[hosts.fr1]
+# Factory (12 cores / 45 GB): every heavy role, plus review/design/sre.
+roles = [
+  "coder",
+  "reviewer",
+  "tester",
+  "linter",
+  "designer",
+  "build",
+  "chromium",
+  "training",
+  "sre",
+]
+src = "/home/agent/agents/src"
+ssh = [
+  "agent@fr1-mesh",
+  "agent@fr1",
+  "agent@@@hosts.fr1.mesh_ip@@",
+  "agent@@@hosts.fr1.public_ip@@",
+]
+
+[hosts.fr2]
+# Edge/proxy/CDN host, 11 GB RAM: minimal, sre only.
+roles = ["sre"]
+src = "/home/agent/agents/src"
+ssh = ["agent@fr2-mesh", "agent@fr2", "agent@@@hosts.fr2.mesh_ip@@", "agent@@@hosts.fr2.public_ip@@"]
+
+[hosts.pc]
+# No heavy builds on the PC.
+roles = ["reviewer", "designer", "growth"]
+src = "C:/aphrody"
+
+[schedule]
+# template (tools/agents/tasks/<name>.json) = period in hours; enqueued by the ship host (prd).
+# growth templates end as drafts in var/agents/publish/<id>/ (approval = owner): nothing is published.
+deps-update = 168
+release-notes = 168
+seo-check = 168
+
+[ship]
+# Every host appends its log.jsonl lines to prd over ssh (WireGuard or public ssh).
+host = "prd"
+dir = "/var/lib/aphrody-agents/logs"

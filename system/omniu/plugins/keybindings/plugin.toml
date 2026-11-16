@@ -1,0 +1,10 @@
+name = "keybindings"
+version = "1.1.0"
+kind = "source"
+entry = "keybindings.plugin.niu"
+summary = "Installs the all-keymap keybinding preset into the NIU_BINDKEYS rc variable at load; mode-scoped presets ship as reference data."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+keybindings = ["common", "emacs", "vi"]

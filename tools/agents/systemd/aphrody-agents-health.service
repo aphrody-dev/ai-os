@@ -1,0 +1,10 @@
+# Repairs the tmux session/windows, requeues orphan tasks, probes CLIs, ships logs to prd.
+[Unit]
+Description=Aphrody agent runner health check
+
+[Service]
+Type=oneshot
+KillMode=process
+Environment=PATH=%h/.bun/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=SRC_ROOT=@SRC@
+ExecStart=@BUN@ --no-env-file @SRC@/tools/agents/runner.ts health

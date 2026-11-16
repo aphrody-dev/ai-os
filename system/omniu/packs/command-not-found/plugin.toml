@@ -1,0 +1,20 @@
+name = "command-not-found"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "builtin"
+api = "niubash:plugin@0.1.0"
+category = "hints"
+summary = "Interactive missing-command hints for native Windows."
+default = false
+permissions = ["command:diagnose"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+providers = ["command-not-found"]

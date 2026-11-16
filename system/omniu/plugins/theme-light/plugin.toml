@@ -1,0 +1,10 @@
+name = "theme-light"
+version = "1.0.1"
+kind = "source"
+entry = "theme-light.plugin.niu"
+summary = "Light official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["light"]

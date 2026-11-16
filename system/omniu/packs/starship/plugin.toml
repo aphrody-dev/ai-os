@@ -1,0 +1,22 @@
+name = "starship"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "ux"
+summary = "Full Starship prompt integration for Niubash."
+default = false
+permissions = ["shell:source", "cwd:read", "process:run:starship"]
+required_binaries = ["starship"]
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = []
+commands = []
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/starship/init.niu"

@@ -1,0 +1,22 @@
+name = "last-working-dir"
+bundle = "oh-my-niu"
+version = "2.0.0"
+kind = "source"
+api = "niubash:plugin@0.1.0"
+category = "workflow"
+summary = "Last working directory cache and restore command."
+default = false
+permissions = ["shell:source", "cwd:read", "shell:cwd:write", "fs:read:cache", "fs:write:cache"]
+required_binaries = []
+
+[exports]
+aliases = false
+completions = []
+prompt_segments = []
+hooks = ["startup", "chpwd"]
+commands = ["lwd"]
+keybindings = []
+themes = []
+
+[source]
+entry = "packs/last-working-dir/init.niu"

@@ -1,0 +1,23 @@
+[package]
+name = "pi_opencode_native"
+version = "1.0.0"
+edition = "2024"
+description = "OpenCode + OpenTUI inspired Rust native zero-copy file index, unified diff engine, and Win32/POSIX workspace isolation primitives for Bun FFI"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_System_SystemInformation",
+  "Win32_System_Threading",
+] }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+panic = "abort"

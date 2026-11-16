@@ -1,0 +1,31 @@
+# oh-my-niu last-working-dir plugin
+# Restores the last directory at startup and records it after cd.
+
+__niubash_lwd_cache_dir=${NIU_CACHE_HOME:-${XDG_CACHE_HOME:-$HOME/.cache}/niubash}
+__niubash_lwd_cache_file=${NIU_LAST_WORKING_DIR_FILE:-$__niubash_lwd_cache_dir/last-working-dir}
+
+__niubash_lwd_restore() {
+  [ -f "$__niubash_lwd_cache_file" ] || return 0
+  IFS= read -r __niubash_lwd_target < "$__niubash_lwd_cache_file" || return 0
+  [ -n "$__niubash_lwd_target" ] && [ -d "$__niubash_lwd_target" ] && cd "$__niubash_lwd_target"
+}
+
+__niubash_lwd_save() {
+  mkdir -p "$__niubash_lwd_cache_dir" 2>/dev/null || return 0
+  printf '%s\n' "$PWD" > "$__niubash_lwd_cache_file"
+}
+
+lwd() {
+  if [ -f "$__niubash_lwd_cache_file" ]; then
+    cat "$__niubash_lwd_cache_file"
+  fi
+}
+
+case "$NIU_PLUGIN_HOOK" in
+  startup)
+    __niubash_lwd_restore
+    ;;
+  chpwd)
+    __niubash_lwd_save
+    ;;
+esac

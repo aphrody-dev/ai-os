@@ -1,0 +1,36 @@
+# LLM provider inventory sources, read by frameworks/ai-os/src/providers/cli.ts (`ai-os providers` ; `just ai-providers`, workflow ai-providers.yml).
+# Add a registry: one [[source]] entry, no code change.
+# kind = "openrouter" | "modelsdev" | "litellm" | "arena" (how the JSON is read); url may be a repo path.
+# Recursion: every provider found with a public `api` base URL is probed at <api>/models (OpenAI-compatible
+# listing, no key); `depth = 0` disables it. Results: docs/ai/providers.json (data) and docs/ai/PROVIDERS.md.
+
+[settings]
+depth = 1
+concurrency = 16
+timeout_ms = 15000
+
+[[source]]
+name = "openrouter"
+kind = "openrouter"
+url = "https://openrouter.ai/api/v1/models"
+
+# models.dev = anomalyco/models.dev (fork aphrody-labs/models.dev, pinned in src.lock.json): `dir` is the checkout, read first
+# (providers/*/provider.toml + providers/*/models/**/*.toml, the repo is the source of the published api.json);
+# `url` is the fallback when the checkout is absent. Same output format either way.
+[[source]]
+name = "models.dev"
+kind = "modelsdev"
+dir = "third_party/models.dev"
+url = "https://models.dev/api.json"
+
+[[source]]
+name = "litellm"
+kind = "litellm"
+url = "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
+
+# arena.ai (LMArena) blocks non-browser clients: docs/ai/arena.json is captured through Claude in Chrome
+# (organizations, model counts, best rank on the text leaderboard).
+[[source]]
+name = "arena"
+kind = "arena"
+url = "docs/ai/arena.json"

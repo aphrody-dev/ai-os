@@ -1,0 +1,16 @@
+{
+  "$comment": "Release of aphrody-labs/open consumed by ai-os (docs/libraries.md of that repository): the Bun package @aphrody/ai-router is a tarball of the release, its native library an asset of the same release, verified against the digest GitHub reports for the asset.",
+  "repo": "aphrody-labs/open",
+  "tag": "libraries-v0.4.0",
+  "rev": "d5676f7c4945524e17da57aeaad1840d68e0ff10",
+  "assets": {
+    "win32": "windows-ai_router.dll",
+    "linux": "linux-libai_router.so",
+    "darwin": "macos-libai_router.dylib"
+  },
+  "file": {
+    "win32": "ai_router.dll",
+    "linux": "libai_router.so",
+    "darwin": "libai_router.dylib"
+  }
+}

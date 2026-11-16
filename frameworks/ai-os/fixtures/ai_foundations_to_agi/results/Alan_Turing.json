@@ -1,0 +1,47 @@
+{
+  "name": "Alan Turing",
+  "source_url": "https://fr.wikipedia.org/wiki/Alan_Turing",
+  "category": "Theoretical Foundations of Computation & AI",
+  "era_and_date": "23 June 1912 – 7 June 1954 (Foundational AI & Computability works: 1936–1954; Royal Pardon: 2013)",
+  "authors_or_protagonists": [
+    "Alan Mathison Turing",
+    "Alonzo Church (PhD advisor at Princeton, Church-Turing thesis)",
+    "Max Newman (Cambridge logic mentor & Manchester Computing Machine Laboratory)",
+    "Gordon Welchman (co-architect of the electromechanical Bombe at Bletchley Park)",
+    "Christopher Morcom (early intellectual companion at Sherborne School)"
+  ],
+  "core_thesis_or_definition": "Founder of theoretical computer science and pioneer of artificial intelligence. By formalizing the intuitive notion of an 'effective procedure' via an abstract symbol-manipulating tape machine (1936), Turing proved the undecidability of the Halting Problem and Hilbert's Entscheidungsproblem while inventing the Universal Turing Machine (stored-program computing). In 1950, he reframed 'Can machines think?' into an operational behavioral benchmark: the Imitation Game (Turing Test).",
+  "key_mathematical_or_architectural_mechanisms": [
+    "a-machine (Turing Machine, 1936): finite state table, infinite discrete tape, read/write/shift head executing deterministic state transitions.",
+    "Universal Turing Machine (UTM): a single fixed machine capable of simulating any arbitrary Turing machine by reading its encoded transition table as data on the tape (foundation of stored-program architecture).",
+    "Oracle Machines / o-machines (1938 Princeton PhD): hypercomputation framework analyzing relativized decidability and ordinal logics.",
+    "Electromechanical Cryptanalytic Bombe & Banburismus (1939–1942): parallelized logical contradiction pruning and sequential Bayesian weight-of-evidence (decibans) to break Luftwaffe and Kriegsmarine Naval Enigma.",
+    "Automatic Computing Engine (ACE, 1945) & Manchester Mark 1 Programming (1948–1950): detailed stored-program electronic computer specification utilizing mercury delay lines and optimum coding.",
+    "The Imitation Game & Child Machine Hypothesis (1950): behavioral evaluation via teleprinter dialogue alongside the proposal to train an unorganized 'child-brain' machine via reinforcement (rewards and punishments) rather than hand-coding adult rules.",
+    "Reaction-Diffusion Morphogenesis (1952): coupled partial differential equations explaining spontaneous biological symmetry breaking and pattern formation (Turing patterns)."
+  ],
+  "computational_complexity_and_expressivity": "Defines the exact upper bound of algorithmic computability (recursively enumerable languages / Type-0 in the Chomsky hierarchy) under the Church-Turing thesis. Proves via diagonalization that the Halting Problem is undecidable and that almost all real numbers are uncomputable. Requires O(T) sequential state transitions for T computation steps.",
+  "historical_milestones_and_benchmarks": [
+    "1936: Publishes 'On Computable Numbers, with an Application to the Entscheidungsproblem' (Proceedings of the London Mathematical Society).",
+    "1938: Completes PhD at Princeton ('Systems of Logic Based on Ordinals') under Alonzo Church; proves equivalence of Turing machines and lambda-calculus.",
+    "1939–1945: Leads Hut 8 at Bletchley Park; Bombe machines decrypt thousands of Enigma messages daily, shortening WWII in Europe by an estimated two years.",
+    "1945–1950: Designs ACE at NPL; writes the Programmers' Handbook for the Manchester Mark 1 following Baby's June 1948 first stored-program run.",
+    "1950: Publishes 'Computing Machinery and Intelligence' in Mind, refuting nine philosophical/mathematical objections to machine intelligence and predicting ~30% judge deception within 5 minutes by the year 2000.",
+    "1952–1954: Convicted under Section 11 of the Criminal Law Amendment Act 1885 and subjected to chemical castration; dies of cyanide poisoning on 7 June 1954 [uncertain] whether intentional suicide, as ruled at inquest, or accidental inhalation from potassium cyanide electroplating apparatus as argued by biographer Jack Copeland.",
+    "2013 & 2017: Granted posthumous Royal Pardon by Queen Elizabeth II (2013), inspiring the UK 'Alan Turing Law' (2017) and appearance on the Bank of England £50 polymer note (2021)."
+  ],
+  "bridge_to_agi": "Turing established both the substrate guarantee and the developmental roadmap for AGI: (1) Universality guarantees that a single general-purpose hardware substrate can run any computable cognitive process without hardware redesign; (2) Section 7 ('Learning Machines') of his 1950 paper explicitly anticipated modern machine learning and RLHF by arguing that human-level intelligence should be grown from a 'child machine' via experiential learning and evolutionary search.",
+  "fundamental_limitations_and_open_problems": [
+    "Gödel-Turing Undecidability: No consistent formal or algorithmic system can decide all mathematical truths or solve the general Halting Problem.",
+    "Behavioral vs. Cognitive Sufficiency of the Turing Test: Large language models now routinely pass conversational Turing Tests via statistical persona mimicry without necessarily possessing grounded causal world models or autonomous agency.",
+    "Physical & Complexity Constraints: Turing computability ignores polynomial-time tractability (P vs NP) and energy/memory bottlenecks."
+  ],
+  "status_in_2026": "Foundational bedrock of computer science and AI theory. While conversational Turing Tests have been surpassed by frontier LLMs (prompting harder benchmarks like ARC-AGI-2), Turing completeness remains the central formal yardstick for analyzing whether fixed-precision Transformers vs. external-memory AI agents can execute arbitrary multi-step algorithms (e.g., Qiao et al., Sep 2026, arXiv:2609.20335).",
+  "primary_references": [
+    "Turing, A. M. (1936). On Computable Numbers, with an Application to the Entscheidungsproblem. Proc. London Math. Soc., s2-42(1), 230-265.",
+    "Turing, A. M. (1950). Computing Machinery and Intelligence. Mind, 59(236), 433-460.",
+    "Turing, A. M. (1952). The Chemical Basis of Morphogenesis. Phil. Trans. R. Soc. Lond. B, 237(641), 37-72.",
+    "Wikipedia FR (2026). Alan Turing — https://fr.wikipedia.org/wiki/Alan_Turing"
+  ],
+  "uncertain": ["historical_milestones_and_benchmarks"]
+}

@@ -1,0 +1,24 @@
+{
+  "role": "coder",
+  "host": "fr1",
+  "prompt": "Weekly dependency update (upstream tools only: `just deps-bump` = ay lock --deps --bump, then `just deps-lock`; if those recipes are missing use `bun update` at the root and `cargo update -w`). Keep within declared requirements, no major bumps. Then run `just checkdeps`, `cargo check --workspace` and `just test`; if a bump breaks them, revert that single bump and retry. Stop when the gates pass. Do not commit: the runner commits.",
+  "check": "just checkdeps && cargo check --workspace --quiet",
+  "commit": {
+    "paths": [
+      "Cargo.lock",
+      "bun.lock",
+      "uv.lock",
+      "src.lock.json",
+      "package.json",
+      "Cargo.toml",
+      "packages",
+      "crates",
+      "apps",
+      "build",
+      "device",
+      "prebuilts",
+      "tools"
+    ],
+    "message": "deps : mise à jour hebdomadaire dans les bornes déclarées (tâche agent coder, fr1)"
+  }
+}

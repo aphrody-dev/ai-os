@@ -1,0 +1,66 @@
+# Alias asset loader for framework plugins.
+#
+# The current official alias assets are simple TOML:
+#
+#   [aliases]
+#   gst = 'git status'
+#   "drm!" = 'docker container rm -f'
+#
+# This loader intentionally supports that small shape only. It keeps alias
+# ownership in plugins while reusing the reviewed bundle asset tables during
+# migration away from host-owned builtin alias packs.
+
+__omw_trim_spaces() {
+  __omw_trim_value="$1"
+  while [ "${__omw_trim_value# }" != "$__omw_trim_value" ]; do
+    __omw_trim_value=${__omw_trim_value# }
+  done
+  while [ "${__omw_trim_value% }" != "$__omw_trim_value" ]; do
+    __omw_trim_value=${__omw_trim_value% }
+  done
+  printf "%s" "$__omw_trim_value"
+}
+
+niubash_load_alias_asset() {
+  __omw_alias_pack="$1"
+  __omw_alias_file="$NIUBASH/aliases/$__omw_alias_pack.toml"
+  __omw_alias_sq="'"
+  __omw_alias_dq='"'
+  __omw_alias_cr=$(printf '\r')
+
+  [ -f "$__omw_alias_file" ] || return 0
+
+  while IFS= read -r __omw_alias_line || [ -n "$__omw_alias_line" ]; do
+    __omw_alias_line=${__omw_alias_line%$__omw_alias_cr}
+
+    case "$__omw_alias_line" in
+      ""|\#*|\[*\])
+        continue
+        ;;
+      *=*) ;;
+      *) continue ;;
+    esac
+
+    __omw_alias_name=${__omw_alias_line%%=*}
+    __omw_alias_value=${__omw_alias_line#*=}
+    __omw_alias_name="$(__omw_trim_spaces "$__omw_alias_name")"
+    __omw_alias_value="$(__omw_trim_spaces "$__omw_alias_value")"
+
+    if [ "${__omw_alias_name#$__omw_alias_dq}" != "$__omw_alias_name" ]; then
+      __omw_alias_name=${__omw_alias_name#$__omw_alias_dq}
+      __omw_alias_name=${__omw_alias_name%$__omw_alias_dq}
+    fi
+
+    if [ "${__omw_alias_value#$__omw_alias_sq}" != "$__omw_alias_value" ]; then
+      __omw_alias_value=${__omw_alias_value#$__omw_alias_sq}
+      __omw_alias_value=${__omw_alias_value%$__omw_alias_sq}
+    fi
+    if [ "${__omw_alias_value#$__omw_alias_dq}" != "$__omw_alias_value" ]; then
+      __omw_alias_value=${__omw_alias_value#$__omw_alias_dq}
+      __omw_alias_value=${__omw_alias_value%$__omw_alias_dq}
+    fi
+
+    [ -n "$__omw_alias_name" ] || continue
+    alias "$__omw_alias_name=$__omw_alias_value"
+  done < "$__omw_alias_file"
+}

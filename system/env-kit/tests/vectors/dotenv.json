@@ -1,0 +1,14 @@
+{
+  "PLAIN": "plain",
+  "COMMENTED": "plain",
+  "SPACED": "spaced",
+  "EXPORTED": "exp",
+  "WITH_EQ": "a=b",
+  "HASH_IN_VALUE": "a#b",
+  "DQ": "quoted value",
+  "DQ_COMMENT": "quoted",
+  "DQ_ESC": "line\nnext\ttab \"q\" back\\slash",
+  "SQ": "single \\n kept",
+  "EMPTY": "",
+  "KEY_SPACES": "v"
+}

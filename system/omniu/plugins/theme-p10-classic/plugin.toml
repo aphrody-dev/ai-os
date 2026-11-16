@@ -1,0 +1,10 @@
+name = "theme-p10-classic"
+version = "1.0.1"
+kind = "source"
+entry = "theme-p10-classic.plugin.niu"
+summary = "Powerlevel-style classic official prompt theme plugin."
+permissions = ["shell:source"]
+required_binaries = []
+
+[exports]
+themes = ["p10-classic"]

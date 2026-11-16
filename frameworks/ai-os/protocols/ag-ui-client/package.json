@@ -1,0 +1,72 @@
+{
+  "name": "@aphrody/ag-ui-client",
+  "version": "1.0.1-aphrody.1",
+  "agui": {
+    "protocolVersion": "1.0"
+  },
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/types/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "bun": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "build": "bun build src/index.ts --target node --packages external --outfile dist/index.mjs && tsc --noEmit false --declaration --emitDeclarationOnly --outDir dist/types --rootDir src",
+    "prepack": "bun run build",
+    "test:upstream": "vitest run"
+  },
+  "dependencies": {
+    "@ag-ui/core": "1.0.1",
+    "@ag-ui/encoder": "1.0.1",
+    "@ag-ui/proto": "1.0.1",
+    "compare-versions": "^6.1.1",
+    "fast-json-patch": "^3.1.1",
+    "rxjs": "7.8.1",
+    "untruncate-json": "^0.0.1",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.76 || ^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.3",
+    "@types/uuid": "^10.0.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3",
+    "bun-types": "^1.4.2"
+  },
+  "engines": {
+    "bun": ">=1.4.2"
+  },
+  "description": "AG-UI client with stream error draining and HTTP cancellation fixes.",
+  "author": "aphrody-dev <contact@aphrody.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphrody-labs/ag-ui-client.git"
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md",
+    "tsconfig.json",
+    "!src/**/__tests__/**",
+    "!src/**/*.test.ts",
+    "!src/**/__fixtures__/**",
+    "dist",
+    "UPSTREAM.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
