@@ -10,6 +10,8 @@ const fake = {
       "..",
       "..",
       "..",
+      "..",
+      "system",
       "omniu",
       "test",
       "fixtures",

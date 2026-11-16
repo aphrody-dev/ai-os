@@ -1,0 +1,3 @@
+# Repository root for include!/include_str! paths and build scripts (system/core/build.rs).
+[env]
+SRC_ROOT = { value = ".", relative = true }

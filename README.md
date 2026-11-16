@@ -18,18 +18,25 @@ The tree is generated, not copied by hand: [`extract.toml`](extract.toml) select
 
 ```sh
 bun install
-bun test frameworks/ai-os/test          # Bun packages
-cargo check --workspace --all-targets   # Rust crates
+bun test ./frameworks/ai-os/test        # Bun packages
+cargo check --workspace --all-targets   # Rust workspace members
+bun tools/crates.ts                     # the standalone crates, one cargo check each
 bun frameworks/ai-os/src/relay/cli.ts serve      # relay on 127.0.0.1:8790
 bun frameworks/ai-os/src/relay/cli.ts mcp-stdio  # the same MCP server over stdio
 ```
 
+## Related repositories
+
+- [aphrody-labs/open](https://github.com/aphrody-labs/open): the open ecosystem monorepo (opencode, opentui, models.dev, `@aphrody/ai-router`, ...). Consumed as a dependency, not copied; legacy `apps/open` is a README stub.
+- [aphrody-labs/auto](https://github.com/aphrody-labs/auto): workflow automation, office suite and scraping. Already standalone; legacy `apps/auto` is an annotated copy of it, not a source.
+- [aphrody-dev/ay](https://github.com/aphrody-dev/ay): the product-first rebuild of the rest of legacy, including the `ay` CLI. This repository holds the AI part (`ay ai` is `system/ay/src/ai.rs` in legacy, `tools/ai` here).
+
 ## Rebuild from legacy
 
 ```sh
-git clone https://github.com/aphrody-labs/legacy ../legacy
+git init ../legacy-rev && git -C ../legacy-rev fetch --depth 1 https://github.com/aphrody-labs/legacy <rev> && git -C ../legacy-rev checkout FETCH_HEAD
 bun tools/extract.ts [--rev=<sha>]   # rewrites the tree and the rev in extract.toml
-bun tools/closure.ts ../legacy <unit>...   # what a unit pulls in, with sizes
+bun tools/closure.ts ../legacy-rev <unit>...   # what a unit pulls in, with sizes
 ```
 
 License: MIT OR Apache-2.0 ([LICENSE.md](LICENSE.md)).

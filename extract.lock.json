@@ -7,6 +7,7 @@
     ".github/workflows/ai-providers.yml",
     ".github/workflows/claude.yml",
     ".github/workflows/jules.yml",
+    "device/os/unixwin/applets.toml",
     "docs/ai",
     "docs/proofs/ai-os-interop-2026-11-13.md",
     "docs/reviews",
@@ -110,6 +111,14 @@
     "system/wck"
   ],
   "members": [
+    "frameworks/agent/context",
+    "frameworks/rag-core",
+    "frameworks/ring3-agent",
+    "system/config",
+    "system/core",
+    "system/vault"
+  ],
+  "standalone": [
     "frameworks/a2a",
     "frameworks/a2a-client",
     "frameworks/a2a-coord",
@@ -121,7 +130,6 @@
     "frameworks/agent-proto",
     "frameworks/agent-runtime",
     "frameworks/agent-tools",
-    "frameworks/agent/context",
     "frameworks/antigravity",
     "frameworks/boq",
     "frameworks/embed",
@@ -141,12 +149,7 @@
     "frameworks/model-client",
     "frameworks/models",
     "frameworks/rag",
-    "frameworks/rag-core",
-    "frameworks/ring3-agent",
-    "system/config",
-    "system/core",
-    "system/jev",
-    "system/vault"
+    "system/jev"
   ],
   "rustWorkspaceDepsMissing": []
 }

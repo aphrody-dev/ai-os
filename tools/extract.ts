@@ -109,10 +109,13 @@ writeFileSync(join(here, "package.json"), `${JSON.stringify(rootPkg, null, 2)}\n
 const legacyToml = await sh(legacy, "git", "show", `${rev}:Cargo.toml`);
 const parsed = Bun.TOML.parse(legacyToml) as { workspace: { members: string[]; package: Record<string, string> } };
 const legacyMembers = new Set(parsed.workspace.members);
-// Every extracted crate is a member: some are workspace members of the legacy repository, the others are standalone published crates.
-void legacyMembers;
-const members = units.filter((u) => existsSync(join(here, u, "Cargo.toml"))).sort();
-const crateName = (m: string) => readFileSync(join(here, m, "Cargo.toml"), "utf8").match(/^\[package\][^[]*?^name\s*=\s*"([^"]+)"/ms)?.[1];
+// Members: the extracted crates that are members of the legacy workspace. The others are standalone published crates, each with its own
+// dependency graph (native libraries such as sqlite3 may conflict across them): they are excluded and checked one by one (tools/crates.ts).
+const crates = units.filter((u) => existsSync(join(here, u, "Cargo.toml"))).sort();
+// A crate that inherits from the workspace root (`workspace = true`) cannot be excluded: it is a member too.
+const inherits = (u: string) => /workspace\s*=\s*true/.test(readFileSync(join(here, u, "Cargo.toml"), "utf8"));
+const members = crates.filter((u) => legacyMembers.has(u) || inherits(u));
+const standalone = crates.filter((u) => !members.includes(u));
 
 const section = (header: string) => {
   const lines = legacyToml.split("\n");
@@ -166,6 +169,9 @@ resolver = "3"
 members = [
 ${members.map((m) => `  "${m}",`).join("\n")}
 ]
+exclude = [
+${standalone.map((m) => `  "${m}",`).join("\n")}
+]
 
 [workspace.package]
 ${Object.entries({ ...pkg, authors: ["aphrody-dev"], repository: cfg["package-json"].repository, homepage: cfg["package-json"].repository }).map(([k, v]) => `${k} = ${JSON.stringify(v)}`).join("\n")}
@@ -175,10 +181,6 @@ ${deps.join("\n")}
 
 ${lints("rust")}
 ${lints("clippy")}
-# The extracted crates resolve each other from this tree, not from the registry.
-[patch.crates-io]
-${members.flatMap((m) => { const n = crateName(m); return n ? [`${n} = { path = "${m}" }`] : []; }).join("\n")}
-
 [profile.dev]
 opt-level = 0
 debug = "line-tables-only"
@@ -208,8 +210,8 @@ for (const f of ["bunfig.toml", ".gitattributes", "DEPS.rules"]) {
 
 writeFileSync(
   lockPath,
-  `${JSON.stringify({ source: cfg.source.repo, rev, roots: top, units, members, rustWorkspaceDepsMissing: missing }, null, 2)}\n`,
+  `${JSON.stringify({ source: cfg.source.repo, rev, roots: top, units, members, standalone, rustWorkspaceDepsMissing: missing }, null, 2)}\n`,
 );
-console.log(`extracted ${units.length} units (${tsUnits.length} TypeScript, ${members.length} Rust) at ${rev.slice(0, 9)}`);
+console.log(`extracted ${units.length} units (${tsUnits.length} TypeScript, ${members.length} Rust workspace members, ${standalone.length} standalone crates) at ${rev.slice(0, 9)}`);
 if (missing.length) console.warn(`workspace dependencies without a legacy entry: ${missing.join(", ")}`);
 mkdirSync(join(here, "docs"), { recursive: true });

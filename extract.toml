@@ -3,7 +3,7 @@
 
 [source]
 repo = "aphrody-labs/legacy"
-checkout = "../legacy"                 # local checkout of the legacy repository, relative to this repository
+checkout = "../legacy-rev"             # checkout of the pinned rev, relative to this repository (CI fetches the same rev)
 rev = "cf409c1643e8cf2765740453f47752a745957f4b"
 
 [select]
@@ -31,6 +31,7 @@ paths = [
   ".github/workflows/ai-providers.yml",
   ".github/workflows/jules.yml",
   ".github/workflows/claude.yml",
+  "device/os/unixwin/applets.toml",
   "docs/ai",
   "docs/reviews",
   ".claude/agents",
@@ -51,3 +52,13 @@ exclude = [
 # Dependencies on units that are not taken (other products); the code reaching them is optional.
 drop-dependencies = ["@aphrody/design"]
 repository = "https://github.com/aphrody-dev/ai-os"
+
+
+[crates]
+# Standalone crates that do not build, and why. tools/crates.ts reports them without failing; a crate that starts to build is reported too.
+[crates.known-failing]
+"frameworks/memory" = "aphrody-memory asks rusqlite ^0.42 while its dependency aphrody-sql 1.4.7 asks ^0.40: two libsqlite3-sys, one native library"
+"frameworks/rag" = "same sqlite3 conflict (aphrody-code-graph 1.4.7 asks rusqlite ^0.40)"
+"frameworks/agent-runtime" = "same sqlite3 conflict through aphrody-google"
+"frameworks/agent-tools" = "same sqlite3 conflict through aphrody-google"
+"frameworks/google" = "bun-os-google 1.4.7 asks rusqlite ^0.40, the workspace crates ^0.42"
