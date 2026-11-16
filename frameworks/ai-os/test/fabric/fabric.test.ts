@@ -10,10 +10,13 @@ const { coordinatorArgs, loadFabric, reachable, remoteLine, tensorSplit } =
   await import("../../src/fabric/index.ts");
 
 const f = loadFabric();
-
 // Node addresses are expanded from the host inventory of the machine (@@hosts.<id>.mesh_ip@@): without it they stay placeholders.
-const MESH = f.node.filter((x) => x.os === "linux").every((n) => /^10\./.test(n.bind));
-test.skipIf(!MESH)("fabric.toml: local coordinator, nodes bound to WireGuard, pinned binaries", () => {
+const MESH = f.node
+  .filter((x) => x.os === "linux")
+  .every((n) => /^10\./.test(n.bind ?? ""));
+
+test("fabric.toml: local coordinator, nodes bound to WireGuard, pinned binaries", () => {
+  if (!MESH) return;
   expect(f.coordinator.host).toBe("127.0.0.1");
   expect(f.release.tag).toMatch(/^b\d+$/);
   for (const n of f.node.filter((x) => x.os === "linux")) {

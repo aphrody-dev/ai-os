@@ -85,5 +85,7 @@ test("Stop hook blocks while mail is pending, then lets the session stop", async
 
 test("unknown and ambiguous recipients are errors", () => {
   expect(() => S.send("aaaa1111", "zzzz", "x")).toThrow(/unknown session/);
-  expect(() => S.send("aaaa1111", "claude-code-aphrody", "x")).toThrow(/ambiguous/);
+  expect(() => S.send("aaaa1111", "claude-code-aphrody", "x")).toThrow(
+    /ambiguous/,
+  );
 });
