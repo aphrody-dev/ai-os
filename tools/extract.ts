@@ -54,7 +54,7 @@ rmSync(tar);
 // 3. Exclusions.
 const glob = (p: string) => new Bun.Glob(p);
 for (const pat of cfg.select.exclude)
-  for (const f of glob(pat).scanSync({ cwd: here, onlyFiles: true, dot: true }))
+  for (const f of [...glob(pat).scanSync({ cwd: here, onlyFiles: true, dot: true })].map((p) => p.replaceAll("\\", "/")))
     if (top.some((t) => f.startsWith(`${t}/`) || f === t)) rmSync(join(here, f), { force: true });
 
 // 3b. Patches of this repository over the extracted tree (patches/*.patch, applied in name order): fixes of legacy assumptions.
