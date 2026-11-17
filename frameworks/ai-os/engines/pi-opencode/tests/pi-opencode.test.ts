@@ -36,10 +36,10 @@ describe("pi-opencode: Rust Native FFI & Torvalds Userspace Guard", () => {
 
   test("blocks the host system directories while allowing workspace paths", () => {
     if (process.platform === "win32") {
-      expect(isSafeWorkspacePath("C:\\Windows\\System32\\cmd.exe")).toBe(false); // paths:ok
-      expect(isSafeWorkspacePath("C:\\Program Files\\Vendor\\x.exe")).toBe(
-        false,
-      ); // paths:ok
+      const system = String.raw`C:\Windows\System32\cmd.exe`; // paths:ok
+      const programs = String.raw`C:\Program Files\Vendor\x.exe`; // paths:ok
+      expect(isSafeWorkspacePath(system)).toBe(false);
+      expect(isSafeWorkspacePath(programs)).toBe(false);
     } else {
       expect(isSafeWorkspacePath("/usr/bin/bash")).toBe(false);
       expect(isSafeWorkspacePath("/etc/passwd")).toBe(false);
