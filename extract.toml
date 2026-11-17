@@ -37,6 +37,10 @@ paths = [
   ".claude/agents",
   "prebuilts/up/tools.toml",
   "docs/proofs/ai-os-interop-2026-11-13.md",
+  # Pet data of the identity package (system/env-kit/identity): its tests and runtime read these files.
+  "system/identity/assets/aphrody/animations.json",
+  "system/identity/assets/aphrody/web.json",
+  "system/identity/tests/fixtures/parite-web.json",
 ]
 # Removed after extraction: binaries and build outputs that are not reproducible sources.
 exclude = [
