@@ -42,10 +42,11 @@ function findSrcRoot(): string {
 }
 
 export async function startTermServer(opts: TermServerOptions = {}) {
-  const host = opts.host ?? Bun.env.AY_TERM_HOST ?? "127.0.0.1";
-  const port = opts.port ?? Number(Bun.env.AY_TERM_PORT ?? 8795);
+  const host = opts.host ?? Bun.env.AI_OS_TERM_HOST ?? Bun.env.AY_TERM_HOST ?? "127.0.0.1";
+  const port = opts.port ?? Number(Bun.env.AI_OS_TERM_PORT ?? Bun.env.AY_TERM_PORT ?? 8795);
   const token =
     opts.token ??
+    Bun.env.AI_OS_TERM_TOKEN ??
     Bun.env.AY_TERM_TOKEN ??
     Buffer.from(crypto.getRandomValues(new Uint8Array(24))).toString("hex");
   const sessionSecret = makeSessionHmac(token);

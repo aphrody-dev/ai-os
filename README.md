@@ -34,9 +34,10 @@ bun frameworks/ai-os/src/relay/cli.ts mcp-stdio  # the same MCP server over stdi
 ## Rebuild from legacy
 
 ```sh
-git init ../legacy-rev && git -C ../legacy-rev fetch --depth 1 https://github.com/aphrody-labs/legacy <rev> && git -C ../legacy-rev checkout FETCH_HEAD
-bun tools/extract.ts [--rev=<sha>]   # rewrites the tree and the rev in extract.toml
-bun tools/closure.ts ../legacy-rev <unit>...   # what a unit pulls in, with sizes
+bun tools/extract.ts [--rev=<sha>]   # fetches the pinned rev into .cache/legacy-rev (gitignored), rewrites the tree and the rev in extract.toml
+bun tools/closure.ts .cache/legacy-rev <unit>...   # what a unit pulls in, with sizes
 ```
+
+A local clone of legacy replaces the cache with `AI_OS_LEGACY_CHECKOUT=<path>`; without network and without a checkout the extraction is skipped.
 
 License: MIT OR Apache-2.0 ([LICENSE.md](LICENSE.md)).

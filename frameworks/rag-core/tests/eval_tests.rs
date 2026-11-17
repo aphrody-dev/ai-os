@@ -330,11 +330,14 @@ fn compare_flags_per_tag_recall5_regression() {
 
 #[test]
 fn gold_file_parses_when_present() {
-    // `SHENRON_ROOT` overrides the sibling checkout next to this repository.
-    let shenron = std::env::var_os("SHENRON_ROOT").map_or_else(
-        || std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../shenron"),
-        std::path::PathBuf::from,
-    );
+    // Another repository's file: read from the checkout named by `AI_OS_SHENRON_ROOT` (alias `SHENRON_ROOT`), skipped when none is given.
+    let Some(shenron) = std::env::var_os("AI_OS_SHENRON_ROOT")
+        .or_else(|| std::env::var_os("SHENRON_ROOT"))
+        .map(std::path::PathBuf::from)
+    else {
+        eprintln!("note: AI_OS_SHENRON_ROOT not set; skipping gold-file parity check");
+        return;
+    };
     let path = shenron.join("apps/bot/tests/rag-gold.jsonl");
     let path = path.as_path();
     if !path.exists() {

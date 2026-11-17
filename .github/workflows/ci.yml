@@ -34,19 +34,11 @@ jobs:
       - run: bun tools/crates.ts --jobs=2
   extract:
     # The tree is the output of tools/extract.ts at the rev pinned in extract.toml: running it again must change nothing.
+    # The tool fetches that rev into .cache/legacy-rev by itself and skips when it cannot.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
-        with: { path: ai-os }
       - uses: oven-sh/setup-bun@v2
-      - name: Fetch the pinned legacy rev
-        run: |
-          rev=$(sed -n 's/^rev = "\(.*\)"/\1/p' ai-os/extract.toml)
-          git init -q legacy-rev
-          git -C legacy-rev fetch -q --depth 1 https://github.com/aphrody-labs/legacy "$rev"
-          git -C legacy-rev checkout -q FETCH_HEAD
       - run: bun tools/extract.ts
-        working-directory: ai-os
       - run: git diff --exit-code
-        working-directory: ai-os

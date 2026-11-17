@@ -1,0 +1,14 @@
+# Names of this repository. The scheme it is checked against: https://github.com/aphrody-labs/.github/blob/main/naming/NAMING.md
+id = "ai-os"
+kind = "ai"
+org = "aphrody-dev"
+
+# Names published from the legacy monorepo before the AI surface had its own repository. Registries never free a name: they stay until
+# this repository's release pipeline publishes the ai-os-* replacements. New crates, packages and variables use the ai-os names.
+[legacy]
+crates = ["aphrody-", "agent-context"]
+npm = [
+  "@aphrody/a2a", "@aphrody/ag-ui", "@aphrody/ag-ui-client", "@aphrody/agent-browser", "@aphrody/gemma-web", "@aphrody/identity",
+  "@aphrody/inference", "@aphrody/mcp-ui", "@aphrody/paths", "@aphrody/rag-core", "@aphrody/xai",
+]
+env = ["APHRODY_"]

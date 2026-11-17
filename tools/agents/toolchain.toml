@@ -43,11 +43,6 @@ state = "absent"
 name = "android-skills"
 state = "absent"
 
-[[claude.marketplace]]
-name = "rosegriffon-plugins"
-path = "../rosegriffon"
-hosts = ["pc"]
-
 # --- Aphrody plugins (kept) ---
 [[claude.plugin]]
 id = "aphrody-skills@aphrody"

@@ -3,7 +3,7 @@
 
 [source]
 repo = "aphrody-labs/legacy"
-checkout = "../legacy-rev"             # checkout of the pinned rev, relative to this repository (CI fetches the same rev)
+checkout = ".cache/legacy-rev"          # cache inside this repository (gitignored), fetched at the pinned rev; AI_OS_LEGACY_CHECKOUT points at a local clone instead
 rev = "cf409c1643e8cf2765740453f47752a745957f4b"
 
 [select]

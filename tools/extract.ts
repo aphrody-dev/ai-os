@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 // Builds this repository from the legacy monorepo as declared in extract.toml: dependency closure of the seeds (tools/closure.ts),
 // `git archive` of the pinned rev, exclusions, root manifests (package.json, Cargo.toml), and extract.lock.json.
-// Usage: bun tools/extract.ts [--rev=<sha>]   (the rev is rewritten into extract.toml when given)
+// Usage: bun tools/extract.ts [--rev=<sha>]   (the rev is rewritten into extract.toml when given; the source is fetched into .cache/legacy-rev when absent)
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { resolve as nativeResolve } from "node:path";
 import { join } from "node:path/posix";
@@ -16,7 +16,10 @@ const cfg = Bun.TOML.parse(readFileSync(cfgPath, "utf8")) as {
 };
 const arg = (k: string) => Bun.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
 
-const legacy = abs(here, cfg.source.checkout);
+// The checkout of the source is a cache inside this repository (gitignored), fetched here at the pinned rev. AI_OS_LEGACY_CHECKOUT points
+// at a local clone instead; it is read, never created.
+const override = Bun.env.AI_OS_LEGACY_CHECKOUT;
+const legacy = abs(here, override ?? cfg.source.checkout);
 const sh = async (cwd: string, ...cmd: string[]) => {
   const p = Bun.spawn(cmd, { cwd, stdout: "pipe", stderr: "pipe" });
   const [out, err, code] = await Promise.all([new Response(p.stdout).text(), new Response(p.stderr).text(), p.exited]);
@@ -25,6 +28,19 @@ const sh = async (cwd: string, ...cmd: string[]) => {
 };
 
 let rev = arg("rev") ?? cfg.source.rev;
+const hasRev = (r: string) => sh(legacy, "git", "cat-file", "-e", `${r}^{commit}`).then(() => true, () => false);
+if (!(existsSync(join(legacy, ".git")) && (await hasRev(rev)))) {
+  if (override) throw new Error(`AI_OS_LEGACY_CHECKOUT=${override} is not a checkout containing ${rev}`);
+  try {
+    mkdirSync(legacy, { recursive: true });
+    await sh(legacy, "git", "init", "-q");
+    await sh(legacy, "git", "fetch", "-q", "--depth", "1", `https://github.com/${cfg.source.repo}`, rev);
+    await sh(legacy, "git", "checkout", "-q", "FETCH_HEAD");
+  } catch (e) {
+    console.log(`skipped: ${cfg.source.repo}@${rev} is not available (${(e as Error).message.split("\n")[0]}); nothing extracted`);
+    process.exit(0);
+  }
+}
 rev = (await sh(legacy, "git", "rev-parse", rev)).trim();
 if (rev !== cfg.source.rev) writeFileSync(cfgPath, readFileSync(cfgPath, "utf8").replace(/^rev = ".*"/m, `rev = "${rev}"`));
 
@@ -93,7 +109,7 @@ const rootPkg = {
   workspaces: { packages: tsUnits, catalog },
   scripts: {
     extract: "bun tools/extract.ts",
-    closure: "bun tools/closure.ts ../legacy",
+    closure: "bun tools/closure.ts .cache/legacy-rev",
     test: "bun test frameworks/ai-os/test",
     check: "bun check",
     fmt: "bun fmt",

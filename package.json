@@ -22,7 +22,7 @@
   },
   "scripts": {
     "extract": "bun tools/extract.ts",
-    "closure": "bun tools/closure.ts ../legacy",
+    "closure": "bun tools/closure.ts .cache/legacy-rev",
     "test": "bun test frameworks/ai-os/test",
     "check": "bun check",
     "fmt": "bun fmt"
