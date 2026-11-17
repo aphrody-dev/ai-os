@@ -5,7 +5,6 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { resolve as nativeResolve } from "node:path";
 import { join } from "node:path/posix";
-import { withFirstParty } from "./first-party.ts";
 
 const abs = (...p: string[]) => nativeResolve(...p).replaceAll("\\", "/");
 const here = abs(import.meta.dir, "..");
@@ -13,7 +12,6 @@ const cfgPath = join(here, "extract.toml");
 const cfg = Bun.TOML.parse(readFileSync(cfgPath, "utf8")) as {
   source: { repo: string; checkout: string; rev: string };
   select: { seeds: string[]; stop: string[]; paths: string[]; exclude: string[] };
-  "first-party"?: { crates: string[] };
   "package-json": { "drop-dependencies": string[]; repository: string };
 };
 const arg = (k: string) => Bun.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
@@ -146,10 +144,8 @@ const legacyMembers = new Set(parsed.workspace.members);
 const crates = units.filter((u) => existsSync(join(here, u, "Cargo.toml"))).sort();
 // A crate that inherits from the workspace root (`workspace = true`) cannot be excluded: it is a member too.
 const inherits = (u: string) => /workspace\s*=\s*true/.test(readFileSync(join(here, u, "Cargo.toml"), "utf8"));
-const extractedMembers = crates.filter((u) => legacyMembers.has(u) || inherits(u));
-const standalone = crates.filter((u) => !extractedMembers.includes(u));
-// First-party crates (extract.toml [first-party]) are members too: written here, never extracted.
-const members = withFirstParty(extractedMembers, cfg["first-party"]?.crates ?? [], (c) => existsSync(join(here, c, "Cargo.toml")));
+const members = crates.filter((u) => legacyMembers.has(u) || inherits(u));
+const standalone = crates.filter((u) => !members.includes(u));
 
 const section = (header: string) => {
   const lines = legacyToml.split("\n");
