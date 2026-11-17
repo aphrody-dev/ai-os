@@ -1,15 +1,18 @@
 diff --git a/frameworks/ai-os/src/term/server.ts b/frameworks/ai-os/src/term/server.ts
-index 491c450..d75e72c 100644
+index 491c450..ab4e177 100644
 --- a/frameworks/ai-os/src/term/server.ts
 +++ b/frameworks/ai-os/src/term/server.ts
-@@ -42,10 +42,11 @@ function findSrcRoot(): string {
+@@ -42,10 +42,14 @@ function findSrcRoot(): string {
  }
  
  export async function startTermServer(opts: TermServerOptions = {}) {
 -  const host = opts.host ?? Bun.env.AY_TERM_HOST ?? "127.0.0.1";
 -  const port = opts.port ?? Number(Bun.env.AY_TERM_PORT ?? 8795);
-+  const host = opts.host ?? Bun.env.AI_OS_TERM_HOST ?? Bun.env.AY_TERM_HOST ?? "127.0.0.1";
-+  const port = opts.port ?? Number(Bun.env.AI_OS_TERM_PORT ?? Bun.env.AY_TERM_PORT ?? 8795);
++  const host =
++    opts.host ?? Bun.env.AI_OS_TERM_HOST ?? Bun.env.AY_TERM_HOST ?? "127.0.0.1";
++  const port =
++    opts.port ??
++    Number(Bun.env.AI_OS_TERM_PORT ?? Bun.env.AY_TERM_PORT ?? 8795);
    const token =
      opts.token ??
 +    Bun.env.AI_OS_TERM_TOKEN ??
