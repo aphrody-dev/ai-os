@@ -14,14 +14,14 @@
 extern "C" {
 #endif
 
-/* Default .env: $ENV_KIT_ROOT/.env, otherwise .env in the current directory. */
+/* Default .env: $ENV_KIT_ROOT/.env; without ENV_KIT_ROOT there is no default file (the current directory is untrusted). */
 static inline const char *sovereign_env_default_path(char *buf, size_t size) {
     const char *root = getenv("ENV_KIT_ROOT");
     if (root && root[0] != '\0') {
         snprintf(buf, size, "%s/.env", root);
         return buf;
     }
-    return ".env";
+    return "";
 }
 
 static inline int sovereign_env_set_var(const char *key, const char *val, int override_existing) {

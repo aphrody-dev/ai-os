@@ -1,0 +1,485 @@
+diff --git a/frameworks/ai-os/engines/brain/src/cli.ts b/frameworks/ai-os/engines/brain/src/cli.ts
+index 98f3a72..8d558b2 100644
+--- a/frameworks/ai-os/engines/brain/src/cli.ts
++++ b/frameworks/ai-os/engines/brain/src/cli.ts
+@@ -5,7 +5,12 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+ import { homedir } from "node:os";
+ import { delimiter, join } from "node:path";
+ import { spawnSync } from "node:child_process";
+-import { dataDir, envFile, workspaceRoot } from "../../../src/core/paths.ts";
++import {
++  dataDir,
++  envFiles,
++  requireEnvFiles,
++  workspaceRoot,
++} from "../../../src/core/paths.ts";
+ 
+ const VAULT = process.env.BRAIN_VAULT ?? dataDir("brain");
+ /** Code directories of the workspace that the code graph covers. */
+@@ -26,10 +31,17 @@ const run = (cmd: string, args: string[], cwd?: string) =>
+     },
+   });
+ 
++/** Secret values of every .env of the configuration (ENV_FILE and the workspace one): all of them are redacted. */
+ function envSecrets(): string[] {
+   const out: string[] = [];
+-  const env = envFile();
+-  if (!existsSync(env)) return out;
++  for (const env of envFiles()) {
++    if (!existsSync(env)) continue;
++    readSecrets(env, out);
++  }
++  return out;
++}
++
++function readSecrets(env: string, out: string[]): void {
+   for (const l of readFileSync(env, "utf8").split(/\r?\n/)) {
+     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
+     const v = m?.[2]?.replace(/^['"]|['"]$/g, "") ?? "";
+@@ -40,7 +52,6 @@ function envSecrets(): string[] {
+     )
+       out.push(v);
+   }
+-  return out;
+ }
+ const PATTERNS = [
+   /figd_[A-Za-z0-9_-]{20,}/,
+@@ -121,6 +132,13 @@ function main() {
+       );
+       break;
+     case "sync": {
++      // The leak scan compares against the secret values of the .env: without it nothing can be verified.
++      try {
++        requireEnvFiles();
++      } catch (e) {
++        console.error(`Refusing to sync: ${(e as Error).message}`);
++        process.exit(2);
++      }
+       const hits = leakScan(VAULT);
+       if (hits.length) {
+         console.error(
+diff --git a/frameworks/ai-os/engines/brain/src/merge-sessions.ts b/frameworks/ai-os/engines/brain/src/merge-sessions.ts
+index 4922d4a..aaff482 100644
+--- a/frameworks/ai-os/engines/brain/src/merge-sessions.ts
++++ b/frameworks/ai-os/engines/brain/src/merge-sessions.ts
+@@ -9,17 +9,24 @@ import {
+ } from "node:fs";
+ import { homedir } from "node:os";
+ import { join } from "node:path";
+-import { dataDir, envFile } from "../../../src/core/paths.ts";
++import { dataDir, requireEnvFiles } from "../../../src/core/paths.ts";
+ 
+ const BRAIN = join(homedir(), ".gemini", "antigravity-cli", "brain");
+ const VAULT = dataDir("brain");
+-mkdirSync(`${VAULT}/Sessions`, { recursive: true });
+-mkdirSync(`${VAULT}/.obsidian`, { recursive: true });
+ 
+ // Redaction: exact secret values from the workspace .env (in memory only) + generic token patterns.
+ const secrets: string[] = [];
+-const envPath = envFile();
+-if (existsSync(envPath)) {
++// Without the .env the secrets are unknown and cannot be redacted: refuse to merge.
++let envPaths: string[];
++try {
++  envPaths = requireEnvFiles();
++} catch (e) {
++  console.error(`brain merge refused: ${(e as Error).message}`);
++  process.exit(2);
++}
++mkdirSync(`${VAULT}/Sessions`, { recursive: true });
++mkdirSync(`${VAULT}/.obsidian`, { recursive: true });
++for (const envPath of envPaths) {
+   for (const l of readFileSync(envPath, "utf8").split(/\r?\n/)) {
+     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
+     if (!m) continue;
+diff --git a/frameworks/ai-os/engines/brain/test/refuse.test.ts b/frameworks/ai-os/engines/brain/test/refuse.test.ts
+new file mode 100644
+index 0000000..19e9099
+--- /dev/null
++++ b/frameworks/ai-os/engines/brain/test/refuse.test.ts
+@@ -0,0 +1,41 @@
++import { afterAll, expect, test } from "bun:test";
++import { existsSync, mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++
++const base = mkdtempSync(join(tmpdir(), "brain-refuse-"));
++afterAll(() => rmSync(base, { recursive: true, force: true }));
++
++// A workspace without .env and a data directory of its own: secrets are unknown, so nothing may be merged or synced.
++const env = () => {
++  const e = { ...process.env } as Record<string, string | undefined>;
++  delete e.ENV_FILE;
++  return {
++    ...e,
++    WORKSPACE_ROOT: join(base, "workspace"),
++    AY_DATA_DIR: join(base, "data"),
++  } as Record<string, string>;
++};
++const run = (script: string, ...args: string[]) =>
++  Bun.spawnSync(
++    [process.execPath, join(import.meta.dir, "..", "src", script), ...args],
++    {
++      cwd: base,
++      env: env(),
++      stdout: "pipe",
++      stderr: "pipe",
++    },
++  );
++
++test("merge refuses to run without a .env and writes nothing", () => {
++  const r = run("merge-sessions.ts");
++  expect(r.exitCode).toBe(2);
++  expect(r.stderr.toString()).toContain("brain merge refused");
++  expect(existsSync(join(base, "data", "brain"))).toBe(false);
++});
++
++test("sync refuses to run without a .env", () => {
++  const r = run("cli.ts", "sync");
++  expect(r.exitCode).toBe(2);
++  expect(r.stderr.toString()).toContain("Refusing to sync");
++});
+diff --git a/frameworks/ai-os/src/core/index.ts b/frameworks/ai-os/src/core/index.ts
+index 630d6ea..d5c51a3 100644
+--- a/frameworks/ai-os/src/core/index.ts
++++ b/frameworks/ai-os/src/core/index.ts
+@@ -71,4 +71,10 @@ export {
+   type WorldStepInput,
+   type WorldStepResult,
+ } from "./cabi";
+-export { dataDir, envFile, workspaceRoot } from "./paths";
++export {
++  dataDir,
++  envFile,
++  envFiles,
++  requireEnvFiles,
++  workspaceRoot,
++} from "./paths";
+diff --git a/frameworks/ai-os/src/core/paths.ts b/frameworks/ai-os/src/core/paths.ts
+index d3a1adc..08acf93 100644
+--- a/frameworks/ai-os/src/core/paths.ts
++++ b/frameworks/ai-os/src/core/paths.ts
+@@ -22,12 +22,34 @@ export function dataDir(...parts: string[]): string {
+   );
+ }
+ 
+-/** The `.env` file: $ENV_FILE, else the nearest `.env` from the current directory upward, else `<root>/.env`. */
+-export function envFile(): string {
++/**
++ * The `.env` files secrets are read from, in order: $ENV_FILE, then `<root>/.env` of the workspace. Both are resolved from the
++ * configuration, never from the current directory: a `.env` found there is untrusted input and must not decide what is redacted.
++ */
++export function envFiles(): string[] {
+   const explicit = process.env.ENV_FILE?.trim();
+-  if (explicit) return resolve(explicit);
+-  for (let dir = process.cwd(); ; dir = dirname(dir)) {
+-    if (existsSync(join(dir, ".env"))) return join(dir, ".env");
+-    if (dirname(dir) === dir) return join(workspaceRoot(), ".env");
+-  }
++  return [
++    ...new Set([
++      ...(explicit ? [resolve(explicit)] : []),
++      join(workspaceRoot(), ".env"),
++    ]),
++  ];
++}
++
++/** The `.env` to read first: $ENV_FILE, else `<root>/.env`. */
++export function envFile(): string {
++  return envFiles()[0]!;
++}
++
++/**
++ * Every existing `.env` of {@link envFiles}. Throws when none exists: a caller that redacts or syncs secrets must refuse to run
++ * without knowing them rather than let them through.
++ */
++export function requireEnvFiles(): string[] {
++  const found = envFiles().filter((f) => existsSync(f));
++  if (found.length === 0)
++    throw new Error(
++      `no .env found (looked at: ${envFiles().join(", ")}); set ENV_FILE or WORKSPACE_ROOT`,
++    );
++  return found;
+ }
+diff --git a/frameworks/ai-os/test/core/paths.test.ts b/frameworks/ai-os/test/core/paths.test.ts
+new file mode 100644
+index 0000000..2d014ab
+--- /dev/null
++++ b/frameworks/ai-os/test/core/paths.test.ts
+@@ -0,0 +1,84 @@
++import { afterEach, describe, expect, test } from "bun:test";
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join, resolve } from "node:path";
++import {
++  dataDir,
++  envFile,
++  envFiles,
++  requireEnvFiles,
++  workspaceRoot,
++} from "../../src/core/paths";
++
++const touched = [
++  "WORKSPACE_ROOT",
++  "SRC_ROOT",
++  "AY_DATA_DIR",
++  "ENV_FILE",
++] as const;
++const saved = Object.fromEntries(touched.map((k) => [k, process.env[k]]));
++const cwd = process.cwd();
++const dirs: string[] = [];
++
++function scratch(): string {
++  const d = mkdtempSync(join(tmpdir(), "paths-"));
++  dirs.push(d);
++  return d;
++}
++
++afterEach(() => {
++  process.chdir(cwd);
++  for (const k of touched) {
++    if (saved[k] === undefined) delete process.env[k];
++    else process.env[k] = saved[k];
++  }
++  for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
++});
++
++describe("derived locations", () => {
++  test("the workspace root and the data directory follow the configuration", () => {
++    const root = scratch();
++    process.env.WORKSPACE_ROOT = root;
++    delete process.env.AY_DATA_DIR;
++    expect(workspaceRoot()).toBe(resolve(root));
++    expect(dataDir("brain")).toBe(join(resolve(root), "var", "brain"));
++    process.env.AY_DATA_DIR = join(root, "data");
++    expect(dataDir("brain")).toBe(join(root, "data", "brain"));
++  });
++
++  test("the .env comes from the workspace or ENV_FILE, never from the current directory", () => {
++    const root = scratch();
++    const elsewhere = scratch();
++    writeFileSync(join(root, ".env"), "REAL_TOKEN=workspace-secret-value\n");
++    writeFileSync(join(elsewhere, ".env"), "LD_PRELOAD=/tmp/evil.so\n");
++    process.env.WORKSPACE_ROOT = root;
++    delete process.env.ENV_FILE;
++    process.chdir(elsewhere);
++    expect(envFiles()).toEqual([join(resolve(root), ".env")]);
++    expect(envFile()).toBe(join(resolve(root), ".env"));
++    expect(requireEnvFiles()).toEqual([join(resolve(root), ".env")]);
++  });
++
++  test("ENV_FILE is read first and the workspace .env still counts: every file is used for redaction", () => {
++    const root = scratch();
++    const extra = join(scratch(), "other.env");
++    writeFileSync(join(root, ".env"), "A_TOKEN=aaaaaaaaaaaaaaaa\n");
++    writeFileSync(extra, "B_TOKEN=bbbbbbbbbbbbbbbb\n");
++    process.env.WORKSPACE_ROOT = root;
++    process.env.ENV_FILE = extra;
++    expect(envFiles()).toEqual([resolve(extra), join(resolve(root), ".env")]);
++    expect(requireEnvFiles()).toEqual([
++      resolve(extra),
++      join(resolve(root), ".env"),
++    ]);
++  });
++
++  test("a missing .env fails closed", () => {
++    const root = scratch();
++    mkdirSync(join(root, "var"));
++    process.env.WORKSPACE_ROOT = root;
++    delete process.env.ENV_FILE;
++    process.chdir(scratch());
++    expect(() => requireEnvFiles()).toThrow("no .env found");
++  });
++});
+diff --git a/system/env-kit/loaders/cpp/sovereign_env.h b/system/env-kit/loaders/cpp/sovereign_env.h
+index f6b67f3..b830722 100644
+--- a/system/env-kit/loaders/cpp/sovereign_env.h
++++ b/system/env-kit/loaders/cpp/sovereign_env.h
+@@ -14,14 +14,14 @@
+ extern "C" {
+ #endif
+ 
+-/* Default .env: $ENV_KIT_ROOT/.env, otherwise .env in the current directory. */
++/* Default .env: $ENV_KIT_ROOT/.env; without ENV_KIT_ROOT there is no default file (the current directory is untrusted). */
+ static inline const char *sovereign_env_default_path(char *buf, size_t size) {
+     const char *root = getenv("ENV_KIT_ROOT");
+     if (root && root[0] != '\0') {
+         snprintf(buf, size, "%s/.env", root);
+         return buf;
+     }
+-    return ".env";
++    return "";
+ }
+ 
+ static inline int sovereign_env_set_var(const char *key, const char *val, int override_existing) {
+diff --git a/system/env-kit/loaders/dotnet/SovereignEnv.cs b/system/env-kit/loaders/dotnet/SovereignEnv.cs
+index 92092d0..8175ff0 100644
+--- a/system/env-kit/loaders/dotnet/SovereignEnv.cs
++++ b/system/env-kit/loaders/dotnet/SovereignEnv.cs
+@@ -12,9 +12,9 @@ namespace Aphrody.EnvKit;
+ 
+ public sealed class SovereignEnv
+ {
+-    /// <summary>$ENV_KIT_ROOT/.env, otherwise .env in the current directory.</summary>
++    /// <summary>$ENV_KIT_ROOT/.env; empty without ENV_KIT_ROOT (the current directory is untrusted).</summary>
+     public static string DefaultMonorepoEnvPath =>
+-        Path.Combine(Environment.GetEnvironmentVariable("ENV_KIT_ROOT") is { Length: > 0 } root ? root : Directory.GetCurrentDirectory(), ".env");
++        Environment.GetEnvironmentVariable("ENV_KIT_ROOT") is { Length: > 0 } root ? Path.Combine(root, ".env") : string.Empty;
+ 
+     private static readonly Regex SecretKeyRegex = new(
+         @"(TOKEN|SECRET|PASSWORD|API_KEY|PRIVATE_KEY|AUTH|CREDENTIAL|DATABASE_URL|NUGET_API_KEY)",
+diff --git a/system/env-kit/loaders/go/envkit.go b/system/env-kit/loaders/go/envkit.go
+index 58ff449..a00cda3 100644
+--- a/system/env-kit/loaders/go/envkit.go
++++ b/system/env-kit/loaders/go/envkit.go
+@@ -10,12 +10,12 @@ import (
+ 	"strings"
+ )
+ 
+-// DefaultMonorepoEnvPath returns $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
++// DefaultMonorepoEnvPath returns $ENV_KIT_ROOT/.env; without ENV_KIT_ROOT there is no default file (the current directory is untrusted).
+ func DefaultMonorepoEnvPath() string {
+ 	if root := os.Getenv("ENV_KIT_ROOT"); root != "" {
+ 		return filepath.Join(root, ".env")
+ 	}
+-	return ".env"
++	return ""
+ }
+ 
+ // Options configures LoadWithOptions.
+diff --git a/system/env-kit/loaders/lua/sovereign_env.lua b/system/env-kit/loaders/lua/sovereign_env.lua
+index 1b49550..a9f2846 100644
+--- a/system/env-kit/loaders/lua/sovereign_env.lua
++++ b/system/env-kit/loaders/lua/sovereign_env.lua
+@@ -4,9 +4,9 @@
+ local M = {}
+ 
+ local is_windows = package.config:sub(1, 1) == "\\"
+--- $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
++-- $ENV_KIT_ROOT/.env; without ENV_KIT_ROOT there is no default file (the current directory is untrusted).
+ local root = os.getenv("ENV_KIT_ROOT")
+-M.DEFAULT_MONOREPO_ENV_PATH = (root and root ~= "") and (root .. "/.env") or ".env"
++M.DEFAULT_MONOREPO_ENV_PATH = (root and root ~= "") and (root .. "/.env") or ""
+ 
+ local SECRET_PATTERNS = {
+   "TOKEN",
+diff --git a/system/env-kit/loaders/shell/load-env.sh b/system/env-kit/loaders/shell/load-env.sh
+index b06d93e..b63d611 100644
+--- a/system/env-kit/loaders/shell/load-env.sh
++++ b/system/env-kit/loaders/shell/load-env.sh
+@@ -1,19 +1,22 @@
+ #!/usr/bin/env sh
+-# POSIX / Bash / Zsh sourceable loader for the nearest .env (or $ENV_KIT_ROOT/.env)
++# POSIX / Bash / Zsh sourceable loader for $ENV_KIT_ROOT/.env, or the .env of the repository holding this script (bash)
++# or the file given as the first argument. The current directory is never searched: a .env found there is untrusted input.
+ # Usage: . system/env-kit/loaders/shell/load-env.sh
+ # Never echoes secret values. Preserves already-set non-empty environment variables unless ENV_KIT_OVERRIDE=1.
+ 
+ _env_kit_load() {
+   _ek_file="${1:-}"
+   if [ -z "$_ek_file" ]; then
+-    _ek_dir="${ENV_KIT_ROOT:-$PWD}"
+-    while [ ! -f "$_ek_dir/.env" ]; do
+-      _ek_up="$(dirname "$_ek_dir")"
+-      [ "$_ek_up" != "$_ek_dir" ] || break
+-      _ek_dir="$_ek_up"
+-    done
+-    _ek_file="$_ek_dir/.env"
+-    unset _ek_dir _ek_up
++    _ek_root="${ENV_KIT_ROOT:-}"
++    if [ -z "$_ek_root" ] && [ -n "${BASH_SOURCE:-}" ]; then
++      _ek_root="$(cd "$(dirname "$BASH_SOURCE")/../../../.." 2>/dev/null && pwd)"
++    fi
++    if [ -z "$_ek_root" ]; then
++      echo "load-env: set ENV_KIT_ROOT or pass the path of the .env file" >&2
++      return 1
++    fi
++    _ek_file="$_ek_root/.env"
++    unset _ek_root
+   fi
+ 
+   [ -f "$_ek_file" ] || return 0
+@@ -34,6 +37,8 @@ _env_kit_load() {
+         _ek_key="$(printf '%s' "$_ek_key" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+         case "$_ek_key" in
+           ''|*[!A-Za-z0-9_]*|[0-9]*) continue ;;
++          # Names that change how programs load code or how the shell behaves are never taken from a file.
++          LD_*|DYLD_*|BASH_ENV|ENV|GIT_*|PATH|IFS|PS4|PROMPT_COMMAND|SHELLOPTS|BASHOPTS|*_OPTIONS) continue ;;
+         esac
+         _ek_val="$(printf '%s' "$_ek_val" | sed 's/^[[:space:]]*//')"
+         # Quotes (same grammar as parseDotEnv, tests/vectors): "..." decodes \n \t \r \" \\ and stops at the
+diff --git a/system/env-kit/tests/load-env-sh.test.ts b/system/env-kit/tests/load-env-sh.test.ts
+new file mode 100644
+index 0000000..1c55cba
+--- /dev/null
++++ b/system/env-kit/tests/load-env-sh.test.ts
+@@ -0,0 +1,69 @@
++// The POSIX loader reads the .env of its anchor (ENV_KIT_ROOT or the file given); a .env found in the current directory is untrusted.
++import { afterAll, describe, expect, test } from "bun:test";
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++
++const base = mkdtempSync(join(tmpdir(), "load-env-"));
++afterAll(() => rmSync(base, { recursive: true, force: true }));
++
++const sh = Bun.which("sh");
++const script = join(import.meta.dir, "..", "loaders", "shell", "load-env.sh").replaceAll("\\", "/");
++const fwd = (p: string) => p.replaceAll("\\", "/");
++
++const DANGEROUS = ["LD_PRELOAD", "DYLD_INSERT_LIBRARIES", "BASH_ENV", "ENV", "GIT_SSH_COMMAND", "NODE_OPTIONS", "PATH_BACKUP_OPTIONS"];
++const ENV_FILE = [
++  "KIT_SAFE_VALUE=loaded",
++  ...DANGEROUS.map((k) => `${k}=/tmp/injected`),
++  "PATH=/tmp/injected-bin",
++].join("\n");
++
++function dirWithEnv(name: string): string {
++  const d = join(base, name);
++  mkdirSync(d, { recursive: true });
++  writeFileSync(join(d, ".env"), ENV_FILE);
++  return d;
++}
++
++function load(cwd: string, extraEnv: Record<string, string>, args = "") {
++  const clean = { ...process.env } as Record<string, string | undefined>;
++  for (const k of ["ENV_KIT_ROOT", "ENV_KIT_OVERRIDE", "KIT_SAFE_VALUE", ...DANGEROUS]) delete clean[k];
++  // Positional parameters are set before sourcing: `. file args` is not portable (dash ignores the arguments).
++  const probe = [`set -- ${args}`, `. "${script}"`, "echo safe=${KIT_SAFE_VALUE:-}", ...DANGEROUS.map((k) => `echo ${k}=\${${k}:-}`), 'echo path=$PATH'].join("; ");
++  const r = Bun.spawnSync([sh!, "-c", probe], { cwd, env: { ...clean, ...extraEnv } as Record<string, string>, stdout: "pipe", stderr: "pipe" });
++  const out = Object.fromEntries(
++    r.stdout
++      .toString()
++      .split(/\r?\n/)
++      .filter((l) => l.includes("="))
++      .map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1)]),
++  );
++  return { out, err: r.stderr.toString(), pathBefore: clean.PATH };
++}
++
++describe("load-env.sh", () => {
++  test("a .env in the current directory is never read", () => {
++    const hostile = dirWithEnv("hostile-cwd");
++    const r = load(hostile, {});
++    expect(r.out.safe).toBe("");
++    for (const k of DANGEROUS) expect(r.out[k]).toBe("");
++    expect(r.out.path).not.toContain("injected-bin");
++  });
++
++  test("the anchor loads its variables but never the ones that change how code is loaded", () => {
++    const root = dirWithEnv("trusted-root");
++    const cwd = join(base, "unrelated");
++    mkdirSync(cwd, { recursive: true });
++    const r = load(cwd, { ENV_KIT_ROOT: fwd(root) });
++    expect(r.out.safe).toBe("loaded");
++    for (const k of DANGEROUS) expect(r.out[k]).toBe("");
++    expect(r.out.path).not.toContain("injected-bin");
++  });
++
++  test("an explicit file argument is honoured and filtered the same way", () => {
++    const root = dirWithEnv("explicit");
++    const r = load(base, {}, `"${fwd(join(root, ".env"))}"`);
++    expect(r.out.safe).toBe("loaded");
++    for (const k of DANGEROUS) expect(r.out[k]).toBe("");
++  });
++});

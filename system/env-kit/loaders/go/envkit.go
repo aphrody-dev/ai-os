@@ -10,12 +10,12 @@ import (
 	"strings"
 )
 
-// DefaultMonorepoEnvPath returns $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
+// DefaultMonorepoEnvPath returns $ENV_KIT_ROOT/.env; without ENV_KIT_ROOT there is no default file (the current directory is untrusted).
 func DefaultMonorepoEnvPath() string {
 	if root := os.Getenv("ENV_KIT_ROOT"); root != "" {
 		return filepath.Join(root, ".env")
 	}
-	return ".env"
+	return ""
 }
 
 // Options configures LoadWithOptions.

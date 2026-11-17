@@ -12,9 +12,9 @@ namespace Aphrody.EnvKit;
 
 public sealed class SovereignEnv
 {
-    /// <summary>$ENV_KIT_ROOT/.env, otherwise .env in the current directory.</summary>
+    /// <summary>$ENV_KIT_ROOT/.env; empty without ENV_KIT_ROOT (the current directory is untrusted).</summary>
     public static string DefaultMonorepoEnvPath =>
-        Path.Combine(Environment.GetEnvironmentVariable("ENV_KIT_ROOT") is { Length: > 0 } root ? root : Directory.GetCurrentDirectory(), ".env");
+        Environment.GetEnvironmentVariable("ENV_KIT_ROOT") is { Length: > 0 } root ? Path.Combine(root, ".env") : string.Empty;
 
     private static readonly Regex SecretKeyRegex = new(
         @"(TOKEN|SECRET|PASSWORD|API_KEY|PRIVATE_KEY|AUTH|CREDENTIAL|DATABASE_URL|NUGET_API_KEY)",

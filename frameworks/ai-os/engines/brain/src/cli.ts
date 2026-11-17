@@ -5,7 +5,12 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { delimiter, join } from "node:path";
 import { spawnSync } from "node:child_process";
-import { dataDir, envFile, workspaceRoot } from "../../../src/core/paths.ts";
+import {
+  dataDir,
+  envFiles,
+  requireEnvFiles,
+  workspaceRoot,
+} from "../../../src/core/paths.ts";
 
 const VAULT = process.env.BRAIN_VAULT ?? dataDir("brain");
 /** Code directories of the workspace that the code graph covers. */
@@ -26,10 +31,17 @@ const run = (cmd: string, args: string[], cwd?: string) =>
     },
   });
 
+/** Secret values of every .env of the configuration (ENV_FILE and the workspace one): all of them are redacted. */
 function envSecrets(): string[] {
   const out: string[] = [];
-  const env = envFile();
-  if (!existsSync(env)) return out;
+  for (const env of envFiles()) {
+    if (!existsSync(env)) continue;
+    readSecrets(env, out);
+  }
+  return out;
+}
+
+function readSecrets(env: string, out: string[]): void {
   for (const l of readFileSync(env, "utf8").split(/\r?\n/)) {
     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
     const v = m?.[2]?.replace(/^['"]|['"]$/g, "") ?? "";
@@ -40,7 +52,6 @@ function envSecrets(): string[] {
     )
       out.push(v);
   }
-  return out;
 }
 const PATTERNS = [
   /figd_[A-Za-z0-9_-]{20,}/,
@@ -121,6 +132,13 @@ function main() {
       );
       break;
     case "sync": {
+      // The leak scan compares against the secret values of the .env: without it nothing can be verified.
+      try {
+        requireEnvFiles();
+      } catch (e) {
+        console.error(`Refusing to sync: ${(e as Error).message}`);
+        process.exit(2);
+      }
       const hits = leakScan(VAULT);
       if (hits.length) {
         console.error(

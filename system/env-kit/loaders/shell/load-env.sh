@@ -1,19 +1,22 @@
 #!/usr/bin/env sh
-# POSIX / Bash / Zsh sourceable loader for the nearest .env (or $ENV_KIT_ROOT/.env)
+# POSIX / Bash / Zsh sourceable loader for $ENV_KIT_ROOT/.env, or the .env of the repository holding this script (bash)
+# or the file given as the first argument. The current directory is never searched: a .env found there is untrusted input.
 # Usage: . system/env-kit/loaders/shell/load-env.sh
 # Never echoes secret values. Preserves already-set non-empty environment variables unless ENV_KIT_OVERRIDE=1.
 
 _env_kit_load() {
   _ek_file="${1:-}"
   if [ -z "$_ek_file" ]; then
-    _ek_dir="${ENV_KIT_ROOT:-$PWD}"
-    while [ ! -f "$_ek_dir/.env" ]; do
-      _ek_up="$(dirname "$_ek_dir")"
-      [ "$_ek_up" != "$_ek_dir" ] || break
-      _ek_dir="$_ek_up"
-    done
-    _ek_file="$_ek_dir/.env"
-    unset _ek_dir _ek_up
+    _ek_root="${ENV_KIT_ROOT:-}"
+    if [ -z "$_ek_root" ] && [ -n "${BASH_SOURCE:-}" ]; then
+      _ek_root="$(cd "$(dirname "$BASH_SOURCE")/../../../.." 2>/dev/null && pwd)"
+    fi
+    if [ -z "$_ek_root" ]; then
+      echo "load-env: set ENV_KIT_ROOT or pass the path of the .env file" >&2
+      return 1
+    fi
+    _ek_file="$_ek_root/.env"
+    unset _ek_root
   fi
 
   [ -f "$_ek_file" ] || return 0
@@ -34,6 +37,8 @@ _env_kit_load() {
         _ek_key="$(printf '%s' "$_ek_key" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
         case "$_ek_key" in
           ''|*[!A-Za-z0-9_]*|[0-9]*) continue ;;
+          # Names that change how programs load code or how the shell behaves are never taken from a file.
+          LD_*|DYLD_*|BASH_ENV|ENV|GIT_*|PATH|IFS|PS4|PROMPT_COMMAND|SHELLOPTS|BASHOPTS|*_OPTIONS) continue ;;
         esac
         _ek_val="$(printf '%s' "$_ek_val" | sed 's/^[[:space:]]*//')"
         # Quotes (same grammar as parseDotEnv, tests/vectors): "..." decodes \n \t \r \" \\ and stops at the

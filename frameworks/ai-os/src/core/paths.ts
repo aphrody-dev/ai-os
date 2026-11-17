@@ -22,12 +22,34 @@ export function dataDir(...parts: string[]): string {
   );
 }
 
-/** The `.env` file: $ENV_FILE, else the nearest `.env` from the current directory upward, else `<root>/.env`. */
-export function envFile(): string {
+/**
+ * The `.env` files secrets are read from, in order: $ENV_FILE, then `<root>/.env` of the workspace. Both are resolved from the
+ * configuration, never from the current directory: a `.env` found there is untrusted input and must not decide what is redacted.
+ */
+export function envFiles(): string[] {
   const explicit = process.env.ENV_FILE?.trim();
-  if (explicit) return resolve(explicit);
-  for (let dir = process.cwd(); ; dir = dirname(dir)) {
-    if (existsSync(join(dir, ".env"))) return join(dir, ".env");
-    if (dirname(dir) === dir) return join(workspaceRoot(), ".env");
-  }
+  return [
+    ...new Set([
+      ...(explicit ? [resolve(explicit)] : []),
+      join(workspaceRoot(), ".env"),
+    ]),
+  ];
+}
+
+/** The `.env` to read first: $ENV_FILE, else `<root>/.env`. */
+export function envFile(): string {
+  return envFiles()[0]!;
+}
+
+/**
+ * Every existing `.env` of {@link envFiles}. Throws when none exists: a caller that redacts or syncs secrets must refuse to run
+ * without knowing them rather than let them through.
+ */
+export function requireEnvFiles(): string[] {
+  const found = envFiles().filter((f) => existsSync(f));
+  if (found.length === 0)
+    throw new Error(
+      `no .env found (looked at: ${envFiles().join(", ")}); set ENV_FILE or WORKSPACE_ROOT`,
+    );
+  return found;
 }

@@ -4,9 +4,9 @@
 local M = {}
 
 local is_windows = package.config:sub(1, 1) == "\\"
--- $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
+-- $ENV_KIT_ROOT/.env; without ENV_KIT_ROOT there is no default file (the current directory is untrusted).
 local root = os.getenv("ENV_KIT_ROOT")
-M.DEFAULT_MONOREPO_ENV_PATH = (root and root ~= "") and (root .. "/.env") or ".env"
+M.DEFAULT_MONOREPO_ENV_PATH = (root and root ~= "") and (root .. "/.env") or ""
 
 local SECRET_PATTERNS = {
   "TOKEN",

@@ -9,17 +9,24 @@ import {
 } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { dataDir, envFile } from "../../../src/core/paths.ts";
+import { dataDir, requireEnvFiles } from "../../../src/core/paths.ts";
 
 const BRAIN = join(homedir(), ".gemini", "antigravity-cli", "brain");
 const VAULT = dataDir("brain");
-mkdirSync(`${VAULT}/Sessions`, { recursive: true });
-mkdirSync(`${VAULT}/.obsidian`, { recursive: true });
 
 // Redaction: exact secret values from the workspace .env (in memory only) + generic token patterns.
 const secrets: string[] = [];
-const envPath = envFile();
-if (existsSync(envPath)) {
+// Without the .env the secrets are unknown and cannot be redacted: refuse to merge.
+let envPaths: string[];
+try {
+  envPaths = requireEnvFiles();
+} catch (e) {
+  console.error(`brain merge refused: ${(e as Error).message}`);
+  process.exit(2);
+}
+mkdirSync(`${VAULT}/Sessions`, { recursive: true });
+mkdirSync(`${VAULT}/.obsidian`, { recursive: true });
+for (const envPath of envPaths) {
   for (const l of readFileSync(envPath, "utf8").split(/\r?\n/)) {
     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
     if (!m) continue;
