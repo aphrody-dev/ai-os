@@ -1,13 +1,14 @@
 import { afterAll, describe, expect, test } from "bun:test";
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import {
   auditAllAgySessions,
   blake3Hex,
@@ -31,6 +32,8 @@ import {
 afterAll(() => {
   closeAllKnowledgeDatabases();
 });
+
+const srcRoot = resolve(import.meta.dir, "..", "..", "..", "..", "..");
 
 describe("@aphrody/knowledge-engine core verification", () => {
   test("Blake3 FFI + fallback hashing is deterministic", () => {
@@ -96,8 +99,8 @@ describe("@aphrody/knowledge-engine core verification", () => {
 
   test("Deterministic fact-checker verifies real paths and flags nonexistent files", async () => {
     const okVerdict = await runFactCheck(
-      "C:\\aphrody\\AGENTS.md defines the canonical architecture with Bun v1.4.4.",
-      { skipNetwork: true },
+      `${join(srcRoot, "README.md")} defines the canonical architecture with Bun v1.4.4.`,
+      { skipNetwork: true, srcRoot },
     );
     expect(okVerdict.totals.contradicted).toBe(0);
 
@@ -106,10 +109,13 @@ describe("@aphrody/knowledge-engine core verification", () => {
       const badDoc = join(tmp, "claim.md");
       writeFileSync(
         badDoc,
-        "File `C:\\aphrody\\nonexistent_fake_path_999.ts` exists.",
+        `File \`${join(srcRoot, "nonexistent_fake_path_999.ts")}\` exists.`,
         "utf8",
       );
-      const badVerdict = await runFactCheck(badDoc, { skipNetwork: true });
+      const badVerdict = await runFactCheck(badDoc, {
+        skipNetwork: true,
+        srcRoot,
+      });
       expect(badVerdict.verdict).toBe("CONTRADICTED");
     } finally {
       rmSync(tmp, { recursive: true, force: true });
@@ -139,13 +145,44 @@ describe("@aphrody/knowledge-engine core verification", () => {
       const mdxPath = join(tmpOut, "index.mdx");
       const docsRep = await generateMonorepoDocs({
         enrichContext7: false,
+        srcRoot,
+        dbPath: ":memory:",
         atlasOutPath: atlasPath,
         mdxOutPath: mdxPath,
       });
       expect(docsRep.entitiesCount).toBeGreaterThanOrEqual(15);
       expect(existsSync(atlasPath)).toBe(true);
 
+      const brain = join(tmpOut, "brain");
+      const logs = join(
+        brain,
+        "11111111-2222-3333-4444-555555555555",
+        ".system_generated",
+        "logs",
+      );
+      mkdirSync(logs, { recursive: true });
+      writeFileSync(
+        join(logs, "transcript.jsonl"),
+        [
+          {
+            step_index: 0,
+            type: "SYSTEM_MESSAGE",
+            content: "start",
+            created_at: "2026-11-11T10:00:00Z",
+          },
+          {
+            step_index: 1,
+            type: "USER_INPUT",
+            content: "audit this",
+            created_at: "2026-11-11T10:01:00Z",
+          },
+        ]
+          .map((s) => JSON.stringify(s))
+          .join("\n"),
+      );
       const sessRep = auditAllAgySessions({
+        brainRootDir: brain,
+        dbPath: ":memory:",
         limit: 5,
         markdownOutPath: join(tmpOut, "REVIEW.md"),
         jsonOutPath: join(tmpOut, "ledger.json"),
@@ -169,5 +206,5 @@ describe("@aphrody/knowledge-engine core verification", () => {
     } finally {
       rmSync(tmpOut, { recursive: true, force: true });
     }
-  });
+  }, 60_000);
 });

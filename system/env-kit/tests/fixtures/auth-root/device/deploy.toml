@@ -1,0 +1,30 @@
+# Synthetic deploy manifest read by auth.test.ts: the shape of device/deploy.toml, with placeholder names and no real value.
+[nodes.usa]
+ssh_alias = "usa"
+role = "edge"
+
+[nodes.build]
+ssh_alias = "build"
+role = "build"
+
+[auth.github.repo_secrets]
+"example-org/example-repo" = ["EXAMPLE_API_TOKEN", "EXAMPLE_DEPLOY_KEY"]
+
+[auth.hosts.usa]
+tunnels = { "cloudflared-example" = "example" }
+wireguard = ["wg0"]
+units = ["certbot"]
+
+[auth.wireguard]
+revoked = []
+
+[auth.oidc.gcp]
+project = "example-project"
+project_number = "000000000000"
+pool = "github-actions"
+provider = "github"
+issuer = "https://token.actions.githubusercontent.com"
+condition = "assertion.repository_owner=='aphrody-labs'"
+service_account = "ci@example-project.iam.gserviceaccount.com"
+repos = ["aphrody-labs/example"]
+account = "owner@example.com"

@@ -1,7 +1,7 @@
 # Fusion: OpenClaw + Hermes ecosystems -> aphrody-labs/agent
 
 Listed 2026-11-12 with `gh api orgs/openclaw/repos` (non-archived) and `gh api orgs/NousResearch/repos` (agent-related).
-Forks: aphrody-labs/openclaw and aphrody-labs/hermes-agent (branch `windows-native`, see C:\aphrody\docs\agents\WINDOWS-NATIVE-PORT.md, 16eea3d).
+Forks: aphrody-labs/openclaw and aphrody-labs/hermes-agent (branch `windows-native`, see docs/agents/WINDOWS-NATIVE-PORT.md, 16eea3d).
 Status: done / partial / todo / skip (out of scope: macOS/Apple-only, org ops, forks of upstream tools we already fork).
 
 ## Rules

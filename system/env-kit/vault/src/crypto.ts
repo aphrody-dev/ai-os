@@ -11,7 +11,7 @@
  */
 
 import { getSecretBytes, setSecret } from "./store.ts";
-import { WIN } from "./paths.ts";
+import { system32, WIN } from "./paths.ts";
 import { helloStatus, helloUnwrap, helloWrap } from "./win/pool.ts";
 
 export const MASTER = "VAULT_MASTER_KEY";
@@ -29,7 +29,7 @@ export function HELLO_KEY(): Promise<string> {
   helloName ??= (async () => {
     const p = Bun.spawn(
       [
-        `${process.env.SystemRoot ?? "C:\\Windows"}\\System32\\whoami.exe`,
+        system32("whoami.exe"),
         "/user",
         "/fo",
         "csv",

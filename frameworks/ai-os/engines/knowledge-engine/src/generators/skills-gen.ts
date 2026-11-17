@@ -5,6 +5,7 @@ import {
   scanTextForEmojis,
   stripEmojis,
 } from "../env/safe-env.ts";
+import { workspaceRoot } from "../../../../src/core/paths.ts";
 
 export interface GeneratedSkillDescriptor {
   name: string;
@@ -40,7 +41,7 @@ const SKILL_BLUEPRINTS: readonly SkillBlueprint[] = [
       "Mandatory upstream API grounding via Context7 v2 SQLite cache, 5-channel parallel deep research (ske research), and deterministic multi-evidence fact checking (ske factcheck) before writing or reviewing code.",
     bodyMarkdown: `# Context7, Deep Research & Deterministic Fact-Checker (\`ske\`)
 
-Activate this skill before implementing unfamiliar upstream APIs, auditing architectural Markdown plans, or citing external library behavior in \`C:\\aphrody\`.
+Activate this skill before implementing unfamiliar upstream APIs, auditing architectural Markdown plans, or citing external library behavior in \`<workspace>\`.
 
 ## Core Workflow
 
@@ -51,12 +52,12 @@ Activate this skill before implementing unfamiliar upstream APIs, auditing archi
      ske research "Bun v1.4.4 bun:ffi dlopen and Context7 MCP"
      \`\`\`
 2. **Multi-Hop Deep Research (\`ske research\`)**:
-   - Fans out in parallel across Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local \`C:\\aphrody\` lockfiles/manifests.
-   - Emits Blake3-deduplicated dossiers into \`C:\\aphrody\\docs\\research\\<slug>.md\`.
+   - Fans out in parallel across Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local \`<workspace>\` lockfiles/manifests.
+   - Emits Blake3-deduplicated dossiers into \`docs/research/<slug>.md\`.
 3. **Deterministic Fact-Checking (\`ske factcheck\`)**:
-   - Verifies \`file:///C:/...\` links, \`~/.local/bin\` binaries, \`src.lock.json\` versions, GitHub repo liveness, Context7 symbols, secret hygiene, \`C:\\Windows\\System32\` non-mutation, and zero-emoji compliance:
+   - Verifies \`file:///\` links, \`~/.local/bin\` binaries, \`src.lock.json\` versions, GitHub repo liveness, Context7 symbols, secret hygiene, Windows System32 non-mutation, and zero-emoji compliance:
      \`\`\`powershell
-     ske factcheck C:/aphrody/README.md
+     ske factcheck README.md
      \`\`\`
 
 ## Progressive Disclosure Reference
@@ -70,11 +71,11 @@ Activate this skill before implementing unfamiliar upstream APIs, auditing archi
 ## REST & Cache Architecture
 - **Search Endpoint**: \`GET https://context7.com/api/v2/libs/search?libraryName=<name>&query=<q>\`
 - **Context Endpoint**: \`GET https://context7.com/api/v2/context?libraryId=<id>&query=<q>&type=txt\`
-- **SQLite WAL Store**: \`C:\\aphrody\\var\\knowledge.sqlite\` (\`context7_cache\` table keyed by \`rs_blake3_hex\` via \`rust_stack_ffi.dll\`, 24h TTL).
-- **Secret Hygiene**: \`CTX7_API_KEY\`, \`EXA_API_KEY\`, and \`GITHUB_TOKEN\` are loaded in-memory from \`C:\\aphrody\\.env\` via \`@aphrody/env-kit\` and never written to editor JSON/TOML config files.
+- **SQLite WAL Store**: \`var/knowledge.sqlite\` (\`context7_cache\` table keyed by \`rs_blake3_hex\` via \`rust_stack_ffi.dll\`, 24h TTL).
+- **Secret Hygiene**: \`CTX7_API_KEY\`, \`EXA_API_KEY\`, and \`GITHUB_TOKEN\` are loaded in-memory from \`.env\` via \`@aphrody/env-kit\` and never written to editor JSON/TOML config files.
 
 ## Source Authority Tiers
-1. **Tier 1**: Official Specifications (WHATWG, W3C, MCP \`2025-03-26\`, \`kernel.org\`), Context7 Official Docs, and Local Verified \`C:\\aphrody\` Lockfiles.
+1. **Tier 1**: Official Specifications (WHATWG, W3C, MCP \`2025-03-26\`, \`kernel.org\`), Context7 Official Docs, and Local Verified \`<workspace>\` Lockfiles.
 2. **Tier 2**: Upstream GitHub / Freedesktop GitLab Canonical Repositories & Release Tags.
 3. **Tier 3**: Exa Neural Web Search Highlights.
 `,
@@ -130,7 +131,7 @@ Activate this skill when coordinating multi-agent tasks, running parallel code r
   {
     name: "rust-stack-sovereign",
     description:
-      "Build, serve, and bind the 100% Pure-Rust Sovereign Stack (C:\\aphrody\\crates\\rust-stack): Better-Auth (Argon2id, OAuth2.1 PKCE, Ed25519 JWKS), shadcn_rs zero-JS SSR/Dioxus/GPUI components, native Open-WebUI, Rust coding agent, OpenAI Gateway (:4320), and 228ns rust_stack_ffi.dll.",
+      "Build, serve, and bind the 100% Pure-Rust Sovereign Stack (crates/rust-stack): Better-Auth (Argon2id, OAuth2.1 PKCE, Ed25519 JWKS), shadcn_rs zero-JS SSR/Dioxus/GPUI components, native Open-WebUI, Rust coding agent, OpenAI Gateway (:4320), and 228ns rust_stack_ffi.dll.",
     bodyMarkdown: `# Pure-Rust Sovereign Stack & \`rust_stack_ffi.dll\`
 
 Activate this skill when working on authentication, zero-JS SSR UI components (\`shadcn_rs\`), high-throughput LLM gateway caching (\`:4320\`), or sub-microsecond Bun <-> Rust C-ABI FFI.
@@ -143,8 +144,8 @@ Activate this skill when working on authentication, zero-JS SSR UI components (\
    \`\`\`
 2. **Run Cargo & Bun FFI Verification**:
    \`\`\`powershell
-   cargo test --manifest-path C:\\aphrody\\crates\\rust-stack\\Cargo.toml
-   bun test C:\\aphrody\\crates\\rust-stack\\ffi_verify.test.ts
+   cargo test --manifest-path crates/rust-stack/Cargo.toml
+   bun test crates/rust-stack/ffi_verify.test.ts
    \`\`\`
 3. **Bun v1.4.4 \`bun:ffi\` Binding Contract**:
    Always pass \`FFIType.u64\` (with \`BigInt(byteLength)\`) for Rust \`usize\` parameters so \`bun check\` and 64-bit Windows MS-x64 ABI match cleanly.
@@ -173,7 +174,7 @@ Located at \`%USERPROFILE%\\.local\\bin\\rust_stack_ffi.dll\` (compiled with \`o
   {
     name: "go-infra-oneclick-deploy",
     description:
-      "Deploy any Bun, Rust, Go, or WASM/WebGPU app in C:\\aphrody via Go 1.27 src-deploy / dpl: daemonless OCI v1.1 image builds, Caddy HTTP/3 blue/green across fr1/fr2 and Google-only usa egress, Cloudflare DNS/Workers/R2 S3v4, and 3-way Rust <-> Bun <-> Go FFI (infra_go.dll).",
+      "Deploy any Bun, Rust, Go, or WASM/WebGPU app in <workspace> via Go 1.27 src-deploy / dpl: daemonless OCI v1.1 image builds, Caddy HTTP/3 blue/green across fr1/fr2 and Google-only usa egress, Cloudflare DNS/Workers/R2 S3v4, and 3-way Rust <-> Bun <-> Go FFI (infra_go.dll).",
     bodyMarkdown: `# Go 1.27 One-Click Deploy & Three-Way FFI (\`src-deploy\` / \`dpl\`)
 
 Activate this skill when packaging OCI v1.1 container images without a Docker daemon, generating HTTP/3 \`Caddyfile\` and \`systemd\` units, uploading assets to Cloudflare R2, or calling \`infra_go.dll\` via FFI.
@@ -183,12 +184,12 @@ Activate this skill when packaging OCI v1.1 container images without a Docker da
 1. **Environment & Fleet Readiness**:
    \`\`\`powershell
    dpl doctor
-   dpl detect C:\\aphrody\\apps\\web
+   dpl detect apps/web
    \`\`\`
 2. **Generate Deployment Plan & HTTP/3 Caddyfile**:
    \`\`\`powershell
-   dpl plan --all --out C:\\aphrody\\infra\\generated\\deploy-plan.json
-   dpl caddyfile --out C:\\aphrody\\infra\\generated\\Caddyfile
+   dpl plan --all --out infra/generated/deploy-plan.json
+   dpl caddyfile --out infra/generated/Caddyfile
    \`\`\`
 3. **Dry-Run or Live Fleet Rollout**:
    \`\`\`powershell
@@ -207,7 +208,7 @@ Activate this skill when packaging OCI v1.1 container images without a Docker da
         filename: "oci-fleet-and-ffi.md",
         content: `# Go Infra OCI v1.1, Fleet Routing & \`infra_go.dll\` FFI
 
-## Daemonless OCI v1.1 Packaging (\`C:\\aphrody\\infra\\internal\\oci\`)
+## Daemonless OCI v1.1 Packaging (\`infra/internal/oci\`)
 Writes deterministic \`oci-layout\`, \`index.json\`, config blobs, and tar layers directly to \`blobs/sha256/*\` without requiring \`dockerd\`, plus supports Windows Named Pipe \`\\\\.\\pipe\\docker_engine\` and SSH tunnel pushes when a daemon is present.
 
 ## Zig 0.17 CGO Shared Library (\`%USERPROFILE%\\.local\\bin\\infra_go.dll\`)
@@ -215,7 +216,7 @@ Writes deterministic \`oci-layout\`, \`index.json\`, config blobs, and tar layer
 - \`GoDetectProjectJSON(path)\` — Framework & regional topology classification.
 - \`GoSignR2S3v4AuthHeader(...)\` — Pure-Go Cloudflare R2 S3v4 signature generator.
 - \`GoComputeOciDigest(buffer)\` — Deterministic SHA-256 OCI layer digest.
-- Tested end-to-end across Rust, Bun, and Go in \`C:\\aphrody\\infra\\ffi-bridge\\polyglot.test.ts\`.
+- Tested end-to-end across Rust, Bun, and Go in \`infra/ffi-bridge/polyglot.test.ts\`.
 `,
       },
     ],
@@ -223,7 +224,7 @@ Writes deterministic \`oci-layout\`, \`index.json\`, config blobs, and tar layer
   {
     name: "agy-continuous-reviewer",
     description:
-      "Audit historical and live Antigravity CLI (agy) sessions via ske review-sessions, ske watch, and C:\\aphrody\\.agents\\hooks.json (PreToolUse, PostToolUse, Stop) for broken file:/// links, failed commands, emoji violations, secret leaks, and System32 safety.",
+      "Audit historical and live Antigravity CLI (agy) sessions via ske review-sessions, ske watch, and .agents/hooks.json (PreToolUse, PostToolUse, Stop) for broken file:/// links, failed commands, emoji violations, secret leaks, and System32 safety.",
     bodyMarkdown: `# Continuous AGY Session Reviewer & Lifecycle Hooks
 
 Activate this skill when auditing \`agy\` transcripts (\`transcript.jsonl\`), configuring \`.agents/hooks.json\`, or running real-time workspace quality gates.
@@ -231,20 +232,20 @@ Activate this skill when auditing \`agy\` transcripts (\`transcript.jsonl\`), co
 ## Commands (\`ske\`)
 
 1. **Incremental Full-Brain Session Audit (\`< 30ms\` cached)**:
-   Scans \`%USERPROFILE%\\.gemini\\antigravity-cli\\brain\\*\\.system_generated\\logs\\transcript.jsonl\` and writes \`C:\\aphrody\\docs\\AGY_SESSIONS_CONTINUOUS_REVIEW.md\` + \`C:\\aphrody\\var\\reports\\agy-sessions-audit.json\`:
+   Scans \`%USERPROFILE%\\.gemini\\antigravity-cli\\brain\\*\\.system_generated\\logs\\transcript.jsonl\` and writes \`docs/AGY_SESSIONS_CONTINUOUS_REVIEW.md\` + \`var/reports/agy-sessions-audit.json\`:
    \`\`\`powershell
    ske review-sessions
    \`\`\`
 2. **Continuous Watcher Loop**:
-   Incrementally audits active transcripts, fact-checks modified \`C:\\aphrody\\docs\\*.md\` and \`SKILL.md\` files, and refreshes \`MONOREPO_ATLAS.md\`:
+   Incrementally audits active transcripts, fact-checks modified \`docs/*.md\` and \`SKILL.md\` files, and refreshes \`MONOREPO_ATLAS.md\`:
    \`\`\`powershell
    ske watch --interval 30
    ske watch --once
    \`\`\`
 
 ## Antigravity \`hooks.json\` Contract Invariants
-- \`PreToolUse\` (\`pre-tool-guard.ts\`): Returns \`{"decision":"allow"}\` or \`{"decision":"deny","reason":"..."}\`. Blocks \`C:\\Windows\\System32\` mutations, raw \`.env\` git staging, and raw token commits.
-- \`PostToolUse\` (\`post-tool-tracker.ts\`): Logs turn events to \`C:\\aphrody\\var\\knowledge.sqlite\` (\`live_turn_events\`) in \`< 15ms\` and returns \`{}\`.
+- \`PreToolUse\` (\`pre-tool-guard.ts\`): Returns \`{"decision":"allow"}\` or \`{"decision":"deny","reason":"..."}\`. Blocks Windows System32 mutations, raw \`.env\` git staging, and raw token commits.
+- \`PostToolUse\` (\`post-tool-tracker.ts\`): Logs turn events to \`var/knowledge.sqlite\` (\`live_turn_events\`) in \`< 15ms\` and returns \`{}\`.
 - \`Stop\` (\`stop-session-reviewer.ts\`): Audits the active turn in \`< 40ms\`, appends to \`continuous-review-stream.jsonl\`, and returns \`{"decision":"stop"}\` (or \`{"decision":"continue","reason":"..."}\` strictly when \`terminationReason === "NO_TOOL_CALL"\`, \`executionNum <= 1\`, and a critical safety violation occurred).
 
 ## Progressive Disclosure Reference
@@ -326,8 +327,7 @@ export function generateWorkspaceSkills(
   options: SkillsGenOptions = {},
 ): SkillsGenReport {
   const t0 = Bun.nanoseconds();
-  const srcRoot =
-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
+  const srcRoot = options.srcRoot ?? workspaceRoot();
   const skillsRootDir = resolve(
     options.skillsRootDir ?? join(srcRoot, ".agents", "skills"),
   );

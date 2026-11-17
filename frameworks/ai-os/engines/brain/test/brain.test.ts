@@ -22,7 +22,7 @@ describe("@aphrody/brain vault indexing & query API", () => {
             start: "2026-11-11T10:00:00Z",
             end: "2026-11-11T10:15:00Z",
             steps: 24,
-            files: ["C:/aphrody/apps/web/server.ts"],
+            files: ["apps/web/server.ts"],
             subagents: ["Codebase Researcher"],
             toolErrors: 0,
             status: "completed",
@@ -34,7 +34,7 @@ describe("@aphrody/brain vault indexing & query API", () => {
             start: "2026-11-10T22:00:00Z",
             end: "2026-11-10T22:42:00Z",
             steps: 12,
-            files: ["C:/aphrody/apps/yolo/server.ts"],
+            files: ["apps/yolo/server.ts"],
             subagents: [],
             toolErrors: 1,
             status: "stopped-quota-429",
@@ -47,7 +47,7 @@ describe("@aphrody/brain vault indexing & query API", () => {
       const all = loadBrainSessions(vault);
       expect(all.length).toBe(2);
 
-      const hits = queryBrainSessions("aphrody", { vaultPath: vault });
+      const hits = queryBrainSessions("sovereign", { vaultPath: vault });
       expect(hits.length).toBe(1);
       expect(hits[0]?.id).toBe("4b0b07e6-test");
 

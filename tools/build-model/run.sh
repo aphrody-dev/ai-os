@@ -2,8 +2,10 @@
 . "$(git rev-parse --show-toplevel)/system/env-kit/loaders/shell/site.sh"; FR1=$(site_ssh fr1)
 # Usage: run from a machine with `ssh <fr1>` and `ssh prd`. No Chromium build is started.
 set -euo pipefail
-OUT=/srv/chromium/src/out/labs_agent-157.0.8103.78
-SISO=/srv/chromium/src/third_party/siso/cipd/siso
+# CHROMIUM_OUT: the Chromium out directory on the build host (<src>/out/<name>); siso comes with the checkout.
+: "${CHROMIUM_OUT:?set CHROMIUM_OUT to the Chromium out directory on the build host}"
+OUT=$CHROMIUM_OUT
+SISO=${SISO:-$OUT/../../third_party/siso/cipd/siso}
 here=$(cd "$(dirname "$0")" && pwd)
 ssh "$FR1" "set -e; mkdir -p /tmp/bm; cd $OUT; nice -n 19 $SISO query graph -C . | nice -n 19 gzip -1 > /tmp/bm/graph.jsonl.gz;
   cp siso_metrics.0.json siso_metrics.json /tmp/bm/; cp ../re-test/siso_metrics.json /tmp/bm/retest_metrics.json"

@@ -24,7 +24,7 @@ autobenches = false
 description = "Local model lifecycle for aphrody: pinned HuggingFace/URL references, a curated catalog of OCR / visual-transcription / speech-to-text / embedding models, a digest-checked resumable downloader, hand-rolled GGUF / GGML / safetensors / ONNX header inspection, and an LRU-evicting on-disk store under ~/.aphrody/models."
 readme = false
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [package.metadata.cargo-machete]
 ignored = ["rustls"]

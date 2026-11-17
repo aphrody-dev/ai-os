@@ -37,7 +37,7 @@ categories = [
     "web-programming",
 ]
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [package.metadata.cargo-machete]
 ignored = [

@@ -39,6 +39,9 @@ export interface OptionsExecution {
   workflow: { id: string; nom: string };
   executionId: string;
   secrets?: Record<string, string>;
+  /** Locale and time zone of the formatting filters, from the request or the user setting. */
+  locale?: string;
+  fuseau?: string;
   signal?: AbortSignal;
   maxEtapes?: number;
   maxElements?: number;
@@ -238,6 +241,8 @@ export async function executer(
     execution: { id: o.executionId },
     workflow: o.workflow,
     index,
+    locale: o.locale,
+    fuseau: o.fuseau,
   });
 
   while (file.length) {

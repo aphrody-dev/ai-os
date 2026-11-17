@@ -1,0 +1,16 @@
+# Files that quote absolute paths on purpose (read by `bun tools/paths.ts --root <this repository>` of the ay checkout).
+docs/reviews/** # dated review records quote the paths of the code they reviewed
+docs/proofs/** # dated run proofs quote the host paths of that run
+patches/** # a patch quotes the lines it removes
+system/gnu-ts/test/gnu.test.ts # fixture: ls -lR listing of ftp.gnu.org, whose paths are server-side
+system/proc/src/elevate.rs # fixture: Windows paths quoted by the argument-quoting and elevation tests
+system/fsindex/src/everything.rs # fixture: Windows paths of Everything hits
+system/fsindex/src/google.rs # fixture: Windows paths of the local_files.db rows
+system/fsindex/src/mft.rs # fixture: Windows paths resolved from MFT records
+system/fsindex/src/paths.rs # fixture: a legacy index file with Windows paths
+system/jobs/src/lib.rs # fixture: a POSIX state root for the default path helpers
+system/sql/tests/product-schema.sql # fixture: unsafe path strings the schema must refuse
+frameworks/toolcall-repair/src/repair_tests.rs # fixture: unescaped Windows paths in model output
+frameworks/toolcall-repair/tests/fixtures/** # fixtures: unescaped Windows paths in model output
+frameworks/subsystem/src/lib.rs # fixture: a Windows path in skill parameters
+frameworks/app-protocol/tests/tier1_contract.rs # fixture: cwd and home values of the protocol examples

@@ -22,7 +22,7 @@ const SESSION = {
   title: "Fix it",
   prompt: "Fix it",
   sourceContext: {
-    source: "sources/github/aphrody-labs/src",
+    source: "sources/github/example-org/example-repo",
     githubRepoContext: { startingBranch: "main" },
   },
   createTime: "2026-11-13T00:00:00Z",
@@ -38,12 +38,12 @@ beforeAll(() => {
       const path = u.pathname.replace(/^\/v1alpha\//, "");
       const body = req.method === "POST" ? await req.json() : null;
       seen.push({ method: req.method, path, headers: req.headers, body });
-      if (path === "sources/github/aphrody-labs/src")
+      if (path === "sources/github/example-org/example-repo")
         return Response.json({
-          name: "sources/github/aphrody-labs/src",
-          id: "github/aphrody-labs/src",
+          name: "sources/github/example-org/example-repo",
+          id: "github/example-org/example-repo",
           githubRepo: {
-            owner: "aphrody-labs",
+            owner: "example-org",
             repo: "src",
             defaultBranch: { displayName: "main" },
           },
@@ -65,7 +65,7 @@ beforeAll(() => {
                 outputs: [
                   {
                     pullRequest: {
-                      url: "https://github.com/aphrody-labs/src/pull/1",
+                      url: "https://github.com/example-org/example-repo/pull/1",
                       title: "Fix it",
                       description: "",
                     },
@@ -98,7 +98,7 @@ describe("jules: absorbed core", () => {
     });
     const run = await j.run({
       prompt: "Fix it",
-      source: { github: "aphrody-labs/src", baseBranch: "main" },
+      source: { github: "example-org/example-repo", baseBranch: "main" },
     });
     expect(run.id).toBe("s1");
     const post = seen.find(
@@ -110,14 +110,14 @@ describe("jules: absorbed core", () => {
       automationMode: "AUTO_CREATE_PR",
       requirePlanApproval: false,
       sourceContext: {
-        source: "sources/github/aphrody-labs/src",
+        source: "sources/github/example-org/example-repo",
         githubRepoContext: { startingBranch: "main" },
       },
     });
     const out = await run.result();
     expect(out.state).toBe("completed");
     expect(out.pullRequest?.url).toBe(
-      "https://github.com/aphrody-labs/src/pull/1",
+      "https://github.com/example-org/example-repo/pull/1",
     );
   });
 

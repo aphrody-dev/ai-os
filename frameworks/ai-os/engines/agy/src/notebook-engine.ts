@@ -1,6 +1,7 @@
 import { Database } from "bun:sqlite";
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { dataDir } from "../../../src/core/paths.ts";
 import {
   computeDeterministicEmbedding,
   federateChatCompletion,
@@ -10,9 +11,8 @@ import {
 } from "../../../src/index.ts";
 import { buildGitingestDigest } from "./depot-orgs.ts";
 
-export const DEFAULT_NOTEBOOKLM_DB_PATH =
-  "C:/aphrody/var/agy-notebooklm.sqlite";
-export const DEFAULT_NOTEBOOKS_DIR = "C:/aphrody/var/agy-notebooks";
+export const DEFAULT_NOTEBOOKLM_DB_PATH = dataDir("agy-notebooklm.sqlite");
+export const DEFAULT_NOTEBOOKS_DIR = dataDir("agy-notebooks");
 
 export interface JupyterCell {
   cell_type: "markdown" | "code";

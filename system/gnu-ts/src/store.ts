@@ -7,7 +7,7 @@ import type { Announce, GnuEvent, Signature } from "./types.ts";
 
 /** Repository root (system/gnu-ts/src -> repo). */
 export const repoRoot = () => resolve(import.meta.dir, "..", "..", "..");
-/** Working directory of the tracker: feed, state, staging, site. fr2 sets GNU_HOME=/srv/gnu. */
+/** Working directory of the tracker: feed, state, staging, site. A deployment sets GNU_HOME. */
 export const home = () => Bun.env.GNU_HOME ?? join(repoRoot(), "var", "gnu");
 export const paths = (h = home()) => ({
   home: h,

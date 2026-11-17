@@ -44,7 +44,7 @@ the bundle relies on:
 - The prompt segment contract in `prompts/segments.toml` is still
   mirrored by the host (`prompt_segments.rs` pins the same segment ids
   and presets, with a test resolving this repository's file).
-- `$HOME` deliberately stays in Windows form (`C:/Users/you`) while
+- `$HOME` deliberately stays in Windows form (`%USERPROFILE%`) while
   `$PWD` is POSIX form (niubash#522); framework code must not assume
   the two share a form. On POSIX hosts, `HOME` may be entirely unset
   (niubash#546).

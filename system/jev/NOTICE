@@ -1,7 +1,7 @@
 Aphrody Jev
 Copyright Aphrody Labs and contributors (aphrody-code).
 Licensed under Apache License, Version 2.0.
-Source transferred from aphrody-labs/ay; exact revision and original
+Source transferred from aphrody-labs/legacy; exact revision and original
 file hashes are recorded in provenance.json.
 
 src/protocol.rs derives from the Bun fork's MIT-licensed Yolo validator.

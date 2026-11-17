@@ -14,6 +14,7 @@ import {
 } from "node:fs";
 import { join, resolve } from "node:path";
 import { expandSync } from "../../system/env-kit/src/discover.ts";
+import { srcRepo } from "./repo.ts";
 
 export type GithubEvent = {
   v: 1;
@@ -43,13 +44,9 @@ export type QueueTask = {
   created_at: string;
 };
 
-const SRC_REPO = "aphrody-labs/ay";
-// Repositories whose code lives in the runner checkout (aphrody and its submodules under apps/): only these give
-// tasks that modify and commit; the others produce a report.
-const inCheckout = (repo = "") =>
-  repo === SRC_REPO ||
-  repo === "aphrody-labs/src" ||
-  /^aphrody-labs\/(rosegriffon|shenron|r2b|auto)$/.test(repo);
+// The repository whose code lives in the runner checkout: only it gives tasks that modify and commit; the others
+// produce a report.
+const inCheckout = (repo = "") => repo === srcRepo();
 const short = (s = "") => s.slice(0, 12);
 // Data coming from the payload: formats validated before entering a prompt; free text (titles) is quoted
 // as untrusted data, never as an instruction or a command argument.
@@ -90,11 +87,11 @@ export function eventTask(
       return {
         ...base,
         id:
-          repo === SRC_REPO || repo === "aphrody-labs/src"
+          inCheckout(repo)
             ? `ci-fix-${short(e.sha)}`
             : `gh-ci-${repo.replace("/", "-")}-${short(e.sha)}`,
         role: "coder", // builds and tests: heavy, forwarded to fr1 by runner.ts route()
-        prompt: `GitHub Actions is red on ${repo} default branch: ${untrusted(e.title)} at ${e.sha} (${e.url}). Run \`git pull --ff-only origin main\` first. If a newer run of the same workflow on main is green, or HEAD already reverts ${short(e.sha)}, stop without changes. Otherwise read the failing log with \`gh run view --log-failed -R ${repo} <run id from the URL>\`. ${inCheckout(repo) ? "Fix the root cause with the smallest change in this checkout (submodules live under apps/), run the matching `just` recipe locally, and stop. Do not commit: the runner commits." : "This repository is not in the checkout: if the failure is transient infrastructure, rerun it once with `gh run rerun --failed`; otherwise write the diagnosis and the proposed patch in your final answer."}`,
+        prompt: `GitHub Actions is red on ${repo} default branch: ${untrusted(e.title)} at ${e.sha} (${e.url}). Run \`git pull --ff-only origin main\` first. If a newer run of the same workflow on main is green, or HEAD already reverts ${short(e.sha)}, stop without changes. Otherwise read the failing log with \`gh run view --log-failed -R ${repo} <run id from the URL>\`. ${inCheckout(repo) ? "Fix the root cause with the smallest change in this checkout, run the matching `just` recipe locally, and stop. Do not commit: the runner commits." : "This repository is not in the checkout: if the failure is transient infrastructure, rerun it once with `gh run rerun --failed`; otherwise write the diagnosis and the proposed patch in your final answer."}`,
         ...(inCheckout(repo)
           ? {
               commit: {

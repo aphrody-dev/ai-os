@@ -150,7 +150,7 @@ function renderPillar(
       ? [
           "---",
           `name: ${p.skill}`,
-          `description: ${p.title}. ${p.summary} Use before writing or modifying ${p.skill} code in C:\\src.`,
+          `description: ${p.title}. ${p.summary} Use before writing or modifying ${p.skill} code in this workspace.`,
           "---",
           "",
         ]

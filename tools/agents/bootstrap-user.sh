@@ -12,7 +12,8 @@ U=${AGENTS_USER:-agent}
 id "$U" >/dev/null 2>&1 || useradd -m -s /bin/bash "$U"
 H=$(getent passwd "$U" | cut -d: -f6)
 install -d -m 0700 -o "$U" -g "$U" "$H/.ssh"
-{ cat /root/.ssh/authorized_keys; [ -z "${SUDO_USER:-}" ] || cat "$(getent passwd "$SUDO_USER" | cut -d: -f6)/.ssh/authorized_keys"; } 2>/dev/null >> "$H/.ssh/authorized_keys" || true
+R=$(getent passwd root | cut -d: -f6)
+{ cat "$R/.ssh/authorized_keys"; [ -z "${SUDO_USER:-}" ] || cat "$(getent passwd "$SUDO_USER" | cut -d: -f6)/.ssh/authorized_keys"; } 2>/dev/null >> "$H/.ssh/authorized_keys" || true
 sort -u -o "$H/.ssh/authorized_keys" "$H/.ssh/authorized_keys"
 chown "$U:$U" "$H/.ssh/authorized_keys"; chmod 0600 "$H/.ssh/authorized_keys"
 getent group docker >/dev/null && usermod -aG docker "$U"
@@ -22,7 +23,7 @@ loginctl enable-linger "$U"
 install -d -m 0755 -o "$U" -g "$U" /var/lib/aphrody-agents /var/lib/aphrody-agents/logs
 chown -R "$U:$U" /var/lib/aphrody-agents
 # ai-os relay (127.0.0.1:8790) bearer token, readable by the runner user only. Re-run after a rotation.
-T=/root/.local/state/aphrody/relay/token
+T="$R/.local/state/aphrody/relay/token"
 if [ -f "$T" ]; then install -d -m 0700 -o "$U" -g "$U" "$H/.local" "$H/.local/state" "$H/.local/state/aphrody" "$H/.local/state/aphrody/relay"; install -m 0600 -o "$U" -g "$U" "$T" "$H/.local/state/aphrody/relay/token"; fi
 command -v tmux git >/dev/null
 echo "bootstrap-user: ok user=$U home=$H"

@@ -7,7 +7,7 @@ memory: project
 effort: medium
 ---
 
-You verify, you never edit. Input: commits or files of C:\src. For each file, list every concrete claim that is left (path, command, crate, package, script, version, measured figure, "exists/removed" statement) and check it:
+You verify, you never edit. Input: commits or files of this repository. For each file, list every concrete claim that is left (path, command, crate, package, script, version, measured figure, "exists/removed" statement) and check it:
 
 - path or file: `git ls-files`, `fd`;
 - crate, package, workspace dependency: crates/*/Cargo.toml, packages/*/package.json, root Cargo.toml;

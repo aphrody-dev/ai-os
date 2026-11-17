@@ -2,7 +2,7 @@
 
 Verified 2026-11-13. Installed `1.5.7` (`agy --version`); `agy changelog` tops at `1.5.7`.
 
-Sources: `agy --help`, `agy mcp --help`, `agy changelog` (1.5.7); REF = https://antigravity.google/docs/cli/reference ; HL = https://antigravity.google/docs/cli/headless ; GS = https://antigravity.google/docs/getting-started?tab=cli . Context7 and a GitHub repo for agy were not used: no official source repo located; no local mirror in C:\aphrody\third_party (fd).
+Sources: `agy --help`, `agy mcp --help`, `agy changelog` (1.5.7); REF = https://antigravity.google/docs/cli/reference ; HL = https://antigravity.google/docs/cli/headless ; GS = https://antigravity.google/docs/getting-started?tab=cli . Context7 and a GitHub repo for agy were not used: no official source repo located; no local mirror in <workspace>/third_party (fd).
 
 ## Settings
 
@@ -46,6 +46,6 @@ Sources: `agy --help`, `agy mcp --help`, `agy changelog` (1.5.7); REF = https://
 - `toolPermission: "always-proceed"`: valid, NHITL. No conflict.
 - `artifactReviewPolicy: "agent-decides"`: CONFLICT for NHITL; docs say it currently behaves as `asks-for-review` (waits). NHITL value is `always-proceed`.
 - `allowNonWorkspaceAccess: true`: valid.
-- `trustedWorkspaces`: 70 entries with duplicates and many removed paths (`C:\aphrody\bun`, `C:\aphrody\yolo-*`, ...), plus `C:\`.
+- `trustedWorkspaces`: 70 entries with duplicates and many removed paths (`<workspace>/bun`, `<workspace>/yolo-*`, ...), plus `C:\`.
 - `hooks.json` sits in `~/.gemini/antigravity-cli/`, but the shared path is `~/.gemini/config/hooks.json` (absent locally): the pre-tool-guard hook likely does not load. Its matcher `run_command|write_file|edit_file` was not checked against current tool names.
 - `mcp_config.json` exists in both `~/.gemini/antigravity-cli/` (legacy) and `~/.gemini/config/` (current).

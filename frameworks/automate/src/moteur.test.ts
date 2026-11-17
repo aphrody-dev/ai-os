@@ -60,6 +60,7 @@ const opts = (s: Services, secrets = {}) => ({
   workflow: { id: "w", nom: "W" },
   executionId: "e",
   secrets,
+  locale: "fr-FR",
 });
 
 describe("expressions", () => {
@@ -70,6 +71,7 @@ describe("expressions", () => {
     execution: { id: "e" },
     workflow: { id: "w", nom: "W" },
     index: 0,
+    locale: "fr-FR",
   };
   test("single typed value, mixed text, filters", () => {
     expect(resoudre("{{ $json.a.b }}", p)).toEqual([1, 2]);

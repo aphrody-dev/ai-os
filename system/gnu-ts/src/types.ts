@@ -3,7 +3,7 @@ import type { KernelSection } from "./kernel.ts";
 // Types shared by the tracker, the feed, the CLI, the MCP tools and the site.
 
 export type FtpFile = { name: string; size: number; mtime: number };
-export type FtpListing = Map<string, FtpFile[]>; // path under /home/ftp/gnu, "" = gnu/ itself
+export type FtpListing = Map<string, FtpFile[]>; // path below the gnu/ root of ftp.gnu.org, "" = gnu/ itself
 
 export type Release = {
   file: string;

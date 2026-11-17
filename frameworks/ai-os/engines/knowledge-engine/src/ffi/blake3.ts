@@ -1,5 +1,6 @@
 import { dlopen, FFIType, ptr } from "bun:ffi";
 import { existsSync } from "node:fs";
+import { homedir } from "node:os";
 import { join } from "node:path";
 
 const encoder = new TextEncoder();
@@ -23,8 +24,7 @@ const scratchOut = new Uint8Array(128);
 function resolveCandidateDllPaths(): string[] {
   const candidates: Array<string | undefined> = [
     process.env.RUST_STACK_FFI_DLL,
-    "%USERPROFILE%\\.local\\bin\\rust_stack_ffi.dll",
-    "C:\\aphrody\\crates\\rust-stack\\target\\release\\rust_stack_ffi.dll",
+    join(homedir(), ".local", "bin", "rust_stack_ffi.dll"),
     process.env.CARGO_TARGET_DIR
       ? join(process.env.CARGO_TARGET_DIR, "release", "rust_stack_ffi.dll")
       : undefined,

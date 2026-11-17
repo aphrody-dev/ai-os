@@ -128,13 +128,13 @@ describe("env-kit Bun/TypeScript core", () => {
     const view = redactEnv({
       ANTHROPIC_API_KEY: "synthetic_key_val_22ch",
       GOOGLE_CLOUD_PROJECT: "aphrody",
-      CUDA_PATH: "C:\\Program Files\\NVIDIA\\CUDA\\v13.4",
+      CUDA_PATH: "C:\\Program Files\\NVIDIA\\CUDA\\v13.4", // paths:ok a value that must pass through unmasked
       CUSTOM_PLAIN_FLAG: `${"figd"}_mock_prefixed_token_999`,
     });
 
     expect(view.ANTHROPIC_API_KEY).toBe("SET [len=22]");
     expect(view.GOOGLE_CLOUD_PROJECT).toBe("aphrody");
-    expect(view.CUDA_PATH).toBe("C:\\Program Files\\NVIDIA\\CUDA\\v13.4");
+    expect(view.CUDA_PATH).toBe("C:\\Program Files\\NVIDIA\\CUDA\\v13.4"); // paths:ok
     expect(view.CUSTOM_PLAIN_FLAG).toBe("SET [len=28]");
   });
 
@@ -147,7 +147,7 @@ describe("env-kit Bun/TypeScript core", () => {
         [
           "CLOUDFLARE_ACCOUNT_ID=0123456789abcdef0123456789abcdef",
           "GEMINI_API_KEY=AIzaMockTestKeyForUnitSpecOnly1234",
-          "CARGO_HOME=/home/user/.cargo",
+          "CARGO_HOME=/home/user/.cargo", // paths:ok a value written to .dev.vars, never read from disk
         ].join("\n"),
         "utf8",
       );

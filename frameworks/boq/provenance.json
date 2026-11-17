@@ -4,7 +4,7 @@
   "package": "aphrody-boq",
   "version": "1.4.4",
   "license": "Apache-2.0",
-  "sourceRepository": "https://github.com/aphrody-labs/ay",
+  "sourceRepository": "https://github.com/aphrody-labs/legacy",
   "sourceCommit": "4b83ea7f6c2727d67c30d4942501e5b831e559dd",
   "sourceRoot": "crates/google/boq",
   "files": [

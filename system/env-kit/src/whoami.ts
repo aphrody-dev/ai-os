@@ -259,7 +259,9 @@ function gcloud(): Identity {
 
 function steam(env: Env): Identity {
   try {
-    const dir = env.STEAM_DIR ?? "C:/Program Files (x86)/Steam";
+    const programFiles = env["ProgramFiles(x86)"] ?? env.ProgramFiles;
+    const dir = env.STEAM_DIR ?? (programFiles ? `${programFiles}/Steam` : undefined);
+    if (!dir) return { provider: "steam", status: "unset" };
     const vdf = require("node:fs").readFileSync(
       `${dir}/config/loginusers.vdf`,
       "utf8",

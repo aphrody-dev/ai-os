@@ -1,4 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { buildAtom, buildFeed } from "../src/feed.ts";
 import {
   buildKernel,
@@ -402,7 +404,7 @@ describe("feed", () => {
   test("one entry per package, ftp wins over GSRC, drift flagged", async () => {
     const f = await buildFeed(inv, st, listing, {
       now: NOW,
-      root: "C:/nonexistent",
+      root: join(tmpdir(), "gnu-nonexistent"),
     });
     const ids = f.entries.map((e) => e.id);
     expect(ids).toContain("coreutils");
@@ -433,7 +435,7 @@ describe("feed", () => {
   test("atom is well formed with one entry per released package", async () => {
     const f = await buildFeed(inv, st, listing, {
       now: NOW,
-      root: "C:/nonexistent",
+      root: join(tmpdir(), "gnu-nonexistent"),
     });
     const x = buildAtom(f);
     expect(x.startsWith('<?xml version="1.0"')).toBe(true);
@@ -446,7 +448,7 @@ describe("feed", () => {
   test("query layer", async () => {
     const f = await buildFeed(inv, st, listing, {
       now: NOW,
-      root: "C:/nonexistent",
+      root: join(tmpdir(), "gnu-nonexistent"),
     });
     expect(search(f, { query: "core util" }).results[0]!.id).toBe("coreutils");
     expect(search(f, { filter: "drop-in" }).total).toBe(1);
@@ -466,7 +468,7 @@ describe("feed", () => {
   test("diff events: release, rust bump, announce, kernel", async () => {
     const a = await buildFeed(inv, st, listing, {
       now: NOW,
-      root: "C:/nonexistent",
+      root: join(tmpdir(), "gnu-nonexistent"),
     });
     const b = structuredClone(a);
     b.generated = "2026-11-15T00:00:00Z";

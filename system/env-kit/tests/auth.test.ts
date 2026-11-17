@@ -3,13 +3,14 @@ import { describe, expect, test } from "bun:test";
 import { spawnSync } from "../src/spawn.ts";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { formatChecks, hostScript, loadManifest } from "../src/auth";
 
-const root = resolve(import.meta.dir, "..", "..", "..");
+// A synthetic manifest with the shape of device/deploy.toml (the real one is not part of this repository).
+const root = join(import.meta.dir, "fixtures", "auth-root");
 
 describe("auth manifest", () => {
-  test("device/deploy.toml declares hosts and GitHub secrets by name only", () => {
+  test("a deploy manifest declares hosts and GitHub secrets by name only", () => {
     const m = loadManifest(root);
     expect(Object.keys(m.nodes)).toContain("usa");
     expect(m.auth.hosts?.usa?.tunnels).toBeDefined();
@@ -20,7 +21,6 @@ describe("auth manifest", () => {
   test("keyless CI federation is declared without spaces (gcloud.cmd goes through cmd.exe)", () => {
     const g = loadManifest(root).auth.oidc?.gcp;
     expect(g?.issuer).toBe("https://token.actions.githubusercontent.com");
-    // Repository owner since the transfer aphrody-dev/src -> aphrody-labs/src (2026-11-13).
     expect(g?.condition).toBe("assertion.repository_owner=='aphrody-labs'");
     for (const r of (g as { repos?: string[] }).repos ?? [])
       expect(r.startsWith("aphrody-labs/")).toBe(true);

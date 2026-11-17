@@ -34,7 +34,7 @@ function deps(over: Partial<Deps> = {}): Deps {
     cachePath: join(mkdtempSync(join(tmpdir(), "disc-")), "discover.json"),
     ttlMs: 60_000,
     now: () => 1_000,
-    env: { USERNAME: "tester", USERPROFILE: "C:/Users/tester", COMPUTERNAME: "TESTBOX" },
+    env: { USERNAME: "tester", USERPROFILE: join(tmpdir(), "tester"), COMPUTERNAME: "TESTBOX" },
     ...over,
   };
   (d as any).calls = calls;

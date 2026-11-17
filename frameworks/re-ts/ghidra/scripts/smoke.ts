@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { stop, withProgram } from "../src/index.ts";
 
-const bin = process.argv[2] ?? (process.platform === "win32" ? "C:/Windows/System32/notepad.exe" : "/bin/ls");
+const bin = process.argv[2] ?? (process.platform === "win32" ? join(process.env.SystemRoot ?? "", "System32", "notepad.exe") : "/bin/ls");
 const loc = process.argv[3] ?? join(tmpdir(), "ghidra-smoke");
 const t0 = performance.now();
 try {

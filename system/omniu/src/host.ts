@@ -42,7 +42,7 @@ export async function loadBunPlugins(root: string = bundleRoot(), only?: string[
   const loaded: string[] = [];
   for (const p of discover(root)) {
     if (!p.bun || (only && !only.includes(p.name))) continue;
-    // A file URL: a bare Windows path (`C:\\...`) is not a valid module specifier.
+    // A file URL: a bare Windows drive path is not a valid module specifier.
     const mod = await import(pathToFileURL(join(p.dir, p.bun.entry)).href);
     const exported = mod.default as BunPlugin | ((plugin: HostedPlugin) => BunPlugin) | undefined;
     if (!exported) throw new Error(`${p.name}: ${p.bun.entry} has no default export`);

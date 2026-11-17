@@ -9,8 +9,8 @@ color: orange
 skills:
   - fleet
 ---
-Roles (owner): fr1 = builds, CI, training, heavy agents; prd = clean production backends only; fr2 = test, lint, bench, research, edge services stay up. Always `timeout N ssh <host>`. Everything must survive reboot: systemd with Restart=always, units versioned under infra/. Change a host only through a versioned file plus its apply step, never by hand-editing state. VPS checkout update: `git fetch -q --no-recurse-submodules origin main && git merge --ff-only FETCH_HEAD` in /srv/src.
-- Commit with `bun scripts/commit.ts -m "<msg>" --push <paths>` (private index, refuses a shrinking tree). Never git commit the shared index, never stash, reset or branch.
+Roles (owner): fr1 = builds, CI, training, heavy agents; prd = clean production backends only; fr2 = test, lint, bench, research, edge services stay up. Always `timeout N ssh <host>`. Everything must survive reboot: systemd with Restart=always, units versioned under infra/. Change a host only through a versioned file plus its apply step, never by hand-editing state. VPS checkout update: `git fetch -q --no-recurse-submodules origin main && git merge --ff-only FETCH_HEAD` in the host's checkout (ay.toml `[paths.<role>] work`).
+- Commit with `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
 
 ## Rules
 - Facts only, each with its source (file:line, command output, commit, URL + date). End of 2026: no version or API from memory.

@@ -19,11 +19,11 @@ test("launcher: .env entries loaded by bun never reach claude", () => {
     PLAIN: "a",
     LOCAL_ONLY: "l",
     PATH: "/bin",
-    HOME: "/home/x",
+    HOME: join(dir, "home"),
   };
   expect(envWithoutDotenv(env, dir, true)).toEqual({
     PATH: "/bin",
-    HOME: "/home/x",
+    HOME: join(dir, "home"),
   });
   // a real environment value that differs from the file is the caller's own: kept
   expect(
@@ -78,16 +78,16 @@ test("sandbox: settings fail closed and hide secrets", () => {
 });
 
 test("sandbox: Windows paths map to /mnt, UNC refused", () => {
-  expect(toWslPath("C:\\aphrody\\packages")).toBe("/mnt/c/src/packages");
-  expect(toWslPath("D:/x")).toBe("/mnt/d/x");
-  expect(toWslPath("/home/a")).toBe("/home/a");
+  expect(toWslPath("C:\\work\\packages")).toBe("/mnt/c/work/packages"); // paths:ok
+  expect(toWslPath("D:/x")).toBe("/mnt/d/x"); // paths:ok
+  expect(toWslPath("/home/a")).toBe("/home/a"); // paths:ok
   expect(() => toWslPath("\\\\srv\\share")).toThrow();
 });
 
 test("sandbox: wsl argv runs claude via --exec, no shell string", () => {
   const a = wslArgv({
     distro: "Arch",
-    cwd: "C:\\aphrody",
+    cwd: "C:\\work", // paths:ok
     env: { NHITL_RUN: "1" },
     claudeArgs: ["claude", "-p", "a b; rm -rf ~"],
   });
@@ -96,7 +96,7 @@ test("sandbox: wsl argv runs claude via --exec, no shell string", () => {
     "-d",
     "Arch",
     "--cd",
-    "/mnt/c/src",
+    "/mnt/c/work",
     "--exec",
     "env",
     "NHITL_RUN=1",
@@ -126,6 +126,11 @@ test("launcher: wsl mode refuses off-Windows, passes --settings", async () => {
       env: { ...process.env, NHITL_RUN_AS: "" },
     },
   );
+  if (process.platform === "win32") {
+    // On Windows the mode is available: the launcher hands over to wsl.exe instead of refusing.
+    expect(r.stderr.toString()).not.toContain("needs Windows");
+    return;
+  }
   expect(r.exitCode).toBe(2);
   expect(r.stderr.toString()).toContain("needs Windows");
 });

@@ -68,7 +68,7 @@ export const KNOWLEDGE_MCP_TOOLS = [
   {
     name: "deep_research",
     description:
-      "Execute 5-channel parallel Deep Research (Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local C:\\aphrody grounding) and optionally save a cited Markdown dossier.",
+      "Execute 5-channel parallel Deep Research (Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local <workspace> grounding) and optionally save a cited Markdown dossier.",
     inputSchema: {
       type: "object",
       properties: {
@@ -79,7 +79,7 @@ export const KNOWLEDGE_MCP_TOOLS = [
         saveReport: {
           type: "boolean",
           description:
-            "Save dossier to C:\\aphrody\\docs\\research\\<slug>.md (default: true)",
+            "Save dossier to docs/research/<slug>.md (default: true)",
         },
       },
       required: ["query"],
@@ -88,14 +88,13 @@ export const KNOWLEDGE_MCP_TOOLS = [
   {
     name: "fact_check",
     description:
-      "Deterministically fact-check a text claim or local file path (verifies file:/// and C:\\aphrody paths, ~/.local/bin binaries, lockfile versions, GitHub repos, Context7 symbols, secret hygiene, System32 safety, and zero-emoji compliance).",
+      "Deterministically fact-check a text claim or local file path (verifies file:/// and <workspace> paths, ~/.local/bin binaries, lockfile versions, GitHub repos, Context7 symbols, secret hygiene, System32 safety, and zero-emoji compliance).",
     inputSchema: {
       type: "object",
       properties: {
         target: {
           type: "string",
-          description:
-            "Claim text or absolute file path (e.g., 'C:/aphrody/README.md')",
+          description: "Claim text or absolute file path (e.g., 'README.md')",
         },
       },
       required: ["target"],
@@ -104,7 +103,7 @@ export const KNOWLEDGE_MCP_TOOLS = [
   {
     name: "generate_docs_and_skills",
     description:
-      "Regenerate C:\\aphrody\\docs\\MONOREPO_ATLAS.md, C:\\aphrody\\third_party\\bun\\docs\\sovereign\\index.mdx, and/or the 5 sovereign workspace SKILL.md definitions.",
+      "Regenerate docs/MONOREPO_ATLAS.md, third_party/bun/docs/sovereign/index.mdx, and/or the 5 sovereign workspace SKILL.md definitions.",
     inputSchema: {
       type: "object",
       properties: {

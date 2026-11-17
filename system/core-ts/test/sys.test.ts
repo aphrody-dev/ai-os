@@ -445,10 +445,10 @@ describe("sys/ Layer-0 Pure C + x86_64 ASM Tree (libaysys)", () => {
     expect(pm.kittyFlags).toBe(7);
 
     protoVt.feed(
-      "\x1b]7;file://host/C:/aphrody\x07\x1b]8;;https://aphrody.com\x07LINK\x1b]8;;\x07",
+      "\x1b]7;file://host/C:/work\x07\x1b]8;;https://aphrody.com\x07LINK\x1b]8;;\x07", // paths:ok an OSC 7 Windows cwd is the parser input
     );
     protoVt.feed("\x1b]52;c;SGVsbG8=\x07");
-    expect(protoVt.meta().cwd).toContain("/C:/aphrody");
+    expect(protoVt.meta().cwd).toContain("/C:/work"); // paths:ok
     expect(protoVt.getLink(1)).toBe("https://aphrody.com");
     expect(protoVt.drainClipboard()).toBe("Hello");
   });

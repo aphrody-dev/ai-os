@@ -210,7 +210,7 @@ pub extern "C" fn ai_os_uname_json() -> *mut c_char {
         fhs: FhsLayout {
             etc: "/etc/ai-os",
             var: "/var/lib/ai-os",
-            home: "/home/agent",
+            home: "/home/agent", // paths:ok virtual FHS of the agent OS, not a host path
             proc: "/proc/agent",
             tmp: "/tmp",
             dev: &["/dev/llm", "/dev/rag", "/dev/world", "/dev/sys1"],

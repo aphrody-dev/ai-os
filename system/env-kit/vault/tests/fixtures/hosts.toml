@@ -1,0 +1,38 @@
+# Fixture of vault.test.ts: the shape of device/vault/hosts.toml (public age recipients only).
+# Hosts of the aphrody vault. Public data only: each recipient is the public
+# half of an age X25519 identity whose private half never leaves its host (DPAPI on the PC,
+# systemd-creds credential "aphrody-vault-age" on a VPS). Recipients are written by
+# `env-kit vault hosts init <host>` and changed by `env-kit vault rotate <host>`.
+
+[pc]
+os = "windows"
+recipient = "age1m26zgufngsrmn2ach9ayrnys6pff2dw42hfjt7e5mp372zj7vyys3qar3g"
+
+# prd (USA, backends): runner user `agent`, user credstore; route (jump host, key alias) comes from the Host entry in ~/.ssh/config.
+[prd]
+os = "linux"
+ssh = ["-l", "agent", "prd"]
+recipient = "age178yp32swtmrew7lhsz97cgqc9fxsmatn6n0gwuam0qj5uackh4nq2e4pp5"
+
+# fr2 (proxy, vhosts, CDN): user credstore; user and address come from ~/.ssh/config.
+[fr2]
+os = "linux"
+ssh = ["fr2"]
+recipient = "age1t58pdvctqrkt3t3hmqv8t85fqs854skg75efrrpctk79zurdgststcgjc6"
+
+# fr1 (Chromium/LLVM builds only): user credstore; user and address come from ~/.ssh/config.
+[fr1]
+os = "linux"
+ssh = ["fr1"]
+recipient = "age1wtpumsxfp9wxcgej5f8qygcsem9rtrlshmvugm44arjyhp0ry5qqdhhsue"
+
+# Runner user `agent` of fr2 and fr1: the agents (relay hub, runner credEnv) read their own user credstore, not the login user's.
+[fr2-agent]
+os = "linux"
+ssh = ["-l", "agent", "fr2"]
+recipient = "age1gyzlle89galq00sgn99exfywm0h6t8lk374rmpvcfq72aq4lcprs4g3w8u"
+
+[fr1-agent]
+os = "linux"
+ssh = ["-l", "agent", "fr1"]
+recipient = "age1pph3q8xvuskz9msl9vj4q9jlp8j75fad3prc5xj4u6dmjpkqxevswwj8lr"

@@ -4,7 +4,7 @@
 # `runner.ts health`: it creates/repairs the psmux session "agents", requeues orphans, ships logs to prd.
 #   just agents-install-pc
 set -eu
-SRC=${SRC_ROOT:-C:/aphrody}
+SRC=${SRC_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel)}
 BUN=$(command -v bun) || { echo "install-pc: bun missing" >&2; exit 1; }
 command -v tmux >/dev/null || { echo "install-pc: tmux (psmux, winget arndawg.tmux-windows) missing" >&2; exit 1; }
 WBUN=$(cygpath -w "$BUN" 2>/dev/null || echo "$BUN")

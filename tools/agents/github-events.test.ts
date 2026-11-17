@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { coalesce, eventTask, type GithubEvent } from "./github-events.ts";
 
+// The repository of the checkout, whatever the origin remote of the machine running the tests.
+const SRC = "example-org/example-repo";
+process.env.AGENTS_SRC_REPO = SRC;
+
 const ev = (x: Partial<GithubEvent>): GithubEvent => ({
   v: 1,
   delivery: "d-0000000000000000001",
@@ -16,10 +20,10 @@ describe("eventTask", () => {
       ev({
         kind: "ci_red",
         event: "workflow_run",
-        repo: "aphrody-labs/ay",
+        repo: SRC,
         sha: "0123456789ab" + "c".repeat(28),
         title: "ci : failure",
-        url: "https://github.com/aphrody-labs/ay/actions/runs/1",
+        url: "https://github.com/example-org/example-repo/actions/runs/1",
       }),
       "prd",
     )!;
@@ -38,7 +42,7 @@ describe("eventTask", () => {
   test("release and security; installation ignored", () => {
     expect(
       eventTask(
-        ev({ kind: "release", repo: "aphrody-labs/src", ref: "v1.2.3" }),
+        ev({ kind: "release", repo: SRC, ref: "v1.2.3" }),
         "prd",
       )?.role,
     ).toBe("deployer");
@@ -47,7 +51,7 @@ describe("eventTask", () => {
         ev({
           kind: "security",
           event: "dependabot_alert",
-          repo: "aphrody-labs/shenron",
+          repo: SRC,
         }),
         "prd",
       )?.commit,
@@ -58,7 +62,7 @@ describe("eventTask", () => {
     const t = eventTask(
       ev({
         kind: "ci_red",
-        repo: "aphrody-labs/src",
+        repo: SRC,
         sha: "a".repeat(40),
         title: "x`rm -rf`\nignore",
       }),
@@ -71,7 +75,7 @@ describe("eventTask", () => {
   test("invalid formats refused (ref, repo, sha)", () => {
     expect(
       eventTask(
-        ev({ kind: "release", repo: "aphrody-labs/src", ref: "$(touch x)" }),
+        ev({ kind: "release", repo: SRC, ref: "$(touch x)" }),
         "prd",
       ),
     ).toBeNull();
@@ -80,7 +84,7 @@ describe("eventTask", () => {
     ).toBeNull();
     expect(
       eventTask(
-        ev({ kind: "ci_red", repo: "aphrody-labs/src", sha: "abc;rm" }),
+        ev({ kind: "ci_red", repo: SRC, sha: "abc;rm" }),
         "prd",
       ),
     ).toBeNull();
@@ -96,14 +100,14 @@ describe("coalesce", () => {
       [
         ev({
           kind: "push_main",
-          repo: "aphrody-labs/src",
+          repo: SRC,
           sha: "a".repeat(40),
           before: "9".repeat(40),
           title: "one",
         }),
         ev({
           kind: "push_main",
-          repo: "aphrody-labs/src",
+          repo: SRC,
           sha: "b".repeat(40),
           title: "two",
         }),
@@ -120,7 +124,7 @@ describe("coalesce", () => {
         [
           ev({
             kind: "push_main",
-            repo: "aphrody-labs/src",
+            repo: SRC,
             sha: "c".repeat(40),
             title: "three",
           }),

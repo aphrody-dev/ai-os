@@ -99,12 +99,12 @@ export function getCpuThreads(): number {
 }
 
 const FORBIDDEN_PREFIXES = [
-  "c:\\windows",
-  "c:/windows",
-  "c:\\program files",
-  "c:/program files",
-  "c:\\program files (x86)",
-  "c:/program files (x86)",
+  "c:\\windows", // paths:ok
+  "c:/windows", // paths:ok
+  "c:\\program files", // paths:ok
+  "c:/program files", // paths:ok
+  "c:\\program files (x86)", // paths:ok
+  "c:/program files (x86)", // paths:ok
   "/bin",
   "/sbin",
   "/usr/bin",
@@ -195,10 +195,55 @@ export function diffLineStats(before: string, after: string): DiffStats {
     const removed = Number(packed & 0xffffffffn);
     return { added, removed };
   }
-  const bLines = before.split(/\r?\n/);
-  const aLines = after.split(/\r?\n/);
-  return {
-    added: Math.max(0, aLines.length - bLines.length),
-    removed: Math.max(0, bLines.length - aLines.length),
-  };
+  return diffLineStatsTs(before, after);
+}
+
+/** Lines of a text with the semantics of Rust's `str::lines`: no empty trailing line. */
+function textLines(text: string): string[] {
+  const lines = text.split(/\r?\n/);
+  if (lines.at(-1) === "") lines.pop();
+  return lines;
+}
+
+/**
+ * Pure TypeScript twin of `diff_line_stats` in rust-core: common prefix and suffix are trimmed, then a bounded O(N*M)
+ * LCS counts the lines added and removed; very large windows fall back to counting every line of the window.
+ */
+export function diffLineStatsTs(before: string, after: string): DiffStats {
+  const oldLines = textLines(before);
+  const newLines = textLines(after);
+  let prefix = 0;
+  while (
+    prefix < oldLines.length &&
+    prefix < newLines.length &&
+    oldLines[prefix] === newLines[prefix]
+  )
+    prefix++;
+  let oldEnd = oldLines.length;
+  let newEnd = newLines.length;
+  while (
+    oldEnd > prefix &&
+    newEnd > prefix &&
+    oldLines[oldEnd - 1] === newLines[newEnd - 1]
+  ) {
+    oldEnd--;
+    newEnd--;
+  }
+  const oldMid = oldLines.slice(prefix, oldEnd);
+  const newMid = newLines.slice(prefix, newEnd);
+  if (oldMid.length === 0) return { added: newMid.length, removed: 0 };
+  if (newMid.length === 0) return { added: 0, removed: oldMid.length };
+  if (oldMid.length * newMid.length > 250_000)
+    return { added: newMid.length, removed: oldMid.length };
+  let prev = new Array<number>(newMid.length + 1).fill(0);
+  let curr = new Array<number>(newMid.length + 1).fill(0);
+  for (const o of oldMid) {
+    for (let j = 0; j < newMid.length; j++)
+      curr[j + 1] =
+        o === newMid[j] ? prev[j]! + 1 : Math.max(prev[j + 1]!, curr[j]!);
+    [prev, curr] = [curr, prev];
+    curr.fill(0);
+  }
+  const common = prev[newMid.length]!;
+  return { added: newMid.length - common, removed: oldMid.length - common };
 }

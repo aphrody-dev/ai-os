@@ -1,6 +1,6 @@
 // Continuous self-improvement loop (Hermes style): collect -> distill (ai-os routed model) -> apply -> log.
 // usage: bun tools/agents/learn-loop.ts [run|collect|install|status] [--since <ISO|hours>] [--no-apply] [--no-llm] [--model provider/model]
-// Pieces reused: learn journal (aphrody-nhitl), skill `learn`, just agents-sync, ai-os brain sync, ai-os review docs, gh, hygiene, commit.ts.
+// Pieces reused: learn journal (aphrody-nhitl), skill `learn`, just agents-sync, ai-os brain sync, ai-os review docs, gh.
 // Safety: secrets redacted in and out, memories deleted only with a valid cited source, nothing under ~/.claude or ~/.gemini removed wholesale.
 import {
   existsSync,
@@ -13,6 +13,7 @@ import {
   appendFileSync,
 } from "node:fs";
 import { join, relative } from "node:path";
+import { srcRepo } from "./repo.ts";
 
 const HOME = (process.env.USERPROFILE ?? process.env.HOME)!.replaceAll("\\", "/");
 const ROOT = join(import.meta.dir, "..", "..").replaceAll("\\", "/");
@@ -20,12 +21,10 @@ const LEARN = `${HOME}/.claude/learning`;
 const RUNS = `${LEARN}/runs`;
 const STATE = `${LEARN}/loop-state.json`;
 const LOCK = `${LEARN}/loop.lock`;
-const PROJECT = process.env.LEARN_PROJECT ?? "C--aphrody";
+// Claude Code names a project directory after its path: every character that is not a letter or digit becomes "-".
+const PROJECT = process.env.LEARN_PROJECT ?? ROOT.replace(/[^A-Za-z0-9]/g, "-");
 const MEM = `${HOME}/.claude/projects/${PROJECT}/memory`;
-const REPOS = (
-  process.env.LEARN_REPOS ??
-  "aphrody-labs/ay,aphrody-labs/shenron,aphrody-labs/rosegriffon,aphrody-labs/open,aphrody-labs/dioxus-monorepo,aphrody-labs/browser"
-).split(",");
+const REPOS = (process.env.LEARN_REPOS ?? srcRepo() ?? "").split(",").filter(Boolean);
 const TEST_TARGETS = (process.env.LEARN_TESTS ?? "frameworks/ai-os/src/brain").split(",");
 const TASK = "Aphrody\\LearnLoop";
 
@@ -79,7 +78,6 @@ type State = {
   lastRun?: string;
   ci?: Record<string, { total: number; fail: number }>;
   tests?: Record<string, { pass: number; fail: number }>;
-  hygiene?: number;
 };
 
 // ---------- 1. collect ----------
@@ -163,7 +161,7 @@ async function collect(since: number, prev: State) {
       add("B", { cite: `task output ${f.split("claude/")[1]}`, text: clip(t.slice(-500), 300), flag: true });
   }
 
-  // R: Gemini verdicts (docs/reviews of this repo + commits of the other repos)
+  // R: Gemini verdicts (docs/reviews of this repo)
   cnt("R");
   const rv = walk(`${ROOT}/docs/reviews`, ".md", [], 4).filter((f) => mt(f) >= since && !f.endsWith("README.md"));
   counts.R.seen = rv.length;
@@ -173,17 +171,6 @@ async function collect(since: number, prev: State) {
     const first = /^\s*1\.\s+(.*)$/m.exec(t)?.[1] ?? t.slice(0, 200);
     add("R", { cite: `review ${relative(ROOT, f).replaceAll("\\", "/")}`, text: clip(`note ${note ?? "?"}/20 | ${first}`, 330), flag: note ? Number(note) < 14 : false });
   }
-  for (const r of ["shenron", "rosegriffon"]) {
-    const x = await sh(["gh", "api", `repos/aphrody-labs/${r}/commits?path=docs/reviews&since=${new Date(since).toISOString()}&per_page=5`]);
-    try {
-      const j = JSON.parse(x.out) as any[];
-      counts.R.seen += j.length;
-      j.forEach((c) => add("R", { cite: `review commit ${c.html_url}`, text: clip(c.commit.message, 250) }));
-    } catch {
-      counts.R.note = `${counts.R.note ?? ""} ${r}: no docs/reviews`.trim();
-    }
-  }
-
   // C: CI (gh run list + failed logs)
   cnt("C");
   next.ci = {};
@@ -210,14 +197,6 @@ async function collect(since: number, prev: State) {
       add("C", { cite: `run ${r.url}`, text: clip(`${r.workflowName} "${r.displayTitle}": ${l.out.slice(-600) || l.err}`, 420), flag: true });
     }
   }
-
-  // H: hygiene
-  cnt("H");
-  const hy = await sh(["bun", "scripts/hygiene.ts"], ROOT, 240_000);
-  const hl = (hy.out + hy.err).split("\n").filter((l) => /\S/.test(l));
-  counts.H.seen = hl.length;
-  next.hygiene = hl.length;
-  add("H", { cite: "bun scripts/hygiene.ts", text: clip(`exit ${hy.code}, ${hl.length} lines${prev.hygiene !== undefined ? `, delta ${hl.length - prev.hygiene}` : ""}; ${hl.slice(-4).join(" / ")}`, 360) });
 
   // U: tests
   cnt("U");
@@ -469,7 +448,6 @@ try {
     for (const p of ["CLAUDE.md", "docs/project/backlog.md"]) if (await dirty(p)) pre.add(p);
     res = await apply(items, sigs, log);
     for (const [name, c] of [
-      ["just agents-sync", ["bun", "system/machine-ts/src/toolchain.ts"]],
       ["ai-os brain sync", ["bun", "frameworks/ai-os/src/brain/cli.ts", "sync"]],
     ] as const) {
       const x = await sh([...c], ROOT, 300_000);
@@ -477,7 +455,8 @@ try {
     }
     const commitPaths = res.changed.filter((p) => !pre.has(p));
     if (res.changed.length && commitPaths.length) {
-      const x = await sh(["bun", "scripts/commit.ts", "-m", `learn: distilled ${commitPaths.length} item(s) from ${Object.keys(counts).join(",")} signals`, ...(process.env.LEARN_PUSH ? ["--push"] : []), ...commitPaths]);
+      const x = await sh(["git", "commit", "-m", `learn: distilled ${commitPaths.length} item(s) from ${Object.keys(counts).join(",")} signals`, "--", ...commitPaths]);
+      if (!x.code && process.env.LEARN_PUSH) await sh(["git", "push", "origin", "main"]);
       commit = `exit ${x.code}: ${clip(x.out + x.err, 200)} paths=${commitPaths.join(", ")}`;
     } else commit = res.changed.length ? `skipped, dirty before edit: ${[...pre].join(", ")}` : "nothing to commit";
   }

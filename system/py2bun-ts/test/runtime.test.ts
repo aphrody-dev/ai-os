@@ -286,7 +286,7 @@ describe("os math random sys time review fixes", () => {
     expect(sys.byteorder).toBe("little");
     const t = await import("../src/runtime/time");
     expect(() => t.sleep(-1)).toThrow();
-    expect(t.ctime(0)).toMatch(/^\w{3} \w{3} [ \d]\d \d\d:\d\d:\d\d \d{4}$/);
+    expect(t.ctime(0)).toMatch(/^\w{3} \w{3} [ \d]\d \d{2}:\d{2}:\d{2} \d{4}$/);
   });
 });
 

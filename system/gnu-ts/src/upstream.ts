@@ -69,7 +69,7 @@ export async function pool<T>(items: T[], n: number, fn: (x: T) => Promise<void>
 export const isPrerelease =(v: string) =>
   /(alpha|beta|rc\d*|pre\d*|snap|test|dev|git|nightly)/i.test(v);
 
-/** Parse `ls -lRt` output (as ftp.gnu.org/ls-lrRt.txt.gz): returns dirs under /home/ftp/gnu. Times are UTC. */
+/** Parse `ls -lRt` output (as ftp.gnu.org/ls-lrRt.txt.gz): returns the directories below the gnu/ root of the server. Times are UTC. */
 export function parseListing(text: string, now = new Date()): FtpListing {
   const out: FtpListing = new Map();
   let cur: FtpFile[] | null = null;

@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join, resolve } from "node:path";
+import { join, resolve, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 import { getLibraryDocs, searchLibraries } from "../context7/client.ts";
 import { openKnowledgeDatabase } from "../db/sqlite.ts";
 import {
@@ -10,6 +11,7 @@ import {
   scanTextForSecretLeaks,
 } from "../env/safe-env.ts";
 import { blake3Hex } from "../ffi/blake3.ts";
+import { envFile, workspaceRoot } from "../../../../src/core/paths.ts";
 
 export type ClaimVerdictStatus =
   "VERIFIED" | "CONTRADICTED" | "UNVERIFIED_NEEDS_CITATION";
@@ -121,10 +123,10 @@ function checkSafetyInvariants(
   if (leaks.length === 0) {
     diags.push({
       category: "safety_secret_hygiene",
-      claim: "Zero raw secret values from C:\\aphrody\\.env or bearer tokens",
+      claim: "Zero raw secret values from the workspace .env or bearer tokens",
       status: "VERIFIED",
       line: 1,
-      citation: `file:///${(envPath ?? "C:/aphrody/.env").replace(/\\/g, "/")}`,
+      citation: pathToFileURL(envPath ?? envFile()).href,
       detail:
         "Verified 0 raw secret literals or unredacted API tokens present.",
     });
@@ -141,7 +143,7 @@ function checkSafetyInvariants(
     }
   }
 
-  // 2. C:\Windows\System32 mutation check
+  // 2. Windows System32 mutation check
   const lines = text.split(/\r?\n/);
   let sys32MutationLine = 0;
   const destructiveSys32Pattern =
@@ -155,20 +157,20 @@ function checkSafetyInvariants(
   if (sys32MutationLine > 0) {
     diags.push({
       category: "safety_system32",
-      claim: "Sacred C:\\Windows\\System32 userspace non-mutation",
+      claim: "Sacred Windows System32 userspace non-mutation",
       status: "CONTRADICTED",
       line: sys32MutationLine,
       citation: targetLabel,
-      detail: `Destructive write/delete command targeting C:\\Windows\\System32 detected at line ${sys32MutationLine}.`,
+      detail: `Destructive write/delete command targeting Windows System32 detected at line ${sys32MutationLine}.`,
     });
   } else {
     diags.push({
       category: "safety_system32",
-      claim: "Sacred C:\\Windows\\System32 userspace non-mutation",
+      claim: "Sacred Windows System32 userspace non-mutation",
       status: "VERIFIED",
       line: 1,
-      citation: "file:///C:/aphrody/.agents/scripts/pre-tool-guard.ts",
-      detail: "Zero destructive mutations targeting C:\\Windows\\System32.",
+      citation: targetLabel,
+      detail: "Zero destructive mutations targeting Windows System32.",
     });
   }
 
@@ -208,11 +210,14 @@ function checkFilesystemAndBinaryClaims(
   const diags: ClaimDiagnostic[] = [];
   const seenPaths = new Set<string>();
 
-  // 1. Explicit file:///C:/... links
-  const fileUrlRegex = /file:\/\/\/([A-Za-z]:\/[^\s)"'`#>\]]+)/g;
+  // 1. Explicit file:/// links (a drive path on Windows, an absolute path elsewhere)
+  const fileUrlRegex = /file:\/\/\/([^\s)"'`#>\]]+)/g;
   let m: RegExpExecArray | null = fileUrlRegex.exec(text);
   while (m !== null) {
-    const rawPath = decodeURIComponent(m[1]!).replace(/\//g, "\\");
+    const decoded = decodeURIComponent(m[1]!);
+    const rawPath = /^[A-Za-z]:/.test(decoded)
+      ? decoded.replace(/\//g, "\\")
+      : `/${decoded}`;
     const normKey = rawPath.toLowerCase();
     if (!seenPaths.has(normKey)) {
       seenPaths.add(normKey);
@@ -236,11 +241,19 @@ function checkFilesystemAndBinaryClaims(
     m = fileUrlRegex.exec(text);
   }
 
-  // 2. Direct C:\aphrody\... paths
-  const winSrcRegex = /\b(C:\\aphrody\\[A-Za-z0-9_.\-\\/]+)\b/g;
+  // 2. Direct paths below the workspace root, written with either separator
+  const rootPattern = srcRoot
+    .replace(/[\\/]+$/, "")
+    .split(/[\\/]+/)
+    .map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("[\\\\/]");
+  const winSrcRegex = new RegExp(
+    `(?<![A-Za-z0-9_])(${rootPattern}[\\\\/][A-Za-z0-9_.\\-\\\\/]+)`,
+    "g",
+  );
   m = winSrcRegex.exec(text);
   while (m !== null) {
-    const rawCandidate = m[1]!.replace(/[/]+/g, "\\").replace(/[.,;:]+$/, "");
+    const rawCandidate = m[1]!.replace(/[\\/]+/g, sep).replace(/[.,;:]+$/, "");
     if (rawCandidate.includes("*") || rawCandidate.includes("<")) {
       m = winSrcRegex.exec(text);
       continue;
@@ -581,8 +594,7 @@ export async function runFactCheck(
   options: FactCheckOptions = {},
 ): Promise<FactCheckVerdict> {
   const t0 = Bun.nanoseconds();
-  const srcRoot =
-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
+  const srcRoot = options.srcRoot ?? workspaceRoot();
   const localBinDir = options.localBinDir ?? join(homedir(), ".local", "bin");
 
   const resolvedFile = normalizeTargetFileCandidate(claimOrFile);

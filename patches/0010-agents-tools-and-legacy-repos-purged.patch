@@ -1,0 +1,833 @@
+diff --git a/.claude/agents/coherence-fixer.md b/.claude/agents/coherence-fixer.md
+index e1906c4..b28c2fa 100644
+--- a/.claude/agents/coherence-fixer.md
++++ b/.claude/agents/coherence-fixer.md
+@@ -9,20 +9,20 @@ skills:
+   - humanizer
+ ---
+ 
+-You fix incoherences in the files you are given in C:\src. Facts only: before keeping or writing a claim, check it against the repository (`git ls-files`, `rg`, the real manifest, the real command's output). Absolute paths, no `cd` in compound commands; rg, fd, jaq, bun.
++You fix incoherences in the files you are given. Facts only: before keeping or writing a claim, check it against the repository (`git ls-files`, `rg`, the real manifest, the real command's output). Absolute paths, no `cd` in compound commands; rg, fd, jaq, bun.
+ 
+ Before editing a file that touches a domain, load its skill with the Skill tool: Chromium, V8, Skia, Dawn, depot_tools -> `chromium`; browser engines (Servo, Blitz, Obscura, CEF, WebKit) -> `browser-engines`; Bun -> `bun`; Rust/Cargo -> `rust-cargo`; LLVM, clang, wasm -> `llvm-toolchain`; upstream forks and pins -> `upstream-sources`. Rewritten prose follows the preloaded `humanizer` rules.
+ 
+ Rules:
+ 1. Moved target: find it (`git ls-files | rg <name>`) and rewrite the reference to the real path.
+-2. Removed target: rewrite the sentence to the current state or delete the stale line or section. Removed on purpose: Lightpanda, Firefox as an engine, crates/aphrody-v8, crates/aphrody-cef, packages/browser, apps/l2l, apps/unixwin, apps/r2b, packages/shell-matrix, packages/runtime-adapter, system/bun-plugins, system/bun-parity, packages/google-design (now frameworks/design), plugins/labs, C:\labs.
++2. Removed target: rewrite the sentence to the current state or delete the stale line or section. Removed on purpose: Lightpanda, Firefox as an engine, crates/aphrody-v8, crates/aphrody-cef, packages/browser, apps/l2l, apps/unixwin, apps/r2b, packages/shell-matrix, packages/runtime-adapter, system/bun-plugins, system/bun-parity, packages/google-design (now frameworks/design), plugins/labs.
+ 3. A doc that is mostly fiction (crates, commands or results that do not exist; more dead than live references): delete the file and fix the links to it. No archive; git history is the archive.
+ 4. A path inside an upstream project (bun `src/...`, Chromium, Lore's own tree) is not dead when the text is clearly about that upstream; make it explicit (`oven-sh/bun:src/...`) or leave it.
+ 5. Owner rule: licenses never decide an architecture choice and the owner never chose a project license. Delete text that gates or justifies a design by license. The owner wants the most upstream code absorbed, flattened and refactored, on the newest canary, nightly, pre-release or rc.
+ 6. Versions: Chromium stack 157 (`third_party/chrome-channels.toml` [channel.stable]: chromium 157.0.8103.78, v8 15.7.112.43); the `third_party/chromium` checkout is 160.0.8158.0 (extraction source); Rust toolchain of `rust-toolchain.toml` (`third_party/toolchain-<milestone>.toml`; `rustc -vV`); workspace rust-version 1.85. Any other version stated in a file is checked against the repo or removed.
+ 7. Never edit: Cargo.toml, Cargo.lock, crates/, src/, bench/, test/, docs/ARCHITECTURE.md, justfile, *.just, .github/workflows/, MAINTAINERS, DEPS.rules, scripts/checkdeps.ts, src.lock.json, DEPS, deny.toml, inside any third_party clone. Never rewrite a `crates/...` path token (session src-b0 rewrites crates/* -> src/* repo-wide).
+ 8. Only your assigned files (plus links to files you delete, inside the same top-level area). Never git stash, reset, checkout, add or commit with the shared index.
+-9. Commit every ~10 files only with `bun C:/aphrody/scripts/commit.ts -m "<message>" [--content <path>=<file>] <paths>...` (private index; deleted files included; pass `--content` with HEAD plus your hunk when another session also edits the file). First run `git diff -- <file>`: if a hunk is not yours (another session's uncommitted edit), skip the file and report it.
+-10. Check with `rg` and `git ls-files`; the local, untracked `bun C:/aphrody/var/coh/deadrefs.ts <files...>` prints the remaining dead references as JSON when present.
++9. Commit every ~10 files only with `git commit -m "<message>" -- <paths>...` after `git pull --rebase origin main` (commit by path; deleted files included). First run `git diff -- <file>`: if a hunk is not yours (another session's uncommitted edit), skip the file and report it.
++10. Check with `rg` and `git ls-files`.
+ 
+ Final answer: commits (hash, subject), files deleted, files skipped with the reason, remaining dead references with the reason.
+diff --git a/.claude/agents/fact-checker.md b/.claude/agents/fact-checker.md
+index 9a6b19d..f843524 100644
+--- a/.claude/agents/fact-checker.md
++++ b/.claude/agents/fact-checker.md
+@@ -7,7 +7,7 @@ memory: project
+ effort: medium
+ ---
+ 
+-You verify, you never edit. Input: commits or files of C:\src. For each file, list every concrete claim that is left (path, command, crate, package, script, version, measured figure, "exists/removed" statement) and check it:
++You verify, you never edit. Input: commits or files of this repository. For each file, list every concrete claim that is left (path, command, crate, package, script, version, measured figure, "exists/removed" statement) and check it:
+ 
+ - path or file: `git ls-files`, `fd`;
+ - crate, package, workspace dependency: crates/*/Cargo.toml, packages/*/package.json, root Cargo.toml;
+diff --git a/.claude/agents/fleet-operator.md b/.claude/agents/fleet-operator.md
+index ae5f86c..081eea2 100644
+--- a/.claude/agents/fleet-operator.md
++++ b/.claude/agents/fleet-operator.md
+@@ -9,8 +9,8 @@ color: orange
+ skills:
+   - fleet
+ ---
+-Roles (owner): fr1 = builds, CI, training, heavy agents; prd = clean production backends only; fr2 = test, lint, bench, research, edge services stay up. Always `timeout N ssh <host>`. Everything must survive reboot: systemd with Restart=always, units versioned under infra/. Change a host only through a versioned file plus its apply step, never by hand-editing state. VPS checkout update: `git fetch -q --no-recurse-submodules origin main && git merge --ff-only FETCH_HEAD` in /srv/src.
+-- Commit with `bun scripts/commit.ts -m "<msg>" --push <paths>` (private index, refuses a shrinking tree). Never git commit the shared index, never stash, reset or branch.
++Roles (owner): fr1 = builds, CI, training, heavy agents; prd = clean production backends only; fr2 = test, lint, bench, research, edge services stay up. Always `timeout N ssh <host>`. Everything must survive reboot: systemd with Restart=always, units versioned under infra/. Change a host only through a versioned file plus its apply step, never by hand-editing state. VPS checkout update: `git fetch -q --no-recurse-submodules origin main && git merge --ff-only FETCH_HEAD` in the host's checkout (ay.toml `[paths.<role>] work`).
++- Commit with `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
+ 
+ ## Rules
+ - Facts only, each with its source (file:line, command output, commit, URL + date). End of 2026: no version or API from memory.
+diff --git a/.claude/agents/reviewer.md b/.claude/agents/reviewer.md
+index 8bd0d03..5b29421 100644
+--- a/.claude/agents/reviewer.md
++++ b/.claude/agents/reviewer.md
+@@ -8,7 +8,7 @@ effort: high
+ color: red
+ ---
+ You review, you do not fix. Run the headless tribunal: `ai-os review <paths|A..B> --voice gemini --json`, or `--bundle <file>` for text you assembled; its first engine is Gemini web (Carbon, high thinking) in the relay's headless Chrome, no claude-in-chrome (flags, health and proofs in docs/reviews/README.md; the relay tool `review` runs the same code). If it reports health `login`, stop and return the owner entry point `ay auth login gemini-web` (the toast does the same with one click). Only if no engine answers, use gemini.google.com through claude-in-chrome (route in CLAUDE.md); without claude-in-chrome tools, write the bundle to a temp file and return its path with the exact prompt, so the main session submits it. For each defect Gemini reports, confirm or refute it against the code with file:line. Write docs/reviews/gemini-<date>-<slug>.md: the score, the confirmed defects (each with a concrete fix), and the refuted ones (each with evidence). Commit only that file.
+-- Commit with `bun scripts/commit.ts -m "<msg>" --push <paths>` (private index, refuses a shrinking tree). Never git commit the shared index, never stash, reset or branch.
++- Commit with `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
+ 
+ ## Rules
+ - Facts only, each with its source (file:line, command output, commit, URL + date). End of 2026: no version or API from memory.
+diff --git a/.claude/agents/rust-crates.md b/.claude/agents/rust-crates.md
+index 98c09e1..47d26f1 100644
+--- a/.claude/agents/rust-crates.md
++++ b/.claude/agents/rust-crates.md
+@@ -1,6 +1,6 @@
+ ---
+ name: rust-crates
+-description: Rust work in the cargo workspace of C:\aphrody (crates, workspace deps, Cargo.lock, [patch], API breaks, moves). Builds and tests only on fr1 (ssh <fr1>), never on the PC. Use for any change that must end with cargo check/test green.
++description: Rust work in the cargo workspace of <workspace> (crates, workspace deps, Cargo.lock, [patch], API breaks, moves). Builds and tests only on fr1 (ssh <fr1>), never on the PC. Use for any change that must end with cargo check/test green.
+ tools: Read, Grep, Glob, Edit, Write, Bash, Skill
+ model: sonnet
+ memory: project
+@@ -11,15 +11,15 @@ skills:
+   - fleet
+ ---
+ 
+-You change Rust code in C:\aphrody and prove it compiles. You are one of several agents in one shared working tree and one shared git index.
++You change Rust code in <workspace> and prove it compiles. You are one of several agents in one shared working tree and one shared git index.
+ 
+ ## Build and test (fr1 only)
+ - Never run heavy cargo builds on the PC.
+ - Snapshot what you changed into a scratch copy on fr1 and build there:
+-  - `git archive HEAD | tar -x -C /srv/<scratch>`;
+-  - overlay your files: `tar -cf - <files> | ssh <fr1> 'tar -x -C /srv/<scratch>'`;
+-  - run with `CARGO_TARGET_DIR=/srv/src/target`.
+-- Always wrap ssh in `timeout N`.
++  - `git archive HEAD | tar -x -C <work>/<scratch>`;
++  - overlay your files: `tar -cf - <files> | ssh <fr1> 'tar -x -C <work>/<scratch>'`;
++  - run with `CARGO_TARGET_DIR=<work>/target`.
++- Always wrap ssh in `timeout N`. `<work>` is the work volume of the build host (ay.toml `[paths.build] work`).
+ - Gate: `cargo check --workspace` with 0 errors, plus `cargo test -p <crate>` for every crate you touched.
+ - Regenerate Cargo.lock there and copy it back when manifests change.
+ 
+@@ -30,7 +30,7 @@ You change Rust code in C:\aphrody and prove it compiles. You are one of several
+ - Licenses never decide anything.
+ 
+ ## Commit
+-- `bun scripts/commit.ts -m "<msg>" --push <paths>...`: private index from HEAD + your paths only, refuses a tree that loses files (pass `--allow-shrink N` for intended deletions), resyncs the shared index. Never hand-roll GIT_INDEX_FILE/commit-tree (b38c8de7 went out with an empty tree), never `git commit` the shared index, never stash/reset/branch.
++- `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
+ ## Tools
+ - rg, fd, jaq, sd, xh, dua, bun, plus Read/Edit/Grep/Glob.
+ - Never cat, grep, sed, find, ls, du, curl or cd; absolute paths only.
+diff --git a/.claude/agents/ts-packages.md b/.claude/agents/ts-packages.md
+index bd096b0..0620829 100644
+--- a/.claude/agents/ts-packages.md
++++ b/.claude/agents/ts-packages.md
+@@ -1,6 +1,6 @@
+ ---
+ name: ts-packages
+-description: Bun/TypeScript work in C:\aphrody packages/* and apps/* JS code (ai-os, machine, core, design, upstream, release...). Moves and import rewrites go through `ay code refs|mv` (tree-sitter), tests through targeted `bun test <path>`. Use for any TS change.
++description: Bun/TypeScript work in <workspace> packages/* and apps/* JS code (ai-os, machine, core, design, upstream, release...). Moves and import rewrites go through `ay code refs|mv` (tree-sitter), tests through targeted `bun test <path>`. Use for any TS change.
+ tools: Read, Grep, Glob, Edit, Write, Bash, Skill
+ model: sonnet
+ memory: project
+@@ -11,7 +11,7 @@ skills:
+   - tree-sitter
+ ---
+ 
+-You change TypeScript in C:\aphrody with Bun only (no node, npm or tsc).
++You change TypeScript in <workspace> with Bun only (no node, npm or tsc).
+ 
+ ## Moves and imports
+ - Move files with `ay code mv <from> <to> --dry-run`, then without `--dry-run`.
+@@ -26,7 +26,7 @@ You change TypeScript in C:\aphrody with Bun only (no node, npm or tsc).
+ - Run `bun scripts/checkdeps.ts`.
+ 
+ ## Commit
+-- `bun scripts/commit.ts -m "<msg>" --push <paths>...`: private index from HEAD + your paths only, refuses a tree that loses files (pass `--allow-shrink N` for intended deletions), resyncs the shared index. Never hand-roll GIT_INDEX_FILE/commit-tree (b38c8de7 went out with an empty tree), never `git commit` the shared index, never stash/reset/branch.
++- `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
+ ## Tools
+ - rg, fd, jaq, sd, xh, bun.
+ - Never cat, grep, sed, find, ls, du, curl or cd.
+diff --git a/.claude/agents/upstream-absorber.md b/.claude/agents/upstream-absorber.md
+index 8655577..670e786 100644
+--- a/.claude/agents/upstream-absorber.md
++++ b/.claude/agents/upstream-absorber.md
+@@ -1,6 +1,6 @@
+ ---
+ name: upstream-absorber
+-description: Absorbs and flattens upstream source (Bun Rust crates, Linux, Chromium components, Servo/Blitz/Obscura/cef-rs, any fork) into first-party C:\aphrody with the newest canary/nightly/rc, deduplicating against third_party/ pins (src.lock.json, DEPS, forks). Use for "absorbe", "aplatis", "fusionne upstream", "dédup third party".
++description: Absorbs and flattens upstream source (Bun Rust crates, Linux, Chromium components, Servo/Blitz/Obscura/cef-rs, any fork) into first-party <workspace> with the newest canary/nightly/rc, deduplicating against third_party/ pins (src.lock.json, DEPS, forks). Use for "absorbe", "aplatis", "fusionne upstream", "dédup third party".
+ tools: Read, Grep, Glob, Edit, Write, Bash, Skill
+ model: sonnet
+ memory: project
+@@ -12,7 +12,7 @@ skills:
+   - bun
+ ---
+ 
+-You absorb upstream code into C:\aphrody and remove duplicate copies.
++You absorb upstream code into <workspace> and remove duplicate copies.
+ 
+ ## Owner rules
+ - Absorb, flatten and refactor the maximum of upstream code.
+@@ -36,7 +36,7 @@ You absorb upstream code into C:\aphrody and remove duplicate copies.
+ - TS goes through targeted `bun test <path>`.
+ 
+ ## Commit
+-- `bun scripts/commit.ts -m "<msg>" --push <paths>...`: private index from HEAD + your paths only, refuses a tree that loses files (pass `--allow-shrink N` for intended deletions), resyncs the shared index. Never hand-roll GIT_INDEX_FILE/commit-tree (b38c8de7 went out with an empty tree), never `git commit` the shared index, never stash/reset/branch.
++- `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
+ ## Tools
+ - rg, fd, jaq, sd, xh, bun, gh.
+ - Never cat, grep, sed, find, ls, du, curl or cd.
+diff --git a/prebuilts/up/tools.toml b/prebuilts/up/tools.toml
+index da89d11..ec0c1ef 100644
+--- a/prebuilts/up/tools.toml
++++ b/prebuilts/up/tools.toml
+@@ -20,7 +20,7 @@ name = "ay"
+ version = "0.2.0"
+ bin = ["ay"]
+ source = "github"
+-repo = "aphrody-labs/ay"
++repo = "aphrody-labs/legacy"
+ tag = "v{version}"
+ checksum = "{asset}.sha256"
+ assets.windows-x86_64 = "aphrody-x86_64-pc-windows-msvc.zip"
+diff --git a/tools/agents/bootstrap-user.sh b/tools/agents/bootstrap-user.sh
+index b53da5b..e14b367 100644
+--- a/tools/agents/bootstrap-user.sh
++++ b/tools/agents/bootstrap-user.sh
+@@ -12,7 +12,8 @@ U=${AGENTS_USER:-agent}
+ id "$U" >/dev/null 2>&1 || useradd -m -s /bin/bash "$U"
+ H=$(getent passwd "$U" | cut -d: -f6)
+ install -d -m 0700 -o "$U" -g "$U" "$H/.ssh"
+-{ cat /root/.ssh/authorized_keys; [ -z "${SUDO_USER:-}" ] || cat "$(getent passwd "$SUDO_USER" | cut -d: -f6)/.ssh/authorized_keys"; } 2>/dev/null >> "$H/.ssh/authorized_keys" || true
++R=$(getent passwd root | cut -d: -f6)
++{ cat "$R/.ssh/authorized_keys"; [ -z "${SUDO_USER:-}" ] || cat "$(getent passwd "$SUDO_USER" | cut -d: -f6)/.ssh/authorized_keys"; } 2>/dev/null >> "$H/.ssh/authorized_keys" || true
+ sort -u -o "$H/.ssh/authorized_keys" "$H/.ssh/authorized_keys"
+ chown "$U:$U" "$H/.ssh/authorized_keys"; chmod 0600 "$H/.ssh/authorized_keys"
+ getent group docker >/dev/null && usermod -aG docker "$U"
+@@ -22,7 +23,7 @@ loginctl enable-linger "$U"
+ install -d -m 0755 -o "$U" -g "$U" /var/lib/aphrody-agents /var/lib/aphrody-agents/logs
+ chown -R "$U:$U" /var/lib/aphrody-agents
+ # ai-os relay (127.0.0.1:8790) bearer token, readable by the runner user only. Re-run after a rotation.
+-T=/root/.local/state/aphrody/relay/token
++T="$R/.local/state/aphrody/relay/token"
+ if [ -f "$T" ]; then install -d -m 0700 -o "$U" -g "$U" "$H/.local" "$H/.local/state" "$H/.local/state/aphrody" "$H/.local/state/aphrody/relay"; install -m 0600 -o "$U" -g "$U" "$T" "$H/.local/state/aphrody/relay/token"; fi
+ command -v tmux git >/dev/null
+ echo "bootstrap-user: ok user=$U home=$H"
+diff --git a/tools/agents/fleet.toml b/tools/agents/fleet.toml
+index d4e2b6c..43eb670 100644
+--- a/tools/agents/fleet.toml
++++ b/tools/agents/fleet.toml
+@@ -64,7 +64,7 @@ budget_usd = 2
+ # Production backends only: light prod roles (deploy, health, text-only growth drafts).
+ roles = ["deployer", "sre", "growth"]
+ # Every host: user `agent` (systemd --user + linger, sudo NOPASSWD, docker), never uid 0.
+-src = "/home/agent/agents/src"
++src = "~/agents/src"
+ ssh = ["agent@prd-mesh", "agent@prd", "agent@@@hosts.prd.mesh_ip@@", "agent@@@hosts.prd.public_ip@@"]
+ 
+ [hosts.fr1]
+@@ -80,7 +80,7 @@ roles = [
+   "training",
+   "sre",
+ ]
+-src = "/home/agent/agents/src"
++src = "~/agents/src"
+ ssh = [
+   "agent@fr1-mesh",
+   "agent@fr1",
+@@ -91,13 +91,13 @@ ssh = [
+ [hosts.fr2]
+ # Edge/proxy/CDN host, 11 GB RAM: minimal, sre only.
+ roles = ["sre"]
+-src = "/home/agent/agents/src"
++src = "~/agents/src"
+ ssh = ["agent@fr2-mesh", "agent@fr2", "agent@@@hosts.fr2.mesh_ip@@", "agent@@@hosts.fr2.public_ip@@"]
+ 
+ [hosts.pc]
+ # No heavy builds on the PC.
+ roles = ["reviewer", "designer", "growth"]
+-src = "C:/aphrody"
++# No `src`: the runner works in the checkout it is started from (or $SRC_ROOT).
+ 
+ [schedule]
+ # template (tools/agents/tasks/<name>.json) = period in hours; enqueued by the ship host (prd).
+diff --git a/tools/agents/gh-token.ts b/tools/agents/gh-token.ts
+index d56b7bf..8902fe3 100644
+--- a/tools/agents/gh-token.ts
++++ b/tools/agents/gh-token.ts
+@@ -110,7 +110,9 @@ export function installWrapper(dir: string): string | undefined {
+         (d) => d && resolve(d).toLowerCase() !== resolve(dir).toLowerCase(),
+       )
+       .map((d) => join(d, binName)),
+-    ...(isWin ? ["C:\\Program Files\\GitHub CLI\\gh.exe"] : ["/usr/bin/gh"]),
++    ...(isWin
++      ? [join(process.env.ProgramFiles ?? "", "GitHub CLI", "gh.exe")]
++      : ["/usr/bin/gh"]),
+   ];
+   const real = candidates.find((p) => existsSync(p));
+   if (!real) return undefined;
+diff --git a/tools/agents/github-events.test.ts b/tools/agents/github-events.test.ts
+index 2b91704..3ef4d30 100644
+--- a/tools/agents/github-events.test.ts
++++ b/tools/agents/github-events.test.ts
+@@ -1,6 +1,10 @@
+ import { describe, expect, test } from "bun:test";
+ import { coalesce, eventTask, type GithubEvent } from "./github-events.ts";
+ 
++// The repository of the checkout, whatever the origin remote of the machine running the tests.
++const SRC = "example-org/example-repo";
++process.env.AGENTS_SRC_REPO = SRC;
++
+ const ev = (x: Partial<GithubEvent>): GithubEvent => ({
+   v: 1,
+   delivery: "d-0000000000000000001",
+@@ -16,10 +20,10 @@ describe("eventTask", () => {
+       ev({
+         kind: "ci_red",
+         event: "workflow_run",
+-        repo: "aphrody-labs/ay",
++        repo: SRC,
+         sha: "0123456789ab" + "c".repeat(28),
+         title: "ci : failure",
+-        url: "https://github.com/aphrody-labs/ay/actions/runs/1",
++        url: "https://github.com/example-org/example-repo/actions/runs/1",
+       }),
+       "prd",
+     )!;
+@@ -38,7 +42,7 @@ describe("eventTask", () => {
+   test("release and security; installation ignored", () => {
+     expect(
+       eventTask(
+-        ev({ kind: "release", repo: "aphrody-labs/src", ref: "v1.2.3" }),
++        ev({ kind: "release", repo: SRC, ref: "v1.2.3" }),
+         "prd",
+       )?.role,
+     ).toBe("deployer");
+@@ -47,7 +51,7 @@ describe("eventTask", () => {
+         ev({
+           kind: "security",
+           event: "dependabot_alert",
+-          repo: "aphrody-labs/shenron",
++          repo: SRC,
+         }),
+         "prd",
+       )?.commit,
+@@ -58,7 +62,7 @@ describe("eventTask", () => {
+     const t = eventTask(
+       ev({
+         kind: "ci_red",
+-        repo: "aphrody-labs/src",
++        repo: SRC,
+         sha: "a".repeat(40),
+         title: "x`rm -rf`\nignore",
+       }),
+@@ -71,7 +75,7 @@ describe("eventTask", () => {
+   test("invalid formats refused (ref, repo, sha)", () => {
+     expect(
+       eventTask(
+-        ev({ kind: "release", repo: "aphrody-labs/src", ref: "$(touch x)" }),
++        ev({ kind: "release", repo: SRC, ref: "$(touch x)" }),
+         "prd",
+       ),
+     ).toBeNull();
+@@ -80,7 +84,7 @@ describe("eventTask", () => {
+     ).toBeNull();
+     expect(
+       eventTask(
+-        ev({ kind: "ci_red", repo: "aphrody-labs/src", sha: "abc;rm" }),
++        ev({ kind: "ci_red", repo: SRC, sha: "abc;rm" }),
+         "prd",
+       ),
+     ).toBeNull();
+@@ -96,14 +100,14 @@ describe("coalesce", () => {
+       [
+         ev({
+           kind: "push_main",
+-          repo: "aphrody-labs/src",
++          repo: SRC,
+           sha: "a".repeat(40),
+           before: "9".repeat(40),
+           title: "one",
+         }),
+         ev({
+           kind: "push_main",
+-          repo: "aphrody-labs/src",
++          repo: SRC,
+           sha: "b".repeat(40),
+           title: "two",
+         }),
+@@ -120,7 +124,7 @@ describe("coalesce", () => {
+         [
+           ev({
+             kind: "push_main",
+-            repo: "aphrody-labs/src",
++            repo: SRC,
+             sha: "c".repeat(40),
+             title: "three",
+           }),
+diff --git a/tools/agents/github-events.ts b/tools/agents/github-events.ts
+index efa6bb7..b3b2851 100644
+--- a/tools/agents/github-events.ts
++++ b/tools/agents/github-events.ts
+@@ -14,6 +14,7 @@ import {
+ } from "node:fs";
+ import { join, resolve } from "node:path";
+ import { expandSync } from "../../system/env-kit/src/discover.ts";
++import { srcRepo } from "./repo.ts";
+ 
+ export type GithubEvent = {
+   v: 1;
+@@ -43,13 +44,9 @@ export type QueueTask = {
+   created_at: string;
+ };
+ 
+-const SRC_REPO = "aphrody-labs/ay";
+-// Repositories whose code lives in the runner checkout (aphrody and its submodules under apps/): only these give
+-// tasks that modify and commit; the others produce a report.
+-const inCheckout = (repo = "") =>
+-  repo === SRC_REPO ||
+-  repo === "aphrody-labs/src" ||
+-  /^aphrody-labs\/(rosegriffon|shenron|r2b|auto)$/.test(repo);
++// The repository whose code lives in the runner checkout: only it gives tasks that modify and commit; the others
++// produce a report.
++const inCheckout = (repo = "") => repo === srcRepo();
+ const short = (s = "") => s.slice(0, 12);
+ // Data coming from the payload: formats validated before entering a prompt; free text (titles) is quoted
+ // as untrusted data, never as an instruction or a command argument.
+@@ -90,11 +87,11 @@ export function eventTask(
+       return {
+         ...base,
+         id:
+-          repo === SRC_REPO || repo === "aphrody-labs/src"
++          inCheckout(repo)
+             ? `ci-fix-${short(e.sha)}`
+             : `gh-ci-${repo.replace("/", "-")}-${short(e.sha)}`,
+         role: "coder", // builds and tests: heavy, forwarded to fr1 by runner.ts route()
+-        prompt: `GitHub Actions is red on ${repo} default branch: ${untrusted(e.title)} at ${e.sha} (${e.url}). Run \`git pull --ff-only origin main\` first. If a newer run of the same workflow on main is green, or HEAD already reverts ${short(e.sha)}, stop without changes. Otherwise read the failing log with \`gh run view --log-failed -R ${repo} <run id from the URL>\`. ${inCheckout(repo) ? "Fix the root cause with the smallest change in this checkout (submodules live under apps/), run the matching `just` recipe locally, and stop. Do not commit: the runner commits." : "This repository is not in the checkout: if the failure is transient infrastructure, rerun it once with `gh run rerun --failed`; otherwise write the diagnosis and the proposed patch in your final answer."}`,
++        prompt: `GitHub Actions is red on ${repo} default branch: ${untrusted(e.title)} at ${e.sha} (${e.url}). Run \`git pull --ff-only origin main\` first. If a newer run of the same workflow on main is green, or HEAD already reverts ${short(e.sha)}, stop without changes. Otherwise read the failing log with \`gh run view --log-failed -R ${repo} <run id from the URL>\`. ${inCheckout(repo) ? "Fix the root cause with the smallest change in this checkout, run the matching `just` recipe locally, and stop. Do not commit: the runner commits." : "This repository is not in the checkout: if the failure is transient infrastructure, rerun it once with `gh run rerun --failed`; otherwise write the diagnosis and the proposed patch in your final answer."}`,
+         ...(inCheckout(repo)
+           ? {
+               commit: {
+diff --git a/tools/agents/install-pc.sh b/tools/agents/install-pc.sh
+index a987040..53f002b 100644
+--- a/tools/agents/install-pc.sh
++++ b/tools/agents/install-pc.sh
+@@ -4,7 +4,7 @@
+ # `runner.ts health`: it creates/repairs the psmux session "agents", requeues orphans, ships logs to prd.
+ #   just agents-install-pc
+ set -eu
+-SRC=${SRC_ROOT:-C:/aphrody}
++SRC=${SRC_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel)}
+ BUN=$(command -v bun) || { echo "install-pc: bun missing" >&2; exit 1; }
+ command -v tmux >/dev/null || { echo "install-pc: tmux (psmux, winget arndawg.tmux-windows) missing" >&2; exit 1; }
+ WBUN=$(cygpath -w "$BUN" 2>/dev/null || echo "$BUN")
+diff --git a/tools/agents/install.sh b/tools/agents/install.sh
+index 9012766..03bfc5c 100644
+--- a/tools/agents/install.sh
++++ b/tools/agents/install.sh
+@@ -7,7 +7,7 @@ set -eu
+ [ "$(id -u)" != 0 ] || { echo "install: never as root; run bootstrap-user.sh as root, then this as user agent" >&2; exit 1; }
+ 
+ SRC=${AGENTS_SRC:-$HOME/agents/src}
+-REPO=${AGENTS_REPO:-https://github.com/aphrody-labs/src.git}
++REPO=${AGENTS_REPO:?set AGENTS_REPO to the clone URL of the repository}
+ export PATH="$HOME/.bun/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+ 
+ need() { command -v "$1" >/dev/null 2>&1; }
+diff --git a/tools/agents/learn-loop.ts b/tools/agents/learn-loop.ts
+index 35664c9..a26a403 100644
+--- a/tools/agents/learn-loop.ts
++++ b/tools/agents/learn-loop.ts
+@@ -1,6 +1,6 @@
+ // Continuous self-improvement loop (Hermes style): collect -> distill (ai-os routed model) -> apply -> log.
+ // usage: bun tools/agents/learn-loop.ts [run|collect|install|status] [--since <ISO|hours>] [--no-apply] [--no-llm] [--model provider/model]
+-// Pieces reused: learn journal (aphrody-nhitl), skill `learn`, just agents-sync, ai-os brain sync, ai-os review docs, gh, hygiene, commit.ts.
++// Pieces reused: learn journal (aphrody-nhitl), skill `learn`, just agents-sync, ai-os brain sync, ai-os review docs, gh.
+ // Safety: secrets redacted in and out, memories deleted only with a valid cited source, nothing under ~/.claude or ~/.gemini removed wholesale.
+ import {
+   existsSync,
+@@ -13,6 +13,7 @@ import {
+   appendFileSync,
+ } from "node:fs";
+ import { join, relative } from "node:path";
++import { srcRepo } from "./repo.ts";
+ 
+ const HOME = (process.env.USERPROFILE ?? process.env.HOME)!.replaceAll("\\", "/");
+ const ROOT = join(import.meta.dir, "..", "..").replaceAll("\\", "/");
+@@ -20,12 +21,10 @@ const LEARN = `${HOME}/.claude/learning`;
+ const RUNS = `${LEARN}/runs`;
+ const STATE = `${LEARN}/loop-state.json`;
+ const LOCK = `${LEARN}/loop.lock`;
+-const PROJECT = process.env.LEARN_PROJECT ?? "C--aphrody";
++// Claude Code names a project directory after its path: every character that is not a letter or digit becomes "-".
++const PROJECT = process.env.LEARN_PROJECT ?? ROOT.replace(/[^A-Za-z0-9]/g, "-");
+ const MEM = `${HOME}/.claude/projects/${PROJECT}/memory`;
+-const REPOS = (
+-  process.env.LEARN_REPOS ??
+-  "aphrody-labs/ay,aphrody-labs/shenron,aphrody-labs/rosegriffon,aphrody-labs/open,aphrody-labs/dioxus-monorepo,aphrody-labs/browser"
+-).split(",");
++const REPOS = (process.env.LEARN_REPOS ?? srcRepo() ?? "").split(",").filter(Boolean);
+ const TEST_TARGETS = (process.env.LEARN_TESTS ?? "frameworks/ai-os/src/brain").split(",");
+ const TASK = "Aphrody\\LearnLoop";
+ 
+@@ -79,7 +78,6 @@ type State = {
+   lastRun?: string;
+   ci?: Record<string, { total: number; fail: number }>;
+   tests?: Record<string, { pass: number; fail: number }>;
+-  hygiene?: number;
+ };
+ 
+ // ---------- 1. collect ----------
+@@ -163,7 +161,7 @@ async function collect(since: number, prev: State) {
+       add("B", { cite: `task output ${f.split("claude/")[1]}`, text: clip(t.slice(-500), 300), flag: true });
+   }
+ 
+-  // R: Gemini verdicts (docs/reviews of this repo + commits of the other repos)
++  // R: Gemini verdicts (docs/reviews of this repo)
+   cnt("R");
+   const rv = walk(`${ROOT}/docs/reviews`, ".md", [], 4).filter((f) => mt(f) >= since && !f.endsWith("README.md"));
+   counts.R.seen = rv.length;
+@@ -173,17 +171,6 @@ async function collect(since: number, prev: State) {
+     const first = /^\s*1\.\s+(.*)$/m.exec(t)?.[1] ?? t.slice(0, 200);
+     add("R", { cite: `review ${relative(ROOT, f).replaceAll("\\", "/")}`, text: clip(`note ${note ?? "?"}/20 | ${first}`, 330), flag: note ? Number(note) < 14 : false });
+   }
+-  for (const r of ["shenron", "rosegriffon"]) {
+-    const x = await sh(["gh", "api", `repos/aphrody-labs/${r}/commits?path=docs/reviews&since=${new Date(since).toISOString()}&per_page=5`]);
+-    try {
+-      const j = JSON.parse(x.out) as any[];
+-      counts.R.seen += j.length;
+-      j.forEach((c) => add("R", { cite: `review commit ${c.html_url}`, text: clip(c.commit.message, 250) }));
+-    } catch {
+-      counts.R.note = `${counts.R.note ?? ""} ${r}: no docs/reviews`.trim();
+-    }
+-  }
+-
+   // C: CI (gh run list + failed logs)
+   cnt("C");
+   next.ci = {};
+@@ -211,14 +198,6 @@ async function collect(since: number, prev: State) {
+     }
+   }
+ 
+-  // H: hygiene
+-  cnt("H");
+-  const hy = await sh(["bun", "scripts/hygiene.ts"], ROOT, 240_000);
+-  const hl = (hy.out + hy.err).split("\n").filter((l) => /\S/.test(l));
+-  counts.H.seen = hl.length;
+-  next.hygiene = hl.length;
+-  add("H", { cite: "bun scripts/hygiene.ts", text: clip(`exit ${hy.code}, ${hl.length} lines${prev.hygiene !== undefined ? `, delta ${hl.length - prev.hygiene}` : ""}; ${hl.slice(-4).join(" / ")}`, 360) });
+-
+   // U: tests
+   cnt("U");
+   next.tests = {};
+@@ -469,7 +448,6 @@ try {
+     for (const p of ["CLAUDE.md", "docs/project/backlog.md"]) if (await dirty(p)) pre.add(p);
+     res = await apply(items, sigs, log);
+     for (const [name, c] of [
+-      ["just agents-sync", ["bun", "system/machine-ts/src/toolchain.ts"]],
+       ["ai-os brain sync", ["bun", "frameworks/ai-os/src/brain/cli.ts", "sync"]],
+     ] as const) {
+       const x = await sh([...c], ROOT, 300_000);
+@@ -477,7 +455,8 @@ try {
+     }
+     const commitPaths = res.changed.filter((p) => !pre.has(p));
+     if (res.changed.length && commitPaths.length) {
+-      const x = await sh(["bun", "scripts/commit.ts", "-m", `learn: distilled ${commitPaths.length} item(s) from ${Object.keys(counts).join(",")} signals`, ...(process.env.LEARN_PUSH ? ["--push"] : []), ...commitPaths]);
++      const x = await sh(["git", "commit", "-m", `learn: distilled ${commitPaths.length} item(s) from ${Object.keys(counts).join(",")} signals`, "--", ...commitPaths]);
++      if (!x.code && process.env.LEARN_PUSH) await sh(["git", "push", "origin", "main"]);
+       commit = `exit ${x.code}: ${clip(x.out + x.err, 200)} paths=${commitPaths.join(", ")}`;
+     } else commit = res.changed.length ? `skipped, dirty before edit: ${[...pre].join(", ")}` : "nothing to commit";
+   }
+diff --git a/tools/agents/plugins/aphrody-nhitl/.claude-plugin/plugin.json b/tools/agents/plugins/aphrody-nhitl/.claude-plugin/plugin.json
+index 92d09eb..034e050 100644
+--- a/tools/agents/plugins/aphrody-nhitl/.claude-plugin/plugin.json
++++ b/tools/agents/plugins/aphrody-nhitl/.claude-plugin/plugin.json
+@@ -3,7 +3,7 @@
+   "version": "0.1.6",
+   "description": "No human in the loop: bun hooks that auto-approve tool calls except a hardcoded deny list, log notifications, continue unfinished goals/todos, inject a local session digest, plus a status line and a headless launcher.",
+   "author": { "name": "aphrody-dev" },
+-  "repository": "https://github.com/aphrody-labs/src",
++  "repository": "https://github.com/aphrody-dev/ai-os",
+   "license": "MIT OR Apache-2.0",
+   "keywords": ["hooks", "autonomy", "headless", "bun"]
+ }
+diff --git a/tools/agents/plugins/aphrody-nhitl/README.md b/tools/agents/plugins/aphrody-nhitl/README.md
+index 49ee141..df74bfa 100644
+--- a/tools/agents/plugins/aphrody-nhitl/README.md
++++ b/tools/agents/plugins/aphrody-nhitl/README.md
+@@ -5,7 +5,7 @@ user settings, headless CLI). claude.exe is never patched.
+ 
+ Claude Code runs with `bypassPermissions`. There is no deny-list engine: the only command guard is the
+ small Bash PreToolUse hook in `tools/agents/claude/settings.json` (coreutils redirection, shared-index
+-`git commit`, `git add -A`, `git stash`, staging `.env`, writes under `C:/Windows/System32`), synced by
++`git commit`, `git add -A`, `git stash`, staging `.env`, writes under `%SystemRoot%/System32`), synced by
+ `just agents-sync`. The boundary against damage is the OS: `runuser -u agent` on prd; on the Windows PC the
+ launcher can run Claude Code under WSL2 with the sandbox (see "OS boundary").
+ 
+@@ -16,7 +16,7 @@ launcher can run Claude Code under WSL2 with the sandbox (see "OS boundary").
+ | Status line      | `src/statusline.ts`    | `nhitl · mode · model · agents n[/total] · ctx %`, wired in `~/.claude/settings.json`.                                                                                                                                                                                                                                                                                                    |
+ | Launcher         | `bin/claude-nhitl.ts`  | `claude -p` with `--permission-mode bypassPermissions --permission-prompts none --output-format stream-json --verbose`, `--session-id`/`--resume`/`--continue`, stream teed to `~/.claude/learning/runs/<sid>.jsonl`. As root, claude runs via `runuser -u $NHITL_RUN_AS` (default `agent`), never with `IS_SANDBOX`. `--help` for the runner contract. |
+ 
+-Tests: `bun test ./test` here (`bun test tools/agents/plugins/aphrody-nhitl` from the root). Install: `claude plugin marketplace add C:/aphrody` (root marketplace `.claude-plugin/marketplace.json`) then
++Tests: `bun test ./test` here (`bun test tools/agents/plugins/aphrody-nhitl` from the root). Install: `claude plugin marketplace add <workspace>` (root marketplace `.claude-plugin/marketplace.json`) then
+ `claude plugin install aphrody-nhitl@aphrody --scope user`; after edits bump `version` and run
+ `claude plugin marketplace update aphrody && claude plugin update aphrody-nhitl@aphrody`.
+ 
+@@ -48,7 +48,7 @@ Route (b), dedicated local account + ACL + Job Object, not retained:
+ - A Job Object bounds processes and memory, not file access; the file boundary rests on ACLs alone.
+ - Denying `%USERPROFILE%` to the account also denies what Claude Code, bun, git and gh need under their own profile
+   paths; the account needs its own copies of every login (claude.ai, gh, gcloud), a second set of secrets to guard.
+-- `bun -e rmSync` inside the allowed tree (`C:\aphrody`) is still permitted: ACLs cannot separate it from legitimate
++- `bun -e rmSync` inside the allowed tree (`<workspace>`) is still permitted: ACLs cannot separate it from legitimate
+   edits, whereas the sandbox write roots plus `denyWrite` on `.git` can.
+ - Needs `icacls`, account creation and `kernel32` FFI (`CreateJobObjectW`), all unverifiable without Windows here.
+   Reconsider only if WSL2 is unavailable on the PC; then ACL deny on secrets and protected `.git` is the minimum.
+diff --git a/tools/agents/plugins/aphrody-nhitl/test/launcher.test.ts b/tools/agents/plugins/aphrody-nhitl/test/launcher.test.ts
+index 351b0eb..b31dc99 100644
+--- a/tools/agents/plugins/aphrody-nhitl/test/launcher.test.ts
++++ b/tools/agents/plugins/aphrody-nhitl/test/launcher.test.ts
+@@ -19,11 +19,11 @@ test("launcher: .env entries loaded by bun never reach claude", () => {
+     PLAIN: "a",
+     LOCAL_ONLY: "l",
+     PATH: "/bin",
+-    HOME: "/home/x",
++    HOME: join(dir, "home"),
+   };
+   expect(envWithoutDotenv(env, dir, true)).toEqual({
+     PATH: "/bin",
+-    HOME: "/home/x",
++    HOME: join(dir, "home"),
+   });
+   // a real environment value that differs from the file is the caller's own: kept
+   expect(
+@@ -78,16 +78,16 @@ test("sandbox: settings fail closed and hide secrets", () => {
+ });
+ 
+ test("sandbox: Windows paths map to /mnt, UNC refused", () => {
+-  expect(toWslPath("C:\\aphrody\\packages")).toBe("/mnt/c/src/packages");
+-  expect(toWslPath("D:/x")).toBe("/mnt/d/x");
+-  expect(toWslPath("/home/a")).toBe("/home/a");
++  expect(toWslPath("C:\\work\\packages")).toBe("/mnt/c/work/packages"); // paths:ok
++  expect(toWslPath("D:/x")).toBe("/mnt/d/x"); // paths:ok
++  expect(toWslPath("/home/a")).toBe("/home/a"); // paths:ok
+   expect(() => toWslPath("\\\\srv\\share")).toThrow();
+ });
+ 
+ test("sandbox: wsl argv runs claude via --exec, no shell string", () => {
+   const a = wslArgv({
+     distro: "Arch",
+-    cwd: "C:\\aphrody",
++    cwd: "C:\\work", // paths:ok
+     env: { NHITL_RUN: "1" },
+     claudeArgs: ["claude", "-p", "a b; rm -rf ~"],
+   });
+@@ -96,7 +96,7 @@ test("sandbox: wsl argv runs claude via --exec, no shell string", () => {
+     "-d",
+     "Arch",
+     "--cd",
+-    "/mnt/c/src",
++    "/mnt/c/work",
+     "--exec",
+     "env",
+     "NHITL_RUN=1",
+@@ -126,6 +126,11 @@ test("launcher: wsl mode refuses off-Windows, passes --settings", async () => {
+       env: { ...process.env, NHITL_RUN_AS: "" },
+     },
+   );
++  if (process.platform === "win32") {
++    // On Windows the mode is available: the launcher hands over to wsl.exe instead of refusing.
++    expect(r.stderr.toString()).not.toContain("needs Windows");
++    return;
++  }
+   expect(r.exitCode).toBe(2);
+   expect(r.stderr.toString()).toContain("needs Windows");
+ });
+diff --git a/tools/agents/repo.ts b/tools/agents/repo.ts
+new file mode 100644
+index 0000000..6ff3423
+--- /dev/null
++++ b/tools/agents/repo.ts
+@@ -0,0 +1,9 @@
++// The GitHub repository of the checkout the agents work in, `<owner>/<name>`: $AGENTS_SRC_REPO, else the origin remote.
++import { resolve } from "node:path";
++
++export function srcRepo(cwd: string = resolve(import.meta.dir, "..", "..")): string | undefined {
++  const explicit = process.env.AGENTS_SRC_REPO?.trim();
++  if (explicit) return explicit;
++  const r = Bun.spawnSync(["git", "-C", cwd, "remote", "get-url", "origin"], { stdout: "pipe", stderr: "ignore" });
++  return /github\.com[:/]([\w.-]+\/[\w.-]+?)(?:\.git)?\/?$/.exec(r.stdout.toString().trim())?.[1];
++}
+diff --git a/tools/agents/runner.test.ts b/tools/agents/runner.test.ts
+index 736953b..8304b5b 100644
+--- a/tools/agents/runner.test.ts
++++ b/tools/agents/runner.test.ts
+@@ -48,7 +48,7 @@ test("no shell in provider argv, prompt intact", () => {
+     "codex",
+     "claude",
+     "jules",
+-    "jules:aphrody-labs/src",
++    "jules:aphrody-dev/ai-os",
+   ]) {
+     let built: { cmd: string[]; stdin?: string };
+     try {
+@@ -139,16 +139,16 @@ test("route: prd forwards heavy and foreign tasks", () => {
+ });
+ 
+ test("jules provider runs ai-os jules run --wait with the repo from the model slot", () => {
+-  const b = providerCmd("jules:aphrody-labs/src", { ...task }, 1);
++  const b = providerCmd("jules:aphrody-dev/ai-os", { ...task }, 1);
+   expect(b.cmd.slice(2)).toEqual([
+     "jules",
+     "run",
+     "--wait",
+     "--repo",
+-    "aphrody-labs/src",
++    "aphrody-dev/ai-os",
+     "-",
+   ]);
+-  expect(b.cmd[1]).toMatch(/packages[\\/]ai-os[\\/]src[\\/]cli\.ts$/);
++  expect(b.cmd[1]).toMatch(/frameworks[\\/]ai-os[\\/]src[\\/]cli\.ts$/);
+   expect(b.stdin).toBe(task.prompt);
+ });
+ 
+diff --git a/tools/agents/runner.ts b/tools/agents/runner.ts
+index 5d3db90..a75290c 100644
+--- a/tools/agents/runner.ts
++++ b/tools/agents/runner.ts
+@@ -28,6 +28,7 @@ import { homedir, hostname } from "node:os";
+ import { join, resolve } from "node:path";
+ import { resolveExe } from "@aphrody/ai-os/llm/agents";
+ import { expandSync } from "../../system/env-kit/src/discover.ts";
++import { srcRepo } from "./repo.ts";
+ 
+ type Role = { timeout_s: number; budget_usd: number; heavy?: boolean };
+ type Host = { roles: string[]; src: string; ssh?: string[] };
+@@ -74,9 +75,9 @@ const WIN = process.platform === "win32";
+ if (!WIN && process.env.HOME)
+   process.env.PATH = `${process.env.HOME}/.bun/bin:${process.env.HOME}/.local/bin:/usr/local/bin:${process.env.PATH ?? "/usr/bin:/bin"}`;
+ const HOST = process.env.AGENTS_HOST ?? hostAlias(hostname());
+-const SRC = resolve(
+-  process.env.SRC_ROOT ?? FLEET.hosts[HOST]?.src ?? join(HERE, "..", ".."),
+-);
++// fleet.toml `src` may start with `~/` (the home of the runner user).
++const hostSrc = FLEET.hosts[HOST]?.src?.replace(/^~(?=[\\/])/, homedir());
++const SRC = resolve(process.env.SRC_ROOT ?? hostSrc ?? join(HERE, "..", ".."));
+ const HOME = resolve(process.env.AGENTS_HOME ?? join(SRC, "var", "agents"));
+ const Q = {
+   tmp: join(HOME, "queue", "tmp"),
+@@ -556,8 +557,8 @@ function claim(role: string): { t: Task; path: string } | null {
+   return null;
+ }
+ 
+-// Runner-owned checkout (<home>/agents/src): the runner may undo task leftovers. The PC works in
+-// C:/aphrody, shared with other agents: there nothing is undone, only in-scope files are committed.
++// Runner-owned checkout (<home>/agents/src): the runner may undo task leftovers. The PC works in the
++// checkout it shares with other agents: there nothing is undone, only in-scope files are committed.
+ const OWNED = /[\\/]agents[\\/]src$/.test(SRC);
+ 
+ // Roles whose output is text only may use relay models; every other role edits the checkout.
+@@ -995,7 +996,7 @@ function ship() {
+   if (r.exit === 0) writeFileSync(offF, String(buf.length));
+ }
+ 
+-// Self-fix loop (ship host only): red `judge`/`ci` on main -> one sre task per failing commit, at
++// Self-fix loop (ship host only): a red workflow (AGENTS_CI_WORKFLOWS, default `ai-os`,`ci`) on main -> one sre task per failing commit, at
+ // most one open at a time. Attributable failures are also reverted by .github/workflows/ci-revert.yml;
+ // the task checks that first.
+ function ciWatch() {
+@@ -1004,13 +1005,15 @@ function ciWatch() {
+     readdirSync(d).some((f) => f.startsWith("ci-fix-")),
+   );
+   if (open) return;
+-  for (const wf of ["judge", "ci"]) {
++  const repo = srcRepo();
++  if (!repo) return;
++  for (const wf of (process.env.AGENTS_CI_WORKFLOWS ?? "ai-os,ci").split(",")) {
+     const r = sh(
+       argv0("gh", [
+         "run",
+         "list",
+         "-R",
+-        "aphrody-labs/ay",
++        repo,
+         "-w",
+         wf,
+         "-b",
+diff --git a/tools/ai/systemd/ay-ai-litellm.service.d/10-creds.conf b/tools/ai/systemd/ay-ai-litellm.service.d/10-creds.conf
+index 00fb387..584f887 100644
+--- a/tools/ai/systemd/ay-ai-litellm.service.d/10-creds.conf
++++ b/tools/ai/systemd/ay-ai-litellm.service.d/10-creds.conf
+@@ -12,4 +12,4 @@ Environment=AY_AI_HOST=prd
+ RuntimeDirectory=ay-ai
+ RuntimeDirectoryMode=0700
+ ExecStart=
+-ExecStart=/root/.bun/bin/bun /usr/local/lib/aphrody-ai/litellm-serve.ts --manifest /usr/local/lib/aphrody-ai/ai.toml --overlay /usr/local/lib/aphrody-ai/litellm-overlay.toml --ay /root/.local/bin/ay --litellm /root/.local/bin/litellm
++ExecStart=%h/.bun/bin/bun /usr/local/lib/aphrody-ai/litellm-serve.ts --manifest /usr/local/lib/aphrody-ai/ai.toml --overlay /usr/local/lib/aphrody-ai/litellm-overlay.toml --ay %h/.local/bin/ay --litellm %h/.local/bin/litellm
+diff --git a/tools/build-model/README.md b/tools/build-model/README.md
+index 6c47032..0340832 100644
+--- a/tools/build-model/README.md
++++ b/tools/build-model/README.md
+@@ -16,6 +16,6 @@ cargo test -p build-model
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/tools/build-model/run.sh b/tools/build-model/run.sh
+index 7eb714d..5fffa75 100644
+--- a/tools/build-model/run.sh
++++ b/tools/build-model/run.sh
+@@ -2,8 +2,10 @@
+ . "$(git rev-parse --show-toplevel)/system/env-kit/loaders/shell/site.sh"; FR1=$(site_ssh fr1)
+ # Usage: run from a machine with `ssh <fr1>` and `ssh prd`. No Chromium build is started.
+ set -euo pipefail
+-OUT=/srv/chromium/src/out/labs_agent-157.0.8103.78
+-SISO=/srv/chromium/src/third_party/siso/cipd/siso
++# CHROMIUM_OUT: the Chromium out directory on the build host (<src>/out/<name>); siso comes with the checkout.
++: "${CHROMIUM_OUT:?set CHROMIUM_OUT to the Chromium out directory on the build host}"
++OUT=$CHROMIUM_OUT
++SISO=${SISO:-$OUT/../../third_party/siso/cipd/siso}
+ here=$(cd "$(dirname "$0")" && pwd)
+ ssh "$FR1" "set -e; mkdir -p /tmp/bm; cd $OUT; nice -n 19 $SISO query graph -C . | nice -n 19 gzip -1 > /tmp/bm/graph.jsonl.gz;
+   cp siso_metrics.0.json siso_metrics.json /tmp/bm/; cp ../re-test/siso_metrics.json /tmp/bm/retest_metrics.json"
+diff --git a/tools/extract.test.ts b/tools/extract.test.ts
+index 156e58d..de28c4b 100644
+--- a/tools/extract.test.ts
++++ b/tools/extract.test.ts
+@@ -29,7 +29,7 @@ repository = "https://github.com/example-org/example-repo"
+ function scratch(name: string, rev = REV): string {
+   const dir = join(base, name);
+   mkdirSync(join(dir, "tools"), { recursive: true });
+-  for (const f of ["extract.ts", "closure.ts"]) copyFileSync(join(root, "tools", f), join(dir, "tools", f));
++  for (const f of ["extract.ts", "closure.ts", "first-party.ts"]) copyFileSync(join(root, "tools", f), join(dir, "tools", f));
+   writeFileSync(join(dir, "extract.toml"), toml(rev));
+   return dir;
+ }
+diff --git a/tools/extract.ts b/tools/extract.ts
+index 0b4b6d0..35b216e 100644
+--- a/tools/extract.ts
++++ b/tools/extract.ts
+@@ -5,6 +5,7 @@
+ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+ import { resolve as nativeResolve } from "node:path";
+ import { join } from "node:path/posix";
++import { withFirstParty } from "./first-party.ts";
+ 
+ const abs = (...p: string[]) => nativeResolve(...p).replaceAll("\\", "/");
+ const here = abs(import.meta.dir, "..");
+@@ -12,6 +13,7 @@ const cfgPath = join(here, "extract.toml");
+ const cfg = Bun.TOML.parse(readFileSync(cfgPath, "utf8")) as {
+   source: { repo: string; checkout: string; rev: string };
+   select: { seeds: string[]; stop: string[]; paths: string[]; exclude: string[] };
++  "first-party"?: { crates: string[] };
+   "package-json": { "drop-dependencies": string[]; repository: string };
+ };
+ const arg = (k: string) => Bun.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
+@@ -144,8 +146,10 @@ const legacyMembers = new Set(parsed.workspace.members);
+ const crates = units.filter((u) => existsSync(join(here, u, "Cargo.toml"))).sort();
+ // A crate that inherits from the workspace root (`workspace = true`) cannot be excluded: it is a member too.
+ const inherits = (u: string) => /workspace\s*=\s*true/.test(readFileSync(join(here, u, "Cargo.toml"), "utf8"));
+-const members = crates.filter((u) => legacyMembers.has(u) || inherits(u));
+-const standalone = crates.filter((u) => !members.includes(u));
++const extractedMembers = crates.filter((u) => legacyMembers.has(u) || inherits(u));
++const standalone = crates.filter((u) => !extractedMembers.includes(u));
++// First-party crates (extract.toml [first-party]) are members too: written here, never extracted.
++const members = withFirstParty(extractedMembers, cfg["first-party"]?.crates ?? [], (c) => existsSync(join(here, c, "Cargo.toml")));
+ 
+ const section = (header: string) => {
+   const lines = legacyToml.split("\n");

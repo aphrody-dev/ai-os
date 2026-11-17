@@ -1,5 +1,5 @@
 /*
- * sovereign_env.h — Header-only C11 loader for C:\aphrody\.env
+ * sovereign_env.h — Header-only C11 loader for the workspace .env
  * Uses `_putenv_s` on Windows NT and `setenv` on POSIX without external dependencies.
  */
 #ifndef SOVEREIGN_ENV_H
@@ -14,11 +14,15 @@
 extern "C" {
 #endif
 
-#if defined(_WIN32)
-#define SOVEREIGN_DEFAULT_ENV_PATH "C:\\aphrody\\.env"
-#else
-#define SOVEREIGN_DEFAULT_ENV_PATH "/src/.env"
-#endif
+/* Default .env: $ENV_KIT_ROOT/.env, otherwise .env in the current directory. */
+static inline const char *sovereign_env_default_path(char *buf, size_t size) {
+    const char *root = getenv("ENV_KIT_ROOT");
+    if (root && root[0] != '\0') {
+        snprintf(buf, size, "%s/.env", root);
+        return buf;
+    }
+    return ".env";
+}
 
 static inline int sovereign_env_set_var(const char *key, const char *val, int override_existing) {
     if (!key || !*key || !val) {
@@ -38,7 +42,8 @@ static inline int sovereign_env_set_var(const char *key, const char *val, int ov
 }
 
 static inline int sovereign_env_load_file(const char *env_path, int override_existing) {
-    const char *target = (env_path && env_path[0] != '\0') ? env_path : SOVEREIGN_DEFAULT_ENV_PATH;
+    char fallback[4096];
+    const char *target = (env_path && env_path[0] != '\0') ? env_path : sovereign_env_default_path(fallback, sizeof fallback);
     FILE *fp = fopen(target, "rb");
     if (!fp) {
         return -1;

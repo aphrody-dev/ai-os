@@ -1,6 +1,6 @@
 use std::env;
 use std::net::{SocketAddr, TcpStream};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
@@ -9,21 +9,32 @@ fn tcp_reachable(port: u16) -> bool {
     TcpStream::connect_timeout(&addr, Duration::from_millis(180)).is_ok()
 }
 
-fn find_webview_host() -> Option<&'static str> {
-    let candidates = [
-        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
-        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+/// An executable installed by the user: `<home>/.local/bin/<name>`.
+fn local_bin(name: &str) -> PathBuf {
+    let home = env::var_os("USERPROFILE").or_else(|| env::var_os("HOME")).map(PathBuf::from);
+    home.unwrap_or_default().join(".local").join("bin").join(name)
+}
+
+/// Edge or Chrome under the Program Files and per-user install roots of the environment.
+fn find_webview_host() -> Option<PathBuf> {
+    let roots = ["ProgramFiles(x86)", "ProgramFiles", "LOCALAPPDATA"].map(env::var_os);
+    let apps = [
+        Path::new("Microsoft").join("Edge").join("Application").join("msedge.exe"),
+        Path::new("Google").join("Chrome").join("Application").join("chrome.exe"),
     ];
-    candidates.into_iter().find(|p| Path::new(p).exists())
+    roots
+        .into_iter()
+        .flatten()
+        .flat_map(|root| apps.iter().map(move |app| PathBuf::from(&root).join(app)))
+        .find(|p| p.exists())
 }
 
 fn print_doctor_json() {
-    let ai_os_bin = Path::new(r"%USERPROFILE%\.local\bin\ai-os.exe").exists();
-    let agy_studio_bin = Path::new(r"%USERPROFILE%\.local\bin\agy-studio.exe").exists();
+    let ai_os_bin = local_bin("ai-os.exe").exists();
+    let agy_studio_bin = local_bin("agy-studio.exe").exists();
     let ai_os_listening = tcp_reachable(4318);
     let agy_web_listening = tcp_reachable(4325);
-    let webview = find_webview_host().unwrap_or("none");
+    let webview = find_webview_host().map_or_else(|| "none".to_string(), |p| p.display().to_string());
 
     println!(
         "{{\"ok\":true,\"binary\":\"agy-desktop\",\"version\":\"2.0.0\",\"edition\":\"rust-2024-fat-lto\",\"aiOsBinary\":{},\"agyStudioBinary\":{},\"aiOsPort4318\":{},\"agyWebPort4325\":{},\"nativeAppHost\":\"{}\"}}",
@@ -52,9 +63,9 @@ fn ensure_agy_web_running() {
     if tcp_reachable(4325) {
         return;
     }
-    let studio_bin = r"%USERPROFILE%\.local\bin\agy-studio.exe";
-    if Path::new(studio_bin).exists() {
-        let _ = Command::new(studio_bin)
+    let studio_bin = local_bin("agy-studio.exe");
+    if studio_bin.exists() {
+        let _ = Command::new(&studio_bin)
             .args(["web", "--port", "4325"])
             .stdin(Stdio::null())
             .stdout(Stdio::null())

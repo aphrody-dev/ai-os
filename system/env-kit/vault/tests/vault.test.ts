@@ -18,7 +18,7 @@ process.env.ENV_KIT_SECRET_DIR = join(root, "local");
 process.env.VAULT_HOSTS_FILE = join(root, "hosts.toml");
 process.env.VAULT_POLICY_FILE = join(root, "policy.toml");
 process.env.VAULT_HELLO = "0";
-const infra = join(import.meta.dir, "..", "..", "..", "..", "device", "vault");
+const infra = join(import.meta.dir, "fixtures");
 copyFileSync(join(infra, "hosts.toml"), process.env.VAULT_HOSTS_FILE);
 copyFileSync(join(infra, "policy.toml"), process.env.VAULT_POLICY_FILE);
 
@@ -257,10 +257,10 @@ describe("scope", () => {
 
   test("owner profile refused", () => {
     expect(
-      V.isOwnerProfile("C:/Users/x/AppData/Local/Google/Chrome/User Data"),
+      V.isOwnerProfile("C:/Users/x/AppData/Local/Google/Chrome/User Data"), // paths:ok a Windows profile path is the classifier input
     ).toBe(true);
     expect(
-      V.isOwnerProfile("C:/Users/x/AppData/Local/aphrody/relay/chrome"),
+      V.isOwnerProfile("C:/Users/x/AppData/Local/aphrody/relay/chrome"), // paths:ok
     ).toBe(false);
   });
 });

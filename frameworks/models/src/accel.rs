@@ -439,7 +439,7 @@ mod tests {
     #[test]
     fn cuda_version_is_extracted_from_install_paths() {
         assert_eq!(
-            cuda_version_from_path("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3"),
+            cuda_version_from_path("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3"), // paths:ok a CUDA install path is the parser input
             "13.3"
         );
         assert_eq!(

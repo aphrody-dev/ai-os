@@ -969,8 +969,8 @@ mod tests {
     #[test]
     fn verbatim_prefixes_are_stripped_but_unc_shares_are_kept() {
         assert_eq!(
-            strip_unc(Path::new(r"\\?\C:\models\m.gguf")),
-            PathBuf::from(r"C:\models\m.gguf")
+            strip_unc(Path::new(r"\\?\C:\models\m.gguf")), // paths:ok verbatim-prefix parser input
+            PathBuf::from(r"C:\models\m.gguf") // paths:ok verbatim-prefix parser output
         );
         // A real UNC share needs the prefix to stay resolvable.
         assert_eq!(
@@ -979,8 +979,8 @@ mod tests {
         );
         // Anything already plain is returned unchanged.
         assert_eq!(
-            strip_unc(Path::new("/home/u/m.gguf")),
-            PathBuf::from("/home/u/m.gguf")
+            strip_unc(Path::new("/home/u/m.gguf")), // paths:ok parser input
+            PathBuf::from("/home/u/m.gguf") // paths:ok parser output
         );
     }
 

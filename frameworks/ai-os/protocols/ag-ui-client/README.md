@@ -18,7 +18,7 @@ bun run --cwd frameworks/ai-os/protocols/ag-ui-client prepack
 bun run --cwd frameworks/ai-os/protocols/ag-ui-client test:upstream
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
 <!-- catalog:end -->
 
 AG-UI client with stream error draining and HTTP cancellation fixes.

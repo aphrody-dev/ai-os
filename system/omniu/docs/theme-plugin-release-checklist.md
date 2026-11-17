@@ -50,7 +50,7 @@ bundled source plugins.
 - [x] Keep dirty Git compact markers on the dirty theme style instead of falling
   back to white/gray detail text.
 - [x] Resolve setup/prompt/config HOME through env-aware Windows path handling
-  so `/c/Users/...`, `C:/Users/...`, and `~` agree.
+  so the MSYS form, the Windows form and `~` of the user profile agree.
 
 ## Theme Plugins
 
@@ -102,7 +102,7 @@ bundled source plugins.
   - AppData binary: `Niubash 0.10.0`, WinuxCmd `0.14.3`.
   - `~/tools/niubash.exe`: `Niubash 0.10.0`, WinuxCmd `0.13.0`.
   - `cd ~; echo PWD=$PWD; pwd; cat.exe ~/.niubashrc` prints native
-    `C:/Users/...` and succeeds.
+    the Windows form of the user profile and succeeds.
   - `niubash setup` generates an isolated temporary `.niubashrc` with theme
     previews and `NIU_PROMPT_CWD_STYLE='home'`.
   - `--gitstatus-daemon` JSONL smoke passed through the `~/tools` entry; the

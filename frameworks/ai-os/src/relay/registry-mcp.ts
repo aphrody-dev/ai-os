@@ -15,7 +15,7 @@ type Args = Record<string, unknown>;
 const CRATES = Bun.env.REGISTRY_CRATES_API ?? "https://crates.io/api/v1";
 const NPM = Bun.env.REGISTRY_NPM_API ?? "https://registry.npmjs.org";
 // crates.io asks every API client to identify itself (crates.io data access policy).
-const UA = "aphrody-registry-mcp (+https://github.com/aphrody-labs/ay)";
+const UA = "aphrody-registry-mcp (+https://github.com/aphrody-dev/ai-os)";
 
 async function get(url: string, accept = "application/json"): Promise<any> {
   const r = await fetch(url, {

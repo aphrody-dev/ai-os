@@ -24,7 +24,7 @@ autobenches = false
 description = "Concrete ToolExecutor implementations for the aphrody agent engine: a streaming sandboxed shell-exec tool and an apply_patch tool that wraps aphrody-patch. These are the real capabilities the engine's ToolRegistry exposes to the model."
 readme = false
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [lib]
 name = "aphrody_agent_tools"

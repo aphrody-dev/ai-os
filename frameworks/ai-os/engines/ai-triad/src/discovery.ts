@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { envFile, workspaceRoot } from "../../../src/core/paths.ts";
 
 export type TriadAgentId =
   "claude" | "codex" | "agy" | "gemini" | "pi-opencode" | "ai-os";
@@ -78,11 +79,7 @@ export function parseDotEnv(content: string): Record<string, string> {
   return out;
 }
 
-export function loadMergedEnv(
-  envFilePath = process.platform === "win32"
-    ? "C:\\aphrody\\.env"
-    : "/src/.env",
-): Record<string, string> {
+export function loadMergedEnv(envFilePath = envFile()): Record<string, string> {
   const merged: Record<string, string> = {};
   if (existsSync(envFilePath)) {
     try {
@@ -206,9 +203,7 @@ export function resolveBinaryCatalog(home = homedir()): Record<
     aios: {
       label: "Sovereign AI-OS",
       executable: isWin ? join(localBin, "ai-os.exe") : join(localBin, "ai-os"),
-      configDir: isWin
-        ? "C:\\aphrody\\packages\\ai-os"
-        : "/src/frameworks/ai-os",
+      configDir: join(workspaceRoot(), "frameworks", "ai-os"),
       versionArgs: ["--help"],
     },
   };

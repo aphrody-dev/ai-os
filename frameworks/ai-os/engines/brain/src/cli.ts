@@ -2,24 +2,35 @@
 // brain: merge AGY sessions into a redacted Obsidian vault, build the code graph (graphify), sync to Google Drive.
 // The Google OAuth consent for the agent account is done by a human (see `brain auth-drive`); nothing here handles passwords.
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { homedir } from "node:os";
+import { delimiter, join } from "node:path";
 import { spawnSync } from "node:child_process";
+import { dataDir, envFile, workspaceRoot } from "../../../src/core/paths.ts";
 
-const VAULT = process.env.BRAIN_VAULT ?? "C:/aphrody/var/brain";
+const VAULT = process.env.BRAIN_VAULT ?? dataDir("brain");
+/** Code directories of the workspace that the code graph covers. */
+const GRAPH_ROOTS = ["frameworks", "system", "tools"].filter((d) =>
+  existsSync(join(workspaceRoot(), d)),
+);
 const REMOTE = process.env.BRAIN_RCLONE_REMOTE ?? "gdrive-yoyo";
 const REMOTE_DIR = process.env.BRAIN_REMOTE_DIR ?? "aphrody-brain";
-const HOME = process.env.USERPROFILE ?? "";
 const run = (cmd: string, args: string[], cwd?: string) =>
   spawnSync(cmd, args, {
     stdio: "inherit",
     cwd,
-    env: { ...process.env, PATH: `${HOME}\\.local\\bin;${process.env.PATH}` },
+    env: {
+      ...process.env,
+      PATH: [join(homedir(), ".local", "bin"), process.env.PATH].join(
+        delimiter,
+      ),
+    },
   });
 
 function envSecrets(): string[] {
   const out: string[] = [];
-  if (!existsSync("C:/aphrody/.env")) return out;
-  for (const l of readFileSync("C:/aphrody/.env", "utf8").split(/\r?\n/)) {
+  const env = envFile();
+  if (!existsSync(env)) return out;
+  for (const l of readFileSync(env, "utf8").split(/\r?\n/)) {
     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
     const v = m?.[2]?.replace(/^['"]|['"]$/g, "") ?? "";
     if (
@@ -78,11 +89,11 @@ function main() {
           .status ?? 1,
       );
     case "graph": {
-      for (const d of ["packages", "crates", "apps", "infra"])
-        run("graphify", ["update", `C:/aphrody/${d}`]);
-      const graphs = ["packages", "crates", "apps", "infra"]
-        .map((d) => `C:/aphrody/${d}/graphify-out/graph.json`)
-        .filter(existsSync);
+      for (const d of GRAPH_ROOTS)
+        run("graphify", ["update", join(workspaceRoot(), d)]);
+      const graphs = GRAPH_ROOTS.map((d) =>
+        join(workspaceRoot(), d, "graphify-out", "graph.json"),
+      ).filter(existsSync);
       if (graphs.length > 1)
         run("graphify", [
           "merge-graphs",

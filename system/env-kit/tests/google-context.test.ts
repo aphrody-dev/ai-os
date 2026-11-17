@@ -1,4 +1,7 @@
 import { expect, test } from "bun:test";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   contextEnv,
   detectContext,
@@ -15,23 +18,25 @@ test("contexts are ordered with a catch-all default last", () => {
   );
 });
 
-// Needs the real checkout layout (../rosegriffon is its own repository): skipped elsewhere (CI Linux).
-const SRC = require("node:path").resolve(import.meta.dir, "..", "..", "..");
-test.skipIf(!require("node:fs").existsSync(`${SRC}/../rosegriffon/.git`))(
-  "detectContext picks rosegriffon inside the sibling rosegriffon checkout and aphrody at the src root",
-  () => {
-    expect(detectContext(`${SRC}/../rosegriffon/apps/rg-website`).name).toBe(
-      "rosegriffon",
-    );
+test("detectContext picks rosegriffon by path fragment and falls through to aphrody", () => {
+  const base = mkdtempSync(join(tmpdir(), "ctx-"));
+  try {
+    const site = join(base, "apps", "rosegriffon", "rg-website");
+    const other = join(base, "unrelated");
+    mkdirSync(site, { recursive: true });
+    mkdirSync(other, { recursive: true });
+    expect(detectContext(site).name).toBe("rosegriffon");
     // A path with no rosegriffon fragment falls through to the default aphrody context.
-    expect(detectContext("C:/tmp/unrelated").name).toBe("aphrody");
-  },
-);
+    expect(detectContext(other).name).toBe("aphrody");
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+});
 
 test("contextEnv points every SDK var at the context project and omits a missing key file", () => {
   const ctx = GCLOUD_CONTEXTS.find((c) => c.name === "rosegriffon")!;
   const env = contextEnv(ctx, {
-    GOOGLE_APPLICATION_CREDENTIALS_RGFR: "C:/nope/missing.json",
+    GOOGLE_APPLICATION_CREDENTIALS_RGFR: join(tmpdir(), "nope", "missing.json"),
   });
   expect(env.GOOGLE_CLOUD_PROJECT).toBe(ROSEGRIFFON_PROJECT);
   expect(env.CLOUDSDK_ACTIVE_CONFIG_NAME).toBe("rosegriffon");

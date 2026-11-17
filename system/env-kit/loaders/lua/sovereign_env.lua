@@ -1,10 +1,12 @@
--- sovereign_env.lua — Zero-dependency Lua 5.1+ / LuaJIT loader for C:\aphrody\.env
+-- sovereign_env.lua — Zero-dependency Lua 5.1+ / LuaJIT loader for the workspace .env
 -- Returns a metatable-protected table with masked `__tostring` so print(env) never leaks secrets.
 
 local M = {}
 
 local is_windows = package.config:sub(1, 1) == "\\"
-M.DEFAULT_MONOREPO_ENV_PATH = is_windows and "C:\\aphrody\\.env" or "/src/.env"
+-- $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
+local root = os.getenv("ENV_KIT_ROOT")
+M.DEFAULT_MONOREPO_ENV_PATH = (root and root ~= "") and (root .. "/.env") or ".env"
 
 local SECRET_PATTERNS = {
   "TOKEN",

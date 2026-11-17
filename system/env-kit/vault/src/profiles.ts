@@ -15,7 +15,7 @@ import { join, resolve } from "node:path";
 import { ageEncryptToFile } from "./age.ts";
 import { b3Files } from "./crypto.ts";
 import { loadHosts, loadPolicy, loadRegistry, scopeOf } from "./hosts.ts";
-import { infraDir, vaultRoot, WIN } from "./paths.ts";
+import { infraDir, system32, vaultRoot, WIN } from "./paths.ts";
 import { getSecretBytes } from "./store.ts";
 
 export interface BackupEntry {
@@ -27,7 +27,7 @@ export interface BackupEntry {
 }
 
 const TAR = WIN
-  ? join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe")
+  ? system32("tar.exe")
   : "tar";
 
 export function expand(p: string): string {

@@ -19,6 +19,11 @@ export type LocalBackend = "dpapi" | "systemd-creds" | "systemd-creds-user";
 
 export const WIN = process.platform === "win32";
 
+/** A Windows system tool: `%SystemRoot%\System32\<exe>`. */
+export function system32(exe: string): string {
+  return join(process.env.SystemRoot ?? process.env.windir ?? "", "System32", exe);
+}
+
 /** Repository root: SRC_ROOT, else four levels above this file (system/env-kit/vault/src). */
 export function srcRoot(): string {
   return process.env.SRC_ROOT ?? resolve(import.meta.dir, "..", "..", "..", "..");

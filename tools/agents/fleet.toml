@@ -64,7 +64,7 @@ budget_usd = 2
 # Production backends only: light prod roles (deploy, health, text-only growth drafts).
 roles = ["deployer", "sre", "growth"]
 # Every host: user `agent` (systemd --user + linger, sudo NOPASSWD, docker), never uid 0.
-src = "/home/agent/agents/src"
+src = "~/agents/src"
 ssh = ["agent@prd-mesh", "agent@prd", "agent@@@hosts.prd.mesh_ip@@", "agent@@@hosts.prd.public_ip@@"]
 
 [hosts.fr1]
@@ -80,7 +80,7 @@ roles = [
   "training",
   "sre",
 ]
-src = "/home/agent/agents/src"
+src = "~/agents/src"
 ssh = [
   "agent@fr1-mesh",
   "agent@fr1",
@@ -91,13 +91,13 @@ ssh = [
 [hosts.fr2]
 # Edge/proxy/CDN host, 11 GB RAM: minimal, sre only.
 roles = ["sre"]
-src = "/home/agent/agents/src"
+src = "~/agents/src"
 ssh = ["agent@fr2-mesh", "agent@fr2", "agent@@@hosts.fr2.mesh_ip@@", "agent@@@hosts.fr2.public_ip@@"]
 
 [hosts.pc]
 # No heavy builds on the PC.
 roles = ["reviewer", "designer", "growth"]
-src = "C:/aphrody"
+# No `src`: the runner works in the checkout it is started from (or $SRC_ROOT).
 
 [schedule]
 # template (tools/agents/tasks/<name>.json) = period in hours; enqueued by the ship host (prd).

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Provision fr2: JDK 25, official Ghidra release, pyghidra venv. Run: ssh <fr2> bash -s < provision-fr2.sh
+# Provision a test host: JDK 25, official Ghidra release, pyghidra venv.
+# Run: ssh <host> GHIDRA_ROOT=<work>/ghidra-release bash -s < provision-fr2.sh   (<work>: the large volume of the host)
 set -euo pipefail
-G=/srv/ghidra-release
+G=${GHIDRA_ROOT:?set GHIDRA_ROOT to the directory that holds the Ghidra release}
 URL=https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip
 SHA256=${GHIDRA_SHA256:-}
 jv=$(java -version 2>&1 | sed -n '1s/.*"\([0-9]*\).*/\1/p' || true)

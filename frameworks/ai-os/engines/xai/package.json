@@ -3,12 +3,12 @@
   "version": "1.1.6",
   "description": "Headless xAI Grok API client for Bun — high-level fluent Chat API (createChat/append/sample/stream/executeToolCalls/sampleStructured, reasoning, structured, XTools for native X tool fulfillment) + SUPER_GROK_TOKEN keyless + OIDC. OpenAI-compatible REST, deep native integration with @aphrody/x.",
   "bugs": {
-    "url": "https://github.com/aphrody-labs/ay/issues"
+    "url": "https://github.com/aphrody-dev/ai-os/issues"
   },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aphrody-labs/ay.git",
+    "url": "https://github.com/aphrody-dev/ai-os.git",
     "directory": "frameworks/ai-os/engines/xai"
   },
   "files": [

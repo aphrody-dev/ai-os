@@ -18,7 +18,7 @@ export class OverlaySandbox {
   private readonly files = new Map<string, string>();
   private readonly deleted = new Set<string>();
   private readonly dirs = new Set<string>(["/"]);
-  readonly env: Record<string, string> = { HOME: "/home/user", PWD: "/" };
+  readonly env: Record<string, string> = { HOME: "/home/user", PWD: "/" }; // paths:ok root of the in-memory overlay, not a host path
   cwd = "/";
 
   constructor(readonly root: string) {}

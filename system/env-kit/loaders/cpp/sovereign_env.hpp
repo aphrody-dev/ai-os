@@ -1,5 +1,5 @@
 /*
- * sovereign_env.hpp — Header-only C++23 loader & redacted SecretString for C:\aphrody\.env
+ * sovereign_env.hpp — Header-only C++23 loader & redacted SecretString for the workspace .env
  */
 #ifndef SOVEREIGN_ENV_HPP
 #define SOVEREIGN_ENV_HPP
@@ -58,7 +58,8 @@ struct LoadOptions {
         }
         cur = parent;
     }
-    return std::filesystem::path{SOVEREIGN_DEFAULT_ENV_PATH};
+    char fallback[4096];
+    return std::filesystem::path{sovereign_env_default_path(fallback, sizeof fallback)};
 }
 
 [[nodiscard]] inline std::map<std::string, SecretString> load(const LoadOptions &opts = {}) {

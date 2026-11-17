@@ -1,4 +1,4 @@
-// Package envkit provides zero-dependency loading and secret redaction for C:\aphrody\.env.
+// Package envkit provides zero-dependency loading and secret redaction for the workspace .env.
 package envkit
 
 import (
@@ -6,17 +6,16 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 )
 
-// DefaultMonorepoEnvPath returns the canonical root .env path.
+// DefaultMonorepoEnvPath returns $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
 func DefaultMonorepoEnvPath() string {
-	if runtime.GOOS == "windows" {
-		return `C:\aphrody\.env`
+	if root := os.Getenv("ENV_KIT_ROOT"); root != "" {
+		return filepath.Join(root, ".env")
 	}
-	return "/src/.env"
+	return ".env"
 }
 
 // Options configures LoadWithOptions.
@@ -114,7 +113,7 @@ func MaskValue(key, value string) string {
 	return value
 }
 
-// ResolveMonorepoEnvPath walks upward from startDir looking for .env, falling back to C:\aphrody\.env.
+// ResolveMonorepoEnvPath walks upward from startDir looking for .env, falling back to DefaultMonorepoEnvPath.
 func ResolveMonorepoEnvPath(startDir string) string {
 	dir := startDir
 	if dir == "" {
@@ -230,7 +229,7 @@ func isValidIdent(s string) bool {
 	return true
 }
 
-// Load discovers C:\aphrody\.env (or nearest .env) and injects missing keys into os.Environ.
+// Load discovers the nearest .env (or DefaultMonorepoEnvPath) and injects missing keys into os.Environ.
 func Load() (*Env, error) {
 	return LoadWithOptions(Options{InjectProcessEnv: true})
 }

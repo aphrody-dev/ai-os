@@ -32,7 +32,7 @@ One brain for Claude Code and agy (Antigravity CLI), owned by `@aphrody/ai-os`.
   `toolPermission` and `artifactReviewPolicy` = `always-proceed`, hooks in `~/.gemini/config/hooks.json`, MCP in
   `~/.gemini/config/mcp_config.json` (legacy copy merged), `trustedWorkspaces` 70 to 23 entries.
 - Claude facts applied (`docs/cli-reference/claude-code.md`): `AGENTS.md` is only loaded without a `CLAUDE.md`, so
-  `C:\aphrody\CLAUDE.md` now imports `@AGENTS.md` and `@.agents/SOUL.md`.
+  `<workspace>/CLAUDE.md` now imports `@AGENTS.md` and `@.agents/SOUL.md`.
 - Context compaction: memories 47 to 36 (duplicates of the global CLAUDE.md removed, fleet contradictions merged into
   `fleet-roles`), GEMINI.md 15 KB to 8 KB (legacy directives replaced by a pointer to AGENTS.md plus the synced block),
   project CLAUDE.md fleet roles aligned with the global rule (fr1 = builds, CI, training, heavy agents).

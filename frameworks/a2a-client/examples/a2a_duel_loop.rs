@@ -133,8 +133,7 @@ mod native_impl {
         #[arg(long, value_enum, default_value_t = Side::Aphrody)]
         side: Side,
 
-        /// Override coord root (default: C:/winclean/.coord on Windows, $APHRODY_COORD_DIR
-        /// otherwise).
+        /// Override coord root (default: `aphrody/coord` under the user data directory).
         #[arg(long, env = "APHRODY_COORD_DIR")]
         coord_dir: Option<PathBuf>,
 
@@ -164,16 +163,13 @@ mod native_impl {
     }
 
     fn default_coord_dir() -> PathBuf {
-        if cfg!(target_os = "windows") {
-            PathBuf::from("C:/winclean/.coord")
-        } else {
-            // XDG-ish fallback on non-Windows hosts. The duel is Windows-anchored
-            // (winclean lives on Windows), so non-Windows runs require an explicit
-            // override via --coord-dir or APHRODY_COORD_DIR.
-            std::env::var_os("HOME")
-                .map(|h| PathBuf::from(h).join(".local/share/winclean/.coord"))
-                .unwrap_or_else(|| PathBuf::from(".coord"))
-        }
+        // The per-user data directory of the platform: %LOCALAPPDATA%, $XDG_DATA_HOME or ~/.local/share.
+        std::env::var_os("LOCALAPPDATA")
+            .or_else(|| std::env::var_os("XDG_DATA_HOME"))
+            .map(PathBuf::from)
+            .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".local/share")))
+            .map(|d| d.join("aphrody").join("coord"))
+            .unwrap_or_else(|| PathBuf::from(".coord"))
     }
 
     fn now_utc_iso() -> String {

@@ -16,7 +16,7 @@ bun run --cwd frameworks/ai-os check
 bun run --cwd frameworks/ai-os relay
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
 <!-- prettier-ignore-end -->
 <!-- catalog:end -->
 
@@ -26,13 +26,13 @@ Cross-platform sandboxed Unix/GNU-like operating system distribution for autonom
 
 ## FHS Virtual Layout & Unified C ABI (`ai_os_*`)
 
-| VFS / Device  | C ABI Entrypoint (`aphrody_core.h`)               | Role                                                                                                                                                                                                                            |
-| :------------ | :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `uname` / FHS | `ai_os_uname_json`, `ai_os_vfs_resolve_json`      | OS identity, standards (`openapi-3.2.1`, `mcp-2026-07-28`, `a2a-1.0.1`, `acp-1.31.0`, `vercel-ai-sdk-7.0`, `cloudflare-agents-0.33`), confined FHS paths (`/etc/ai-os`, `/var/lib/ai-os`, `/home/agent`, `/proc/agent`, `/tmp`) |
-| `/dev/llm`    | `ai_os_llm_spec_json`                             | Runtime-discovered multi-provider LLM wire contract (zero hardcoded models)                                                                                                                                                     |
-| `/dev/rag`    | `ai_os_rag_upsert_json`, `ai_os_rag_query_json`   | Shared SQLite WAL + FTS5 BM25 + recency RRF store (`frameworks/agent/context`)                                                                                                                                                  |
-| `/dev/world`  | `ai_os_world_step_json`, `ai_os_world_state_json` | Persistent causal state transitions (`world_entities`, `world_transitions`) + prediction error (`surprise`)                                                                                                                     |
-| `/dev/sys1`   | `ai_os_sys1_decide_json`                          | Sub-millisecond (`< 1 ms`) System 1 router (`exec` / `escalate_sys2` / `deny`) with SQLite audit trail (`sys1_decisions`)                                                                                                       |
+| VFS / Device  | C ABI Entrypoint (`aphrody_core.h`)               | Role                                                                                                                                                                                                                             |
+| :------------ | :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `uname` / FHS | `ai_os_uname_json`, `ai_os_vfs_resolve_json`      | OS identity, standards (`openapi-3.2.1`, `mcp-2026-07-28`, `a2a-1.0.1`, `acp-1.31.0`, `vercel-ai-sdk-7.0`, `cloudflare-agents-0.33`), confined FHS paths (`/etc/ai-os`, `/var/lib/ai-os`, the agent home, `/proc/agent`, `/tmp`) |
+| `/dev/llm`    | `ai_os_llm_spec_json`                             | Runtime-discovered multi-provider LLM wire contract (zero hardcoded models)                                                                                                                                                      |
+| `/dev/rag`    | `ai_os_rag_upsert_json`, `ai_os_rag_query_json`   | Shared SQLite WAL + FTS5 BM25 + recency RRF store (`frameworks/agent/context`)                                                                                                                                                   |
+| `/dev/world`  | `ai_os_world_step_json`, `ai_os_world_state_json` | Persistent causal state transitions (`world_entities`, `world_transitions`) + prediction error (`surprise`)                                                                                                                      |
+| `/dev/sys1`   | `ai_os_sys1_decide_json`                          | Sub-millisecond (`< 1 ms`) System 1 router (`exec` / `escalate_sys2` / `deny`) with SQLite audit trail (`sys1_decisions`)                                                                                                        |
 
 ## Subsystems
 

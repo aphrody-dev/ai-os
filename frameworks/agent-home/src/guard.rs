@@ -168,7 +168,7 @@ mod tests {
         let td = tempdir().unwrap();
         let guard = WorkspaceGuard::new(td.path());
         let outside = if cfg!(windows) {
-            "C:\\Windows\\system.ini"
+            "C:\\Windows\\system.ini" // paths:ok an absolute path outside the workspace root
         } else {
             "/etc/hosts"
         };

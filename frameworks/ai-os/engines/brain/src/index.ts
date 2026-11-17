@@ -1,7 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { dataDir } from "../../../src/core/paths.ts";
 
-export const DEFAULT_BRAIN_VAULT_PATH = "C:/aphrody/var/brain";
+export const DEFAULT_BRAIN_VAULT_PATH = dataDir("brain");
 
 export interface BrainSessionRecord {
   id: string;

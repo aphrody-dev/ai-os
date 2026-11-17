@@ -12,6 +12,9 @@ export interface Portee {
   workflow: { id: string; nom: string };
   index: number;
   maintenant?: Date;
+  /** BCP 47 tag and IANA zone of the formatting filters (`euros`, `centimes`, `date`); the runtime defaults when absent. */
+  locale?: string;
+  fuseau?: string;
 }
 
 export class ErreurExpression extends Error {}
@@ -106,7 +109,7 @@ const nombre = (v: unknown): number => {
   return n;
 };
 
-type Filtre = (v: unknown, arg: unknown) => unknown;
+type Filtre = (v: unknown, arg: unknown, p: Portee) => unknown;
 
 export const FILTRES: Record<string, Filtre> = {
   majuscules: (v) => texte(v).toUpperCase(),
@@ -119,14 +122,14 @@ export const FILTRES: Record<string, Filtre> = {
     const f = 10 ** Number(a ?? 0);
     return Math.round(nombre(v) * f) / f;
   },
-  euros: (v) =>
-    new Intl.NumberFormat("fr-FR", {
+  euros: (v, _a, p) =>
+    new Intl.NumberFormat(p.locale, {
       style: "currency",
       currency: "EUR",
     }).format(nombre(v)),
   /** Amount in cents (auto convention) shown in euros. */
-  centimes: (v) =>
-    new Intl.NumberFormat("fr-FR", {
+  centimes: (v, _a, p) =>
+    new Intl.NumberFormat(p.locale, {
       style: "currency",
       currency: "EUR",
     }).format(nombre(v) / 100),
@@ -136,15 +139,15 @@ export const FILTRES: Record<string, Filtre> = {
   joindre: (v, a) =>
     Array.isArray(v) ? v.map(texte).join(texte(a ?? ", ")) : texte(v),
   defaut: (v, a) => (v == null || v === "" ? a : v),
-  date: (v, a) => {
+  date: (v, a, p) => {
     const d = new Date(texte(v) || Date.now());
     if (Number.isNaN(d.getTime()))
       throw new ErreurExpression(`invalid date: ${texte(v)}`);
     if (a === "iso") return d.toISOString();
     if (a === "jour") return d.toISOString().slice(0, 10);
-    return new Intl.DateTimeFormat("fr-FR", {
+    return new Intl.DateTimeFormat(p.locale, {
       dateStyle: "long",
-      timeZone: "Europe/Paris",
+      timeZone: p.fuseau,
     }).format(d);
   },
   plus_jours: (v, a) => {
@@ -169,7 +172,7 @@ function evaluer(source: string, p: Portee): unknown {
       const l = litteral(brut);
       arg = l.ok ? l.v : chemin(brut, p);
     }
-    v = fn(v, arg);
+    v = fn(v, arg, p);
   }
   return v;
 }

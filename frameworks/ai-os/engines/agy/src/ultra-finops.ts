@@ -1,8 +1,9 @@
 import { Database } from "bun:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { dataDir } from "../../../src/core/paths.ts";
 
-export const DEFAULT_FINOPS_DB_PATH = "C:/aphrody/var/agy-finops.sqlite";
+export const DEFAULT_FINOPS_DB_PATH = dataDir("agy-finops.sqlite");
 
 export interface GoogleAiSubscriptionPlan {
   id: "google-ai-ultra" | "google-ai-pro" | "payg-api-only";

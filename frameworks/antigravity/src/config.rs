@@ -313,11 +313,11 @@ mod tests {
         // deterministic regardless of the host environment.
         #[cfg(target_os = "windows")]
         unsafe {
-            std::env::set_var("USERPROFILE", r"C:\Users\tester");
+            std::env::set_var("USERPROFILE", std::env::temp_dir().join("tester"));
         }
         #[cfg(not(target_os = "windows"))]
         unsafe {
-            std::env::set_var("HOME", "/home/tester");
+            std::env::set_var("HOME", std::env::temp_dir().join("tester"));
         }
 
         let path = config_path().unwrap();

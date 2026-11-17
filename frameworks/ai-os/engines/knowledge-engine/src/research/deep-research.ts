@@ -18,6 +18,7 @@ import {
   stripEmojis,
 } from "../env/safe-env.ts";
 import { blake3Hex } from "../ffi/blake3.ts";
+import { workspaceRoot } from "../../../../src/core/paths.ts";
 
 export type AuthorityTier =
   | "Tier 1: Official Spec / Context7 / Local Verified Source"
@@ -726,15 +727,14 @@ function renderResearchDossierMarkdown(params: {
 
 /**
  * Multi-hop parallel Deep Research engine fanning out across Context7 v2, Exa Neural Search,
- * GitHub Live API, Kernel.org/Freedesktop GitLab, and local `C:\aphrody` manifests.
+ * GitHub Live API, Kernel.org/Freedesktop GitLab, and local `<workspace>` manifests.
  */
 export async function runDeepResearch(
   query: string,
   options: DeepResearchOptions = {},
 ): Promise<DeepResearchResult> {
   const t0 = Bun.nanoseconds();
-  const srcRoot =
-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
+  const srcRoot = options.srcRoot ?? workspaceRoot();
   const outDir = options.outDir ?? join(srcRoot, "docs", "research");
   const saveReport = options.saveReport ?? true;
   const fetchFn = options.fetchImpl ?? fetch;

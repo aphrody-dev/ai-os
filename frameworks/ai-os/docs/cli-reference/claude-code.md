@@ -52,4 +52,4 @@ Sources: `claude --help` (2.1.322); CS = https://code.claude.com/docs/en/setting
 
 - `permissions.defaultMode: "bypassPermissions"` and `skipDangerousModePermissionPrompt: true` sit in user settings: honored (SR). No conflict.
 - `cleanupPeriodDays` is not set locally: default 30 days applies (SR).
-- C:\aphrody has `CLAUDE.md`, so `AGENTS.md` is NOT auto-loaded (MEM); `.agents/SOUL.md` and `AGENTS.md` reach the model only via explicit reads or `@` imports. Conflict with the claim in CLAUDE.md that AGENTS.md is the canonical contract.
+- <workspace> has `CLAUDE.md`, so `AGENTS.md` is NOT auto-loaded (MEM); `.agents/SOUL.md` and `AGENTS.md` reach the model only via explicit reads or `@` imports. Conflict with the claim in CLAUDE.md that AGENTS.md is the canonical contract.

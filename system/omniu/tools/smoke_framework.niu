@@ -1,7 +1,7 @@
 # Smoke test the directory-first Oh My Niu framework with Niubash.
 #
 # Usage:
-#   niubash tools/smoke_framework.niu C:/path/to/oh-my-niu
+#   niubash tools/smoke_framework.niu <path-to-oh-my-niu>
 
 ROOT="${1:-$PWD}"
 failures=0
@@ -108,7 +108,7 @@ expect_type path_remove
 expect_type path_dedupe
 expect_type extract
 
-smoke_parent="${TMPDIR:-${TEMP:-${TMP:-C:/tmp}}}"
+smoke_parent="${TMPDIR:-${TEMP:-${TMP:-/tmp}}}"
 smoke_dir="$smoke_parent/omw-framework-smoke-$$"
 mkdir -p "$smoke_dir" || exit 2
 printf "OMW_FRAMEWORK_SMOKE=ok\n" > "$smoke_dir/.env"

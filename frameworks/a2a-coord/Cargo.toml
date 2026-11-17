@@ -37,7 +37,7 @@ categories = [
     "web-programming::http-server",
 ]
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [lib]
 name = "aphrody_a2a_coord"

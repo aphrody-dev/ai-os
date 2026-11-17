@@ -13,7 +13,20 @@ process.env.JULES_HOME ??= join(
   "jules",
 );
 
-export const DEFAULT_REPO = Bun.env.JULES_REPO ?? "aphrody-labs/src";
+/** The GitHub repository of the checkout (origin remote, `<owner>/<name>`), the target of a Jules session by default. */
+function originRepo(): string {
+  const r = Bun.spawnSync(
+    ["git", "-C", import.meta.dir, "remote", "get-url", "origin"],
+    { stdout: "pipe", stderr: "ignore" },
+  );
+  return (
+    /github\.com[:/]([\w.-]+\/[\w.-]+?)(?:\.git)?\/?$/.exec(
+      r.stdout.toString().trim(),
+    )?.[1] ?? ""
+  );
+}
+
+export const DEFAULT_REPO = Bun.env.JULES_REPO ?? originRepo();
 
 const print = (v: unknown) => console.log(JSON.stringify(v, null, 2));
 const readStdin = async () =>

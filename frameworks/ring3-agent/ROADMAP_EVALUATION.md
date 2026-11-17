@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary & Core Mission
 
-This document establishes the canonical roadmap and technical evaluation of the `aphrody-dev` GitHub portfolio and the local `C:\aphrody` subsystems. The overarching target is the construction of a sovereign, ultra-low-overhead, unprivileged (Ring-3) AI daemon and inference substrate: **`r3d` (`ring3-agent`)**.
+This document establishes the canonical roadmap and technical evaluation of the `aphrody-dev` GitHub portfolio and its local subsystems. The overarching target is the construction of a sovereign, ultra-low-overhead, unprivileged (Ring-3) AI daemon and inference substrate: **`r3d` (`ring3-agent`)**.
 
 ### System Pillars:
 
@@ -91,28 +91,7 @@ These forks overlap with Tier A components or have been superseded by more integ
 
 ---
 
-## 4. Local Subsystem Audit (`C:\aphrody`)
-
-| Subsystem Directory                            | Focus & Upstream Lineage                                                    | Integration Status with `r3d`                                                 |
-| :--------------------------------------------- | :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
-| `C:\aphrody\apps\web`                          | Strict Google replica, 100% pure Bun, 0 external npm dependencies.          | Frontend presentation layer for client-side WebGPU agent chat console.        |
-| `C:\aphrody\crates\bench`                          | Benchmarking harnesses for memory latency and inference throughput.         | Performance verification suite for AVX2 vs CUDA latency.                      |
-| `C:\aphrody\third_party\bun`                       | Upstream `oven-sh/bun` source tree.                                         | Host runtime for scripts and high-speed local control scripts.                |
-| `C:\aphrody\third_party\chromium` & `chromium-bun` | Chromium upstream source and headless bindings.                             | Headless web interaction and testing for WebGPU browser compute.              |
-| `C:\aphrody\crates\depot` & `depot_tools`          | Sovereign monorepo engine using Google `argh` + `zerocopy` + `windows-sys`. | Build orchestration and dependency management.                                |
-| `C:\aphrody\third_party\dioxus` & `taffy`          | Rust UI layout and cross-platform GUI framework.                            | Native UI layout engine for local HUD displays.                               |
-| `C:\aphrody\crates\gamescope-rs`                   | Rust micro-compositor wrapper.                                              | Display management for low-latency isolated rendering.                        |
-| `C:\aphrody\third_party\linux` & `unix`            | Linux kernel headers and Unix core tools.                                   | Target headers for systemd early-boot units and seccomp profile generation.   |
-| `C:\aphrody\third_party\longbridge`                | High-frequency trading and low-latency network protocols.                   | Reference for zero-copy binary streaming and connection pooling.              |
-| `C:\aphrody\third_party\microsoft`                 | Native Windows NT APIs, WDK, and Windows SDK tools.                         | Win32 Job Object, Power Throttling, and DWM hook definitions.                 |
-| `C:\aphrody\apps\rosegriffon` & `shenron`          | Production web platforms (`rosegriffon.fr`, `dragonballfr.com`).            | Real-world consumer applications consuming `r3d` API endpoints.               |
-| `C:\aphrody\third_party\storytold`                 | Interactive narrative engine.                                               | AI agent testbed for creative text generation and branching state logic.      |
-| `C:\aphrody\third_party\wgpu` & `winit`            | WebGPU native implementation in Rust and cross-platform windowing.          | Underpins client-side rendering and GPU shader execution.                     |
-| `C:\aphrody\third_party\zed`                       | High-performance GPUI collaborative editor.                                 | Reference architecture for low-latency buffer management and thread dispatch. |
-
----
-
-## 5. Architectural Blueprint for `ring3-agent` (`r3d`)
+## 4. Architectural Blueprint for `ring3-agent` (`r3d`)
 
 ```
 +-----------------------------------------------------------------------------------+

@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { dataDir } from "../../../src/core/paths.ts";
 import {
   getMcpToolsForProfile,
   installSkillCollection,
@@ -25,7 +26,7 @@ export interface AgyModeState {
   updatedAt: string;
 }
 
-export const DEFAULT_AGY_MODE_STATE_PATH = "C:/aphrody/var/agy-mode-state.json";
+export const DEFAULT_AGY_MODE_STATE_PATH = dataDir("agy-mode-state.json");
 
 /**
  * Quasi-empty (<100 tokens) system prompt for Mode 1 (`minimal` / `pi-sudo`):
@@ -37,7 +38,7 @@ export function buildMinimalPiSudoSystemPrompt(
 ): string {
   return `Role: Autonomous local agent (${domainFocus}). Ephemeral unrecorded session.
 Tools: os_atomic (read/write/edit/bash), posix_os, desktop_snapshot, desktop_action.
-Rules: Execute directly 24/7 without chatter or emojis. Full userspace privileges enabled; C:\\Windows\\System32 strictly read-only.`;
+Rules: Execute directly 24/7 without chatter or emojis. Full userspace privileges enabled; the host OS system directories strictly read-only.`;
 }
 
 /**

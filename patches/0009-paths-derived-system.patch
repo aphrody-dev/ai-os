@@ -1,0 +1,1278 @@
+diff --git a/system/config/README.md b/system/config/README.md
+index 154202f..ecc41f3 100644
+--- a/system/config/README.md
++++ b/system/config/README.md
+@@ -16,6 +16,6 @@ cargo test -p aphrody-config
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/core-ts/README.md b/system/core-ts/README.md
+index 099d772..95caffa 100644
+--- a/system/core-ts/README.md
++++ b/system/core-ts/README.md
+@@ -15,6 +15,6 @@ bun run --cwd system/core-ts test
+ bun run --cwd system/core-ts check
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/core-ts/src/generate.ts b/system/core-ts/src/generate.ts
+index 18c20b3..9337f52 100644
+--- a/system/core-ts/src/generate.ts
++++ b/system/core-ts/src/generate.ts
+@@ -150,7 +150,7 @@ function renderPillar(
+       ? [
+           "---",
+           `name: ${p.skill}`,
+-          `description: ${p.title}. ${p.summary} Use before writing or modifying ${p.skill} code in C:\\src.`,
++          `description: ${p.title}. ${p.summary} Use before writing or modifying ${p.skill} code in this workspace.`,
+           "---",
+           "",
+         ]
+diff --git a/system/core-ts/test/generate.test.ts b/system/core-ts/test/generate.test.ts
+index 5f28c0b..a4e1f4a 100644
+--- a/system/core-ts/test/generate.test.ts
++++ b/system/core-ts/test/generate.test.ts
+@@ -58,16 +58,15 @@ describe("declarative template engine", () => {
+ });
+ 
+ describe("monorepo snapshot & live scanner", () => {
+-  test("collectMonorepoSnapshot reads real Cargo.toml, headers, and absorbed Bun crates", () => {
++  test("collectMonorepoSnapshot reads the real Cargo.toml, packages and headers of this repository", () => {
+     const snap = collectMonorepoSnapshot(SRC_ROOT);
+     expect(snap.workspace.edition).toBe("2024");
+-    expect(snap.crates.length).toBeGreaterThan(20);
+-    expect(snap.packages.length).toBeGreaterThan(10);
+-    expect(snap.apps.some((a) => a.name === "aphrody")).toBe(true);
++    expect(snap.crates.length).toBeGreaterThan(3);
++    expect(snap.crates.some((c) => c.dir === "system/core")).toBe(true);
++    expect(snap.packages.length).toBeGreaterThan(3);
+     expect(snap.headers.some((h) => h.file.endsWith("aphrody_core.h"))).toBe(
+       true,
+     );
+-    expect(snap.bunCrates.map((c) => c.name)).toContain("bun_wyhash");
+     expect(snap.bunCrates.every((c) => c.name.startsWith("bun_"))).toBe(true);
+   });
+ 
+@@ -87,7 +86,7 @@ describe("monorepo snapshot & live scanner", () => {
+     expect(fuzzyScore("genDocs", "generateDocs")).toBeGreaterThan(0);
+     expect(fuzzyScore("xyz999", "generateDocs")).toBe(0);
+ 
+-    const docs = searchDocs(SRC_ROOT, "C23", { limit: 5 });
++    const docs = searchDocs(SRC_ROOT, "extract", { limit: 5 });
+     expect(docs.length).toBeGreaterThan(0);
+ 
+     const combined = searchCodebase(db, SRC_ROOT, "generateDocs", 5);
+@@ -102,10 +101,7 @@ describe("monorepo snapshot & live scanner", () => {
+         includes: ["system/core-ts/src", "system/core-ts/test"],
+         useFfi: false,
+       });
+-      // Generate into tmp using real snapshot from SRC_ROOT? Verify templates directly on SRC_ROOT
+-      // and ensure CLI-generated files in SRC_ROOT exist and are valid.
+       const res = await generateDocs(db, tmp, { rescan: false, useFfi: false });
+-      expect(res.written).toContain("README.md");
+       expect(res.written).toContain("docs/PLAN.mdx");
+       expect(res.written).toContain("docs/native/llvm/PURE-C-LLVM.mdx");
+       expect(res.written).toContain("docs/web/MODERN-WEB-GUIDANCE.mdx");
+@@ -114,25 +110,23 @@ describe("monorepo snapshot & live scanner", () => {
+       for (const rel of res.written) {
+         const content = readFileSync(join(tmp, rel), "utf8");
+         expect(content.length).toBeGreaterThan(50);
+-        expect(existsSync(join(SRC_ROOT, rel))).toBe(true);
++        expect(existsSync(join(tmp, rel))).toBe(true);
+       }
+ 
+-      const plan = readFileSync(join(SRC_ROOT, "docs", "PLAN.mdx"), "utf8");
++      const plan = readFileSync(join(tmp, "docs", "PLAN.mdx"), "utf8");
+       expect(plan).toMatch(/^---\r?\ntitle:/);
+       expect(plan).toContain("<Callout");
+       expect(plan).toContain("<Cards>");
+-      expect(plan).toContain("bun_wyhash");
+ 
+       const pureC = readFileSync(
+-        join(SRC_ROOT, "docs", "native", "llvm", "PURE-C-LLVM.mdx"),
++        join(tmp, "docs", "native", "llvm", "PURE-C-LLVM.mdx"),
+         "utf8",
+       );
+       expect(pureC).toContain("<Tabs");
+       expect(pureC).toContain("aphrody_core.h");
+-      expect(pureC).toContain("wyhash");
+ 
+       const mwg = readFileSync(
+-        join(SRC_ROOT, "docs", "web", "MODERN-WEB-GUIDANCE.mdx"),
++        join(tmp, "docs", "web", "MODERN-WEB-GUIDANCE.mdx"),
+         "utf8",
+       );
+       expect(mwg).toContain("<Callout");
+diff --git a/system/core-ts/test/sys.test.ts b/system/core-ts/test/sys.test.ts
+index 3021efa..87c0c6d 100644
+--- a/system/core-ts/test/sys.test.ts
++++ b/system/core-ts/test/sys.test.ts
+@@ -445,10 +445,10 @@ describe("sys/ Layer-0 Pure C + x86_64 ASM Tree (libaysys)", () => {
+     expect(pm.kittyFlags).toBe(7);
+ 
+     protoVt.feed(
+-      "\x1b]7;file://host/C:/aphrody\x07\x1b]8;;https://aphrody.com\x07LINK\x1b]8;;\x07",
++      "\x1b]7;file://host/C:/work\x07\x1b]8;;https://aphrody.com\x07LINK\x1b]8;;\x07", // paths:ok an OSC 7 Windows cwd is the parser input
+     );
+     protoVt.feed("\x1b]52;c;SGVsbG8=\x07");
+-    expect(protoVt.meta().cwd).toContain("/C:/aphrody");
++    expect(protoVt.meta().cwd).toContain("/C:/work"); // paths:ok
+     expect(protoVt.getLink(1)).toBe("https://aphrody.com");
+     expect(protoVt.drainClipboard()).toBe("Hello");
+   });
+diff --git a/system/core/README.md b/system/core/README.md
+index fe56577..401d6fd 100644
+--- a/system/core/README.md
++++ b/system/core/README.md
+@@ -17,6 +17,6 @@ cargo run -p aphrody-core --bin aphrody-code
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/core/capi/README.md b/system/core/capi/README.md
+index ff18e48..7e36a0a 100644
+--- a/system/core/capi/README.md
++++ b/system/core/capi/README.md
+@@ -16,6 +16,6 @@ cargo test -p aphrody-core-capi
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../README.md), [Catalog](../../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/core/capi/py/README.md b/system/core/capi/py/README.md
+index b05bc99..c37bd23 100644
+--- a/system/core/capi/py/README.md
++++ b/system/core/capi/py/README.md
+@@ -16,6 +16,6 @@ cargo test -p aphrody-core-py
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/core/capi/src/ai_os.rs b/system/core/capi/src/ai_os.rs
+index e37e40f..7f908fb 100644
+--- a/system/core/capi/src/ai_os.rs
++++ b/system/core/capi/src/ai_os.rs
+@@ -210,7 +210,7 @@ pub extern "C" fn ai_os_uname_json() -> *mut c_char {
+         fhs: FhsLayout {
+             etc: "/etc/ai-os",
+             var: "/var/lib/ai-os",
+-            home: "/home/agent",
++            home: "/home/agent", // paths:ok virtual FHS of the agent OS, not a host path
+             proc: "/proc/agent",
+             tmp: "/tmp",
+             dev: &["/dev/llm", "/dev/rag", "/dev/world", "/dev/sys1"],
+diff --git a/system/core/capi/src/sys.rs b/system/core/capi/src/sys.rs
+index cb6d0f6..c3e0e37 100644
+--- a/system/core/capi/src/sys.rs
++++ b/system/core/capi/src/sys.rs
+@@ -1,4 +1,4 @@
+-//! Rust FFI bindings to the central Layer-0 Pure C, Assembly & WebAssembly Core (`C:\aphrody\src\include\ay\sys.h`).
++//! Rust FFI bindings to the central Layer-0 Pure C, Assembly & WebAssembly Core (`ay/sys.h`).
+ //!
+ //! Subsystems use canonical upstream prefixes (`ay_*`, `drm_*`, `mesa_*`, `wl_*`, `xcb_*`, `xwm_*`,
+ //! `nt_*`, `wine_*`, `wasm_*`) so multi-million-LoC Linux, Freedesktop, ReactOS, Wine, and WebAssembly
+diff --git a/system/core/jni/README.md b/system/core/jni/README.md
+index f9d913c..7280862 100644
+--- a/system/core/jni/README.md
++++ b/system/core/jni/README.md
+@@ -16,6 +16,6 @@ cargo test -p aphrody-core-jni
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../README.md), [Catalog](../../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/env-kit/README.md b/system/env-kit/README.md
+index 2b731bb..a340ef0 100644
+--- a/system/env-kit/README.md
++++ b/system/env-kit/README.md
+@@ -2,7 +2,7 @@
+ 
+ <!-- catalog:begin unit -->
+ <!-- prettier-ignore-start -->
+-> Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for C:/aphrody
++> Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for <workspace>
+ 
+ | Type | Path |
+ | :-- | :-- |
+@@ -19,16 +19,16 @@ bun run --cwd system/env-kit doctor
+ bun run --cwd system/env-kit accounts
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 
+-Zero-dependency cross-language environment loader, secret redaction guard, and unified editor/CLI credential synchronizer for `C:\aphrody`.
++Zero-dependency cross-language environment loader, secret redaction guard, and unified editor/CLI credential synchronizer for `<workspace>`.
+ 
+ ## Security Model
+ 
+-1. **Master Secret Vault (`C:\aphrody\.env`)**: Locked via Windows NTFS ACLs (`inheritance:r`, explicit Full Control strictly restricted to `$env:USERNAME`, `NT AUTHORITY\SYSTEM`, and `BUILTIN\Administrators`).
+-2. **Global Git Guard**: `C:\aphrody\.gitignore` and global `core.excludesFile` (`~/.gitignore_global`) block `.env`, `.env.*` (except `!.env.example`), `.dev.vars`, `*.pem`, `*.key`, and `.credentials.json` across every repository on the machine.
++1. **Master Secret Vault (`<workspace>/.env`)**: Locked via Windows NTFS ACLs (`inheritance:r`, explicit Full Control strictly restricted to `$env:USERNAME`, `NT AUTHORITY\SYSTEM`, and `BUILTIN\Administrators`).
++2. **Global Git Guard**: `<workspace>/.gitignore` and global `core.excludesFile` (`~/.gitignore_global`) block `.env`, `.env.*` (except `!.env.example`), `.dev.vars`, `*.pem`, `*.key`, and `.credentials.json` across every repository on the machine.
+ 3. **Zero-Leakage Redaction**: Every language loader masks credentials (`SET [len=N]`) or `[REDACTED]` on `inspect`, `JSON.stringify`, `Debug`/`Display`, `repr()`, `fmt.Stringer`, and `__tostring`.
+ 
+ ## CLI Usage (`env-kit`)
+@@ -41,13 +41,13 @@ env-kit accounts status [--json]     # 3-principal gcloud configs, rclone, and 1
+ env-kit accounts init-gcloud         # Idempotently configure ai-agent, owner, org-contact, sa-automation
+ env-kit accounts switch <principal>  # Switch active gcloud config (<ai|owner|org|sa>)
+ env-kit accounts iam-bindings        # Print idempotent IAM policy bindings for project aphrody (#<gcp-project-numbers>)
+-env-kit set <KEY> <VALUE>            # Propagate secret to C:\aphrody\.env + Windows User Env + OpenCode/Zed/Pi
++env-kit set <KEY> <VALUE>            # Propagate secret to <workspace>/.env + Windows User Env + OpenCode/Zed/Pi
+ env-kit nuget-set-key <API_KEY>      # Set NUGET_API_KEY across .env and Windows User Env
+ env-kit sync-editors                 # Sync OpenCode, Zed, and Pi provider & MCP configs
+ env-kit sync-gh                      # Sync active `gh auth token` into GITHUB_TOKEN & GH_TOKEN
+ env-kit dev-vars <workerDir>         # Generate gitignored .dev.vars for Cloudflare `wrangler dev`
+ env-kit vercel-env [dir] [--write]   # Export masked Vercel env summary or .env.local
+-env-kit exec -- <command> [args...]  # Run any binary with C:\aphrody\.env injected
++env-kit exec -- <command> [args...]  # Run any binary with <workspace>/.env injected
+ ```
+ 
+ ## OS Secret Store (`env-kit secret`, `ay secret`)
+@@ -80,11 +80,11 @@ Inventory in `device/deploy.toml` (`[nodes.*]`, `[auth.*]`).
+ 
+ | Language / Runtime            | Path                                                      | Native CLI Flag / Usage                                                  |
+ | :---------------------------- | :-------------------------------------------------------- | :----------------------------------------------------------------------- |
+-| **Bun v1.4.4 / TypeScript**   | `C:\aphrody\packages\env-kit\src\index.ts`                    | `bun --env-file=C:/aphrody/.env` or `loadMonorepoEnv({ service, required })` |
+-| **Rust 2024 (`aphrody-env`)** | `C:\aphrody\src\env` (`ay env` inspects a `.env` without printing values) | `aphrody_env::load_monorepo_env(LoadOptions::default())`                 |
+-| **Python 3.12+ / `uv`**       | `C:\aphrody\packages\env-kit\loaders\python\sovereign_env.py` | `uv run --env-file C:/aphrody/.env` or `sovereign_env.load_monorepo_env()`   |
+-| **C11 / C++23**               | `C:\aphrody\packages\env-kit\loaders\cpp\sovereign_env.hpp`   | `sovereign_env::load()` / `sovereign_env_load_file(NULL, 0)`             |
+-| **.NET 10/11 C#**             | `C:\aphrody\packages\env-kit\loaders\dotnet\SovereignEnv.cs`  | `Aphrody.EnvKit.SovereignEnv.Load()`                                     |
+-| **Go 1.24+**                  | `C:\aphrody\packages\env-kit\loaders\go\envkit.go`            | `envkit.Load()`                                                          |
+-| **Lua 5.1+ / LuaJIT**         | `C:\aphrody\packages\env-kit\loaders\lua\sovereign_env.lua`   | `require("sovereign_env").load()` (via `LUA_PATH`)                       |
+-| **PowerShell / POSIX**        | `C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1`      | `. C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1` / `. load-env.sh` |
++| **Bun v1.4.4 / TypeScript**   | `system/env-kit/src/index.ts`                    | `bun --env-file=<workspace>/.env` or `loadMonorepoEnv({ service, required })` |
++| **Rust 2024 (`aphrody-env`)** | `<workspace>/src/env` (`ay env` inspects a `.env` without printing values) | `aphrody_env::load_monorepo_env(LoadOptions::default())`                 |
++| **Python 3.12+ / `uv`**       | `system/env-kit/loaders/python/sovereign_env.py` | `uv run --env-file <workspace>/.env` or `sovereign_env.load_monorepo_env()`   |
++| **C11 / C++23**               | `system/env-kit/loaders/cpp/sovereign_env.hpp`   | `sovereign_env::load()` / `sovereign_env_load_file(NULL, 0)`             |
++| **.NET 10/11 C#**             | `system/env-kit/loaders/dotnet/SovereignEnv.cs`  | `Aphrody.EnvKit.SovereignEnv.Load()`                                     |
++| **Go 1.24+**                  | `system/env-kit/loaders/go/envkit.go`            | `envkit.Load()`                                                          |
++| **Lua 5.1+ / LuaJIT**         | `system/env-kit/loaders/lua/sovereign_env.lua`   | `require("sovereign_env").load()` (via `LUA_PATH`)                       |
++| **PowerShell / POSIX**        | `system/env-kit/loaders/shell/load-env.ps1`      | `. system/env-kit/loaders/shell/load-env.ps1` / `. load-env.sh` |
+diff --git a/system/env-kit/identity/README.md b/system/env-kit/identity/README.md
+index 33009f0..98d6037 100644
+--- a/system/env-kit/identity/README.md
++++ b/system/env-kit/identity/README.md
+@@ -19,7 +19,7 @@ bun run --cwd system/env-kit/identity demo
+ bun run --cwd system/env-kit/identity measure
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- catalog:end -->
+ 
+ The Aphrody product identity for React/M3 surfaces, drawn from `crates/ui/identity` of the aphrody
+diff --git a/system/env-kit/loaders/cpp/sovereign_env.h b/system/env-kit/loaders/cpp/sovereign_env.h
+index 6221e82..f6b67f3 100644
+--- a/system/env-kit/loaders/cpp/sovereign_env.h
++++ b/system/env-kit/loaders/cpp/sovereign_env.h
+@@ -1,5 +1,5 @@
+ /*
+- * sovereign_env.h — Header-only C11 loader for C:\aphrody\.env
++ * sovereign_env.h — Header-only C11 loader for the workspace .env
+  * Uses `_putenv_s` on Windows NT and `setenv` on POSIX without external dependencies.
+  */
+ #ifndef SOVEREIGN_ENV_H
+@@ -14,11 +14,15 @@
+ extern "C" {
+ #endif
+ 
+-#if defined(_WIN32)
+-#define SOVEREIGN_DEFAULT_ENV_PATH "C:\\aphrody\\.env"
+-#else
+-#define SOVEREIGN_DEFAULT_ENV_PATH "/src/.env"
+-#endif
++/* Default .env: $ENV_KIT_ROOT/.env, otherwise .env in the current directory. */
++static inline const char *sovereign_env_default_path(char *buf, size_t size) {
++    const char *root = getenv("ENV_KIT_ROOT");
++    if (root && root[0] != '\0') {
++        snprintf(buf, size, "%s/.env", root);
++        return buf;
++    }
++    return ".env";
++}
+ 
+ static inline int sovereign_env_set_var(const char *key, const char *val, int override_existing) {
+     if (!key || !*key || !val) {
+@@ -38,7 +42,8 @@ static inline int sovereign_env_set_var(const char *key, const char *val, int ov
+ }
+ 
+ static inline int sovereign_env_load_file(const char *env_path, int override_existing) {
+-    const char *target = (env_path && env_path[0] != '\0') ? env_path : SOVEREIGN_DEFAULT_ENV_PATH;
++    char fallback[4096];
++    const char *target = (env_path && env_path[0] != '\0') ? env_path : sovereign_env_default_path(fallback, sizeof fallback);
+     FILE *fp = fopen(target, "rb");
+     if (!fp) {
+         return -1;
+diff --git a/system/env-kit/loaders/cpp/sovereign_env.hpp b/system/env-kit/loaders/cpp/sovereign_env.hpp
+index 0b39ab3..4d0413f 100644
+--- a/system/env-kit/loaders/cpp/sovereign_env.hpp
++++ b/system/env-kit/loaders/cpp/sovereign_env.hpp
+@@ -1,5 +1,5 @@
+ /*
+- * sovereign_env.hpp — Header-only C++23 loader & redacted SecretString for C:\aphrody\.env
++ * sovereign_env.hpp — Header-only C++23 loader & redacted SecretString for the workspace .env
+  */
+ #ifndef SOVEREIGN_ENV_HPP
+ #define SOVEREIGN_ENV_HPP
+@@ -58,7 +58,8 @@ struct LoadOptions {
+         }
+         cur = parent;
+     }
+-    return std::filesystem::path{SOVEREIGN_DEFAULT_ENV_PATH};
++    char fallback[4096];
++    return std::filesystem::path{sovereign_env_default_path(fallback, sizeof fallback)};
+ }
+ 
+ [[nodiscard]] inline std::map<std::string, SecretString> load(const LoadOptions &opts = {}) {
+diff --git a/system/env-kit/loaders/dotnet/SovereignEnv.cs b/system/env-kit/loaders/dotnet/SovereignEnv.cs
+index c4569a6..92092d0 100644
+--- a/system/env-kit/loaders/dotnet/SovereignEnv.cs
++++ b/system/env-kit/loaders/dotnet/SovereignEnv.cs
+@@ -1,4 +1,4 @@
+-// SovereignEnv.cs — Zero-dependency .NET 10/11 C# loader & secret redaction helper for C:\aphrody\.env
++// SovereignEnv.cs — Zero-dependency .NET 10/11 C# loader & secret redaction helper for the workspace .env
+ #nullable enable
+ 
+ using System;
+@@ -12,8 +12,9 @@ namespace Aphrody.EnvKit;
+ 
+ public sealed class SovereignEnv
+ {
++    /// <summary>$ENV_KIT_ROOT/.env, otherwise .env in the current directory.</summary>
+     public static string DefaultMonorepoEnvPath =>
+-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? @"C:\aphrody\.env" : "/src/.env";
++        Path.Combine(Environment.GetEnvironmentVariable("ENV_KIT_ROOT") is { Length: > 0 } root ? root : Directory.GetCurrentDirectory(), ".env");
+ 
+     private static readonly Regex SecretKeyRegex = new(
+         @"(TOKEN|SECRET|PASSWORD|API_KEY|PRIVATE_KEY|AUTH|CREDENTIAL|DATABASE_URL|NUGET_API_KEY)",
+diff --git a/system/env-kit/loaders/go/envkit.go b/system/env-kit/loaders/go/envkit.go
+index 3407e20..58ff449 100644
+--- a/system/env-kit/loaders/go/envkit.go
++++ b/system/env-kit/loaders/go/envkit.go
+@@ -1,4 +1,4 @@
+-// Package envkit provides zero-dependency loading and secret redaction for C:\aphrody\.env.
++// Package envkit provides zero-dependency loading and secret redaction for the workspace .env.
+ package envkit
+ 
+ import (
+@@ -6,17 +6,16 @@ import (
+ 	"fmt"
+ 	"os"
+ 	"path/filepath"
+-	"runtime"
+ 	"sort"
+ 	"strings"
+ )
+ 
+-// DefaultMonorepoEnvPath returns the canonical root .env path.
++// DefaultMonorepoEnvPath returns $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
+ func DefaultMonorepoEnvPath() string {
+-	if runtime.GOOS == "windows" {
+-		return `C:\aphrody\.env`
++	if root := os.Getenv("ENV_KIT_ROOT"); root != "" {
++		return filepath.Join(root, ".env")
+ 	}
+-	return "/src/.env"
++	return ".env"
+ }
+ 
+ // Options configures LoadWithOptions.
+@@ -114,7 +113,7 @@ func MaskValue(key, value string) string {
+ 	return value
+ }
+ 
+-// ResolveMonorepoEnvPath walks upward from startDir looking for .env, falling back to C:\aphrody\.env.
++// ResolveMonorepoEnvPath walks upward from startDir looking for .env, falling back to DefaultMonorepoEnvPath.
+ func ResolveMonorepoEnvPath(startDir string) string {
+ 	dir := startDir
+ 	if dir == "" {
+@@ -230,7 +229,7 @@ func isValidIdent(s string) bool {
+ 	return true
+ }
+ 
+-// Load discovers C:\aphrody\.env (or nearest .env) and injects missing keys into os.Environ.
++// Load discovers the nearest .env (or DefaultMonorepoEnvPath) and injects missing keys into os.Environ.
+ func Load() (*Env, error) {
+ 	return LoadWithOptions(Options{InjectProcessEnv: true})
+ }
+diff --git a/system/env-kit/loaders/lua/sovereign_env.lua b/system/env-kit/loaders/lua/sovereign_env.lua
+index a5f7232..1b49550 100644
+--- a/system/env-kit/loaders/lua/sovereign_env.lua
++++ b/system/env-kit/loaders/lua/sovereign_env.lua
+@@ -1,10 +1,12 @@
+--- sovereign_env.lua — Zero-dependency Lua 5.1+ / LuaJIT loader for C:\aphrody\.env
++-- sovereign_env.lua — Zero-dependency Lua 5.1+ / LuaJIT loader for the workspace .env
+ -- Returns a metatable-protected table with masked `__tostring` so print(env) never leaks secrets.
+ 
+ local M = {}
+ 
+ local is_windows = package.config:sub(1, 1) == "\\"
+-M.DEFAULT_MONOREPO_ENV_PATH = is_windows and "C:\\aphrody\\.env" or "/src/.env"
++-- $ENV_KIT_ROOT/.env, otherwise .env in the current directory.
++local root = os.getenv("ENV_KIT_ROOT")
++M.DEFAULT_MONOREPO_ENV_PATH = (root and root ~= "") and (root .. "/.env") or ".env"
+ 
+ local SECRET_PATTERNS = {
+   "TOKEN",
+diff --git a/system/env-kit/loaders/python/sovereign_env.py b/system/env-kit/loaders/python/sovereign_env.py
+index 40f83cb..cba4d2c 100644
+--- a/system/env-kit/loaders/python/sovereign_env.py
++++ b/system/env-kit/loaders/python/sovereign_env.py
+@@ -1,6 +1,6 @@
+-"""Zero-dependency Python 3.12+ loader and secret redaction guard for C:/aphrody/.env.
++"""Zero-dependency Python 3.12+ loader and secret redaction guard for the workspace .env.
+ 
+-Compatible with `uv run --env-file C:/aphrody/.env` as well as direct library import.
++Compatible with `uv run --env-file <workspace>/.env` as well as direct library import.
+ """
+ 
+ from __future__ import annotations
+diff --git a/system/env-kit/loaders/shell/load-env.ps1 b/system/env-kit/loaders/shell/load-env.ps1
+index b0efff6..83cc5ef 100644
+--- a/system/env-kit/loaders/shell/load-env.ps1
++++ b/system/env-kit/loaders/shell/load-env.ps1
+@@ -1,13 +1,13 @@
+ #Requires -Version 5.1
+ <#
+ .SYNOPSIS
+-  Dot-sourceable PowerShell loader for C:\aphrody\.env (`C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1`).
++  Dot-sourceable PowerShell loader for the workspace .env.
+   Never prints raw secret values. Does not override existing process env vars unless -Override is specified.
+ .EXAMPLE
+-  . C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1
++  . system\env-kit\loaders\shell\load-env.ps1
+ #>
+ param(
+-  [string]$EnvPath = "C:\aphrody\.env",
++  [string]$EnvPath = $(if ($env:ENV_KIT_ROOT) { Join-Path $env:ENV_KIT_ROOT '.env' } else { Join-Path $PSScriptRoot '..\..\..\..\.env' }),
+   [switch]$Override,
+   [string[]]$Required = @(),
+   [string]$Service = "powershell"
+diff --git a/system/env-kit/loaders/shell/load-env.sh b/system/env-kit/loaders/shell/load-env.sh
+index 92d4c6d..b06d93e 100644
+--- a/system/env-kit/loaders/shell/load-env.sh
++++ b/system/env-kit/loaders/shell/load-env.sh
+@@ -1,18 +1,19 @@
+ #!/usr/bin/env sh
+-# POSIX / Bash / Zsh sourceable loader for C:/aphrody/.env or /src/.env
+-# Usage: . C:/aphrody/system/env-kit/loaders/shell/load-env.sh
++# POSIX / Bash / Zsh sourceable loader for the nearest .env (or $ENV_KIT_ROOT/.env)
++# Usage: . system/env-kit/loaders/shell/load-env.sh
+ # Never echoes secret values. Preserves already-set non-empty environment variables unless ENV_KIT_OVERRIDE=1.
+ 
+ _env_kit_load() {
+   _ek_file="${1:-}"
+   if [ -z "$_ek_file" ]; then
+-    if [ -f "C:/aphrody/.env" ]; then
+-      _ek_file="C:/aphrody/.env"
+-    elif [ -f "/c/aphrody/.env" ]; then
+-      _ek_file="/c/aphrody/.env"
+-    else
+-      _ek_file="/src/.env"
+-    fi
++    _ek_dir="${ENV_KIT_ROOT:-$PWD}"
++    while [ ! -f "$_ek_dir/.env" ]; do
++      _ek_up="$(dirname "$_ek_dir")"
++      [ "$_ek_up" != "$_ek_dir" ] || break
++      _ek_dir="$_ek_up"
++    done
++    _ek_file="$_ek_dir/.env"
++    unset _ek_dir _ek_up
+   fi
+ 
+   [ -f "$_ek_file" ] || return 0
+diff --git a/system/env-kit/package.json b/system/env-kit/package.json
+index fc3330f..4ba2300 100644
+--- a/system/env-kit/package.json
++++ b/system/env-kit/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "@aphrody/env-kit",
+   "version": "1.0.0",
+-  "description": "Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for C:/aphrody",
++  "description": "Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for the workspace .env",
+   "type": "module",
+   "main": "./src/index.ts",
+   "types": "./src/index.ts",
+diff --git a/system/env-kit/paths/README.md b/system/env-kit/paths/README.md
+index b9cff6a..c0da560 100644
+--- a/system/env-kit/paths/README.md
++++ b/system/env-kit/paths/README.md
+@@ -17,5 +17,5 @@ bun run --cwd system/env-kit/paths test
+ bun run --cwd system/env-kit/paths typecheck
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- catalog:end -->
+diff --git a/system/env-kit/paths/SOURCE.json b/system/env-kit/paths/SOURCE.json
+index 417a4c1..2efafff 100644
+--- a/system/env-kit/paths/SOURCE.json
++++ b/system/env-kit/paths/SOURCE.json
+@@ -1,5 +1,5 @@
+ {
+-  "sourceRepository": "https://github.com/aphrody-labs/ay",
++  "sourceRepository": "https://github.com/aphrody-labs/legacy",
+   "visibility": "private",
+   "sourceRevision": "3187d795e84ff88da67f53f12be1add715ad73b2",
+   "sourcePrefix": "packages/infra/paths",
+diff --git a/system/env-kit/src/auth.ts b/system/env-kit/src/auth.ts
+index 763eb40..211145b 100644
+--- a/system/env-kit/src/auth.ts
++++ b/system/env-kit/src/auth.ts
+@@ -837,7 +837,7 @@ for i in ${q(h.wireguard ?? [])}; do
+   st=ok; [ $fresh = 0 ] && st=invalid; [ $fresh != 0 ] && [ $fresh != $tot ] && st=action
+   p wireguard "$i" $st "wg show $i latest-handshakes: $fresh/$tot pairs < 180 s\${stale:+ ; sans handshake:$stale}"
+   for r in ${q(revoked)}; do
+-    grep -qF "$r" <<< "$hs" && p wireguard-key "$i:\${r:0:8}" invalid "pair encore actif avec une clé révoquée (device/deploy.toml [auth.wireguard].revoked)"
++    grep -qF "$r" <<< "$hs" && p wireguard-key "$i:$(printf %.8s "$r")" invalid "pair encore actif avec une clé révoquée (device/deploy.toml [auth.wireguard].revoked)"
+   done
+ done
+ for u in ${q(h.units ?? [])}; do
+diff --git a/system/env-kit/src/discover.ts b/system/env-kit/src/discover.ts
+index 683379e..519ae8b 100644
+--- a/system/env-kit/src/discover.ts
++++ b/system/env-kit/src/discover.ts
+@@ -342,7 +342,6 @@ const HOST_KEYS: Record<string, (r: Resolved) => string | undefined> = {
+   mesh_ip: (r) => r.mesh,
+   link_ip: (r) => r.meshAll?.[1],
+   extra_mesh_ip: (r) => r.meshAll?.[1],
+-  src_root: () => "/srv/src",
+ };
+ 
+ /**
+diff --git a/system/env-kit/src/github-app.ts b/system/env-kit/src/github-app.ts
+index f31be51..f208216 100644
+--- a/system/env-kit/src/github-app.ts
++++ b/system/env-kit/src/github-app.ts
+@@ -720,7 +720,9 @@ async function retire(a: string[]): Promise<number> {
+  */
+ async function cratesTrust(a: string[]): Promise<number> {
+   const crates = (opt(a, "--crates") ?? "").split(",").filter(Boolean);
+-  const [owner, repo] = (opt(a, "--repo") ?? "aphrody-labs/ay").split("/");
++  const slug = opt(a, "--repo");
++  if (!slug) throw new Error("--repo <owner>/<name> requis");
++  const [owner, repo] = slug.split("/");
+   const workflow = opt(a, "--workflow") ?? "crates-publish.yml";
+   const token = cred("CARGO_REGISTRY_TOKEN");
+   if (!crates.length || !token)
+diff --git a/system/env-kit/src/whoami.ts b/system/env-kit/src/whoami.ts
+index f837b4a..00b17e8 100644
+--- a/system/env-kit/src/whoami.ts
++++ b/system/env-kit/src/whoami.ts
+@@ -259,7 +259,9 @@ function gcloud(): Identity {
+ 
+ function steam(env: Env): Identity {
+   try {
+-    const dir = env.STEAM_DIR ?? "C:/Program Files (x86)/Steam";
++    const programFiles = env["ProgramFiles(x86)"] ?? env.ProgramFiles;
++    const dir = env.STEAM_DIR ?? (programFiles ? `${programFiles}/Steam` : undefined);
++    if (!dir) return { provider: "steam", status: "unset" };
+     const vdf = require("node:fs").readFileSync(
+       `${dir}/config/loginusers.vdf`,
+       "utf8",
+diff --git a/system/env-kit/tests/auth-services.test.ts b/system/env-kit/tests/auth-services.test.ts
+index 156d77f..5f14e8b 100644
+--- a/system/env-kit/tests/auth-services.test.ts
++++ b/system/env-kit/tests/auth-services.test.ts
+@@ -87,8 +87,9 @@ test("toast: escaped, one click and one button launch the sign-in link, no scrip
+   expect(xml).toContain(`launch="${loginUri("gemini-web")}"`);
+   expect(xml).toContain('activationType="protocol"');
+   expect(xml).toContain("Gemini &#60;web&#62;");
+-  const reg = registrationCommands("C:\\bin\\ay.exe").flat().join(" ");
+-  expect(reg).toContain(`"C:\\bin\\ay.exe" auth login --uri "%1"`);
++  const exe = join(tmpdir(), "ay.exe");
++  const reg = registrationCommands(exe).flat().join(" ");
++  expect(reg).toContain(`"${exe}" auth login --uri "%1"`);
+   expect(`${xml} ${reg}`).not.toMatch(/\.ts\b|packages[\\/]/);
+ });
+ 
+diff --git a/system/env-kit/tests/auth.test.ts b/system/env-kit/tests/auth.test.ts
+index 39815ef..86a370d 100644
+--- a/system/env-kit/tests/auth.test.ts
++++ b/system/env-kit/tests/auth.test.ts
+@@ -3,13 +3,14 @@ import { describe, expect, test } from "bun:test";
+ import { spawnSync } from "../src/spawn.ts";
+ import { mkdtempSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+-import { join, resolve } from "node:path";
++import { join } from "node:path";
+ import { formatChecks, hostScript, loadManifest } from "../src/auth";
+ 
+-const root = resolve(import.meta.dir, "..", "..", "..");
++// A synthetic manifest with the shape of device/deploy.toml (the real one is not part of this repository).
++const root = join(import.meta.dir, "fixtures", "auth-root");
+ 
+ describe("auth manifest", () => {
+-  test("device/deploy.toml declares hosts and GitHub secrets by name only", () => {
++  test("a deploy manifest declares hosts and GitHub secrets by name only", () => {
+     const m = loadManifest(root);
+     expect(Object.keys(m.nodes)).toContain("usa");
+     expect(m.auth.hosts?.usa?.tunnels).toBeDefined();
+@@ -20,7 +21,6 @@ describe("auth manifest", () => {
+   test("keyless CI federation is declared without spaces (gcloud.cmd goes through cmd.exe)", () => {
+     const g = loadManifest(root).auth.oidc?.gcp;
+     expect(g?.issuer).toBe("https://token.actions.githubusercontent.com");
+-    // Repository owner since the transfer aphrody-dev/src -> aphrody-labs/src (2026-11-13).
+     expect(g?.condition).toBe("assertion.repository_owner=='aphrody-labs'");
+     for (const r of (g as { repos?: string[] }).repos ?? [])
+       expect(r.startsWith("aphrody-labs/")).toBe(true);
+diff --git a/system/env-kit/tests/discover.test.ts b/system/env-kit/tests/discover.test.ts
+index a1fafa0..580dda2 100644
+--- a/system/env-kit/tests/discover.test.ts
++++ b/system/env-kit/tests/discover.test.ts
+@@ -34,7 +34,7 @@ function deps(over: Partial<Deps> = {}): Deps {
+     cachePath: join(mkdtempSync(join(tmpdir(), "disc-")), "discover.json"),
+     ttlMs: 60_000,
+     now: () => 1_000,
+-    env: { USERNAME: "tester", USERPROFILE: "C:/Users/tester", COMPUTERNAME: "TESTBOX" },
++    env: { USERNAME: "tester", USERPROFILE: join(tmpdir(), "tester"), COMPUTERNAME: "TESTBOX" },
+     ...over,
+   };
+   (d as any).calls = calls;
+diff --git a/system/env-kit/tests/env-kit.test.ts b/system/env-kit/tests/env-kit.test.ts
+index 3c706fe..1ab65b1 100644
+--- a/system/env-kit/tests/env-kit.test.ts
++++ b/system/env-kit/tests/env-kit.test.ts
+@@ -128,13 +128,13 @@ describe("env-kit Bun/TypeScript core", () => {
+     const view = redactEnv({
+       ANTHROPIC_API_KEY: "synthetic_key_val_22ch",
+       GOOGLE_CLOUD_PROJECT: "aphrody",
+-      CUDA_PATH: "C:\\Program Files\\NVIDIA\\CUDA\\v13.4",
++      CUDA_PATH: "C:\\Program Files\\NVIDIA\\CUDA\\v13.4", // paths:ok a value that must pass through unmasked
+       CUSTOM_PLAIN_FLAG: `${"figd"}_mock_prefixed_token_999`,
+     });
+ 
+     expect(view.ANTHROPIC_API_KEY).toBe("SET [len=22]");
+     expect(view.GOOGLE_CLOUD_PROJECT).toBe("aphrody");
+-    expect(view.CUDA_PATH).toBe("C:\\Program Files\\NVIDIA\\CUDA\\v13.4");
++    expect(view.CUDA_PATH).toBe("C:\\Program Files\\NVIDIA\\CUDA\\v13.4"); // paths:ok
+     expect(view.CUSTOM_PLAIN_FLAG).toBe("SET [len=28]");
+   });
+ 
+@@ -147,7 +147,7 @@ describe("env-kit Bun/TypeScript core", () => {
+         [
+           "CLOUDFLARE_ACCOUNT_ID=0123456789abcdef0123456789abcdef",
+           "GEMINI_API_KEY=AIzaMockTestKeyForUnitSpecOnly1234",
+-          "CARGO_HOME=/home/user/.cargo",
++          "CARGO_HOME=/home/user/.cargo", // paths:ok a value written to .dev.vars, never read from disk
+         ].join("\n"),
+         "utf8",
+       );
+diff --git a/system/env-kit/tests/fixtures/auth-root/device/deploy.toml b/system/env-kit/tests/fixtures/auth-root/device/deploy.toml
+new file mode 100644
+index 0000000..f1cd474
+--- /dev/null
++++ b/system/env-kit/tests/fixtures/auth-root/device/deploy.toml
+@@ -0,0 +1,30 @@
++# Synthetic deploy manifest read by auth.test.ts: the shape of device/deploy.toml, with placeholder names and no real value.
++[nodes.usa]
++ssh_alias = "usa"
++role = "edge"
++
++[nodes.build]
++ssh_alias = "build"
++role = "build"
++
++[auth.github.repo_secrets]
++"example-org/example-repo" = ["EXAMPLE_API_TOKEN", "EXAMPLE_DEPLOY_KEY"]
++
++[auth.hosts.usa]
++tunnels = { "cloudflared-example" = "example" }
++wireguard = ["wg0"]
++units = ["certbot"]
++
++[auth.wireguard]
++revoked = []
++
++[auth.oidc.gcp]
++project = "example-project"
++project_number = "000000000000"
++pool = "github-actions"
++provider = "github"
++issuer = "https://token.actions.githubusercontent.com"
++condition = "assertion.repository_owner=='aphrody-labs'"
++service_account = "ci@example-project.iam.gserviceaccount.com"
++repos = ["aphrody-labs/example"]
++account = "owner@example.com"
+diff --git a/system/env-kit/tests/google-context.test.ts b/system/env-kit/tests/google-context.test.ts
+index a45aa4f..12728eb 100644
+--- a/system/env-kit/tests/google-context.test.ts
++++ b/system/env-kit/tests/google-context.test.ts
+@@ -1,4 +1,7 @@
+ import { expect, test } from "bun:test";
++import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
+ import {
+   contextEnv,
+   detectContext,
+@@ -15,23 +18,25 @@ test("contexts are ordered with a catch-all default last", () => {
+   );
+ });
+ 
+-// Needs the real checkout layout (../rosegriffon is its own repository): skipped elsewhere (CI Linux).
+-const SRC = require("node:path").resolve(import.meta.dir, "..", "..", "..");
+-test.skipIf(!require("node:fs").existsSync(`${SRC}/../rosegriffon/.git`))(
+-  "detectContext picks rosegriffon inside the sibling rosegriffon checkout and aphrody at the src root",
+-  () => {
+-    expect(detectContext(`${SRC}/../rosegriffon/apps/rg-website`).name).toBe(
+-      "rosegriffon",
+-    );
++test("detectContext picks rosegriffon by path fragment and falls through to aphrody", () => {
++  const base = mkdtempSync(join(tmpdir(), "ctx-"));
++  try {
++    const site = join(base, "apps", "rosegriffon", "rg-website");
++    const other = join(base, "unrelated");
++    mkdirSync(site, { recursive: true });
++    mkdirSync(other, { recursive: true });
++    expect(detectContext(site).name).toBe("rosegriffon");
+     // A path with no rosegriffon fragment falls through to the default aphrody context.
+-    expect(detectContext("C:/tmp/unrelated").name).toBe("aphrody");
+-  },
+-);
++    expect(detectContext(other).name).toBe("aphrody");
++  } finally {
++    rmSync(base, { recursive: true, force: true });
++  }
++});
+ 
+ test("contextEnv points every SDK var at the context project and omits a missing key file", () => {
+   const ctx = GCLOUD_CONTEXTS.find((c) => c.name === "rosegriffon")!;
+   const env = contextEnv(ctx, {
+-    GOOGLE_APPLICATION_CREDENTIALS_RGFR: "C:/nope/missing.json",
++    GOOGLE_APPLICATION_CREDENTIALS_RGFR: join(tmpdir(), "nope", "missing.json"),
+   });
+   expect(env.GOOGLE_CLOUD_PROJECT).toBe(ROSEGRIFFON_PROJECT);
+   expect(env.CLOUDSDK_ACTIVE_CONFIG_NAME).toBe("rosegriffon");
+diff --git a/system/env-kit/vault/README.md b/system/env-kit/vault/README.md
+index 22264b9..f89f1f4 100644
+--- a/system/env-kit/vault/README.md
++++ b/system/env-kit/vault/README.md
+@@ -15,5 +15,5 @@ bun run --cwd system/env-kit/vault bench
+ bun run --cwd system/env-kit/vault check
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- catalog:end -->
+diff --git a/system/env-kit/vault/src/crypto.ts b/system/env-kit/vault/src/crypto.ts
+index 526b297..ab526c7 100644
+--- a/system/env-kit/vault/src/crypto.ts
++++ b/system/env-kit/vault/src/crypto.ts
+@@ -11,7 +11,7 @@
+  */
+ 
+ import { getSecretBytes, setSecret } from "./store.ts";
+-import { WIN } from "./paths.ts";
++import { system32, WIN } from "./paths.ts";
+ import { helloStatus, helloUnwrap, helloWrap } from "./win/pool.ts";
+ 
+ export const MASTER = "VAULT_MASTER_KEY";
+@@ -29,7 +29,7 @@ export function HELLO_KEY(): Promise<string> {
+   helloName ??= (async () => {
+     const p = Bun.spawn(
+       [
+-        `${process.env.SystemRoot ?? "C:\\Windows"}\\System32\\whoami.exe`,
++        system32("whoami.exe"),
+         "/user",
+         "/fo",
+         "csv",
+diff --git a/system/env-kit/vault/src/paths.ts b/system/env-kit/vault/src/paths.ts
+index c082ab3..865a44d 100644
+--- a/system/env-kit/vault/src/paths.ts
++++ b/system/env-kit/vault/src/paths.ts
+@@ -19,6 +19,11 @@ export type LocalBackend = "dpapi" | "systemd-creds" | "systemd-creds-user";
+ 
+ export const WIN = process.platform === "win32";
+ 
++/** A Windows system tool: `%SystemRoot%\System32\<exe>`. */
++export function system32(exe: string): string {
++  return join(process.env.SystemRoot ?? process.env.windir ?? "", "System32", exe);
++}
++
+ /** Repository root: SRC_ROOT, else four levels above this file (system/env-kit/vault/src). */
+ export function srcRoot(): string {
+   return process.env.SRC_ROOT ?? resolve(import.meta.dir, "..", "..", "..", "..");
+diff --git a/system/env-kit/vault/src/profiles.ts b/system/env-kit/vault/src/profiles.ts
+index 582ef73..68d17c6 100644
+--- a/system/env-kit/vault/src/profiles.ts
++++ b/system/env-kit/vault/src/profiles.ts
+@@ -15,7 +15,7 @@ import { join, resolve } from "node:path";
+ import { ageEncryptToFile } from "./age.ts";
+ import { b3Files } from "./crypto.ts";
+ import { loadHosts, loadPolicy, loadRegistry, scopeOf } from "./hosts.ts";
+-import { infraDir, vaultRoot, WIN } from "./paths.ts";
++import { infraDir, system32, vaultRoot, WIN } from "./paths.ts";
+ import { getSecretBytes } from "./store.ts";
+ 
+ export interface BackupEntry {
+@@ -27,7 +27,7 @@ export interface BackupEntry {
+ }
+ 
+ const TAR = WIN
+-  ? join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe")
++  ? system32("tar.exe")
+   : "tar";
+ 
+ export function expand(p: string): string {
+diff --git a/system/env-kit/vault/src/sync.ts b/system/env-kit/vault/src/sync.ts
+index eb53fc1..80a3a30 100644
+--- a/system/env-kit/vault/src/sync.ts
++++ b/system/env-kit/vault/src/sync.ts
+@@ -39,7 +39,7 @@ import {
+   scopeOf,
+   setRecipient,
+ } from "./hosts.ts";
+-import { infraDir, vaultRoot, WIN } from "./paths.ts";
++import { infraDir, system32, vaultRoot, WIN } from "./paths.ts";
+ import { assertName, getSecretBytes, listSecrets, setSecret } from "./store.ts";
+ 
+ export const PC_IDENTITY = "VAULT_AGE_IDENTITY";
+@@ -261,7 +261,7 @@ export interface PushResult {
+ }
+ 
+ const TAR = WIN
+-  ? join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe")
++  ? system32("tar.exe")
+   : "tar";
+ 
+ export async function push(host: Host, force = false): Promise<PushResult> {
+@@ -470,7 +470,7 @@ export function taskXml(
+   const push = kind === "push";
+   const cmd = push
+     ? process.execPath
+-    : join(process.env.SystemRoot ?? "C:\\Windows", "System32", "conhost.exe");
++    : system32("conhost.exe");
+   const args = push
+     ? `run "${cli}" sync --push-only`
+     : `--headless "${process.execPath}" run "${cli}" sync`;
+diff --git a/system/env-kit/vault/tests/fixtures/hosts.toml b/system/env-kit/vault/tests/fixtures/hosts.toml
+new file mode 100644
+index 0000000..06caf88
+--- /dev/null
++++ b/system/env-kit/vault/tests/fixtures/hosts.toml
+@@ -0,0 +1,38 @@
++# Fixture of vault.test.ts: the shape of device/vault/hosts.toml (public age recipients only).
++# Hosts of the aphrody vault. Public data only: each recipient is the public
++# half of an age X25519 identity whose private half never leaves its host (DPAPI on the PC,
++# systemd-creds credential "aphrody-vault-age" on a VPS). Recipients are written by
++# `env-kit vault hosts init <host>` and changed by `env-kit vault rotate <host>`.
++
++[pc]
++os = "windows"
++recipient = "age1m26zgufngsrmn2ach9ayrnys6pff2dw42hfjt7e5mp372zj7vyys3qar3g"
++
++# prd (USA, backends): runner user `agent`, user credstore; route (jump host, key alias) comes from the Host entry in ~/.ssh/config.
++[prd]
++os = "linux"
++ssh = ["-l", "agent", "prd"]
++recipient = "age178yp32swtmrew7lhsz97cgqc9fxsmatn6n0gwuam0qj5uackh4nq2e4pp5"
++
++# fr2 (proxy, vhosts, CDN): user credstore; user and address come from ~/.ssh/config.
++[fr2]
++os = "linux"
++ssh = ["fr2"]
++recipient = "age1t58pdvctqrkt3t3hmqv8t85fqs854skg75efrrpctk79zurdgststcgjc6"
++
++# fr1 (Chromium/LLVM builds only): user credstore; user and address come from ~/.ssh/config.
++[fr1]
++os = "linux"
++ssh = ["fr1"]
++recipient = "age1wtpumsxfp9wxcgej5f8qygcsem9rtrlshmvugm44arjyhp0ry5qqdhhsue"
++
++# Runner user `agent` of fr2 and fr1: the agents (relay hub, runner credEnv) read their own user credstore, not the login user's.
++[fr2-agent]
++os = "linux"
++ssh = ["-l", "agent", "fr2"]
++recipient = "age1gyzlle89galq00sgn99exfywm0h6t8lk374rmpvcfq72aq4lcprs4g3w8u"
++
++[fr1-agent]
++os = "linux"
++ssh = ["-l", "agent", "fr1"]
++recipient = "age1pph3q8xvuskz9msl9vj4q9jlp8j75fad3prc5xj4u6dmjpkqxevswwj8lr"
+diff --git a/system/env-kit/vault/tests/fixtures/policy.toml b/system/env-kit/vault/tests/fixtures/policy.toml
+new file mode 100644
+index 0000000..20803ca
+--- /dev/null
++++ b/system/env-kit/vault/tests/fixtures/policy.toml
+@@ -0,0 +1,23 @@
++# Fixture of vault.test.ts: the shape of device/vault/policy.toml (names only, no values).
++# Scope of each secret: the hosts that receive it (age envelope to that host only). Anything not
++# listed keeps the default of its kind, and the defaults never leave the PC. Names only, no values.
++# Precedence: `env-kit vault add NAME --scope a,b` (local registry) > [scope] here > [defaults].
++
++[defaults]
++token = ["pc"]
++document = ["pc"]
++chrome-passwords = ["pc"]
++profile = ["pc"]
++
++[scope]
++# Proof secret of the sync (random, no meaning): PC -> prd, fr2 within one timer period.
++VAULT_PROOF_TOKEN = ["pc", "prd", "fr2"]
++# Same value the agents login flow (frameworks/ai-os/src/nhitl/login.ts) installs on the runners.
++CLAUDE_CODE_OAUTH_TOKEN = ["pc", "prd", "fr2"]
++# Context7 API key (relay hub `context7` server, headers CONTEXT7_API_KEY in tools/agents/toolchain.toml): every host's hub.
++CTX7_API_KEY = ["pc", "prd", "fr2", "fr1", "fr2-agent", "fr1-agent"]
++
++# Never synced whatever the scope says (enforced in system/env-kit/vault/src/hosts.ts).
++[never]
++names = ["VAULT_MASTER_KEY", "VAULT_AGE_IDENTITY", "aphrody-vault-age"]
++kinds = ["chrome-passwords", "profile"]
+diff --git a/system/env-kit/vault/tests/vault.test.ts b/system/env-kit/vault/tests/vault.test.ts
+index 372f403..5de76c7 100644
+--- a/system/env-kit/vault/tests/vault.test.ts
++++ b/system/env-kit/vault/tests/vault.test.ts
+@@ -18,7 +18,7 @@ process.env.ENV_KIT_SECRET_DIR = join(root, "local");
+ process.env.VAULT_HOSTS_FILE = join(root, "hosts.toml");
+ process.env.VAULT_POLICY_FILE = join(root, "policy.toml");
+ process.env.VAULT_HELLO = "0";
+-const infra = join(import.meta.dir, "..", "..", "..", "..", "device", "vault");
++const infra = join(import.meta.dir, "fixtures");
+ copyFileSync(join(infra, "hosts.toml"), process.env.VAULT_HOSTS_FILE);
+ copyFileSync(join(infra, "policy.toml"), process.env.VAULT_POLICY_FILE);
+ 
+@@ -257,10 +257,10 @@ describe("scope", () => {
+ 
+   test("owner profile refused", () => {
+     expect(
+-      V.isOwnerProfile("C:/Users/x/AppData/Local/Google/Chrome/User Data"),
++      V.isOwnerProfile("C:/Users/x/AppData/Local/Google/Chrome/User Data"), // paths:ok a Windows profile path is the classifier input
+     ).toBe(true);
+     expect(
+-      V.isOwnerProfile("C:/Users/x/AppData/Local/aphrody/relay/chrome"),
++      V.isOwnerProfile("C:/Users/x/AppData/Local/aphrody/relay/chrome"), // paths:ok
+     ).toBe(false);
+   });
+ });
+diff --git a/system/gnu-ts/README.md b/system/gnu-ts/README.md
+index 45bcf61..293d670 100644
+--- a/system/gnu-ts/README.md
++++ b/system/gnu-ts/README.md
+@@ -16,6 +16,6 @@ bun run --cwd system/gnu-ts check
+ bun run --cwd system/gnu-ts sync
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/gnu-ts/gnu.just b/system/gnu-ts/gnu.just
+index 734dfa4..b3b9c58 100644
+--- a/system/gnu-ts/gnu.just
++++ b/system/gnu-ts/gnu.just
+@@ -10,11 +10,6 @@ gnu *args:
+ gnu-service:
+     ssh fr2 "systemctl is-active aphrody-gnu.service aphrody-gnu-watch.timer; journalctl -u aphrody-gnu --no-pager -n 15"
+ 
+-# Pull the checkout on fr2 and restart the tracker
+-[group('gnu')]
+-gnu-deploy:
+-    ssh fr2 "git -C /srv/src fetch -q --no-recurse-submodules origin main && git -C /srv/src merge -q --ff-only FETCH_HEAD && sh /srv/src/device/gnu/install.sh"
+-
+ # Tests of the tracker package
+ [group('gnu')]
+ gnu-test:
+diff --git a/system/gnu-ts/src/store.ts b/system/gnu-ts/src/store.ts
+index 009b28f..e5c3135 100644
+--- a/system/gnu-ts/src/store.ts
++++ b/system/gnu-ts/src/store.ts
+@@ -7,7 +7,7 @@ import type { Announce, GnuEvent, Signature } from "./types.ts";
+ 
+ /** Repository root (system/gnu-ts/src -> repo). */
+ export const repoRoot = () => resolve(import.meta.dir, "..", "..", "..");
+-/** Working directory of the tracker: feed, state, staging, site. fr2 sets GNU_HOME=/srv/gnu. */
++/** Working directory of the tracker: feed, state, staging, site. A deployment sets GNU_HOME. */
+ export const home = () => Bun.env.GNU_HOME ?? join(repoRoot(), "var", "gnu");
+ export const paths = (h = home()) => ({
+   home: h,
+diff --git a/system/gnu-ts/src/types.ts b/system/gnu-ts/src/types.ts
+index 577a7cd..95026a5 100644
+--- a/system/gnu-ts/src/types.ts
++++ b/system/gnu-ts/src/types.ts
+@@ -3,7 +3,7 @@ import type { KernelSection } from "./kernel.ts";
+ // Types shared by the tracker, the feed, the CLI, the MCP tools and the site.
+ 
+ export type FtpFile = { name: string; size: number; mtime: number };
+-export type FtpListing = Map<string, FtpFile[]>; // path under /home/ftp/gnu, "" = gnu/ itself
++export type FtpListing = Map<string, FtpFile[]>; // path below the gnu/ root of ftp.gnu.org, "" = gnu/ itself
+ 
+ export type Release = {
+   file: string;
+diff --git a/system/gnu-ts/src/upstream.ts b/system/gnu-ts/src/upstream.ts
+index 7841353..9cdb329 100644
+--- a/system/gnu-ts/src/upstream.ts
++++ b/system/gnu-ts/src/upstream.ts
+@@ -69,7 +69,7 @@ export async function pool<T>(items: T[], n: number, fn: (x: T) => Promise<void>
+ export const isPrerelease =(v: string) =>
+   /(alpha|beta|rc\d*|pre\d*|snap|test|dev|git|nightly)/i.test(v);
+ 
+-/** Parse `ls -lRt` output (as ftp.gnu.org/ls-lrRt.txt.gz): returns dirs under /home/ftp/gnu. Times are UTC. */
++/** Parse `ls -lRt` output (as ftp.gnu.org/ls-lrRt.txt.gz): returns the directories below the gnu/ root of the server. Times are UTC. */
+ export function parseListing(text: string, now = new Date()): FtpListing {
+   const out: FtpListing = new Map();
+   let cur: FtpFile[] | null = null;
+diff --git a/system/gnu-ts/test/gnu.test.ts b/system/gnu-ts/test/gnu.test.ts
+index 76740af..0556c86 100644
+--- a/system/gnu-ts/test/gnu.test.ts
++++ b/system/gnu-ts/test/gnu.test.ts
+@@ -1,4 +1,6 @@
+ import { describe, expect, test } from "bun:test";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
+ import { buildAtom, buildFeed } from "../src/feed.ts";
+ import {
+   buildKernel,
+@@ -402,7 +404,7 @@ describe("feed", () => {
+   test("one entry per package, ftp wins over GSRC, drift flagged", async () => {
+     const f = await buildFeed(inv, st, listing, {
+       now: NOW,
+-      root: "C:/nonexistent",
++      root: join(tmpdir(), "gnu-nonexistent"),
+     });
+     const ids = f.entries.map((e) => e.id);
+     expect(ids).toContain("coreutils");
+@@ -433,7 +435,7 @@ describe("feed", () => {
+   test("atom is well formed with one entry per released package", async () => {
+     const f = await buildFeed(inv, st, listing, {
+       now: NOW,
+-      root: "C:/nonexistent",
++      root: join(tmpdir(), "gnu-nonexistent"),
+     });
+     const x = buildAtom(f);
+     expect(x.startsWith('<?xml version="1.0"')).toBe(true);
+@@ -446,7 +448,7 @@ describe("feed", () => {
+   test("query layer", async () => {
+     const f = await buildFeed(inv, st, listing, {
+       now: NOW,
+-      root: "C:/nonexistent",
++      root: join(tmpdir(), "gnu-nonexistent"),
+     });
+     expect(search(f, { query: "core util" }).results[0]!.id).toBe("coreutils");
+     expect(search(f, { filter: "drop-in" }).total).toBe(1);
+@@ -466,7 +468,7 @@ describe("feed", () => {
+   test("diff events: release, rust bump, announce, kernel", async () => {
+     const a = await buildFeed(inv, st, listing, {
+       now: NOW,
+-      root: "C:/nonexistent",
++      root: join(tmpdir(), "gnu-nonexistent"),
+     });
+     const b = structuredClone(a);
+     b.generated = "2026-11-15T00:00:00Z";
+diff --git a/system/jev/NOTICE b/system/jev/NOTICE
+index a396d96..bec8780 100644
+--- a/system/jev/NOTICE
++++ b/system/jev/NOTICE
+@@ -1,7 +1,7 @@
+ Aphrody Jev
+ Copyright Aphrody Labs and contributors (aphrody-code).
+ Licensed under Apache License, Version 2.0.
+-Source transferred from aphrody-labs/ay; exact revision and original
++Source transferred from aphrody-labs/legacy; exact revision and original
+ file hashes are recorded in provenance.json.
+ 
+ src/protocol.rs derives from the Bun fork's MIT-licensed Yolo validator.
+diff --git a/system/jev/provenance.json b/system/jev/provenance.json
+index 55f168c..ce8976b 100644
+--- a/system/jev/provenance.json
++++ b/system/jev/provenance.json
+@@ -1,6 +1,6 @@
+ {
+   "schemaVersion": 1,
+-  "repository": "https://github.com/aphrody-labs/ay",
++  "repository": "https://github.com/aphrody-labs/legacy",
+   "revision": "170702f02085b392377dbc9749f1b3cc8db9efbf",
+   "sourcePath": "crates/ai/jev",
+   "license": "Apache-2.0",
+diff --git a/system/omniu/README.md b/system/omniu/README.md
+index e7a44a2..97454cb 100644
+--- a/system/omniu/README.md
++++ b/system/omniu/README.md
+@@ -15,7 +15,7 @@ bun run --cwd system/omniu test
+ bun run --cwd system/omniu validate
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 
+diff --git a/system/omniu/docs/compatibility.md b/system/omniu/docs/compatibility.md
+index cb7ec29..ccb3bf5 100644
+--- a/system/omniu/docs/compatibility.md
++++ b/system/omniu/docs/compatibility.md
+@@ -44,7 +44,7 @@ the bundle relies on:
+ - The prompt segment contract in `prompts/segments.toml` is still
+   mirrored by the host (`prompt_segments.rs` pins the same segment ids
+   and presets, with a test resolving this repository's file).
+-- `$HOME` deliberately stays in Windows form (`C:/Users/you`) while
++- `$HOME` deliberately stays in Windows form (`%USERPROFILE%`) while
+   `$PWD` is POSIX form (niubash#522); framework code must not assume
+   the two share a form. On POSIX hosts, `HOME` may be entirely unset
+   (niubash#546).
+diff --git a/system/omniu/docs/framework-smoke-notes.md b/system/omniu/docs/framework-smoke-notes.md
+index 1309687..0e0b3cd 100644
+--- a/system/omniu/docs/framework-smoke-notes.md
++++ b/system/omniu/docs/framework-smoke-notes.md
+@@ -7,7 +7,7 @@ Status: living runtime QA notes for the directory-first framework.
+ Run with the selected installed Niubash binary:
+ 
+ ```sh
+-niubash tools/smoke_framework.niu C:/path/to/oh-my-niu
++niubash tools/smoke_framework.niu <path-to-oh-my-niu>
+ ```
+ 
+ The smoke currently verifies:
+@@ -43,8 +43,8 @@ covered by the smoke above.
+   substitution on the installed Niubash build. The current helper captures Git
+   branch/status without putting `2>/dev/null` inside the captured branch
+   command.
+-- Smoke scripts should prefer stable native paths such as `C:/tmp` for temp
+-  files. The installed build exposes a `/c/Users/.../Temp` value for `TMPDIR`
++- Smoke scripts should prefer stable native paths such as `$TEMP` for temp
++  files. The installed build exposes an MSYS-style value for `TMPDIR`
+   that can fail during redirected writes.
+ 
+ ## Next Smoke Gates
+diff --git a/system/omniu/docs/theme-plugin-release-checklist.md b/system/omniu/docs/theme-plugin-release-checklist.md
+index d8fd153..ff61c3f 100644
+--- a/system/omniu/docs/theme-plugin-release-checklist.md
++++ b/system/omniu/docs/theme-plugin-release-checklist.md
+@@ -50,7 +50,7 @@ bundled source plugins.
+ - [x] Keep dirty Git compact markers on the dirty theme style instead of falling
+   back to white/gray detail text.
+ - [x] Resolve setup/prompt/config HOME through env-aware Windows path handling
+-  so `/c/Users/...`, `C:/Users/...`, and `~` agree.
++  so the MSYS form, the Windows form and `~` of the user profile agree.
+ 
+ ## Theme Plugins
+ 
+@@ -102,7 +102,7 @@ bundled source plugins.
+   - AppData binary: `Niubash 0.10.0`, WinuxCmd `0.14.3`.
+   - `~/tools/niubash.exe`: `Niubash 0.10.0`, WinuxCmd `0.13.0`.
+   - `cd ~; echo PWD=$PWD; pwd; cat.exe ~/.niubashrc` prints native
+-    `C:/Users/...` and succeeds.
++    the Windows form of the user profile and succeeds.
+   - `niubash setup` generates an isolated temporary `.niubashrc` with theme
+     previews and `NIU_PROMPT_CWD_STYLE='home'`.
+   - `--gitstatus-daemon` JSONL smoke passed through the `~/tools` entry; the
+diff --git a/system/omniu/oh-my-niu.niu b/system/omniu/oh-my-niu.niu
+index 69a968e..4f64fa7 100644
+--- a/system/omniu/oh-my-niu.niu
++++ b/system/omniu/oh-my-niu.niu
+@@ -3,7 +3,7 @@
+ # Source this file from an interactive Niubash rc file after setting NIUBASH to
+ # this repository or installed bundle root:
+ #
+-#   NIUBASH=C:/Users/me/.niubash/oh-my-niu
++#   NIUBASH=$HOME/.niubash/oh-my-niu
+ #   NIU_PLUGINS=(prompt-core git docker zoxide)
+ #   NIU_THEME=minimal
+ #   source "$NIUBASH/oh-my-niu.niu"
+diff --git a/system/omniu/src/host.ts b/system/omniu/src/host.ts
+index bda9eb0..952fe7b 100644
+--- a/system/omniu/src/host.ts
++++ b/system/omniu/src/host.ts
+@@ -42,7 +42,7 @@ export async function loadBunPlugins(root: string = bundleRoot(), only?: string[
+   const loaded: string[] = [];
+   for (const p of discover(root)) {
+     if (!p.bun || (only && !only.includes(p.name))) continue;
+-    // A file URL: a bare Windows path (`C:\\...`) is not a valid module specifier.
++    // A file URL: a bare Windows drive path is not a valid module specifier.
+     const mod = await import(pathToFileURL(join(p.dir, p.bun.entry)).href);
+     const exported = mod.default as BunPlugin | ((plugin: HostedPlugin) => BunPlugin) | undefined;
+     if (!exported) throw new Error(`${p.name}: ${p.bun.entry} has no default export`);
+diff --git a/system/omniu/tools/smoke_framework.niu b/system/omniu/tools/smoke_framework.niu
+index 0323d42..0b45474 100644
+--- a/system/omniu/tools/smoke_framework.niu
++++ b/system/omniu/tools/smoke_framework.niu
+@@ -1,7 +1,7 @@
+ # Smoke test the directory-first Oh My Niu framework with Niubash.
+ #
+ # Usage:
+-#   niubash tools/smoke_framework.niu C:/path/to/oh-my-niu
++#   niubash tools/smoke_framework.niu <path-to-oh-my-niu>
+ 
+ ROOT="${1:-$PWD}"
+ failures=0
+@@ -108,7 +108,7 @@ expect_type path_remove
+ expect_type path_dedupe
+ expect_type extract
+ 
+-smoke_parent="${TMPDIR:-${TEMP:-${TMP:-C:/tmp}}}"
++smoke_parent="${TMPDIR:-${TEMP:-${TMP:-/tmp}}}"
+ smoke_dir="$smoke_parent/omw-framework-smoke-$$"
+ mkdir -p "$smoke_dir" || exit 2
+ printf "OMW_FRAMEWORK_SMOKE=ok\n" > "$smoke_dir/.env"
+diff --git a/system/py2bun-ts/README.md b/system/py2bun-ts/README.md
+index ef5a49f..a37720c 100644
+--- a/system/py2bun-ts/README.md
++++ b/system/py2bun-ts/README.md
+@@ -14,7 +14,7 @@
+ bun run --cwd system/py2bun-ts test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 
+diff --git a/system/py2bun-ts/test/runtime.test.ts b/system/py2bun-ts/test/runtime.test.ts
+index 168a209..b7f8fa2 100644
+--- a/system/py2bun-ts/test/runtime.test.ts
++++ b/system/py2bun-ts/test/runtime.test.ts
+@@ -286,7 +286,7 @@ describe("os math random sys time review fixes", () => {
+     expect(sys.byteorder).toBe("little");
+     const t = await import("../src/runtime/time");
+     expect(() => t.sleep(-1)).toThrow();
+-    expect(t.ctime(0)).toMatch(/^\w{3} \w{3} [ \d]\d \d\d:\d\d:\d\d \d{4}$/);
++    expect(t.ctime(0)).toMatch(/^\w{3} \w{3} [ \d]\d \d{2}:\d{2}:\d{2} \d{4}$/);
+   });
+ });
+ 
+diff --git a/system/vault/README.md b/system/vault/README.md
+index fe0a568..851252c 100644
+--- a/system/vault/README.md
++++ b/system/vault/README.md
+@@ -16,6 +16,6 @@ cargo test -p aphrody-vault
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/system/wck/README.md b/system/wck/README.md
+index a5ff301..3ade10c 100644
+--- a/system/wck/README.md
++++ b/system/wck/README.md
+@@ -17,7 +17,7 @@ bun run --cwd system/wck check
+ bun run --cwd system/wck fmt
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 

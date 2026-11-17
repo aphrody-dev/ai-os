@@ -87,8 +87,9 @@ test("toast: escaped, one click and one button launch the sign-in link, no scrip
   expect(xml).toContain(`launch="${loginUri("gemini-web")}"`);
   expect(xml).toContain('activationType="protocol"');
   expect(xml).toContain("Gemini &#60;web&#62;");
-  const reg = registrationCommands("C:\\bin\\ay.exe").flat().join(" ");
-  expect(reg).toContain(`"C:\\bin\\ay.exe" auth login --uri "%1"`);
+  const exe = join(tmpdir(), "ay.exe");
+  const reg = registrationCommands(exe).flat().join(" ");
+  expect(reg).toContain(`"${exe}" auth login --uri "%1"`);
   expect(`${xml} ${reg}`).not.toMatch(/\.ts\b|packages[\\/]/);
 });
 

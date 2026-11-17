@@ -2,7 +2,7 @@
 
 <!-- catalog:begin unit -->
 <!-- prettier-ignore-start -->
-> Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for C:/aphrody
+> Zero-dependency cross-language environment sharing, secret redaction, and editor/agent sync toolkit (Google Cloud IAM and billing live in @aphrody/google/gcp) for <workspace>
 
 | Type | Path |
 | :-- | :-- |
@@ -19,16 +19,16 @@ bun run --cwd system/env-kit doctor
 bun run --cwd system/env-kit accounts
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
 <!-- prettier-ignore-end -->
 <!-- catalog:end -->
 
-Zero-dependency cross-language environment loader, secret redaction guard, and unified editor/CLI credential synchronizer for `C:\aphrody`.
+Zero-dependency cross-language environment loader, secret redaction guard, and unified editor/CLI credential synchronizer for `<workspace>`.
 
 ## Security Model
 
-1. **Master Secret Vault (`C:\aphrody\.env`)**: Locked via Windows NTFS ACLs (`inheritance:r`, explicit Full Control strictly restricted to `$env:USERNAME`, `NT AUTHORITY\SYSTEM`, and `BUILTIN\Administrators`).
-2. **Global Git Guard**: `C:\aphrody\.gitignore` and global `core.excludesFile` (`~/.gitignore_global`) block `.env`, `.env.*` (except `!.env.example`), `.dev.vars`, `*.pem`, `*.key`, and `.credentials.json` across every repository on the machine.
+1. **Master Secret Vault (`<workspace>/.env`)**: Locked via Windows NTFS ACLs (`inheritance:r`, explicit Full Control strictly restricted to `$env:USERNAME`, `NT AUTHORITY\SYSTEM`, and `BUILTIN\Administrators`).
+2. **Global Git Guard**: `<workspace>/.gitignore` and global `core.excludesFile` (`~/.gitignore_global`) block `.env`, `.env.*` (except `!.env.example`), `.dev.vars`, `*.pem`, `*.key`, and `.credentials.json` across every repository on the machine.
 3. **Zero-Leakage Redaction**: Every language loader masks credentials (`SET [len=N]`) or `[REDACTED]` on `inspect`, `JSON.stringify`, `Debug`/`Display`, `repr()`, `fmt.Stringer`, and `__tostring`.
 
 ## CLI Usage (`env-kit`)
@@ -41,13 +41,13 @@ env-kit accounts status [--json]     # 3-principal gcloud configs, rclone, and 1
 env-kit accounts init-gcloud         # Idempotently configure ai-agent, owner, org-contact, sa-automation
 env-kit accounts switch <principal>  # Switch active gcloud config (<ai|owner|org|sa>)
 env-kit accounts iam-bindings        # Print idempotent IAM policy bindings for project aphrody (#<gcp-project-numbers>)
-env-kit set <KEY> <VALUE>            # Propagate secret to C:\aphrody\.env + Windows User Env + OpenCode/Zed/Pi
+env-kit set <KEY> <VALUE>            # Propagate secret to <workspace>/.env + Windows User Env + OpenCode/Zed/Pi
 env-kit nuget-set-key <API_KEY>      # Set NUGET_API_KEY across .env and Windows User Env
 env-kit sync-editors                 # Sync OpenCode, Zed, and Pi provider & MCP configs
 env-kit sync-gh                      # Sync active `gh auth token` into GITHUB_TOKEN & GH_TOKEN
 env-kit dev-vars <workerDir>         # Generate gitignored .dev.vars for Cloudflare `wrangler dev`
 env-kit vercel-env [dir] [--write]   # Export masked Vercel env summary or .env.local
-env-kit exec -- <command> [args...]  # Run any binary with C:\aphrody\.env injected
+env-kit exec -- <command> [args...]  # Run any binary with <workspace>/.env injected
 ```
 
 ## OS Secret Store (`env-kit secret`, `ay secret`)
@@ -80,11 +80,11 @@ Inventory in `device/deploy.toml` (`[nodes.*]`, `[auth.*]`).
 
 | Language / Runtime            | Path                                                      | Native CLI Flag / Usage                                                  |
 | :---------------------------- | :-------------------------------------------------------- | :----------------------------------------------------------------------- |
-| **Bun v1.4.4 / TypeScript**   | `C:\aphrody\packages\env-kit\src\index.ts`                    | `bun --env-file=C:/aphrody/.env` or `loadMonorepoEnv({ service, required })` |
-| **Rust 2024 (`aphrody-env`)** | `C:\aphrody\src\env` (`ay env` inspects a `.env` without printing values) | `aphrody_env::load_monorepo_env(LoadOptions::default())`                 |
-| **Python 3.12+ / `uv`**       | `C:\aphrody\packages\env-kit\loaders\python\sovereign_env.py` | `uv run --env-file C:/aphrody/.env` or `sovereign_env.load_monorepo_env()`   |
-| **C11 / C++23**               | `C:\aphrody\packages\env-kit\loaders\cpp\sovereign_env.hpp`   | `sovereign_env::load()` / `sovereign_env_load_file(NULL, 0)`             |
-| **.NET 10/11 C#**             | `C:\aphrody\packages\env-kit\loaders\dotnet\SovereignEnv.cs`  | `Aphrody.EnvKit.SovereignEnv.Load()`                                     |
-| **Go 1.24+**                  | `C:\aphrody\packages\env-kit\loaders\go\envkit.go`            | `envkit.Load()`                                                          |
-| **Lua 5.1+ / LuaJIT**         | `C:\aphrody\packages\env-kit\loaders\lua\sovereign_env.lua`   | `require("sovereign_env").load()` (via `LUA_PATH`)                       |
-| **PowerShell / POSIX**        | `C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1`      | `. C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1` / `. load-env.sh` |
+| **Bun v1.4.4 / TypeScript**   | `system/env-kit/src/index.ts`                    | `bun --env-file=<workspace>/.env` or `loadMonorepoEnv({ service, required })` |
+| **Rust 2024 (`aphrody-env`)** | `<workspace>/src/env` (`ay env` inspects a `.env` without printing values) | `aphrody_env::load_monorepo_env(LoadOptions::default())`                 |
+| **Python 3.12+ / `uv`**       | `system/env-kit/loaders/python/sovereign_env.py` | `uv run --env-file <workspace>/.env` or `sovereign_env.load_monorepo_env()`   |
+| **C11 / C++23**               | `system/env-kit/loaders/cpp/sovereign_env.hpp`   | `sovereign_env::load()` / `sovereign_env_load_file(NULL, 0)`             |
+| **.NET 10/11 C#**             | `system/env-kit/loaders/dotnet/SovereignEnv.cs`  | `Aphrody.EnvKit.SovereignEnv.Load()`                                     |
+| **Go 1.24+**                  | `system/env-kit/loaders/go/envkit.go`            | `envkit.Load()`                                                          |
+| **Lua 5.1+ / LuaJIT**         | `system/env-kit/loaders/lua/sovereign_env.lua`   | `require("sovereign_env").load()` (via `LUA_PATH`)                       |
+| **PowerShell / POSIX**        | `system/env-kit/loaders/shell/load-env.ps1`      | `. system/env-kit/loaders/shell/load-env.ps1` / `. load-env.sh` |

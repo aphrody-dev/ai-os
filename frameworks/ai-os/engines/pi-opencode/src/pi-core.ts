@@ -102,7 +102,7 @@ export function buildMinimalPiSystemPrompt(opts: PiAgentOptions): string {
     "Tools available: read, write, edit, bash.",
     "Rules:",
     "- Read files before editing them. Prefer surgical edits over full rewrites.",
-    "- Never touch host OS directories (C:\\Windows\\System32, /usr/bin, /etc).",
+    "- Never touch host OS directories (the Windows system directories, /usr/bin, /etc).",
     "- Verify every change with real tests or typechecks (`bun test`, `bun check`, `cargo test`).",
     `Working directory: ${resolve(opts.cwd)}`,
   ];

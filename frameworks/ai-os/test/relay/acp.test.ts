@@ -28,7 +28,7 @@ const rpc = async (
   await handle({ jsonrpc: "2.0", id, method, params }, (m) => out.push(m));
   return out;
 };
-const cwd = process.platform === "win32" ? "C:\\w" : "/w";
+const cwd = join(tmpdir(), "w");
 
 test("initialize: negotiated version, loadSession and session/list announced", async () => {
   const [r] = await rpc("initialize", { protocolVersion: 7 });

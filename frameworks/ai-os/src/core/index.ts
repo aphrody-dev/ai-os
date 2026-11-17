@@ -71,3 +71,4 @@ export {
   type WorldStepInput,
   type WorldStepResult,
 } from "./cabi";
+export { dataDir, envFile, workspaceRoot } from "./paths";

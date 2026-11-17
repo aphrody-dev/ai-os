@@ -17,7 +17,7 @@ bun run --cwd system/wck check
 bun run --cwd system/wck fmt
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
 <!-- prettier-ignore-end -->
 <!-- catalog:end -->
 

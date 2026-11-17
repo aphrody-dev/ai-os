@@ -1,6 +1,13 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  linkSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, isAbsolute, join } from "node:path";
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import {
   buildAuthorizationUrl,
@@ -17,6 +24,7 @@ import {
   discoverBinaries,
   redactSecret,
   redactTextSecrets,
+  resolveBinaryCatalog,
   runCommandCapture,
   type TriadAgentId,
 } from "../src/discovery.ts";
@@ -438,17 +446,52 @@ describe("Gateway Multi-Protocol Translation & MCP 2025-03-26", () => {
   });
 });
 
-describe("Live Workstation CLI Discovery", () => {
-  test("discovers installed claude, codex, agy, and gemini binaries and --help", () => {
-    const bins = discoverBinaries();
-    const byId = Object.fromEntries(bins.map((b) => [b.id, b]));
-    expect(byId.claude?.installed).toBe(true);
-    expect(byId.codex?.installed).toBe(true);
-    expect(byId.agy?.installed).toBe(true);
-    expect(byId.gemini?.installed).toBe(true);
+describe("CLI discovery", () => {
+  test("finds the catalog binaries under a home directory and reads their version", () => {
+    const home = mkdtempSync(join(tmpdir(), "triad-home-"));
+    const localAppData = process.env.LOCALAPPDATA;
+    process.env.LOCALAPPDATA = join(home, "AppData", "Local");
+    try {
+      const missing = Object.fromEntries(
+        discoverBinaries(home).map((b) => [b.id, b]),
+      );
+      for (const id of ["claude", "codex", "agy", "gemini"]) {
+        expect(missing[id]?.installed).toBe(false);
+        expect(missing[id]?.version).toBe("not-installed");
+      }
 
-    const codexHelp = runCommandCapture([byId.codex!.executable, "--help"]);
-    expect(codexHelp.exitCode).toBe(0);
-    expect(codexHelp.stdout).toContain("Codex CLI");
+      // The test runtime stands in for each CLI: any executable that prints a version line is discoverable.
+      const catalog = resolveBinaryCatalog(home);
+      let first: string | undefined;
+      for (const id of ["claude", "codex", "agy", "gemini"]) {
+        // A catalog entry that is not installed may be a bare command name: the fixture goes under the home.
+        const listed = catalog[id]!.executable;
+        const exe = isAbsolute(listed)
+          ? listed
+          : join(home, ".local", "bin", id);
+        mkdirSync(dirname(exe), { recursive: true });
+        if (first) {
+          try {
+            linkSync(first, exe);
+          } catch {
+            copyFileSync(first, exe); // a hard link needs one device
+          }
+        } else copyFileSync(process.execPath, (first = exe));
+      }
+
+      const found = Object.fromEntries(
+        discoverBinaries(home).map((b) => [b.id, b]),
+      );
+      for (const id of ["claude", "codex", "agy", "gemini"]) {
+        expect(found[id]?.installed).toBe(true);
+        expect(found[id]?.version).toMatch(/\d+\.\d+/);
+      }
+      const help = runCommandCapture([found.codex!.executable, "--help"]);
+      expect(help.exitCode).toBe(0);
+    } finally {
+      if (localAppData === undefined) delete process.env.LOCALAPPDATA;
+      else process.env.LOCALAPPDATA = localAppData;
+      rmSync(home, { recursive: true, force: true });
+    }
   });
 });

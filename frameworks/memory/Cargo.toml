@@ -24,7 +24,7 @@ autobenches = false
 description = "aphrody memory SDK — async MemoryBackend (JSONL/HNSW/SQLite) + MemoryProvider (Mem0/Honcho/SqliteLocal Tier-1)."
 readme = false
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [package.metadata.cargo-machete]
 ignored = ["time"]

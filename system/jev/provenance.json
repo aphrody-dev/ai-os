@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "repository": "https://github.com/aphrody-labs/ay",
+  "repository": "https://github.com/aphrody-labs/legacy",
   "revision": "170702f02085b392377dbc9749f1b3cc8db9efbf",
   "sourcePath": "crates/ai/jev",
   "license": "Apache-2.0",

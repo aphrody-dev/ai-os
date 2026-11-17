@@ -48,7 +48,7 @@ test("no shell in provider argv, prompt intact", () => {
     "codex",
     "claude",
     "jules",
-    "jules:aphrody-labs/src",
+    "jules:aphrody-dev/ai-os",
   ]) {
     let built: { cmd: string[]; stdin?: string };
     try {
@@ -139,16 +139,16 @@ test("route: prd forwards heavy and foreign tasks", () => {
 });
 
 test("jules provider runs ai-os jules run --wait with the repo from the model slot", () => {
-  const b = providerCmd("jules:aphrody-labs/src", { ...task }, 1);
+  const b = providerCmd("jules:aphrody-dev/ai-os", { ...task }, 1);
   expect(b.cmd.slice(2)).toEqual([
     "jules",
     "run",
     "--wait",
     "--repo",
-    "aphrody-labs/src",
+    "aphrody-dev/ai-os",
     "-",
   ]);
-  expect(b.cmd[1]).toMatch(/packages[\\/]ai-os[\\/]src[\\/]cli\.ts$/);
+  expect(b.cmd[1]).toMatch(/frameworks[\\/]ai-os[\\/]src[\\/]cli\.ts$/);
   expect(b.stdin).toBe(task.prompt);
 });
 

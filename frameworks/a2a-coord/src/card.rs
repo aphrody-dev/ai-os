@@ -71,7 +71,7 @@ pub(crate) fn agent_card_from_manifest_with_auth(
                 url: p
                     .url
                     .clone()
-                    .unwrap_or_else(|| "https://github.com/aphrody-labs/ay".to_owned()),
+                    .unwrap_or_else(|| "https://github.com/aphrody-dev/ai-os".to_owned()),
             }),
         documentation_url: manifest.documentation_url.clone(),
         icon_url: None,

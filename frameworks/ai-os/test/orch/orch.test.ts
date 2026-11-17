@@ -302,10 +302,10 @@ test("routing: Jules only on explicit request, repository in the template locati
     rank(
       "pc",
       all,
-      { edit: true, models: ["jules:aphrody-labs/src"] },
+      { edit: true, models: ["jules:example-org/example-repo"] },
       h,
     ).slice(0, 2),
-  ).toEqual(["jules:aphrody-labs/src", "jules"]);
+  ).toEqual(["jules:example-org/example-repo", "jules"]);
   expect(rank("pc", all, { only: ["^jules"] }, h)).toEqual(["jules"]);
   h.close();
 });

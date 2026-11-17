@@ -1,0 +1,782 @@
+diff --git a/frameworks/a2a-client/Cargo.toml b/frameworks/a2a-client/Cargo.toml
+index 42b52cc..3f05226 100644
+--- a/frameworks/a2a-client/Cargo.toml
++++ b/frameworks/a2a-client/Cargo.toml
+@@ -37,7 +37,7 @@ categories = [
+     "web-programming",
+ ]
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ default = ["rustls-tls"]
+diff --git a/frameworks/a2a-client/examples/a2a_duel_loop.rs b/frameworks/a2a-client/examples/a2a_duel_loop.rs
+index 9193728..04a2254 100644
+--- a/frameworks/a2a-client/examples/a2a_duel_loop.rs
++++ b/frameworks/a2a-client/examples/a2a_duel_loop.rs
+@@ -133,8 +133,7 @@ mod native_impl {
+         #[arg(long, value_enum, default_value_t = Side::Aphrody)]
+         side: Side,
+ 
+-        /// Override coord root (default: C:/winclean/.coord on Windows, $APHRODY_COORD_DIR
+-        /// otherwise).
++        /// Override coord root (default: `aphrody/coord` under the user data directory).
+         #[arg(long, env = "APHRODY_COORD_DIR")]
+         coord_dir: Option<PathBuf>,
+ 
+@@ -164,16 +163,13 @@ mod native_impl {
+     }
+ 
+     fn default_coord_dir() -> PathBuf {
+-        if cfg!(target_os = "windows") {
+-            PathBuf::from("C:/winclean/.coord")
+-        } else {
+-            // XDG-ish fallback on non-Windows hosts. The duel is Windows-anchored
+-            // (winclean lives on Windows), so non-Windows runs require an explicit
+-            // override via --coord-dir or APHRODY_COORD_DIR.
+-            std::env::var_os("HOME")
+-                .map(|h| PathBuf::from(h).join(".local/share/winclean/.coord"))
+-                .unwrap_or_else(|| PathBuf::from(".coord"))
+-        }
++        // The per-user data directory of the platform: %LOCALAPPDATA%, $XDG_DATA_HOME or ~/.local/share.
++        std::env::var_os("LOCALAPPDATA")
++            .or_else(|| std::env::var_os("XDG_DATA_HOME"))
++            .map(PathBuf::from)
++            .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".local/share")))
++            .map(|d| d.join("aphrody").join("coord"))
++            .unwrap_or_else(|| PathBuf::from(".coord"))
+     }
+ 
+     fn now_utc_iso() -> String {
+diff --git a/frameworks/a2a-coord/Cargo.toml b/frameworks/a2a-coord/Cargo.toml
+index 734271c..6733dfe 100644
+--- a/frameworks/a2a-coord/Cargo.toml
++++ b/frameworks/a2a-coord/Cargo.toml
+@@ -37,7 +37,7 @@ categories = [
+     "web-programming::http-server",
+ ]
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [lib]
+ name = "aphrody_a2a_coord"
+diff --git a/frameworks/a2a-coord/src/card.rs b/frameworks/a2a-coord/src/card.rs
+index b583205..9e392e6 100644
+--- a/frameworks/a2a-coord/src/card.rs
++++ b/frameworks/a2a-coord/src/card.rs
+@@ -71,7 +71,7 @@ pub(crate) fn agent_card_from_manifest_with_auth(
+                 url: p
+                     .url
+                     .clone()
+-                    .unwrap_or_else(|| "https://github.com/aphrody-labs/ay".to_owned()),
++                    .unwrap_or_else(|| "https://github.com/aphrody-dev/ai-os".to_owned()),
+             }),
+         documentation_url: manifest.documentation_url.clone(),
+         icon_url: None,
+diff --git a/frameworks/a2a-grpc/Cargo.toml b/frameworks/a2a-grpc/Cargo.toml
+index 912c765..be1298d 100644
+--- a/frameworks/a2a-grpc/Cargo.toml
++++ b/frameworks/a2a-grpc/Cargo.toml
+@@ -37,7 +37,7 @@ categories = [
+     "web-programming",
+ ]
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ default = ["rustls-tls"]
+diff --git a/frameworks/a2a-pb/Cargo.toml b/frameworks/a2a-pb/Cargo.toml
+index f3b3895..d5b0e21 100644
+--- a/frameworks/a2a-pb/Cargo.toml
++++ b/frameworks/a2a-pb/Cargo.toml
+@@ -37,7 +37,7 @@ categories = [
+     "web-programming",
+ ]
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = [
+diff --git a/frameworks/a2a-server/Cargo.toml b/frameworks/a2a-server/Cargo.toml
+index 8293677..35ce266 100644
+--- a/frameworks/a2a-server/Cargo.toml
++++ b/frameworks/a2a-server/Cargo.toml
+@@ -37,7 +37,7 @@ categories = [
+     "web-programming",
+ ]
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = [
+diff --git a/frameworks/agent-home/Cargo.toml b/frameworks/agent-home/Cargo.toml
+index e6c4ddc..ec4d65e 100644
+--- a/frameworks/agent-home/Cargo.toml
++++ b/frameworks/agent-home/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "aphrody-agent-home — the agent's persistent home: Soul / Identity / User / Tools, mmap zero-copy file cache, content-addressed cache, bootstrap budget, system-prompt assembler, hot-reload, git backup."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = ["gix"]
+diff --git a/frameworks/agent-home/src/guard.rs b/frameworks/agent-home/src/guard.rs
+index 3d58ed1..15f9cef 100644
+--- a/frameworks/agent-home/src/guard.rs
++++ b/frameworks/agent-home/src/guard.rs
+@@ -168,7 +168,7 @@ mod tests {
+         let td = tempdir().unwrap();
+         let guard = WorkspaceGuard::new(td.path());
+         let outside = if cfg!(windows) {
+-            "C:\\Windows\\system.ini"
++            "C:\\Windows\\system.ini" // paths:ok an absolute path outside the workspace root
+         } else {
+             "/etc/hosts"
+         };
+diff --git a/frameworks/agent-runtime/Cargo.toml b/frameworks/agent-runtime/Cargo.toml
+index 4cdfd8e..30fc796 100644
+--- a/frameworks/agent-runtime/Cargo.toml
++++ b/frameworks/agent-runtime/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Wiring/factory layer that assembles a ready-to-run aphrody agent: builds a ModelClient (Gemini or stub), a ToolRegistry preloaded with the shell-exec + apply-patch tools, an optional rollout recorder, and spawns an aphrody-engine session. The ergonomic entry point every surface (CLI / TUI / desktop) uses to start an autonomous agent."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ default = []
+diff --git a/frameworks/agent-tools/Cargo.toml b/frameworks/agent-tools/Cargo.toml
+index b04ec8b..c57ee1f 100644
+--- a/frameworks/agent-tools/Cargo.toml
++++ b/frameworks/agent-tools/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Concrete ToolExecutor implementations for the aphrody agent engine: a streaming sandboxed shell-exec tool and an apply_patch tool that wraps aphrody-patch. These are the real capabilities the engine's ToolRegistry exposes to the model."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [lib]
+ name = "aphrody_agent_tools"
+diff --git a/frameworks/agent/context/README.md b/frameworks/agent/context/README.md
+index 47aa95e..4999b46 100644
+--- a/frameworks/agent/context/README.md
++++ b/frameworks/agent/context/README.md
+@@ -16,6 +16,6 @@ cargo test -p agent-context
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../README.md), [Catalog](../../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/frameworks/antigravity/src/config.rs b/frameworks/antigravity/src/config.rs
+index 2127fad..a70e188 100644
+--- a/frameworks/antigravity/src/config.rs
++++ b/frameworks/antigravity/src/config.rs
+@@ -313,11 +313,11 @@ mod tests {
+         // deterministic regardless of the host environment.
+         #[cfg(target_os = "windows")]
+         unsafe {
+-            std::env::set_var("USERPROFILE", r"C:\Users\tester");
++            std::env::set_var("USERPROFILE", std::env::temp_dir().join("tester"));
+         }
+         #[cfg(not(target_os = "windows"))]
+         unsafe {
+-            std::env::set_var("HOME", "/home/tester");
++            std::env::set_var("HOME", std::env::temp_dir().join("tester"));
+         }
+ 
+         let path = config_path().unwrap();
+diff --git a/frameworks/automate/README.md b/frameworks/automate/README.md
+index 7ed06e7..4f6c805 100644
+--- a/frameworks/automate/README.md
++++ b/frameworks/automate/README.md
+@@ -16,7 +16,7 @@ bun run --cwd frameworks/automate fmt
+ bun run --cwd frameworks/automate test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 
+diff --git a/frameworks/automate/src/expressions.ts b/frameworks/automate/src/expressions.ts
+index cef4d34..96db5f8 100644
+--- a/frameworks/automate/src/expressions.ts
++++ b/frameworks/automate/src/expressions.ts
+@@ -12,6 +12,9 @@ export interface Portee {
+   workflow: { id: string; nom: string };
+   index: number;
+   maintenant?: Date;
++  /** BCP 47 tag and IANA zone of the formatting filters (`euros`, `centimes`, `date`); the runtime defaults when absent. */
++  locale?: string;
++  fuseau?: string;
+ }
+ 
+ export class ErreurExpression extends Error {}
+@@ -106,7 +109,7 @@ const nombre = (v: unknown): number => {
+   return n;
+ };
+ 
+-type Filtre = (v: unknown, arg: unknown) => unknown;
++type Filtre = (v: unknown, arg: unknown, p: Portee) => unknown;
+ 
+ export const FILTRES: Record<string, Filtre> = {
+   majuscules: (v) => texte(v).toUpperCase(),
+@@ -119,14 +122,14 @@ export const FILTRES: Record<string, Filtre> = {
+     const f = 10 ** Number(a ?? 0);
+     return Math.round(nombre(v) * f) / f;
+   },
+-  euros: (v) =>
+-    new Intl.NumberFormat("fr-FR", {
++  euros: (v, _a, p) =>
++    new Intl.NumberFormat(p.locale, {
+       style: "currency",
+       currency: "EUR",
+     }).format(nombre(v)),
+   /** Amount in cents (auto convention) shown in euros. */
+-  centimes: (v) =>
+-    new Intl.NumberFormat("fr-FR", {
++  centimes: (v, _a, p) =>
++    new Intl.NumberFormat(p.locale, {
+       style: "currency",
+       currency: "EUR",
+     }).format(nombre(v) / 100),
+@@ -136,15 +139,15 @@ export const FILTRES: Record<string, Filtre> = {
+   joindre: (v, a) =>
+     Array.isArray(v) ? v.map(texte).join(texte(a ?? ", ")) : texte(v),
+   defaut: (v, a) => (v == null || v === "" ? a : v),
+-  date: (v, a) => {
++  date: (v, a, p) => {
+     const d = new Date(texte(v) || Date.now());
+     if (Number.isNaN(d.getTime()))
+       throw new ErreurExpression(`invalid date: ${texte(v)}`);
+     if (a === "iso") return d.toISOString();
+     if (a === "jour") return d.toISOString().slice(0, 10);
+-    return new Intl.DateTimeFormat("fr-FR", {
++    return new Intl.DateTimeFormat(p.locale, {
+       dateStyle: "long",
+-      timeZone: "Europe/Paris",
++      timeZone: p.fuseau,
+     }).format(d);
+   },
+   plus_jours: (v, a) => {
+@@ -169,7 +172,7 @@ function evaluer(source: string, p: Portee): unknown {
+       const l = litteral(brut);
+       arg = l.ok ? l.v : chemin(brut, p);
+     }
+-    v = fn(v, arg);
++    v = fn(v, arg, p);
+   }
+   return v;
+ }
+diff --git a/frameworks/automate/src/moteur.test.ts b/frameworks/automate/src/moteur.test.ts
+index b2a228a..0ea41e0 100644
+--- a/frameworks/automate/src/moteur.test.ts
++++ b/frameworks/automate/src/moteur.test.ts
+@@ -60,6 +60,7 @@ const opts = (s: Services, secrets = {}) => ({
+   workflow: { id: "w", nom: "W" },
+   executionId: "e",
+   secrets,
++  locale: "fr-FR",
+ });
+ 
+ describe("expressions", () => {
+@@ -70,6 +71,7 @@ describe("expressions", () => {
+     execution: { id: "e" },
+     workflow: { id: "w", nom: "W" },
+     index: 0,
++    locale: "fr-FR",
+   };
+   test("single typed value, mixed text, filters", () => {
+     expect(resoudre("{{ $json.a.b }}", p)).toEqual([1, 2]);
+diff --git a/frameworks/automate/src/moteur.ts b/frameworks/automate/src/moteur.ts
+index 62f381b..f8628c8 100644
+--- a/frameworks/automate/src/moteur.ts
++++ b/frameworks/automate/src/moteur.ts
+@@ -39,6 +39,9 @@ export interface OptionsExecution {
+   workflow: { id: string; nom: string };
+   executionId: string;
+   secrets?: Record<string, string>;
++  /** Locale and time zone of the formatting filters, from the request or the user setting. */
++  locale?: string;
++  fuseau?: string;
+   signal?: AbortSignal;
+   maxEtapes?: number;
+   maxElements?: number;
+@@ -238,6 +241,8 @@ export async function executer(
+     execution: { id: o.executionId },
+     workflow: o.workflow,
+     index,
++    locale: o.locale,
++    fuseau: o.fuseau,
+   });
+ 
+   while (file.length) {
+diff --git a/frameworks/boq/Cargo.toml b/frameworks/boq/Cargo.toml
+index e9d180a..0add948 100644
+--- a/frameworks/boq/Cargo.toml
++++ b/frameworks/boq/Cargo.toml
+@@ -22,7 +22,7 @@ autoexamples = false
+ autotests = false
+ autobenches = false
+ description = "Google Boq batchexecute codec shared by the Gemini web and NotebookLM clients: f.req encoder, anti-XSSI strip, length-prefixed chunk parser, wrb.fr envelope extraction."
+-homepage = "https://github.com/aphrody-labs/ay"
++homepage = "https://github.com/aphrody-dev/ai-os"
+ readme = false
+ license = "Apache-2.0"
+ repository = "https://github.com/aphrody-labs/bun-distribution"
+diff --git a/frameworks/boq/provenance.json b/frameworks/boq/provenance.json
+index fb677fc..04b7ac5 100644
+--- a/frameworks/boq/provenance.json
++++ b/frameworks/boq/provenance.json
+@@ -4,7 +4,7 @@
+   "package": "aphrody-boq",
+   "version": "1.4.4",
+   "license": "Apache-2.0",
+-  "sourceRepository": "https://github.com/aphrody-labs/ay",
++  "sourceRepository": "https://github.com/aphrody-labs/legacy",
+   "sourceCommit": "4b83ea7f6c2727d67c30d4942501e5b831e559dd",
+   "sourceRoot": "crates/google/boq",
+   "files": [
+diff --git a/frameworks/embed/Cargo.toml b/frameworks/embed/Cargo.toml
+index 7ad6eef..656a2d1 100644
+--- a/frameworks/embed/Cargo.toml
++++ b/frameworks/embed/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Local, offline text embeddings for aphrody — fastembed (ONNX Runtime) text vectorisation with no external API. Feeds semantic memory/search."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = [
+diff --git a/frameworks/gateway/Cargo.toml b/frameworks/gateway/Cargo.toml
+index 2b6dcbd..0f076d4 100644
+--- a/frameworks/gateway/Cargo.toml
++++ b/frameworks/gateway/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Provider-agnostic OpenAI-compatible AI gateway: Cloudflare AI Gateway, Vercel AI Gateway, and BYOK OpenAI proxy."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = []
+diff --git a/frameworks/gateway/src/gemini_cli.rs b/frameworks/gateway/src/gemini_cli.rs
+index a18d923..6de244b 100644
+--- a/frameworks/gateway/src/gemini_cli.rs
++++ b/frameworks/gateway/src/gemini_cli.rs
+@@ -337,7 +337,7 @@ mod tests {
+     fn resolve_bin_honors_aphrody_env_override() {
+         // Use a path we control rather than depending on `which`.
+         let fake = if cfg!(windows) {
+-            r"C:\fake\gemini.exe"
++            r"C:\fake\gemini.exe" // paths:ok an executable override that need not exist
+         } else {
+             "/opt/fake/gemini"
+         };
+diff --git a/frameworks/infer/Cargo.toml b/frameworks/infer/Cargo.toml
+index 9ff6b5f..e52e568 100644
+--- a/frameworks/infer/Cargo.toml
++++ b/frameworks/infer/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Local ONNX inference backend for aphrody: runtime discovery, execution-provider selection with CUDA/DirectML/CPU fallback, and session loading driven by the aphrody-models catalog."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ default = []
+diff --git a/frameworks/llama-server/Cargo.toml b/frameworks/llama-server/Cargo.toml
+index 87e6b42..d3d0a83 100644
+--- a/frameworks/llama-server/Cargo.toml
++++ b/frameworks/llama-server/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Managed local inference: a supervisor for llama.cpp's `llama-server`, driven as an external binary (never linked). Reads GGUF facts, probes what the installed build supports, plans the launch (context, KV precision, MoE/layer placement, LoRA), runs the server under a detached idle-timeout daemon that holds the GPU lease, and gives clients attach-or-spawn access to an OpenAI-compatible endpoint plus the tokenize / LoRA hot-swap / props side channels."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ in-process = [
+diff --git a/frameworks/llama-sys/Cargo.toml b/frameworks/llama-sys/Cargo.toml
+index d1b03a5..cc71def 100644
+--- a/frameworks/llama-sys/Cargo.toml
++++ b/frameworks/llama-sys/Cargo.toml
+@@ -38,7 +38,7 @@ categories = [
+     "science",
+ ]
+ license = "MIT OR Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = [
+diff --git a/frameworks/llama/Cargo.toml b/frameworks/llama/Cargo.toml
+index 8981faa..f42e09f 100644
+--- a/frameworks/llama/Cargo.toml
++++ b/frameworks/llama/Cargo.toml
+@@ -38,7 +38,7 @@ categories = [
+     "science",
+ ]
+ license = "MIT OR Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ default = []
+diff --git a/frameworks/mcp-client/Cargo.toml b/frameworks/mcp-client/Cargo.toml
+index 8c322eb..72a1fc3 100644
+--- a/frameworks/mcp-client/Cargo.toml
++++ b/frameworks/mcp-client/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Model Context Protocol client for Aphrody: the single MCP client of the workspace. Stdio and streamable HTTP transports, ToolExecutor adapter, fail-closed credential expansion, built-in tools, and shared Rust web tools."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [lib]
+ name = "aphrody_mcp_client"
+diff --git a/frameworks/memory/Cargo.toml b/frameworks/memory/Cargo.toml
+index 7bc0605..93524a5 100644
+--- a/frameworks/memory/Cargo.toml
++++ b/frameworks/memory/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "aphrody memory SDK — async MemoryBackend (JSONL/HNSW/SQLite) + MemoryProvider (Mem0/Honcho/SqliteLocal Tier-1)."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = ["time"]
+diff --git a/frameworks/ml-config/Cargo.toml b/frameworks/ml-config/Cargo.toml
+index 35582f1..b0614c4 100644
+--- a/frameworks/ml-config/Cargo.toml
++++ b/frameworks/ml-config/Cargo.toml
+@@ -33,7 +33,7 @@ keywords = [
+     "machine-learning",
+ ]
+ license = "MIT OR Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [lib]
+ name = "aphrody_ml_config"
+diff --git a/frameworks/ml-runtime/Cargo.toml b/frameworks/ml-runtime/Cargo.toml
+index ce20131..16dd6f4 100644
+--- a/frameworks/ml-runtime/Cargo.toml
++++ b/frameworks/ml-runtime/Cargo.toml
+@@ -38,7 +38,7 @@ categories = [
+     "science",
+ ]
+ license = "MIT OR Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [lib]
+ name = "aphrody_ml_runtime"
+diff --git a/frameworks/model-client/Cargo.toml b/frameworks/model-client/Cargo.toml
+index fa60dda..53414b6 100644
+--- a/frameworks/model-client/Cargo.toml
++++ b/frameworks/model-client/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Provider abstraction for the aphrody agent engine: the async `ModelClient` trait, a unified `ModelStreamEvent` (text delta / tool call / reasoning / completed+usage), and a Gemini generateContent streaming client that maps Google's SSE wire onto the unified events. Lets the turn loop stay provider-agnostic (Gemini REST / gemini-web / agy)."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [lib]
+ name = "aphrody_model_client"
+diff --git a/frameworks/models/Cargo.toml b/frameworks/models/Cargo.toml
+index f4ee0a1..344ec13 100644
+--- a/frameworks/models/Cargo.toml
++++ b/frameworks/models/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Local model lifecycle for aphrody: pinned HuggingFace/URL references, a curated catalog of OCR / visual-transcription / speech-to-text / embedding models, a digest-checked resumable downloader, hand-rolled GGUF / GGML / safetensors / ONNX header inspection, and an LRU-evicting on-disk store under ~/.aphrody/models."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = ["rustls"]
+diff --git a/frameworks/models/src/accel.rs b/frameworks/models/src/accel.rs
+index 2dc4b6c..618d4c3 100644
+--- a/frameworks/models/src/accel.rs
++++ b/frameworks/models/src/accel.rs
+@@ -439,7 +439,7 @@ mod tests {
+     #[test]
+     fn cuda_version_is_extracted_from_install_paths() {
+         assert_eq!(
+-            cuda_version_from_path("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3"),
++            cuda_version_from_path("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3"), // paths:ok a CUDA install path is the parser input
+             "13.3"
+         );
+         assert_eq!(
+diff --git a/frameworks/models/src/paths.rs b/frameworks/models/src/paths.rs
+index 11fd589..f0e5041 100644
+--- a/frameworks/models/src/paths.rs
++++ b/frameworks/models/src/paths.rs
+@@ -287,7 +287,7 @@ mod tests {
+     #[test]
+     fn explicit_override_is_the_state_dir_not_a_home() {
+         let explicit = PathBuf::from("/data/aph");
+-        let home = std::path::Path::new("/home/u");
++        let home = std::path::Path::new("/home/u"); // paths:ok a path composed in memory, never touched
+         assert_eq!(compose_state_dir(Some(explicit.clone()), home), explicit);
+         assert_ne!(
+             compose_state_dir(Some(explicit.clone()), home),
+@@ -298,7 +298,7 @@ mod tests {
+     /// With no override, the state directory is `.aphrody` under the home.
+     #[test]
+     fn default_state_dir_hangs_off_the_home() {
+-        let home = std::path::Path::new("/home/u");
++        let home = std::path::Path::new("/home/u"); // paths:ok a path composed in memory, never touched
+         assert_eq!(compose_state_dir(None, home), home.join(".aphrody"));
+     }
+ 
+diff --git a/frameworks/models/src/store.rs b/frameworks/models/src/store.rs
+index 152d039..f6c13ad 100644
+--- a/frameworks/models/src/store.rs
++++ b/frameworks/models/src/store.rs
+@@ -969,8 +969,8 @@ mod tests {
+     #[test]
+     fn verbatim_prefixes_are_stripped_but_unc_shares_are_kept() {
+         assert_eq!(
+-            strip_unc(Path::new(r"\\?\C:\models\m.gguf")),
+-            PathBuf::from(r"C:\models\m.gguf")
++            strip_unc(Path::new(r"\\?\C:\models\m.gguf")), // paths:ok verbatim-prefix parser input
++            PathBuf::from(r"C:\models\m.gguf") // paths:ok verbatim-prefix parser output
+         );
+         // A real UNC share needs the prefix to stay resolvable.
+         assert_eq!(
+@@ -979,8 +979,8 @@ mod tests {
+         );
+         // Anything already plain is returned unchanged.
+         assert_eq!(
+-            strip_unc(Path::new("/home/u/m.gguf")),
+-            PathBuf::from("/home/u/m.gguf")
++            strip_unc(Path::new("/home/u/m.gguf")), // paths:ok parser input
++            PathBuf::from("/home/u/m.gguf") // paths:ok parser output
+         );
+     }
+ 
+diff --git a/frameworks/rag-core/Cargo.toml b/frameworks/rag-core/Cargo.toml
+index 67708e2..8ebd66c 100644
+--- a/frameworks/rag-core/Cargo.toml
++++ b/frameworks/rag-core/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Pure, wasm32-safe core of the aphrody RAG layer: source-aware chunkers (Rust/JS-TS/Markdown/structural/prose), reciprocal-rank-fusion + MMR + vector helpers, and a bit-for-bit port of shenron's retrieval eval harness."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [package.metadata.cargo-machete]
+ ignored = ["proc-macro2"]
+diff --git a/frameworks/rag-core/README.md b/frameworks/rag-core/README.md
+index a543a5f..7e8f86d 100644
+--- a/frameworks/rag-core/README.md
++++ b/frameworks/rag-core/README.md
+@@ -16,6 +16,6 @@ cargo test -p aphrody-rag-core
+ 
+ Rust builds run on the build host or in CI, not on a workstation.
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/crate.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+diff --git a/frameworks/rag/Cargo.toml b/frameworks/rag/Cargo.toml
+index bed921a..60dbd4a 100644
+--- a/frameworks/rag/Cargo.toml
++++ b/frameworks/rag/Cargo.toml
+@@ -24,7 +24,7 @@ autobenches = false
+ description = "Unified RAG storage, embedding, vector scan, hybrid search, and agent tools for aphrody (P8)."
+ readme = false
+ license = "Apache-2.0"
+-repository = "https://github.com/aphrody-labs/ay"
++repository = "https://github.com/aphrody-dev/ai-os"
+ 
+ [features]
+ default = []
+diff --git a/frameworks/re-ts/ghidra/README.md b/frameworks/re-ts/ghidra/README.md
+index 7cf1380..d2d7772 100644
+--- a/frameworks/re-ts/ghidra/README.md
++++ b/frameworks/re-ts/ghidra/README.md
+@@ -14,7 +14,7 @@
+ bun run --cwd frameworks/re-ts/ghidra test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../README.md), [Catalog](../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 
+@@ -22,7 +22,7 @@ Ghidra for Bun: the pyghidra API surface, a Bun plugin (`?ghidra`, `ghidra:`), a
+ 
+ - Full API: a headless Ghidra JVM (official release) driven through `bridge/Bridge.java` (reflection JSON-RPC over stdio). Any Ghidra class/method is reachable by name; every call is `async`.
+ - Fast path: `aphrody-re` (Rust) through the NAPI addon, no JVM.
+-- Requirements for the JVM backend: JDK 25 (Ghidra 12.2) and `GHIDRA_INSTALL_DIR` (or `~/.config/ghidra/lastrun`). `scripts/provision-fr2.sh` shows the fr2 setup (`/srv/ghidra-release`).
++- Requirements for the JVM backend: JDK 25 (Ghidra 12.2) and `GHIDRA_INSTALL_DIR` (or `~/.config/ghidra/lastrun`). `scripts/provision-fr2.sh` shows the test-host setup (`GHIDRA_ROOT` names the directory that holds the release).
+ - Parity with pyghidra: `PARITY.md` (generated by `scripts/parity/run.ts` on fr2).
+ 
+ ## API (pyghidra names in camelCase)
+@@ -90,4 +90,4 @@ The addon also exports `analyze(path, maxFunctions)` and `version()`. `onBeforeP
+ ## Tests
+ 
+ - `bun test frameworks/re-ts/ghidra` runs locally without Ghidra (mock bridge, flat API, plugin parsing).
+-- fr2 integration: `bun scripts/sync-fr2.ts` then on fr2 `GHIDRA_INSTALL_DIR=/srv/ghidra-release/ghidra_12.2_PUBLIC bun scripts/parity/run.ts` (pyghidra via `uv` venv in `/srv/ghidra-release/venv`), `scripts/smoke.ts`, `scripts/native-proof.ts`.
++- fr2 integration: `bun scripts/sync-fr2.ts` then on the test host `GHIDRA_INSTALL_DIR=<GHIDRA_ROOT>/ghidra_12.2_PUBLIC bun scripts/parity/run.ts` (pyghidra via the `uv` venv in `<GHIDRA_ROOT>/venv`), `scripts/smoke.ts`, `scripts/native-proof.ts`.
+diff --git a/frameworks/re-ts/ghidra/scripts/parity/run.ts b/frameworks/re-ts/ghidra/scripts/parity/run.ts
+index 48c5b57..9acd2ee 100644
+--- a/frameworks/re-ts/ghidra/scripts/parity/run.ts
++++ b/frameworks/re-ts/ghidra/scripts/parity/run.ts
+@@ -2,9 +2,12 @@
+ // Builds test inputs, runs pyghidra (parity_py.py) and bun-ghidra (parity.ts) on the same binary, diffs, writes PARITY.md.
+ import { mkdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+ import { join, resolve } from "node:path";
++import { findInstall } from "../../src/rpc.ts";
+ 
+-const install = process.env.GHIDRA_INSTALL_DIR ?? "/srv/ghidra-release/ghidra_12.2_PUBLIC";
+-const venvPy = process.env.PYGHIDRA_PYTHON ?? "/srv/ghidra-release/venv/bin/python";
++const install = findInstall();
++if (!install) throw new Error("no Ghidra install: set GHIDRA_INSTALL_DIR");
++// provision-fr2.sh puts the pyghidra venv next to the release directory.
++const venvPy = process.env.PYGHIDRA_PYTHON ?? join(install, "..", "venv", "bin", "python");
+ const work = process.env.PARITY_WORK ?? "/tmp/ghidra-parity";
+ const here = import.meta.dir;
+ const pkg = resolve(here, "../..");
+diff --git a/frameworks/re-ts/ghidra/scripts/provision-fr2.sh b/frameworks/re-ts/ghidra/scripts/provision-fr2.sh
+index 71043a2..3d36222 100644
+--- a/frameworks/re-ts/ghidra/scripts/provision-fr2.sh
++++ b/frameworks/re-ts/ghidra/scripts/provision-fr2.sh
+@@ -1,7 +1,8 @@
+ #!/usr/bin/env bash
+-# Provision fr2: JDK 25, official Ghidra release, pyghidra venv. Run: ssh <fr2> bash -s < provision-fr2.sh
++# Provision a test host: JDK 25, official Ghidra release, pyghidra venv.
++# Run: ssh <host> GHIDRA_ROOT=<work>/ghidra-release bash -s < provision-fr2.sh   (<work>: the large volume of the host)
+ set -euo pipefail
+-G=/srv/ghidra-release
++G=${GHIDRA_ROOT:?set GHIDRA_ROOT to the directory that holds the Ghidra release}
+ URL=https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip
+ SHA256=${GHIDRA_SHA256:-}
+ jv=$(java -version 2>&1 | sed -n '1s/.*"\([0-9]*\).*/\1/p' || true)
+diff --git a/frameworks/re-ts/ghidra/scripts/smoke.ts b/frameworks/re-ts/ghidra/scripts/smoke.ts
+index 11ed552..265d0c7 100644
+--- a/frameworks/re-ts/ghidra/scripts/smoke.ts
++++ b/frameworks/re-ts/ghidra/scripts/smoke.ts
+@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { stop, withProgram } from "../src/index.ts";
+ 
+-const bin = process.argv[2] ?? (process.platform === "win32" ? "C:/Windows/System32/notepad.exe" : "/bin/ls");
++const bin = process.argv[2] ?? (process.platform === "win32" ? join(process.env.SystemRoot ?? "", "System32", "notepad.exe") : "/bin/ls");
+ const loc = process.argv[3] ?? join(tmpdir(), "ghidra-smoke");
+ const t0 = performance.now();
+ try {
+diff --git a/frameworks/re-ts/ghidra/scripts/sync-fr2.ts b/frameworks/re-ts/ghidra/scripts/sync-fr2.ts
+index d66b7d5..c2dc5aa 100644
+--- a/frameworks/re-ts/ghidra/scripts/sync-fr2.ts
++++ b/frameworks/re-ts/ghidra/scripts/sync-fr2.ts
+@@ -1,9 +1,10 @@
+ // Push frameworks/re-ts/ghidra, system/ghidra-bun and frameworks/re (path dependency) to a remote work dir without git:
+-//   bun scripts/sync-fr2.ts [host=cdn] [dest=/home/ubuntu/ghidra-work]
++//   bun scripts/sync-fr2.ts <host> [dest=ghidra-work]   (dest: relative to the remote home)
+ import { fileURLToPath } from "node:url";
+ 
+-const host = process.argv[2] ?? "cdn";
+-const dest = process.argv[3] ?? "/home/ubuntu/ghidra-work";
++const host = process.argv[2];
++if (!host) throw new Error("usage: bun scripts/sync-fr2.ts <host> [dest]");
++const dest = process.argv[3] ?? "ghidra-work";
+ const root = fileURLToPath(new URL("../../../..", import.meta.url));
+ const q = (s: string) => `'${s.replaceAll("'", "'\\''")}'`;
+ 
+diff --git a/frameworks/re-ts/ghidra/src/flat.ts b/frameworks/re-ts/ghidra/src/flat.ts
+index 00dee16..69b4885 100644
+--- a/frameworks/re-ts/ghidra/src/flat.ts
++++ b/frameworks/re-ts/ghidra/src/flat.ts
+@@ -1,6 +1,6 @@
+ // FlatAPI export list for scripts translated from GhidraScript / pyghidra (target of system/py2bun-ts).
+ // Source: Ghidra 12.2 ghidra.program.flatapi.FlatProgramAPI and ghidra.app.script.GhidraScript
+-// (public/protected methods, extracted from the fork clone on fr1: /srv/ghidra).
++// (public/protected methods, extracted from the Ghidra fork clone).
+ // Every method is async (Promise) because the JVM lives in another process; a script is `await`-ed code.
+ 
+ /** ghidra.program.flatapi.FlatProgramAPI public methods. */
+diff --git a/frameworks/re-ts/ghidra/src/rpc.ts b/frameworks/re-ts/ghidra/src/rpc.ts
+index 308fdf3..f8f0be1 100644
+--- a/frameworks/re-ts/ghidra/src/rpc.ts
++++ b/frameworks/re-ts/ghidra/src/rpc.ts
+@@ -293,9 +293,8 @@ export class Session {
+ }
+ 
+ export function findInstall(): string | undefined {
+-  const cands = [
+-    "/srv/ghidra-release/ghidra_12.2_PUBLIC", join(homedir(), ".local/share/ghidra"), "C:/ghidra",
+-  ];
++  const cands = [join(homedir(), ".local/share/ghidra")];
++  if (process.env.GHIDRA_INSTALL_DIR) cands.unshift(process.env.GHIDRA_INSTALL_DIR);
+   const lastrun = join(homedir(), ".config/ghidra/lastrun");
+   if (existsSync(lastrun)) {
+     const m = readFileSync(lastrun, "utf8").match(/^GHIDRA_INSTALL_DIR\s*[=:]\s*(.+)$/m);
+diff --git a/frameworks/ring3-agent/ROADMAP_EVALUATION.md b/frameworks/ring3-agent/ROADMAP_EVALUATION.md
+index 6ef529b..80f83f4 100644
+--- a/frameworks/ring3-agent/ROADMAP_EVALUATION.md
++++ b/frameworks/ring3-agent/ROADMAP_EVALUATION.md
+@@ -2,7 +2,7 @@
+ 
+ ## 1. Executive Summary & Core Mission
+ 
+-This document establishes the canonical roadmap and technical evaluation of the `aphrody-dev` GitHub portfolio and the local `C:\aphrody` subsystems. The overarching target is the construction of a sovereign, ultra-low-overhead, unprivileged (Ring-3) AI daemon and inference substrate: **`r3d` (`ring3-agent`)**.
++This document establishes the canonical roadmap and technical evaluation of the `aphrody-dev` GitHub portfolio and its local subsystems. The overarching target is the construction of a sovereign, ultra-low-overhead, unprivileged (Ring-3) AI daemon and inference substrate: **`r3d` (`ring3-agent`)**.
+ 
+ ### System Pillars:
+ 
+@@ -91,28 +91,7 @@ These forks overlap with Tier A components or have been superseded by more integ
+ 
+ ---
+ 
+-## 4. Local Subsystem Audit (`C:\aphrody`)
+-
+-| Subsystem Directory                            | Focus & Upstream Lineage                                                    | Integration Status with `r3d`                                                 |
+-| :--------------------------------------------- | :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
+-| `C:\aphrody\apps\web`                          | Strict Google replica, 100% pure Bun, 0 external npm dependencies.          | Frontend presentation layer for client-side WebGPU agent chat console.        |
+-| `C:\aphrody\crates\bench`                          | Benchmarking harnesses for memory latency and inference throughput.         | Performance verification suite for AVX2 vs CUDA latency.                      |
+-| `C:\aphrody\third_party\bun`                       | Upstream `oven-sh/bun` source tree.                                         | Host runtime for scripts and high-speed local control scripts.                |
+-| `C:\aphrody\third_party\chromium` & `chromium-bun` | Chromium upstream source and headless bindings.                             | Headless web interaction and testing for WebGPU browser compute.              |
+-| `C:\aphrody\crates\depot` & `depot_tools`          | Sovereign monorepo engine using Google `argh` + `zerocopy` + `windows-sys`. | Build orchestration and dependency management.                                |
+-| `C:\aphrody\third_party\dioxus` & `taffy`          | Rust UI layout and cross-platform GUI framework.                            | Native UI layout engine for local HUD displays.                               |
+-| `C:\aphrody\crates\gamescope-rs`                   | Rust micro-compositor wrapper.                                              | Display management for low-latency isolated rendering.                        |
+-| `C:\aphrody\third_party\linux` & `unix`            | Linux kernel headers and Unix core tools.                                   | Target headers for systemd early-boot units and seccomp profile generation.   |
+-| `C:\aphrody\third_party\longbridge`                | High-frequency trading and low-latency network protocols.                   | Reference for zero-copy binary streaming and connection pooling.              |
+-| `C:\aphrody\third_party\microsoft`                 | Native Windows NT APIs, WDK, and Windows SDK tools.                         | Win32 Job Object, Power Throttling, and DWM hook definitions.                 |
+-| `C:\aphrody\apps\rosegriffon` & `shenron`          | Production web platforms (`rosegriffon.fr`, `dragonballfr.com`).            | Real-world consumer applications consuming `r3d` API endpoints.               |
+-| `C:\aphrody\third_party\storytold`                 | Interactive narrative engine.                                               | AI agent testbed for creative text generation and branching state logic.      |
+-| `C:\aphrody\third_party\wgpu` & `winit`            | WebGPU native implementation in Rust and cross-platform windowing.          | Underpins client-side rendering and GPU shader execution.                     |
+-| `C:\aphrody\third_party\zed`                       | High-performance GPUI collaborative editor.                                 | Reference architecture for low-latency buffer management and thread dispatch. |
+-
+----
+-
+-## 5. Architectural Blueprint for `ring3-agent` (`r3d`)
++## 4. Architectural Blueprint for `ring3-agent` (`r3d`)
+ 
+ ```
+ +-----------------------------------------------------------------------------------+

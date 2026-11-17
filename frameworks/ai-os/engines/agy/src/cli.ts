@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 import { existsSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { dataDir, workspaceRoot } from "../../../src/core/paths.ts";
 import {
   diagnoseGoogleAuth,
   getSovereignEnv,
@@ -121,7 +123,7 @@ export async function runAgyCli(argv = process.argv.slice(2)): Promise<void> {
   }
 
   if (cmd === "ingest") {
-    const target = argv[1] ?? "C:/aphrody/frameworks/ai-os/engines/agy";
+    const target = argv[1] ?? resolve(import.meta.dir, "..");
     const res = buildGitingestDigest(target, {
       preferExternalBinary: hasFlag(argv, "--external"),
     });
@@ -214,7 +216,7 @@ export async function runAgyCli(argv = process.argv.slice(2)): Promise<void> {
     const sub = argv[1] ?? "ask";
     const notebookId = parseFlag(argv, "--id") ?? "default";
     if (sub === "ingest") {
-      const target = argv[2] ?? "C:/aphrody/AGENTS.md";
+      const target = argv[2] ?? join(workspaceRoot(), "AGENTS.md");
       const title = parseFlag(argv, "--title") ?? target;
       console.log(
         JSON.stringify(
@@ -324,7 +326,7 @@ export async function runAgyCli(argv = process.argv.slice(2)): Promise<void> {
       return;
     }
     if (sub === "scaffold") {
-      const dir = argv[2] ?? "C:/aphrody/var/agy-scaffold-demo";
+      const dir = argv[2] ?? dataDir("agy-scaffold-demo");
       console.log(
         JSON.stringify(generateFullstackCloudflareVercelConfig(dir), null, 2),
       );

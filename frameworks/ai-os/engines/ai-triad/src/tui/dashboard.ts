@@ -1,5 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { workspaceRoot } from "../../../../src/core/paths.ts";
 import { inspectCrossAuthStatus } from "../auth/cross-auth.ts";
 import { discoverBinaries } from "../discovery.ts";
 
@@ -23,9 +24,7 @@ function pad(str: string, width: number): string {
 }
 
 export function listClonedEcosystemRepos(
-  ecosystemRoot = process.platform === "win32"
-    ? "C:\\aphrody\\third_party\\ai-ecosystem"
-    : "/src/third_party/ai-ecosystem",
+  ecosystemRoot = join(workspaceRoot(), "third_party", "ai-ecosystem"),
 ): Array<{ name: string; path: string; hasGit: boolean }> {
   if (!existsSync(ecosystemRoot)) return [];
   try {

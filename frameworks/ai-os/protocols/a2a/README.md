@@ -20,7 +20,7 @@ bun run --cwd frameworks/ai-os/protocols/a2a test
 bun run --cwd frameworks/ai-os/protocols/a2a lint
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
 <!-- catalog:end -->
 
 A2A **1.0** client for Bun and the web platform: Agent Card discovery, the JSON-RPC and HTTP+JSON

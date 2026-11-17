@@ -293,9 +293,8 @@ export class Session {
 }
 
 export function findInstall(): string | undefined {
-  const cands = [
-    "/srv/ghidra-release/ghidra_12.2_PUBLIC", join(homedir(), ".local/share/ghidra"), "C:/ghidra",
-  ];
+  const cands = [join(homedir(), ".local/share/ghidra")];
+  if (process.env.GHIDRA_INSTALL_DIR) cands.unshift(process.env.GHIDRA_INSTALL_DIR);
   const lastrun = join(homedir(), ".config/ghidra/lastrun");
   if (existsSync(lastrun)) {
     const m = readFileSync(lastrun, "utf8").match(/^GHIDRA_INSTALL_DIR\s*[=:]\s*(.+)$/m);

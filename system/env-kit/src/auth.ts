@@ -837,7 +837,7 @@ for i in ${q(h.wireguard ?? [])}; do
   st=ok; [ $fresh = 0 ] && st=invalid; [ $fresh != 0 ] && [ $fresh != $tot ] && st=action
   p wireguard "$i" $st "wg show $i latest-handshakes: $fresh/$tot pairs < 180 s\${stale:+ ; sans handshake:$stale}"
   for r in ${q(revoked)}; do
-    grep -qF "$r" <<< "$hs" && p wireguard-key "$i:\${r:0:8}" invalid "pair encore actif avec une clé révoquée (device/deploy.toml [auth.wireguard].revoked)"
+    grep -qF "$r" <<< "$hs" && p wireguard-key "$i:$(printf %.8s "$r")" invalid "pair encore actif avec une clé révoquée (device/deploy.toml [auth.wireguard].revoked)"
   done
 done
 for u in ${q(h.units ?? [])}; do

@@ -7,6 +7,7 @@ import {
 } from "node:fs";
 import { basename, extname, join, resolve } from "node:path";
 import { stripEmojis, writeFileSafeUserspace } from "../../../src/index.ts";
+import { dataDir, workspaceRoot } from "../../../src/core/paths.ts";
 
 export const GOOGLE_AI_ORGS = [
   "google-antigravity",
@@ -153,8 +154,8 @@ export const GOOGLE_AI_ECOSYSTEM_SURFACES: readonly GoogleAiSurfaceDescriptor[] 
     },
   ];
 
-export const DEFAULT_PROBE_CACHE_PATH = "C:/aphrody/var/google-orgs-probe.json";
-export const DEFAULT_AGY_DEPOT_ROOT = "C:/aphrody/var/agy-depot";
+export const DEFAULT_PROBE_CACHE_PATH = dataDir("google-orgs-probe.json");
+export const DEFAULT_AGY_DEPOT_ROOT = dataDir("agy-depot");
 
 function decodeUtfTextSafe(filePath: string): string {
   const buf = readFileSync(filePath);
@@ -371,12 +372,14 @@ export function syncDepotRepoKeyless(
   }
 
   // Check if already checked out in third_party/google-ecosystem first
+  const thirdParty = (name: string) =>
+    join(workspaceRoot(), "third_party", name);
   const existingMap: Record<string, string> = {
-    "google/skills": "C:/aphrody/third_party/google-skills",
-    "google-gemini/gemini-skills": "C:/aphrody/third_party/gemini-skills",
-    "google-labs-code/stitch-skills": "C:/aphrody/third_party/stitch-skills",
-    "google-labs-code/jules-skills": "C:/aphrody/third_party/jules-skills",
-    "google-labs-code/design-md": "C:/aphrody/third_party/design-md",
+    "google/skills": thirdParty("google-skills"),
+    "google-gemini/gemini-skills": thirdParty("gemini-skills"),
+    "google-labs-code/stitch-skills": thirdParty("stitch-skills"),
+    "google-labs-code/jules-skills": thirdParty("jules-skills"),
+    "google-labs-code/design-md": thirdParty("design-md"),
   };
   if (existingMap[fullName] && existsSync(existingMap[fullName]!)) {
     return {

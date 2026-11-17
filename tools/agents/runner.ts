@@ -28,6 +28,7 @@ import { homedir, hostname } from "node:os";
 import { join, resolve } from "node:path";
 import { resolveExe } from "@aphrody/ai-os/llm/agents";
 import { expandSync } from "../../system/env-kit/src/discover.ts";
+import { srcRepo } from "./repo.ts";
 
 type Role = { timeout_s: number; budget_usd: number; heavy?: boolean };
 type Host = { roles: string[]; src: string; ssh?: string[] };
@@ -74,9 +75,9 @@ const WIN = process.platform === "win32";
 if (!WIN && process.env.HOME)
   process.env.PATH = `${process.env.HOME}/.bun/bin:${process.env.HOME}/.local/bin:/usr/local/bin:${process.env.PATH ?? "/usr/bin:/bin"}`;
 const HOST = process.env.AGENTS_HOST ?? hostAlias(hostname());
-const SRC = resolve(
-  process.env.SRC_ROOT ?? FLEET.hosts[HOST]?.src ?? join(HERE, "..", ".."),
-);
+// fleet.toml `src` may start with `~/` (the home of the runner user).
+const hostSrc = FLEET.hosts[HOST]?.src?.replace(/^~(?=[\\/])/, homedir());
+const SRC = resolve(process.env.SRC_ROOT ?? hostSrc ?? join(HERE, "..", ".."));
 const HOME = resolve(process.env.AGENTS_HOME ?? join(SRC, "var", "agents"));
 const Q = {
   tmp: join(HOME, "queue", "tmp"),
@@ -556,8 +557,8 @@ function claim(role: string): { t: Task; path: string } | null {
   return null;
 }
 
-// Runner-owned checkout (<home>/agents/src): the runner may undo task leftovers. The PC works in
-// C:/aphrody, shared with other agents: there nothing is undone, only in-scope files are committed.
+// Runner-owned checkout (<home>/agents/src): the runner may undo task leftovers. The PC works in the
+// checkout it shares with other agents: there nothing is undone, only in-scope files are committed.
 const OWNED = /[\\/]agents[\\/]src$/.test(SRC);
 
 // Roles whose output is text only may use relay models; every other role edits the checkout.
@@ -995,7 +996,7 @@ function ship() {
   if (r.exit === 0) writeFileSync(offF, String(buf.length));
 }
 
-// Self-fix loop (ship host only): red `judge`/`ci` on main -> one sre task per failing commit, at
+// Self-fix loop (ship host only): a red workflow (AGENTS_CI_WORKFLOWS, default `ai-os`,`ci`) on main -> one sre task per failing commit, at
 // most one open at a time. Attributable failures are also reverted by .github/workflows/ci-revert.yml;
 // the task checks that first.
 function ciWatch() {
@@ -1004,13 +1005,15 @@ function ciWatch() {
     readdirSync(d).some((f) => f.startsWith("ci-fix-")),
   );
   if (open) return;
-  for (const wf of ["judge", "ci"]) {
+  const repo = srcRepo();
+  if (!repo) return;
+  for (const wf of (process.env.AGENTS_CI_WORKFLOWS ?? "ai-os,ci").split(",")) {
     const r = sh(
       argv0("gh", [
         "run",
         "list",
         "-R",
-        "aphrody-labs/ay",
+        repo,
         "-w",
         wf,
         "-b",

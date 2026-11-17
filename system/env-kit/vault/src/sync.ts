@@ -39,7 +39,7 @@ import {
   scopeOf,
   setRecipient,
 } from "./hosts.ts";
-import { infraDir, vaultRoot, WIN } from "./paths.ts";
+import { infraDir, system32, vaultRoot, WIN } from "./paths.ts";
 import { assertName, getSecretBytes, listSecrets, setSecret } from "./store.ts";
 
 export const PC_IDENTITY = "VAULT_AGE_IDENTITY";
@@ -261,7 +261,7 @@ export interface PushResult {
 }
 
 const TAR = WIN
-  ? join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe")
+  ? system32("tar.exe")
   : "tar";
 
 export async function push(host: Host, force = false): Promise<PushResult> {
@@ -470,7 +470,7 @@ export function taskXml(
   const push = kind === "push";
   const cmd = push
     ? process.execPath
-    : join(process.env.SystemRoot ?? "C:\\Windows", "System32", "conhost.exe");
+    : system32("conhost.exe");
   const args = push
     ? `run "${cli}" sync --push-only`
     : `--headless "${process.execPath}" run "${cli}" sync`;

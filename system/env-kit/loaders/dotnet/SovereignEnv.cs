@@ -1,4 +1,4 @@
-// SovereignEnv.cs — Zero-dependency .NET 10/11 C# loader & secret redaction helper for C:\aphrody\.env
+// SovereignEnv.cs — Zero-dependency .NET 10/11 C# loader & secret redaction helper for the workspace .env
 #nullable enable
 
 using System;
@@ -12,8 +12,9 @@ namespace Aphrody.EnvKit;
 
 public sealed class SovereignEnv
 {
+    /// <summary>$ENV_KIT_ROOT/.env, otherwise .env in the current directory.</summary>
     public static string DefaultMonorepoEnvPath =>
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? @"C:\aphrody\.env" : "/src/.env";
+        Path.Combine(Environment.GetEnvironmentVariable("ENV_KIT_ROOT") is { Length: > 0 } root ? root : Directory.GetCurrentDirectory(), ".env");
 
     private static readonly Regex SecretKeyRegex = new(
         @"(TOKEN|SECRET|PASSWORD|API_KEY|PRIVATE_KEY|AUTH|CREDENTIAL|DATABASE_URL|NUGET_API_KEY)",

@@ -1,5 +1,5 @@
 // Merge all AGY CLI sessions into a redacted Obsidian-compatible "brain" vault.
-// Read-only on sessions; writes only under C:/aphrody/var/brain.
+// Read-only on sessions; writes only under the data directory (AY_DATA_DIR, else <workspace>/var/brain).
 import {
   existsSync,
   mkdirSync,
@@ -7,16 +7,20 @@ import {
   readdirSync,
   writeFileSync,
 } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { dataDir, envFile } from "../../../src/core/paths.ts";
 
-const BRAIN = "%USERPROFILE%/.gemini/antigravity-cli/brain";
-const VAULT = "C:/aphrody/var/brain";
+const BRAIN = join(homedir(), ".gemini", "antigravity-cli", "brain");
+const VAULT = dataDir("brain");
 mkdirSync(`${VAULT}/Sessions`, { recursive: true });
 mkdirSync(`${VAULT}/.obsidian`, { recursive: true });
 
-// Redaction: exact secret values from C:/aphrody/.env (in memory only) + generic token patterns.
+// Redaction: exact secret values from the workspace .env (in memory only) + generic token patterns.
 const secrets: string[] = [];
-if (existsSync("C:/aphrody/.env")) {
-  for (const l of readFileSync("C:/aphrody/.env", "utf8").split(/\r?\n/)) {
+const envPath = envFile();
+if (existsSync(envPath)) {
+  for (const l of readFileSync(envPath, "utf8").split(/\r?\n/)) {
     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
     if (!m) continue;
     const v = m[2]!.replace(/^['"]|['"]$/g, "");

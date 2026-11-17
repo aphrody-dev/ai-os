@@ -22,10 +22,10 @@ Usage:
   ske <command> [options]
 
 Commands:
-  research <query> [--no-save]          Run 5-channel parallel Deep Research and write C:\\aphrody\\docs\\research\\<slug>.md
+  research <query> [--no-save]          Run 5-channel parallel Deep Research and write docs/research/<slug>.md
   factcheck <claim-or-file> [--json]    Verify paths, binaries, versions, repos, Context7 symbols, secrets & System32 safety
   ctx7 <library> [query] [--tokens N]   Resolve library via Context7 v2 + SQLite WAL Blake3 cache and fetch official docs
-  gen-docs [--offline]                  Generate C:\\aphrody\\docs\\MONOREPO_ATLAS.md and third_party/bun/docs/sovereign/index.mdx
+  gen-docs [--offline]                  Generate docs/MONOREPO_ATLAS.md and third_party/bun/docs/sovereign/index.mdx
   gen-skills                            Synthesize and validate the 5 sovereign workspace SKILL.md definitions
   review-sessions [--json] [--limit N]  Incrementally audit all AGY brain transcripts (< 30ms cached) -> AGY_SESSIONS_CONTINUOUS_REVIEW.md
   watch [--interval 30] [--once]        Continuous reviewer loop over active transcripts, docs/*.md, and SKILL.md

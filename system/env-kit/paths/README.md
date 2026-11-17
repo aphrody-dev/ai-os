@@ -17,5 +17,5 @@ bun run --cwd system/env-kit/paths test
 bun run --cwd system/env-kit/paths typecheck
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
 <!-- catalog:end -->

@@ -342,7 +342,6 @@ const HOST_KEYS: Record<string, (r: Resolved) => string | undefined> = {
   mesh_ip: (r) => r.mesh,
   link_ip: (r) => r.meshAll?.[1],
   extra_mesh_ip: (r) => r.meshAll?.[1],
-  src_root: () => "/srv/src",
 };
 
 /**

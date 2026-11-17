@@ -20,6 +20,7 @@ import {
   scanTextForSecretLeaks,
   stripEmojis,
 } from "../env/safe-env.ts";
+import { workspaceRoot } from "../../../../src/core/paths.ts";
 
 export interface SessionAuditMetrics {
   sessionId: string;
@@ -297,10 +298,7 @@ export function parseSingleSession(
             const p = String(
               tc.args?.Path ?? tc.args?.path ?? "",
             ).toLowerCase();
-            if (
-              p.startsWith("c:\\windows\\system32") ||
-              p.startsWith("c:/windows/system32")
-            ) {
+            if (/^[a-z]:[\\/]windows[\\/]system32/.test(p)) {
               metrics.system32ViolationsCount++;
             }
           } else if (name === "run_command") {
@@ -383,8 +381,8 @@ function renderContinuousReviewMarkdown(
     `| **Total Planner & Tool Steps** | \`${report.totals.steps.toLocaleString()}\` | Active |`,
     `| **Total Token Volume (In / Out)** | \`${report.totals.inputTokens.toLocaleString()}\` in / \`${report.totals.outputTokens.toLocaleString()}\` out | Tracked |`,
     `| **Total Tool Invocations / MCP Calls** | \`${report.totals.toolCalls.toLocaleString()}\` tools (\`${report.totals.mcpCalls}\` MCP calls) | Active |`,
-    `| **Raw \`C:\\aphrody\\.env\` Secret Leaks** | \`${report.totals.secretLeaks}\` | ${report.totals.secretLeaks === 0 ? "PASS (Zero Leaks)" : "ACTION REQUIRED"} |`,
-    `| **\`C:\\Windows\\System32\` Mutations** | \`${report.totals.system32Violations}\` | ${report.totals.system32Violations === 0 ? "PASS (Sacred Userspace Intact)" : "CRITICAL VIOLATION"} |`,
+    `| **Raw \`.env\` Secret Leaks** | \`${report.totals.secretLeaks}\` | ${report.totals.secretLeaks === 0 ? "PASS (Zero Leaks)" : "ACTION REQUIRED"} |`,
+    `| **Windows System32 Mutations** | \`${report.totals.system32Violations}\` | ${report.totals.system32Violations === 0 ? "PASS (Sacred Userspace Intact)" : "CRITICAL VIOLATION"} |`,
     `| **Non-Zero / Error Tool Steps** | \`${report.totals.failedCommands}\` | Historical command retries |`,
     `| **Broken \`file:///\` Links in Outputs/Artifacts** | \`${report.totals.brokenFileLinks}\` | Tracked |`,
     `| **Emoji Occurrences in Final Responses/Artifacts** | \`${report.totals.emojiViolations}\` | Audited |`,
@@ -457,8 +455,7 @@ export function auditAllAgySessions(
 ): GlobalSessionsAuditReport {
   const t0 = Bun.nanoseconds();
   const home = homedir();
-  const srcRoot =
-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
+  const srcRoot = options.srcRoot ?? workspaceRoot();
   const brainRootDir = resolve(
     options.brainRootDir ?? join(home, ".gemini", "antigravity-cli", "brain"),
   );
@@ -730,7 +727,7 @@ export interface WatchCycleSummary {
 /**
  * Continuous Reviewer & Watcher (`ske watch [--interval 30] [--once]`).
  * 1. Incrementally audits modified AGY `transcript.jsonl` sessions,
- * 2. Fact-checks modified `C:\aphrody\docs\*.md` and `SKILL.md` files,
+ * 2. Fact-checks modified `docs/*.md` and `SKILL.md` files,
  * 3. Regenerates `MONOREPO_ATLAS.md` and `AGY_SESSIONS_CONTINUOUS_REVIEW.md` when changes occur.
  */
 export async function runContinuousWatchLoop(options?: {
@@ -740,8 +737,7 @@ export async function runContinuousWatchLoop(options?: {
   brainRootDir?: string;
   dbPath?: string;
 }): Promise<WatchCycleSummary> {
-  const srcRoot =
-    options?.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
+  const srcRoot = options?.srcRoot ?? workspaceRoot();
   const intervalMs = Math.max(2, options?.intervalSeconds ?? 30) * 1000;
   const seenDocMtimes = new Map<string, number>();
 

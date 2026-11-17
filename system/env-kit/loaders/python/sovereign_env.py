@@ -1,6 +1,6 @@
-"""Zero-dependency Python 3.12+ loader and secret redaction guard for C:/aphrody/.env.
+"""Zero-dependency Python 3.12+ loader and secret redaction guard for the workspace .env.
 
-Compatible with `uv run --env-file C:/aphrody/.env` as well as direct library import.
+Compatible with `uv run --env-file <workspace>/.env` as well as direct library import.
 """
 
 from __future__ import annotations

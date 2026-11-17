@@ -1,0 +1,23 @@
+# Fixture of vault.test.ts: the shape of device/vault/policy.toml (names only, no values).
+# Scope of each secret: the hosts that receive it (age envelope to that host only). Anything not
+# listed keeps the default of its kind, and the defaults never leave the PC. Names only, no values.
+# Precedence: `env-kit vault add NAME --scope a,b` (local registry) > [scope] here > [defaults].
+
+[defaults]
+token = ["pc"]
+document = ["pc"]
+chrome-passwords = ["pc"]
+profile = ["pc"]
+
+[scope]
+# Proof secret of the sync (random, no meaning): PC -> prd, fr2 within one timer period.
+VAULT_PROOF_TOKEN = ["pc", "prd", "fr2"]
+# Same value the agents login flow (frameworks/ai-os/src/nhitl/login.ts) installs on the runners.
+CLAUDE_CODE_OAUTH_TOKEN = ["pc", "prd", "fr2"]
+# Context7 API key (relay hub `context7` server, headers CONTEXT7_API_KEY in tools/agents/toolchain.toml): every host's hub.
+CTX7_API_KEY = ["pc", "prd", "fr2", "fr1", "fr2-agent", "fr1-agent"]
+
+# Never synced whatever the scope says (enforced in system/env-kit/vault/src/hosts.ts).
+[never]
+names = ["VAULT_MASTER_KEY", "VAULT_AGE_IDENTITY", "aphrody-vault-age"]
+kinds = ["chrome-passwords", "profile"]

@@ -1,9 +1,10 @@
 // Push frameworks/re-ts/ghidra, system/ghidra-bun and frameworks/re (path dependency) to a remote work dir without git:
-//   bun scripts/sync-fr2.ts [host=cdn] [dest=/home/ubuntu/ghidra-work]
+//   bun scripts/sync-fr2.ts <host> [dest=ghidra-work]   (dest: relative to the remote home)
 import { fileURLToPath } from "node:url";
 
-const host = process.argv[2] ?? "cdn";
-const dest = process.argv[3] ?? "/home/ubuntu/ghidra-work";
+const host = process.argv[2];
+if (!host) throw new Error("usage: bun scripts/sync-fr2.ts <host> [dest]");
+const dest = process.argv[3] ?? "ghidra-work";
 const root = fileURLToPath(new URL("../../../..", import.meta.url));
 const q = (s: string) => `'${s.replaceAll("'", "'\\''")}'`;
 

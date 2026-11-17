@@ -18,12 +18,12 @@ const IGNORED_DIRS: &[&str] = &[
 ];
 
 const FORBIDDEN_HOST_PREFIXES_WIN: &[&str] = &[
-    "c:\\windows",
-    "c:/windows",
-    "c:\\program files",
-    "c:/program files",
-    "c:\\program files (x86)",
-    "c:/program files (x86)",
+    "c:\\windows", // paths:ok
+    "c:/windows", // paths:ok
+    "c:\\program files", // paths:ok
+    "c:/program files", // paths:ok
+    "c:\\program files (x86)", // paths:ok
+    "c:/program files (x86)", // paths:ok
 ];
 
 const FORBIDDEN_HOST_PREFIXES_UNIX: &[&str] = &[
@@ -261,10 +261,10 @@ mod tests {
 
     #[test]
     fn test_sacred_userspace_guard_blocks_system32() {
-        assert!(!is_safe_workspace_path(Path::new(r"C:\Windows\System32\cmd.exe")));
-        assert!(!is_safe_workspace_path(Path::new("C:/Windows/System32")));
+        assert!(!is_safe_workspace_path(Path::new(r"C:\Windows\System32\cmd.exe"))); // paths:ok
+        assert!(!is_safe_workspace_path(Path::new("C:/Windows/System32"))); // paths:ok
         assert!(!is_safe_workspace_path(Path::new("/usr/bin/bash")));
-        assert!(is_safe_workspace_path(Path::new(r"C:\aphrody\packages\pi-opencode\src\cli.ts")));
+        assert!(is_safe_workspace_path(&Path::new(env!("CARGO_MANIFEST_DIR")).join("src").join("lib.rs")));
     }
 
     #[test]

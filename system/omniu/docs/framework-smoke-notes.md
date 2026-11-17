@@ -7,7 +7,7 @@ Status: living runtime QA notes for the directory-first framework.
 Run with the selected installed Niubash binary:
 
 ```sh
-niubash tools/smoke_framework.niu C:/path/to/oh-my-niu
+niubash tools/smoke_framework.niu <path-to-oh-my-niu>
 ```
 
 The smoke currently verifies:
@@ -43,8 +43,8 @@ covered by the smoke above.
   substitution on the installed Niubash build. The current helper captures Git
   branch/status without putting `2>/dev/null` inside the captured branch
   command.
-- Smoke scripts should prefer stable native paths such as `C:/tmp` for temp
-  files. The installed build exposes a `/c/Users/.../Temp` value for `TMPDIR`
+- Smoke scripts should prefer stable native paths such as `$TEMP` for temp
+  files. The installed build exposes an MSYS-style value for `TMPDIR`
   that can fail during redirected writes.
 
 ## Next Smoke Gates

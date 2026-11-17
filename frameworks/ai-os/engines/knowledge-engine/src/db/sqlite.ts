@@ -1,11 +1,9 @@
 import { Database } from "bun:sqlite";
 import { existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { dataDir } from "../../../../src/core/paths.ts";
 
-export const DEFAULT_KNOWLEDGE_DB_PATH =
-  process.platform === "win32"
-    ? "C:\\aphrody\\var\\knowledge.sqlite"
-    : "/src/var/knowledge.sqlite";
+export const DEFAULT_KNOWLEDGE_DB_PATH = dataDir("knowledge.sqlite");
 
 const dbPool = new Map<string, Database>();
 

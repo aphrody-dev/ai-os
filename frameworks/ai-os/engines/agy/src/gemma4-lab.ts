@@ -1,5 +1,7 @@
 import { existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { homedir } from "node:os";
+import { dataDir } from "../../../src/core/paths.ts";
 import {
   federateChatCompletion,
   formatGemma4Prompt,
@@ -169,9 +171,9 @@ export function discoverLocalGgufModels(): Array<{
   path: string;
 }> {
   const searchDirs = [
-    "%USERPROFILE%/.cache/llama.cpp",
-    "%USERPROFILE%/.lmstudio/models",
-    "C:/aphrody/var/models",
+    join(homedir(), ".cache", "llama.cpp"),
+    join(homedir(), ".lmstudio", "models"),
+    dataDir("models"),
   ];
   const found: Array<{ name: string; path: string }> = [];
   for (const dir of searchDirs) {
@@ -210,7 +212,7 @@ export function generateGemma4TrainingPipeline(
   sourceCode: string;
 } {
   const modelId = options?.modelId ?? "google/gemma-4-12b-it";
-  const outDir = options?.outDir ?? "C:/aphrody/var/agy-gemma4-lab";
+  const outDir = options?.outDir ?? dataDir("agy-gemma4-lab");
   const loraRank = options?.loraRank ?? 16;
   const lr = options?.learningRate ?? 2e-4;
   mkdirSync(outDir, { recursive: true });

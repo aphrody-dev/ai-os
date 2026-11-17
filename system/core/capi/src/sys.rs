@@ -1,4 +1,4 @@
-//! Rust FFI bindings to the central Layer-0 Pure C, Assembly & WebAssembly Core (`C:\aphrody\src\include\ay\sys.h`).
+//! Rust FFI bindings to the central Layer-0 Pure C, Assembly & WebAssembly Core (`ay/sys.h`).
 //!
 //! Subsystems use canonical upstream prefixes (`ay_*`, `drm_*`, `mesa_*`, `wl_*`, `xcb_*`, `xwm_*`,
 //! `nt_*`, `wine_*`, `wasm_*`) so multi-million-LoC Linux, Freedesktop, ReactOS, Wine, and WebAssembly

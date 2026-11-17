@@ -65,7 +65,7 @@ jobs:
   const sovereignForgeToml = `# Sovereign Forge (frg) Pipeline — AI Triad Autonomous Gate
 [pipeline]
 name = "ai-triad-gate"
-workspace = "C:/aphrody/frameworks/ai-os/engines/ai-triad"
+workspace = "frameworks/ai-os/engines/ai-triad"
 
 [[stages]]
 name = "static-verification"

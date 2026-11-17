@@ -34,13 +34,18 @@ describe("pi-opencode: Rust Native FFI & Torvalds Userspace Guard", () => {
     expect(getCpuThreads()).toBeGreaterThanOrEqual(4);
   });
 
-  test("blocks C:\\Windows\\System32 and /usr/bin while allowing workspace paths", () => {
-    expect(isSafeWorkspacePath("C:\\Windows\\System32\\cmd.exe")).toBe(false);
-    expect(isSafeWorkspacePath("C:\\Program Files\\Vendor\\x.exe")).toBe(false);
+  test("blocks the host system directories while allowing workspace paths", () => {
+    if (process.platform === "win32") {
+      expect(isSafeWorkspacePath("C:\\Windows\\System32\\cmd.exe")).toBe(false); // paths:ok
+      expect(isSafeWorkspacePath("C:\\Program Files\\Vendor\\x.exe")).toBe(
+        false,
+      ); // paths:ok
+    } else {
+      expect(isSafeWorkspacePath("/usr/bin/bash")).toBe(false);
+      expect(isSafeWorkspacePath("/etc/passwd")).toBe(false);
+    }
     expect(
-      isSafeWorkspacePath(
-        "C:\\aphrody\\packages\\ai-os\\engines\\pi-opencode\\src\\cli.ts",
-      ),
+      isSafeWorkspacePath(join(import.meta.dir, "..", "src", "cli.ts")),
     ).toBe(true);
   });
 

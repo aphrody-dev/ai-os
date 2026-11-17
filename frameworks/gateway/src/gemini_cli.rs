@@ -337,7 +337,7 @@ mod tests {
     fn resolve_bin_honors_aphrody_env_override() {
         // Use a path we control rather than depending on `which`.
         let fake = if cfg!(windows) {
-            r"C:\fake\gemini.exe"
+            r"C:\fake\gemini.exe" // paths:ok an executable override that need not exist
         } else {
             "/opt/fake/gemini"
         };

@@ -24,7 +24,7 @@ autobenches = false
 description = "Local ONNX inference backend for aphrody: runtime discovery, execution-provider selection with CUDA/DirectML/CPU fallback, and session loading driven by the aphrody-models catalog."
 readme = false
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [features]
 default = []

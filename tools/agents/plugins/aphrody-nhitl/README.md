@@ -5,7 +5,7 @@ user settings, headless CLI). claude.exe is never patched.
 
 Claude Code runs with `bypassPermissions`. There is no deny-list engine: the only command guard is the
 small Bash PreToolUse hook in `tools/agents/claude/settings.json` (coreutils redirection, shared-index
-`git commit`, `git add -A`, `git stash`, staging `.env`, writes under `C:/Windows/System32`), synced by
+`git commit`, `git add -A`, `git stash`, staging `.env`, writes under `%SystemRoot%/System32`), synced by
 `just agents-sync`. The boundary against damage is the OS: `runuser -u agent` on prd; on the Windows PC the
 launcher can run Claude Code under WSL2 with the sandbox (see "OS boundary").
 
@@ -16,7 +16,7 @@ launcher can run Claude Code under WSL2 with the sandbox (see "OS boundary").
 | Status line      | `src/statusline.ts`    | `nhitl · mode · model · agents n[/total] · ctx %`, wired in `~/.claude/settings.json`.                                                                                                                                                                                                                                                                                                    |
 | Launcher         | `bin/claude-nhitl.ts`  | `claude -p` with `--permission-mode bypassPermissions --permission-prompts none --output-format stream-json --verbose`, `--session-id`/`--resume`/`--continue`, stream teed to `~/.claude/learning/runs/<sid>.jsonl`. As root, claude runs via `runuser -u $NHITL_RUN_AS` (default `agent`), never with `IS_SANDBOX`. `--help` for the runner contract. |
 
-Tests: `bun test ./test` here (`bun test tools/agents/plugins/aphrody-nhitl` from the root). Install: `claude plugin marketplace add C:/aphrody` (root marketplace `.claude-plugin/marketplace.json`) then
+Tests: `bun test ./test` here (`bun test tools/agents/plugins/aphrody-nhitl` from the root). Install: `claude plugin marketplace add <workspace>` (root marketplace `.claude-plugin/marketplace.json`) then
 `claude plugin install aphrody-nhitl@aphrody --scope user`; after edits bump `version` and run
 `claude plugin marketplace update aphrody && claude plugin update aphrody-nhitl@aphrody`.
 
@@ -48,7 +48,7 @@ Route (b), dedicated local account + ACL + Job Object, not retained:
 - A Job Object bounds processes and memory, not file access; the file boundary rests on ACLs alone.
 - Denying `%USERPROFILE%` to the account also denies what Claude Code, bun, git and gh need under their own profile
   paths; the account needs its own copies of every login (claude.ai, gh, gcloud), a second set of secrets to guard.
-- `bun -e rmSync` inside the allowed tree (`C:\aphrody`) is still permitted: ACLs cannot separate it from legitimate
+- `bun -e rmSync` inside the allowed tree (`<workspace>`) is still permitted: ACLs cannot separate it from legitimate
   edits, whereas the sandbox write roots plus `denyWrite` on `.git` can.
 - Needs `icacls`, account creation and `kernel32` FFI (`CreateJobObjectW`), all unverifiable without Windows here.
   Reconsider only if WSL2 is unavailable on the PC; then ACL deny on secrets and protected `.git` is the minimum.

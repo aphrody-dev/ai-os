@@ -24,7 +24,7 @@ autobenches = false
 description = "Model Context Protocol client for Aphrody: the single MCP client of the workspace. Stdio and streamable HTTP transports, ToolExecutor adapter, fail-closed credential expansion, built-in tools, and shared Rust web tools."
 readme = false
 license = "Apache-2.0"
-repository = "https://github.com/aphrody-labs/ay"
+repository = "https://github.com/aphrody-dev/ai-os"
 
 [lib]
 name = "aphrody_mcp_client"

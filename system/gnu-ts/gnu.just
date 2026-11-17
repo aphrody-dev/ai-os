@@ -10,11 +10,6 @@ gnu *args:
 gnu-service:
     ssh fr2 "systemctl is-active aphrody-gnu.service aphrody-gnu-watch.timer; journalctl -u aphrody-gnu --no-pager -n 15"
 
-# Pull the checkout on fr2 and restart the tracker
-[group('gnu')]
-gnu-deploy:
-    ssh fr2 "git -C /srv/src fetch -q --no-recurse-submodules origin main && git -C /srv/src merge -q --ff-only FETCH_HEAD && sh /srv/src/device/gnu/install.sh"
-
 # Tests of the tracker package
 [group('gnu')]
 gnu-test:

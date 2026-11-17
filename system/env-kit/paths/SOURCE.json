@@ -1,5 +1,5 @@
 {
-  "sourceRepository": "https://github.com/aphrody-labs/ay",
+  "sourceRepository": "https://github.com/aphrody-labs/legacy",
   "visibility": "private",
   "sourceRevision": "3187d795e84ff88da67f53f12be1add715ad73b2",
   "sourcePrefix": "packages/infra/paths",

@@ -1,6 +1,6 @@
 // FlatAPI export list for scripts translated from GhidraScript / pyghidra (target of system/py2bun-ts).
 // Source: Ghidra 12.2 ghidra.program.flatapi.FlatProgramAPI and ghidra.app.script.GhidraScript
-// (public/protected methods, extracted from the fork clone on fr1: /srv/ghidra).
+// (public/protected methods, extracted from the Ghidra fork clone).
 // Every method is async (Promise) because the JVM lives in another process; a script is `await`-ed code.
 
 /** ghidra.program.flatapi.FlatProgramAPI public methods. */

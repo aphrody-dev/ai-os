@@ -287,7 +287,7 @@ mod tests {
     #[test]
     fn explicit_override_is_the_state_dir_not_a_home() {
         let explicit = PathBuf::from("/data/aph");
-        let home = std::path::Path::new("/home/u");
+        let home = std::path::Path::new("/home/u"); // paths:ok a path composed in memory, never touched
         assert_eq!(compose_state_dir(Some(explicit.clone()), home), explicit);
         assert_ne!(
             compose_state_dir(Some(explicit.clone()), home),
@@ -298,7 +298,7 @@ mod tests {
     /// With no override, the state directory is `.aphrody` under the home.
     #[test]
     fn default_state_dir_hangs_off_the_home() {
-        let home = std::path::Path::new("/home/u");
+        let home = std::path::Path::new("/home/u"); // paths:ok a path composed in memory, never touched
         assert_eq!(compose_state_dir(None, home), home.join(".aphrody"));
     }
 

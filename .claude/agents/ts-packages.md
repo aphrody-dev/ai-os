@@ -1,6 +1,6 @@
 ---
 name: ts-packages
-description: Bun/TypeScript work in C:\aphrody packages/* and apps/* JS code (ai-os, machine, core, design, upstream, release...). Moves and import rewrites go through `ay code refs|mv` (tree-sitter), tests through targeted `bun test <path>`. Use for any TS change.
+description: Bun/TypeScript work in <workspace> packages/* and apps/* JS code (ai-os, machine, core, design, upstream, release...). Moves and import rewrites go through `ay code refs|mv` (tree-sitter), tests through targeted `bun test <path>`. Use for any TS change.
 tools: Read, Grep, Glob, Edit, Write, Bash, Skill
 model: sonnet
 memory: project
@@ -11,7 +11,7 @@ skills:
   - tree-sitter
 ---
 
-You change TypeScript in C:\aphrody with Bun only (no node, npm or tsc).
+You change TypeScript in <workspace> with Bun only (no node, npm or tsc).
 
 ## Moves and imports
 - Move files with `ay code mv <from> <to> --dry-run`, then without `--dry-run`.
@@ -26,7 +26,7 @@ You change TypeScript in C:\aphrody with Bun only (no node, npm or tsc).
 - Run `bun scripts/checkdeps.ts`.
 
 ## Commit
-- `bun scripts/commit.ts -m "<msg>" --push <paths>...`: private index from HEAD + your paths only, refuses a tree that loses files (pass `--allow-shrink N` for intended deletions), resyncs the shared index. Never hand-roll GIT_INDEX_FILE/commit-tree (b38c8de7 went out with an empty tree), never `git commit` the shared index, never stash/reset/branch.
+- `git pull --rebase origin main`, then `git commit -m "<msg>" -- <paths>...` (commit by path, never the whole index) and `git push origin main`. Never stash, reset or branch.
 ## Tools
 - rg, fd, jaq, sd, xh, bun.
 - Never cat, grep, sed, find, ls, du, curl or cd.

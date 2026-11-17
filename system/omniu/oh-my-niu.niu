@@ -3,7 +3,7 @@
 # Source this file from an interactive Niubash rc file after setting NIUBASH to
 # this repository or installed bundle root:
 #
-#   NIUBASH=C:/Users/me/.niubash/oh-my-niu
+#   NIUBASH=$HOME/.niubash/oh-my-niu
 #   NIU_PLUGINS=(prompt-core git docker zoxide)
 #   NIU_THEME=minimal
 #   source "$NIUBASH/oh-my-niu.niu"

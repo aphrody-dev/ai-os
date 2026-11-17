@@ -164,7 +164,7 @@ export function parseContext7TextChunks(
 
 /**
  * Searches Context7 v2 `/libs/search` for official upstream library IDs and metadata,
- * caching responses in `C:\aphrody\var\knowledge.sqlite` keyed by Blake3 digest (TTL 24h).
+ * caching responses in `var/knowledge.sqlite` keyed by Blake3 digest (TTL 24h).
  */
 export async function searchLibraries(
   libraryName: string,

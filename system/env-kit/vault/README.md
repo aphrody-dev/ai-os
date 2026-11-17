@@ -15,5 +15,5 @@ bun run --cwd system/env-kit/vault bench
 bun run --cwd system/env-kit/vault check
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
 <!-- catalog:end -->

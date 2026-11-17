@@ -3,6 +3,7 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { workspaceRoot } from "../../../../src/core/paths.ts";
 import { openKnowledgeDatabase } from "../db/sqlite.ts";
 
 export interface KernelRelease {
@@ -269,7 +270,8 @@ export async function syncKernelStoryMdx(options?: {
   });
   const mdxOutput = generateLiveUpstreamMdx(feed);
   const targetDir =
-    options?.targetDir ?? "C:/aphrody/docs/linux-kernel-story/mdx";
+    options?.targetDir ??
+    join(workspaceRoot(), "docs", "linux-kernel-story", "mdx");
   if (!existsSync(targetDir)) {
     mkdirSync(targetDir, { recursive: true });
   }

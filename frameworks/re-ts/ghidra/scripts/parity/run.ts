@@ -2,9 +2,12 @@
 // Builds test inputs, runs pyghidra (parity_py.py) and bun-ghidra (parity.ts) on the same binary, diffs, writes PARITY.md.
 import { mkdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { findInstall } from "../../src/rpc.ts";
 
-const install = process.env.GHIDRA_INSTALL_DIR ?? "/srv/ghidra-release/ghidra_12.2_PUBLIC";
-const venvPy = process.env.PYGHIDRA_PYTHON ?? "/srv/ghidra-release/venv/bin/python";
+const install = findInstall();
+if (!install) throw new Error("no Ghidra install: set GHIDRA_INSTALL_DIR");
+// provision-fr2.sh puts the pyghidra venv next to the release directory.
+const venvPy = process.env.PYGHIDRA_PYTHON ?? join(install, "..", "venv", "bin", "python");
 const work = process.env.PARITY_WORK ?? "/tmp/ghidra-parity";
 const here = import.meta.dir;
 const pkg = resolve(here, "../..");

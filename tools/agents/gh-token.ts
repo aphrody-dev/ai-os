@@ -110,7 +110,9 @@ export function installWrapper(dir: string): string | undefined {
         (d) => d && resolve(d).toLowerCase() !== resolve(dir).toLowerCase(),
       )
       .map((d) => join(d, binName)),
-    ...(isWin ? ["C:\\Program Files\\GitHub CLI\\gh.exe"] : ["/usr/bin/gh"]),
+    ...(isWin
+      ? [join(process.env.ProgramFiles ?? "", "GitHub CLI", "gh.exe")]
+      : ["/usr/bin/gh"]),
   ];
   const real = candidates.find((p) => existsSync(p));
   if (!real) return undefined;

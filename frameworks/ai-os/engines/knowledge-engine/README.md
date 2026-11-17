@@ -21,7 +21,7 @@ bun run --cwd frameworks/ai-os/engines/knowledge-engine mcp-stdio
 bun run --cwd frameworks/ai-os/engines/knowledge-engine build
 ```
 
-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
+Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
 <!-- catalog:end -->
 
 Unified **Context7 v2 + 5-Channel Deep Research + Deterministic Fact-Checker + Monorepo Docs & Skills Generator + Continuous AGY Session Reviewer** built in 100% pure **Bun v1.4.4** (`bun:sqlite` WAL + `bun:ffi` `rust_stack_ffi.dll` Blake3).
@@ -34,9 +34,9 @@ Unified **Context7 v2 + 5-Channel Deep Research + Deterministic Fact-Checker + M
 
 ## Modules
 
-1. [`src/context7/client.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/context7/client.ts): Context7 v2 `/libs/search` and `/context` client cached in `C:\aphrody\var\knowledge.sqlite` (`context7_cache` keyed by `rs_blake3_hex`, 24h TTL).
-2. [`src/research/deep-research.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/research/deep-research.ts): Parallel 5-channel Deep Research across Context7, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local `C:\aphrody` lockfiles -> `C:\aphrody\docs\research\<slug>.md`.
-3. [`src/factcheck/verifier.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/factcheck/verifier.ts): Deterministic multi-evidence Fact Checker over local paths, `~/.local/bin` binaries, lockfile versions, GitHub repos, Context7 API symbols, secret hygiene, `C:\Windows\System32` non-mutation, and zero-emoji compliance.
-4. [`src/generators/docs-gen.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/generators/docs-gen.ts) & [`src/generators/skills-gen.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/generators/skills-gen.ts): Generates `C:\aphrody\docs\MONOREPO_ATLAS.md`, `C:\aphrody\third_party\bun\docs\sovereign\index.mdx`, and the 5 sovereign `SKILL.md` workspace skills.
-5. [`src/reviewer/agy-session-auditor.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/reviewer/agy-session-auditor.ts): Incremental `< 30ms` auditor over all `brain/*/transcript.jsonl` sessions + continuous `ske watch` daemon.
-6. [`src/mcp/stdio.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/mcp/stdio.ts): MCP `2025-03-26` server exposing `ctx7_query_docs`, `deep_research`, `fact_check`, `generate_docs_and_skills`, `review_agy_sessions`, and `knowledge_status`.
+1. [`src/context7/client.ts`](src/context7/client.ts): Context7 v2 `/libs/search` and `/context` client cached in `<workspace>/var/knowledge.sqlite` (`context7_cache` keyed by `rs_blake3_hex`, 24h TTL).
+2. [`src/research/deep-research.ts`](src/research/deep-research.ts): Parallel 5-channel Deep Research across Context7, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local `<workspace>` lockfiles -> `<workspace>/docs/research\<slug>.md`.
+3. [`src/factcheck/verifier.ts`](src/factcheck/verifier.ts): Deterministic multi-evidence Fact Checker over local paths, `~/.local/bin` binaries, lockfile versions, GitHub repos, Context7 API symbols, secret hygiene, `%SystemRoot%\System32` non-mutation, and zero-emoji compliance.
+4. [`src/generators/docs-gen.ts`](src/generators/docs-gen.ts) & [`src/generators/skills-gen.ts`](src/generators/skills-gen.ts): Generates `<workspace>/docs/MONOREPO_ATLAS.md`, `third_party/bun/docs/sovereign/index.mdx`, and the 5 sovereign `SKILL.md` workspace skills.
+5. [`src/reviewer/agy-session-auditor.ts`](src/reviewer/agy-session-auditor.ts): Incremental `< 30ms` auditor over all `brain/*/transcript.jsonl` sessions + continuous `ske watch` daemon.
+6. [`src/mcp/stdio.ts`](src/mcp/stdio.ts): MCP `2025-03-26` server exposing `ctx7_query_docs`, `deep_research`, `fact_check`, `generate_docs_and_skills`, `review_agy_sessions`, and `knowledge_status`.

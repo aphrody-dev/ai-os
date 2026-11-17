@@ -1,0 +1,2282 @@
+diff --git a/frameworks/ai-os/README.md b/frameworks/ai-os/README.md
+index b3cd8a0..fa11ea3 100644
+--- a/frameworks/ai-os/README.md
++++ b/frameworks/ai-os/README.md
+@@ -16,7 +16,7 @@ bun run --cwd frameworks/ai-os check
+ bun run --cwd frameworks/ai-os relay
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../README.md), [Catalog](../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../README.md).
+ <!-- prettier-ignore-end -->
+ <!-- catalog:end -->
+ 
+@@ -26,13 +26,13 @@ Cross-platform sandboxed Unix/GNU-like operating system distribution for autonom
+ 
+ ## FHS Virtual Layout & Unified C ABI (`ai_os_*`)
+ 
+-| VFS / Device  | C ABI Entrypoint (`aphrody_core.h`)               | Role                                                                                                                                                                                                                            |
+-| :------------ | :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+-| `uname` / FHS | `ai_os_uname_json`, `ai_os_vfs_resolve_json`      | OS identity, standards (`openapi-3.2.1`, `mcp-2026-07-28`, `a2a-1.0.1`, `acp-1.31.0`, `vercel-ai-sdk-7.0`, `cloudflare-agents-0.33`), confined FHS paths (`/etc/ai-os`, `/var/lib/ai-os`, `/home/agent`, `/proc/agent`, `/tmp`) |
+-| `/dev/llm`    | `ai_os_llm_spec_json`                             | Runtime-discovered multi-provider LLM wire contract (zero hardcoded models)                                                                                                                                                     |
+-| `/dev/rag`    | `ai_os_rag_upsert_json`, `ai_os_rag_query_json`   | Shared SQLite WAL + FTS5 BM25 + recency RRF store (`frameworks/agent/context`)                                                                                                                                                  |
+-| `/dev/world`  | `ai_os_world_step_json`, `ai_os_world_state_json` | Persistent causal state transitions (`world_entities`, `world_transitions`) + prediction error (`surprise`)                                                                                                                     |
+-| `/dev/sys1`   | `ai_os_sys1_decide_json`                          | Sub-millisecond (`< 1 ms`) System 1 router (`exec` / `escalate_sys2` / `deny`) with SQLite audit trail (`sys1_decisions`)                                                                                                       |
++| VFS / Device  | C ABI Entrypoint (`aphrody_core.h`)               | Role                                                                                                                                                                                                                             |
++| :------------ | :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| `uname` / FHS | `ai_os_uname_json`, `ai_os_vfs_resolve_json`      | OS identity, standards (`openapi-3.2.1`, `mcp-2026-07-28`, `a2a-1.0.1`, `acp-1.31.0`, `vercel-ai-sdk-7.0`, `cloudflare-agents-0.33`), confined FHS paths (`/etc/ai-os`, `/var/lib/ai-os`, the agent home, `/proc/agent`, `/tmp`) |
++| `/dev/llm`    | `ai_os_llm_spec_json`                             | Runtime-discovered multi-provider LLM wire contract (zero hardcoded models)                                                                                                                                                      |
++| `/dev/rag`    | `ai_os_rag_upsert_json`, `ai_os_rag_query_json`   | Shared SQLite WAL + FTS5 BM25 + recency RRF store (`frameworks/agent/context`)                                                                                                                                                   |
++| `/dev/world`  | `ai_os_world_step_json`, `ai_os_world_state_json` | Persistent causal state transitions (`world_entities`, `world_transitions`) + prediction error (`surprise`)                                                                                                                      |
++| `/dev/sys1`   | `ai_os_sys1_decide_json`                          | Sub-millisecond (`< 1 ms`) System 1 router (`exec` / `escalate_sys2` / `deny`) with SQLite audit trail (`sys1_decisions`)                                                                                                        |
+ 
+ ## Subsystems
+ 
+diff --git a/frameworks/ai-os/docs/BRAIN.md b/frameworks/ai-os/docs/BRAIN.md
+index 195bf3e..3da63e6 100644
+--- a/frameworks/ai-os/docs/BRAIN.md
++++ b/frameworks/ai-os/docs/BRAIN.md
+@@ -32,7 +32,7 @@ One brain for Claude Code and agy (Antigravity CLI), owned by `@aphrody/ai-os`.
+   `toolPermission` and `artifactReviewPolicy` = `always-proceed`, hooks in `~/.gemini/config/hooks.json`, MCP in
+   `~/.gemini/config/mcp_config.json` (legacy copy merged), `trustedWorkspaces` 70 to 23 entries.
+ - Claude facts applied (`docs/cli-reference/claude-code.md`): `AGENTS.md` is only loaded without a `CLAUDE.md`, so
+-  `C:\aphrody\CLAUDE.md` now imports `@AGENTS.md` and `@.agents/SOUL.md`.
++  `<workspace>/CLAUDE.md` now imports `@AGENTS.md` and `@.agents/SOUL.md`.
+ - Context compaction: memories 47 to 36 (duplicates of the global CLAUDE.md removed, fleet contradictions merged into
+   `fleet-roles`), GEMINI.md 15 KB to 8 KB (legacy directives replaced by a pointer to AGENTS.md plus the synced block),
+   project CLAUDE.md fleet roles aligned with the global rule (fr1 = builds, CI, training, heavy agents).
+diff --git a/frameworks/ai-os/docs/FUSION.md b/frameworks/ai-os/docs/FUSION.md
+index 8727c9d..8e290af 100644
+--- a/frameworks/ai-os/docs/FUSION.md
++++ b/frameworks/ai-os/docs/FUSION.md
+@@ -1,7 +1,7 @@
+ # Fusion: OpenClaw + Hermes ecosystems -> aphrody-labs/agent
+ 
+ Listed 2026-11-12 with `gh api orgs/openclaw/repos` (non-archived) and `gh api orgs/NousResearch/repos` (agent-related).
+-Forks: aphrody-labs/openclaw and aphrody-labs/hermes-agent (branch `windows-native`, see C:\aphrody\docs\agents\WINDOWS-NATIVE-PORT.md, 16eea3d).
++Forks: aphrody-labs/openclaw and aphrody-labs/hermes-agent (branch `windows-native`, see docs/agents/WINDOWS-NATIVE-PORT.md, 16eea3d).
+ Status: done / partial / todo / skip (out of scope: macOS/Apple-only, org ops, forks of upstream tools we already fork).
+ 
+ ## Rules
+diff --git a/frameworks/ai-os/docs/ROADMAP.md b/frameworks/ai-os/docs/ROADMAP.md
+index 94bb588..343ec17 100644
+--- a/frameworks/ai-os/docs/ROADMAP.md
++++ b/frameworks/ai-os/docs/ROADMAP.md
+@@ -16,4 +16,4 @@ Done (2026-11-12)
+ - `local:` provider verified against llama-server on prd (container auto-llm, model auto-extraction, --jinja) via ssh tunnel: read_file + write_file, 3 steps. shenron-chat-v2 (no --jinja) answers but emits no tool calls.
+ - Deep research: `agent research <outline.yaml>` (one subagent per item, batch_size, results/<item>.json, TS validator ported from the upstream validate_json.py, results fed to memory).
+ 
+-Next 2. Merge Windows-native patches from aphrody-labs/{openclaw,hermes-agent} branch `windows-native` (C:\aphrody\docs\agents\WINDOWS-NATIVE-PORT.md, commit 16eea3d) into gateway/sandbox ports. 3. Research: index results in a vector store (local ONNX embeddings), cross-item synthesis report, resume of partial runs. 4. Durable scheduler on Vercel Workflow / Cloudflare Agents schedule; Windows service for the heartbeat. 5. Gateway + channels via Chat SDK (OpenClaw channel config). 6. Web UI (AI SDK UI + AG-UI); A2A and ACP endpoints; MCP over HTTP. 7. Sandbox: AppContainer via windows-rs; Vercel/CF Sandbox remote. 8. Inference: llama.cpp + ONNX Runtime/DirectML crates (forks), weights store (HF hub -> blake3 CAS -> R2); `local:` provider against prd llama-server through the mesh. 9. pyo3 bridge (our cpython/uv); tree-sitter tools via src src/core (branch core/common-lib). 10. Remaining src AI code: apps/web, apps/yolo, <fr2-hostname>; desktop/mobile; Linux 7.x packaging; runtime-adapter deploy (branch hosting/portable).
++Next 2. Merge Windows-native patches from aphrody-labs/{openclaw,hermes-agent} branch `windows-native` (docs/agents/WINDOWS-NATIVE-PORT.md, commit 16eea3d) into gateway/sandbox ports. 3. Research: index results in a vector store (local ONNX embeddings), cross-item synthesis report, resume of partial runs. 4. Durable scheduler on Vercel Workflow / Cloudflare Agents schedule; Windows service for the heartbeat. 5. Gateway + channels via Chat SDK (OpenClaw channel config). 6. Web UI (AI SDK UI + AG-UI); A2A and ACP endpoints; MCP over HTTP. 7. Sandbox: AppContainer via windows-rs; Vercel/CF Sandbox remote. 8. Inference: llama.cpp + ONNX Runtime/DirectML crates (forks), weights store (HF hub -> blake3 CAS -> R2); `local:` provider against prd llama-server through the mesh. 9. pyo3 bridge (our cpython/uv); tree-sitter tools via src src/core (branch core/common-lib). 10. Remaining src AI code: apps/web, apps/yolo, <fr2-hostname>; desktop/mobile; Linux 7.x packaging; runtime-adapter deploy (branch hosting/portable).
+diff --git a/frameworks/ai-os/docs/cli-reference/agy.md b/frameworks/ai-os/docs/cli-reference/agy.md
+index 0fc53dd..5007538 100644
+--- a/frameworks/ai-os/docs/cli-reference/agy.md
++++ b/frameworks/ai-os/docs/cli-reference/agy.md
+@@ -2,7 +2,7 @@
+ 
+ Verified 2026-11-13. Installed `1.5.7` (`agy --version`); `agy changelog` tops at `1.5.7`.
+ 
+-Sources: `agy --help`, `agy mcp --help`, `agy changelog` (1.5.7); REF = https://antigravity.google/docs/cli/reference ; HL = https://antigravity.google/docs/cli/headless ; GS = https://antigravity.google/docs/getting-started?tab=cli . Context7 and a GitHub repo for agy were not used: no official source repo located; no local mirror in C:\aphrody\third_party (fd).
++Sources: `agy --help`, `agy mcp --help`, `agy changelog` (1.5.7); REF = https://antigravity.google/docs/cli/reference ; HL = https://antigravity.google/docs/cli/headless ; GS = https://antigravity.google/docs/getting-started?tab=cli . Context7 and a GitHub repo for agy were not used: no official source repo located; no local mirror in <workspace>/third_party (fd).
+ 
+ ## Settings
+ 
+@@ -46,6 +46,6 @@ Sources: `agy --help`, `agy mcp --help`, `agy changelog` (1.5.7); REF = https://
+ - `toolPermission: "always-proceed"`: valid, NHITL. No conflict.
+ - `artifactReviewPolicy: "agent-decides"`: CONFLICT for NHITL; docs say it currently behaves as `asks-for-review` (waits). NHITL value is `always-proceed`.
+ - `allowNonWorkspaceAccess: true`: valid.
+-- `trustedWorkspaces`: 70 entries with duplicates and many removed paths (`C:\aphrody\bun`, `C:\aphrody\yolo-*`, ...), plus `C:\`.
++- `trustedWorkspaces`: 70 entries with duplicates and many removed paths (`<workspace>/bun`, `<workspace>/yolo-*`, ...), plus `C:\`.
+ - `hooks.json` sits in `~/.gemini/antigravity-cli/`, but the shared path is `~/.gemini/config/hooks.json` (absent locally): the pre-tool-guard hook likely does not load. Its matcher `run_command|write_file|edit_file` was not checked against current tool names.
+ - `mcp_config.json` exists in both `~/.gemini/antigravity-cli/` (legacy) and `~/.gemini/config/` (current).
+diff --git a/frameworks/ai-os/docs/cli-reference/claude-code.md b/frameworks/ai-os/docs/cli-reference/claude-code.md
+index 0f8fb7e..aa27829 100644
+--- a/frameworks/ai-os/docs/cli-reference/claude-code.md
++++ b/frameworks/ai-os/docs/cli-reference/claude-code.md
+@@ -52,4 +52,4 @@ Sources: `claude --help` (2.1.322); CS = https://code.claude.com/docs/en/setting
+ 
+ - `permissions.defaultMode: "bypassPermissions"` and `skipDangerousModePermissionPrompt: true` sit in user settings: honored (SR). No conflict.
+ - `cleanupPeriodDays` is not set locally: default 30 days applies (SR).
+-- C:\aphrody has `CLAUDE.md`, so `AGENTS.md` is NOT auto-loaded (MEM); `.agents/SOUL.md` and `AGENTS.md` reach the model only via explicit reads or `@` imports. Conflict with the claim in CLAUDE.md that AGENTS.md is the canonical contract.
++- <workspace> has `CLAUDE.md`, so `AGENTS.md` is NOT auto-loaded (MEM); `.agents/SOUL.md` and `AGENTS.md` reach the model only via explicit reads or `@` imports. Conflict with the claim in CLAUDE.md that AGENTS.md is the canonical contract.
+diff --git a/frameworks/ai-os/engines/agy/README.md b/frameworks/ai-os/engines/agy/README.md
+index f144fda..819173b 100644
+--- a/frameworks/ai-os/engines/agy/README.md
++++ b/frameworks/ai-os/engines/agy/README.md
+@@ -19,5 +19,5 @@ bun run --cwd frameworks/ai-os/engines/agy check
+ bun run --cwd frameworks/ai-os/engines/agy fmt
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+diff --git a/frameworks/ai-os/engines/agy/rust-desktop/src/main.rs b/frameworks/ai-os/engines/agy/rust-desktop/src/main.rs
+index f9bb699..eaf6485 100644
+--- a/frameworks/ai-os/engines/agy/rust-desktop/src/main.rs
++++ b/frameworks/ai-os/engines/agy/rust-desktop/src/main.rs
+@@ -1,6 +1,6 @@
+ use std::env;
+ use std::net::{SocketAddr, TcpStream};
+-use std::path::Path;
++use std::path::{Path, PathBuf};
+ use std::process::{Command, Stdio};
+ use std::time::Duration;
+ 
+@@ -9,21 +9,32 @@ fn tcp_reachable(port: u16) -> bool {
+     TcpStream::connect_timeout(&addr, Duration::from_millis(180)).is_ok()
+ }
+ 
+-fn find_webview_host() -> Option<&'static str> {
+-    let candidates = [
+-        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+-        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+-        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
++/// An executable installed by the user: `<home>/.local/bin/<name>`.
++fn local_bin(name: &str) -> PathBuf {
++    let home = env::var_os("USERPROFILE").or_else(|| env::var_os("HOME")).map(PathBuf::from);
++    home.unwrap_or_default().join(".local").join("bin").join(name)
++}
++
++/// Edge or Chrome under the Program Files and per-user install roots of the environment.
++fn find_webview_host() -> Option<PathBuf> {
++    let roots = ["ProgramFiles(x86)", "ProgramFiles", "LOCALAPPDATA"].map(env::var_os);
++    let apps = [
++        Path::new("Microsoft").join("Edge").join("Application").join("msedge.exe"),
++        Path::new("Google").join("Chrome").join("Application").join("chrome.exe"),
+     ];
+-    candidates.into_iter().find(|p| Path::new(p).exists())
++    roots
++        .into_iter()
++        .flatten()
++        .flat_map(|root| apps.iter().map(move |app| PathBuf::from(&root).join(app)))
++        .find(|p| p.exists())
+ }
+ 
+ fn print_doctor_json() {
+-    let ai_os_bin = Path::new(r"%USERPROFILE%\.local\bin\ai-os.exe").exists();
+-    let agy_studio_bin = Path::new(r"%USERPROFILE%\.local\bin\agy-studio.exe").exists();
++    let ai_os_bin = local_bin("ai-os.exe").exists();
++    let agy_studio_bin = local_bin("agy-studio.exe").exists();
+     let ai_os_listening = tcp_reachable(4318);
+     let agy_web_listening = tcp_reachable(4325);
+-    let webview = find_webview_host().unwrap_or("none");
++    let webview = find_webview_host().map_or_else(|| "none".to_string(), |p| p.display().to_string());
+ 
+     println!(
+         "{{\"ok\":true,\"binary\":\"agy-desktop\",\"version\":\"2.0.0\",\"edition\":\"rust-2024-fat-lto\",\"aiOsBinary\":{},\"agyStudioBinary\":{},\"aiOsPort4318\":{},\"agyWebPort4325\":{},\"nativeAppHost\":\"{}\"}}",
+@@ -52,9 +63,9 @@ fn ensure_agy_web_running() {
+     if tcp_reachable(4325) {
+         return;
+     }
+-    let studio_bin = r"%USERPROFILE%\.local\bin\agy-studio.exe";
+-    if Path::new(studio_bin).exists() {
+-        let _ = Command::new(studio_bin)
++    let studio_bin = local_bin("agy-studio.exe");
++    if studio_bin.exists() {
++        let _ = Command::new(&studio_bin)
+             .args(["web", "--port", "4325"])
+             .stdin(Stdio::null())
+             .stdout(Stdio::null())
+diff --git a/frameworks/ai-os/engines/agy/src/cli.ts b/frameworks/ai-os/engines/agy/src/cli.ts
+index 7eaeb98..db2905f 100644
+--- a/frameworks/ai-os/engines/agy/src/cli.ts
++++ b/frameworks/ai-os/engines/agy/src/cli.ts
+@@ -1,5 +1,7 @@
+ #!/usr/bin/env bun
+ import { existsSync } from "node:fs";
++import { join, resolve } from "node:path";
++import { dataDir, workspaceRoot } from "../../../src/core/paths.ts";
+ import {
+   diagnoseGoogleAuth,
+   getSovereignEnv,
+@@ -121,7 +123,7 @@ export async function runAgyCli(argv = process.argv.slice(2)): Promise<void> {
+   }
+ 
+   if (cmd === "ingest") {
+-    const target = argv[1] ?? "C:/aphrody/frameworks/ai-os/engines/agy";
++    const target = argv[1] ?? resolve(import.meta.dir, "..");
+     const res = buildGitingestDigest(target, {
+       preferExternalBinary: hasFlag(argv, "--external"),
+     });
+@@ -214,7 +216,7 @@ export async function runAgyCli(argv = process.argv.slice(2)): Promise<void> {
+     const sub = argv[1] ?? "ask";
+     const notebookId = parseFlag(argv, "--id") ?? "default";
+     if (sub === "ingest") {
+-      const target = argv[2] ?? "C:/aphrody/AGENTS.md";
++      const target = argv[2] ?? join(workspaceRoot(), "AGENTS.md");
+       const title = parseFlag(argv, "--title") ?? target;
+       console.log(
+         JSON.stringify(
+@@ -324,7 +326,7 @@ export async function runAgyCli(argv = process.argv.slice(2)): Promise<void> {
+       return;
+     }
+     if (sub === "scaffold") {
+-      const dir = argv[2] ?? "C:/aphrody/var/agy-scaffold-demo";
++      const dir = argv[2] ?? dataDir("agy-scaffold-demo");
+       console.log(
+         JSON.stringify(generateFullstackCloudflareVercelConfig(dir), null, 2),
+       );
+diff --git a/frameworks/ai-os/engines/agy/src/depot-orgs.ts b/frameworks/ai-os/engines/agy/src/depot-orgs.ts
+index de975e2..0f942ca 100644
+--- a/frameworks/ai-os/engines/agy/src/depot-orgs.ts
++++ b/frameworks/ai-os/engines/agy/src/depot-orgs.ts
+@@ -7,6 +7,7 @@ import {
+ } from "node:fs";
+ import { basename, extname, join, resolve } from "node:path";
+ import { stripEmojis, writeFileSafeUserspace } from "../../../src/index.ts";
++import { dataDir, workspaceRoot } from "../../../src/core/paths.ts";
+ 
+ export const GOOGLE_AI_ORGS = [
+   "google-antigravity",
+@@ -153,8 +154,8 @@ export const GOOGLE_AI_ECOSYSTEM_SURFACES: readonly GoogleAiSurfaceDescriptor[]
+     },
+   ];
+ 
+-export const DEFAULT_PROBE_CACHE_PATH = "C:/aphrody/var/google-orgs-probe.json";
+-export const DEFAULT_AGY_DEPOT_ROOT = "C:/aphrody/var/agy-depot";
++export const DEFAULT_PROBE_CACHE_PATH = dataDir("google-orgs-probe.json");
++export const DEFAULT_AGY_DEPOT_ROOT = dataDir("agy-depot");
+ 
+ function decodeUtfTextSafe(filePath: string): string {
+   const buf = readFileSync(filePath);
+@@ -371,12 +372,14 @@ export function syncDepotRepoKeyless(
+   }
+ 
+   // Check if already checked out in third_party/google-ecosystem first
++  const thirdParty = (name: string) =>
++    join(workspaceRoot(), "third_party", name);
+   const existingMap: Record<string, string> = {
+-    "google/skills": "C:/aphrody/third_party/google-skills",
+-    "google-gemini/gemini-skills": "C:/aphrody/third_party/gemini-skills",
+-    "google-labs-code/stitch-skills": "C:/aphrody/third_party/stitch-skills",
+-    "google-labs-code/jules-skills": "C:/aphrody/third_party/jules-skills",
+-    "google-labs-code/design-md": "C:/aphrody/third_party/design-md",
++    "google/skills": thirdParty("google-skills"),
++    "google-gemini/gemini-skills": thirdParty("gemini-skills"),
++    "google-labs-code/stitch-skills": thirdParty("stitch-skills"),
++    "google-labs-code/jules-skills": thirdParty("jules-skills"),
++    "google-labs-code/design-md": thirdParty("design-md"),
+   };
+   if (existingMap[fullName] && existsSync(existingMap[fullName]!)) {
+     return {
+diff --git a/frameworks/ai-os/engines/agy/src/gemma4-lab.ts b/frameworks/ai-os/engines/agy/src/gemma4-lab.ts
+index a00a228..0566005 100644
+--- a/frameworks/ai-os/engines/agy/src/gemma4-lab.ts
++++ b/frameworks/ai-os/engines/agy/src/gemma4-lab.ts
+@@ -1,5 +1,7 @@
+ import { existsSync, mkdirSync, readdirSync } from "node:fs";
+ import { join } from "node:path";
++import { homedir } from "node:os";
++import { dataDir } from "../../../src/core/paths.ts";
+ import {
+   federateChatCompletion,
+   formatGemma4Prompt,
+@@ -169,9 +171,9 @@ export function discoverLocalGgufModels(): Array<{
+   path: string;
+ }> {
+   const searchDirs = [
+-    "%USERPROFILE%/.cache/llama.cpp",
+-    "%USERPROFILE%/.lmstudio/models",
+-    "C:/aphrody/var/models",
++    join(homedir(), ".cache", "llama.cpp"),
++    join(homedir(), ".lmstudio", "models"),
++    dataDir("models"),
+   ];
+   const found: Array<{ name: string; path: string }> = [];
+   for (const dir of searchDirs) {
+@@ -210,7 +212,7 @@ export function generateGemma4TrainingPipeline(
+   sourceCode: string;
+ } {
+   const modelId = options?.modelId ?? "google/gemma-4-12b-it";
+-  const outDir = options?.outDir ?? "C:/aphrody/var/agy-gemma4-lab";
++  const outDir = options?.outDir ?? dataDir("agy-gemma4-lab");
+   const loraRank = options?.loraRank ?? 16;
+   const lr = options?.learningRate ?? 2e-4;
+   mkdirSync(outDir, { recursive: true });
+diff --git a/frameworks/ai-os/engines/agy/src/modes-and-collections.ts b/frameworks/ai-os/engines/agy/src/modes-and-collections.ts
+index 4eb10b1..1640595 100644
+--- a/frameworks/ai-os/engines/agy/src/modes-and-collections.ts
++++ b/frameworks/ai-os/engines/agy/src/modes-and-collections.ts
+@@ -1,5 +1,6 @@
+ import { existsSync, mkdirSync, readFileSync } from "node:fs";
+ import { dirname, join, resolve } from "node:path";
++import { dataDir } from "../../../src/core/paths.ts";
+ import {
+   getMcpToolsForProfile,
+   installSkillCollection,
+@@ -25,7 +26,7 @@ export interface AgyModeState {
+   updatedAt: string;
+ }
+ 
+-export const DEFAULT_AGY_MODE_STATE_PATH = "C:/aphrody/var/agy-mode-state.json";
++export const DEFAULT_AGY_MODE_STATE_PATH = dataDir("agy-mode-state.json");
+ 
+ /**
+  * Quasi-empty (<100 tokens) system prompt for Mode 1 (`minimal` / `pi-sudo`):
+@@ -37,7 +38,7 @@ export function buildMinimalPiSudoSystemPrompt(
+ ): string {
+   return `Role: Autonomous local agent (${domainFocus}). Ephemeral unrecorded session.
+ Tools: os_atomic (read/write/edit/bash), posix_os, desktop_snapshot, desktop_action.
+-Rules: Execute directly 24/7 without chatter or emojis. Full userspace privileges enabled; C:\\Windows\\System32 strictly read-only.`;
++Rules: Execute directly 24/7 without chatter or emojis. Full userspace privileges enabled; the host OS system directories strictly read-only.`;
+ }
+ 
+ /**
+diff --git a/frameworks/ai-os/engines/agy/src/notebook-engine.ts b/frameworks/ai-os/engines/agy/src/notebook-engine.ts
+index edf1921..0915286 100644
+--- a/frameworks/ai-os/engines/agy/src/notebook-engine.ts
++++ b/frameworks/ai-os/engines/agy/src/notebook-engine.ts
+@@ -1,6 +1,7 @@
+ import { Database } from "bun:sqlite";
+ import { existsSync, mkdirSync, readFileSync } from "node:fs";
+ import { dirname, join } from "node:path";
++import { dataDir } from "../../../src/core/paths.ts";
+ import {
+   computeDeterministicEmbedding,
+   federateChatCompletion,
+@@ -10,9 +11,8 @@ import {
+ } from "../../../src/index.ts";
+ import { buildGitingestDigest } from "./depot-orgs.ts";
+ 
+-export const DEFAULT_NOTEBOOKLM_DB_PATH =
+-  "C:/aphrody/var/agy-notebooklm.sqlite";
+-export const DEFAULT_NOTEBOOKS_DIR = "C:/aphrody/var/agy-notebooks";
++export const DEFAULT_NOTEBOOKLM_DB_PATH = dataDir("agy-notebooklm.sqlite");
++export const DEFAULT_NOTEBOOKS_DIR = dataDir("agy-notebooks");
+ 
+ export interface JupyterCell {
+   cell_type: "markdown" | "code";
+diff --git a/frameworks/ai-os/engines/agy/src/ultra-finops.ts b/frameworks/ai-os/engines/agy/src/ultra-finops.ts
+index cb144e3..4214804 100644
+--- a/frameworks/ai-os/engines/agy/src/ultra-finops.ts
++++ b/frameworks/ai-os/engines/agy/src/ultra-finops.ts
+@@ -1,8 +1,9 @@
+ import { Database } from "bun:sqlite";
+ import { mkdirSync } from "node:fs";
+ import { dirname } from "node:path";
++import { dataDir } from "../../../src/core/paths.ts";
+ 
+-export const DEFAULT_FINOPS_DB_PATH = "C:/aphrody/var/agy-finops.sqlite";
++export const DEFAULT_FINOPS_DB_PATH = dataDir("agy-finops.sqlite");
+ 
+ export interface GoogleAiSubscriptionPlan {
+   id: "google-ai-ultra" | "google-ai-pro" | "payg-api-only";
+diff --git a/frameworks/ai-os/engines/ai-triad/README.md b/frameworks/ai-os/engines/ai-triad/README.md
+index 8e704d8..bfaa5e4 100644
+--- a/frameworks/ai-os/engines/ai-triad/README.md
++++ b/frameworks/ai-os/engines/ai-triad/README.md
+@@ -21,7 +21,7 @@ bun run --cwd frameworks/ai-os/engines/ai-triad build
+ bun run --cwd frameworks/ai-os/engines/ai-triad fmt
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ Cross-AI CLI, TUI, WebGUI, OAuth 2.1 / PKCE / RFC 8628 Device Authorization, MCP `2025-03-26`, ACP v1, and Multi-Protocol Gateway uniting **OpenAI Codex (`codex`)**, **Google Antigravity (`agy` + `gemini`)**, **Anthropic Claude Code (`claude`)**, **OpenCode**, **Pi**, and **Zed** in pure **Bun v1.4.4**.
+@@ -45,7 +45,7 @@ triad serve --port 4319
+ triad mcp-stdio
+ 
+ # Generate GitHub Actions, Sovereign Forge, PowerShell, and POSIX CI pipelines
+-triad ci-gen --out C:/aphrody/frameworks/ai-os/engines/ai-triad
++triad ci-gen --out frameworks/ai-os/engines/ai-triad
+ 
+ # Regenerate live CLI --help corpus
+ triad capture-help
+diff --git a/frameworks/ai-os/engines/ai-triad/ci/forge-triad.toml b/frameworks/ai-os/engines/ai-triad/ci/forge-triad.toml
+index 820c281..a6ef672 100644
+--- a/frameworks/ai-os/engines/ai-triad/ci/forge-triad.toml
++++ b/frameworks/ai-os/engines/ai-triad/ci/forge-triad.toml
+@@ -1,7 +1,7 @@
+ # Sovereign Forge (frg) Pipeline — AI Triad Autonomous Gate
+ [pipeline]
+ name = "ai-triad-gate"
+-workspace = "C:/aphrody/frameworks/ai-os/engines/ai-triad"
++workspace = "frameworks/ai-os/engines/ai-triad"
+ 
+ [[stages]]
+ name = "static-verification"
+diff --git a/frameworks/ai-os/engines/ai-triad/docs/CROSS_PROVIDER_ARCHITECTURE.md b/frameworks/ai-os/engines/ai-triad/docs/CROSS_PROVIDER_ARCHITECTURE.md
+index b669a6b..78bb6b5 100644
+--- a/frameworks/ai-os/engines/ai-triad/docs/CROSS_PROVIDER_ARCHITECTURE.md
++++ b/frameworks/ai-os/engines/ai-triad/docs/CROSS_PROVIDER_ARCHITECTURE.md
+@@ -2,7 +2,7 @@
+ 
+ ## 1. Executive Topology
+ 
+-`@aphrody/ai-triad` (`C:\aphrody\packages\ai-triad`) unifies **OpenAI Codex (`codex`)**, **Google Antigravity (`agy` + `gemini`)**, and **Anthropic Claude Code (`claude`)** alongside **OpenCode**, **Pi**, **Zed**, and local **Sovereign AI-OS / Ring-3 CUDA (`sm_89`)** daemons using strictly documented, standard protocols:
++`@aphrody/ai-triad` (`frameworks/ai-os/engines/ai-triad`) unifies **OpenAI Codex (`codex`)**, **Google Antigravity (`agy` + `gemini`)**, and **Anthropic Claude Code (`claude`)** alongside **OpenCode**, **Pi**, **Zed**, and local **Sovereign AI-OS / Ring-3 CUDA (`sm_89`)** daemons using strictly documented, standard protocols:
+ 
+ - **MCP `2025-03-26` (Stdio & Streamable HTTP)**: Bidirectional cross-agent tool invocation (`triad mcp-stdio` and `POST http://127.0.0.1:4319/mcp`).
+ - **ACP v1 (Agent Client Protocol)**: Native JSON-RPC stdio session orchestration across `agy acp`, `gemini --acp`, and Zed external agents.
+@@ -53,14 +53,14 @@ flowchart LR
+ 
+ | Host Environment                 | Inbound Config File                                                                                      | How It Calls Peer Agents                                                                                             | Outbound Headless Invocation                                                |
+ | :------------------------------- | :------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+-| **Claude Code (`claude`)**       | `~/.claude.json`, `~/.claude/mcp_sovereign.json`, `C:\aphrody\CLAUDE.md`                                 | Calls `triad_ask_codex`, `triad_ask_agy`, `triad_council_review` via `ai-triad` MCP                                  | `claude -p "<prompt>" --output-format json --mcp-config ...`                |
++| **Claude Code (`claude`)**       | `~/.claude.json`, `~/.claude/mcp_sovereign.json`, `<workspace>/CLAUDE.md`                                | Calls `triad_ask_codex`, `triad_ask_agy`, `triad_council_review` via `ai-triad` MCP                                  | `claude -p "<prompt>" --output-format json --mcp-config ...`                |
+ | **OpenAI Codex (`codex`)**       | `~/.codex/config.toml`, `~/.codex/local.config.toml`, `~/.codex/triad.config.toml`, `~/.codex/AGENTS.md` | Calls `triad_ask_claude`, `triad_ask_agy`, `triad_council_review` via `ai_triad` MCP or `-p triad` (`/v1/responses`) | `codex exec "<prompt>" --json --skip-git-repo-check` or `codex exec review` |
+-| **Google Antigravity (`agy`)**   | `~/.gemini/antigravity-cli/mcp_config.json`, `settings.json`, `C:\aphrody\GEMINI.md`                     | Calls `triad_ask_claude`, `triad_ask_codex`, `triad_council_review` via `ai-triad` MCP                               | `agy -p "<prompt>" --output-format json --mode accept-edits` or `agy acp`   |
++| **Google Antigravity (`agy`)**   | `~/.gemini/antigravity-cli/mcp_config.json`, `settings.json`, `<workspace>/GEMINI.md`                    | Calls `triad_ask_claude`, `triad_ask_codex`, `triad_council_review` via `ai-triad` MCP                               | `agy -p "<prompt>" --output-format json --mode accept-edits` or `agy acp`   |
+ | **Google Gemini CLI (`gemini`)** | `~/.gemini/settings.json`, `~/.gemini/projects.json`                                                     | MCP + ACP (`gemini --acp`)                                                                                           | `gemini -p "<prompt>" -o json`                                              |
+ | **OpenCode & Pi**                | `~/.config/opencode/opencode.jsonc`                                                                      | `providers.ai_triad` (`:4319/v1`) + `mcp.ai_triad`                                                                   | `pi-opencode` + Ring-3 local fallback (`:8787/v1`)                          |
+ | **Zed Editor**                   | `%APPDATA%\Zed\settings.json`                                                                            | `language_models.openai_compatible.ai_triad` + `context_servers.ai-triad`                                            | Consumes `triad/auto` and `triad/council` models                            |
+ 
+-## 3. Reference Ecosystem Integration (`C:\aphrody\third_party\ai-ecosystem`)
++## 3. Reference Ecosystem Integration (`<workspace>/third_party/ai-ecosystem`)
+ 
+ 1. **`openai/codex`**: Rust workspace (`codex-rs`) implementing `WireApi::Responses` (`/v1/responses`), Profile V2 (`$CODEX_HOME/<name>.config.toml`), MCP client/server, and Device Code / OAuthkeyring auth.
+ 2. **`anthropics/claude-code`**: Reference plugins, hooks, `CLAUDE.md` conventions, and headless `--output-format stream-json|json` automation patterns.
+diff --git a/frameworks/ai-os/engines/ai-triad/src/ci/templates.ts b/frameworks/ai-os/engines/ai-triad/src/ci/templates.ts
+index 51b5d5b..8d6d395 100644
+--- a/frameworks/ai-os/engines/ai-triad/src/ci/templates.ts
++++ b/frameworks/ai-os/engines/ai-triad/src/ci/templates.ts
+@@ -65,7 +65,7 @@ jobs:
+   const sovereignForgeToml = `# Sovereign Forge (frg) Pipeline — AI Triad Autonomous Gate
+ [pipeline]
+ name = "ai-triad-gate"
+-workspace = "C:/aphrody/frameworks/ai-os/engines/ai-triad"
++workspace = "frameworks/ai-os/engines/ai-triad"
+ 
+ [[stages]]
+ name = "static-verification"
+diff --git a/frameworks/ai-os/engines/ai-triad/src/config/sync-configs.ts b/frameworks/ai-os/engines/ai-triad/src/config/sync-configs.ts
+index 36827e9..d8665a3 100644
+--- a/frameworks/ai-os/engines/ai-triad/src/config/sync-configs.ts
++++ b/frameworks/ai-os/engines/ai-triad/src/config/sync-configs.ts
+@@ -7,7 +7,7 @@ export interface SyncConfigReport {
+ 
+ /**
+  * Compatibility shim: AI-Triad & MCP configuration ownership now lives exclusively in
+- * `@aphrody/ai-os` (`C:/aphrody/frameworks/ai-os/src/triad/index.ts`), wiring `ai-os` as the
++ * `@aphrody/ai-os` (`frameworks/ai-os/src/triad/index.ts`), wiring `ai-os` as the
+  * single unified context-optimized MCP across all agent homes.
+  */
+ export function syncAllTriadConfigs(options?: {
+diff --git a/frameworks/ai-os/engines/ai-triad/src/discovery.ts b/frameworks/ai-os/engines/ai-triad/src/discovery.ts
+index 1de9f2c..5753ce5 100644
+--- a/frameworks/ai-os/engines/ai-triad/src/discovery.ts
++++ b/frameworks/ai-os/engines/ai-triad/src/discovery.ts
+@@ -1,6 +1,7 @@
+ import { existsSync, readdirSync, readFileSync } from "node:fs";
+ import { homedir } from "node:os";
+ import { join } from "node:path";
++import { envFile, workspaceRoot } from "../../../src/core/paths.ts";
+ 
+ export type TriadAgentId =
+   "claude" | "codex" | "agy" | "gemini" | "pi-opencode" | "ai-os";
+@@ -78,11 +79,7 @@ export function parseDotEnv(content: string): Record<string, string> {
+   return out;
+ }
+ 
+-export function loadMergedEnv(
+-  envFilePath = process.platform === "win32"
+-    ? "C:\\aphrody\\.env"
+-    : "/src/.env",
+-): Record<string, string> {
++export function loadMergedEnv(envFilePath = envFile()): Record<string, string> {
+   const merged: Record<string, string> = {};
+   if (existsSync(envFilePath)) {
+     try {
+@@ -206,9 +203,7 @@ export function resolveBinaryCatalog(home = homedir()): Record<
+     aios: {
+       label: "Sovereign AI-OS",
+       executable: isWin ? join(localBin, "ai-os.exe") : join(localBin, "ai-os"),
+-      configDir: isWin
+-        ? "C:\\aphrody\\packages\\ai-os"
+-        : "/src/frameworks/ai-os",
++      configDir: join(workspaceRoot(), "frameworks", "ai-os"),
+       versionArgs: ["--help"],
+     },
+   };
+diff --git a/frameworks/ai-os/engines/ai-triad/src/docs/help-corpus.ts b/frameworks/ai-os/engines/ai-triad/src/docs/help-corpus.ts
+index 605037f..0b57bf5 100644
+--- a/frameworks/ai-os/engines/ai-triad/src/docs/help-corpus.ts
++++ b/frameworks/ai-os/engines/ai-triad/src/docs/help-corpus.ts
+@@ -1,6 +1,7 @@
+ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+ import { homedir } from "node:os";
+ import { join } from "node:path";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ import {
+   redactTextSecrets,
+   resolveBinaryCatalog,
+@@ -27,7 +28,7 @@ export function generateCrossProviderArchitectureDoc(): string {
+ 
+ ## 1. Executive Topology
+ 
+-\`@aphrody/ai-triad\` (\`C:\\aphrody\\packages\\ai-os\\engines\\ai-triad\`) unifies **OpenAI Codex (\`codex\`)**, **Google Antigravity (\`agy\` + \`gemini\`)**, and **Anthropic Claude Code (\`claude\`)** alongside **OpenCode**, **Pi**, **Zed**, and local **Sovereign AI-OS / Ring-3 CUDA (\`sm_89\`)** daemons using strictly documented, standard protocols:
++\`@aphrody/ai-triad\` (\`frameworks/ai-os/engines/ai-triad\`) unifies **OpenAI Codex (\`codex\`)**, **Google Antigravity (\`agy\` + \`gemini\`)**, and **Anthropic Claude Code (\`claude\`)** alongside **OpenCode**, **Pi**, **Zed**, and local **Sovereign AI-OS / Ring-3 CUDA (\`sm_89\`)** daemons using strictly documented, standard protocols:
+ 
+ - **MCP \`2025-03-26\` (Stdio & Streamable HTTP)**: Bidirectional cross-agent tool invocation (\`triad mcp-stdio\` and \`POST http://127.0.0.1:4319/mcp\`).
+ - **ACP v1 (Agent Client Protocol)**: Native JSON-RPC stdio session orchestration across \`agy acp\`, \`gemini --acp\`, and Zed external agents.
+@@ -78,14 +79,14 @@ flowchart LR
+ 
+ | Host Environment | Inbound Config File | How It Calls Peer Agents | Outbound Headless Invocation |
+ | :--- | :--- | :--- | :--- |
+-| **Claude Code (\`claude\`)** | \`~/.claude.json\`, \`~/.claude/mcp_sovereign.json\`, \`C:\\aphrody\\CLAUDE.md\` | Calls \`triad_ask_codex\`, \`triad_ask_agy\`, \`triad_council_review\` via \`ai-triad\` MCP | \`claude -p "<prompt>" --output-format json --mcp-config ...\` |
++| **Claude Code (\`claude\`)** | \`~/.claude.json\`, \`~/.claude/mcp_sovereign.json\`, \`<workspace>/CLAUDE.md\` | Calls \`triad_ask_codex\`, \`triad_ask_agy\`, \`triad_council_review\` via \`ai-triad\` MCP | \`claude -p "<prompt>" --output-format json --mcp-config ...\` |
+ | **OpenAI Codex (\`codex\`)** | \`~/.codex/config.toml\`, \`~/.codex/local.config.toml\`, \`~/.codex/triad.config.toml\`, \`~/.codex/AGENTS.md\` | Calls \`triad_ask_claude\`, \`triad_ask_agy\`, \`triad_council_review\` via \`ai_triad\` MCP or \`-p triad\` (\`/v1/responses\`) | \`codex exec "<prompt>" --json --skip-git-repo-check\` or \`codex exec review\` |
+-| **Google Antigravity (\`agy\`)** | \`~/.gemini/antigravity-cli/mcp_config.json\`, \`settings.json\`, \`C:\\aphrody\\GEMINI.md\` | Calls \`triad_ask_claude\`, \`triad_ask_codex\`, \`triad_council_review\` via \`ai-triad\` MCP | \`agy -p "<prompt>" --output-format json --mode accept-edits\` or \`agy acp\` |
++| **Google Antigravity (\`agy\`)** | \`~/.gemini/antigravity-cli/mcp_config.json\`, \`settings.json\`, \`<workspace>/GEMINI.md\` | Calls \`triad_ask_claude\`, \`triad_ask_codex\`, \`triad_council_review\` via \`ai-triad\` MCP | \`agy -p "<prompt>" --output-format json --mode accept-edits\` or \`agy acp\` |
+ | **Google Gemini CLI (\`gemini\`)** | \`~/.gemini/settings.json\`, \`~/.gemini/projects.json\` | MCP + ACP (\`gemini --acp\`) | \`gemini -p "<prompt>" -o json\` |
+ | **OpenCode & Pi** | \`~/.config/opencode/opencode.jsonc\` | \`providers.ai_triad\` (\`:4319/v1\`) + \`mcp.ai_triad\` | \`pi-opencode\` + Ring-3 local fallback (\`:8787/v1\`) |
+ | **Zed Editor** | \`%APPDATA%\\Zed\\settings.json\` | \`language_models.openai_compatible.ai_triad\` + \`context_servers.ai-triad\` | Consumes \`triad/auto\` and \`triad/council\` models |
+ 
+-## 3. Reference Ecosystem Integration (\`C:\\aphrody\\third_party\\ai-ecosystem\`)
++## 3. Reference Ecosystem Integration (\`<workspace>/third_party/ai-ecosystem\`)
+ 
+ 1. **\`openai/codex\`**: Rust workspace (\`codex-rs\`) implementing \`WireApi::Responses\` (\`/v1/responses\`), Profile V2 (\`$CODEX_HOME/<name>.config.toml\`), MCP client/server, and Device Code / OAuthkeyring auth.
+ 2. **\`anthropics/claude-code\`**: Reference plugins, hooks, \`CLAUDE.md\` conventions, and headless \`--output-format stream-json|json\` automation patterns.
+@@ -108,16 +109,10 @@ export function captureAllCliHelpDocs(options?: {
+   ecosystemRoot?: string;
+ }): string[] {
+   const home = options?.home ?? homedir();
+-  const docsDir =
+-    options?.docsDir ??
+-    (process.platform === "win32"
+-      ? "C:\\aphrody\\packages\\ai-os\\engines\\ai-triad\\docs"
+-      : "/src/frameworks/ai-os/engines/ai-triad/docs");
++  const docsDir = options?.docsDir ?? join(import.meta.dir, "..", "..", "docs");
+   const ecosystemRoot =
+     options?.ecosystemRoot ??
+-    (process.platform === "win32"
+-      ? "C:\\aphrody\\third_party\\ai-ecosystem"
+-      : "/src/third_party/ai-ecosystem");
++    join(workspaceRoot(), "third_party", "ai-ecosystem");
+ 
+   mkdirSync(docsDir, { recursive: true });
+   const catalog = resolveBinaryCatalog(home);
+diff --git a/frameworks/ai-os/engines/ai-triad/src/tui/dashboard.ts b/frameworks/ai-os/engines/ai-triad/src/tui/dashboard.ts
+index 24d4609..deb7289 100644
+--- a/frameworks/ai-os/engines/ai-triad/src/tui/dashboard.ts
++++ b/frameworks/ai-os/engines/ai-triad/src/tui/dashboard.ts
+@@ -1,5 +1,6 @@
+ import { existsSync, readdirSync } from "node:fs";
+ import { join } from "node:path";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ import { inspectCrossAuthStatus } from "../auth/cross-auth.ts";
+ import { discoverBinaries } from "../discovery.ts";
+ 
+@@ -23,9 +24,7 @@ function pad(str: string, width: number): string {
+ }
+ 
+ export function listClonedEcosystemRepos(
+-  ecosystemRoot = process.platform === "win32"
+-    ? "C:\\aphrody\\third_party\\ai-ecosystem"
+-    : "/src/third_party/ai-ecosystem",
++  ecosystemRoot = join(workspaceRoot(), "third_party", "ai-ecosystem"),
+ ): Array<{ name: string; path: string; hasGit: boolean }> {
+   if (!existsSync(ecosystemRoot)) return [];
+   try {
+diff --git a/frameworks/ai-os/engines/ai-triad/test/triad.test.ts b/frameworks/ai-os/engines/ai-triad/test/triad.test.ts
+index e0844dc..45f0f88 100644
+--- a/frameworks/ai-os/engines/ai-triad/test/triad.test.ts
++++ b/frameworks/ai-os/engines/ai-triad/test/triad.test.ts
+@@ -1,6 +1,13 @@
+-import { mkdirSync, writeFileSync } from "node:fs";
++import {
++  copyFileSync,
++  linkSync,
++  mkdirSync,
++  mkdtempSync,
++  rmSync,
++  writeFileSync,
++} from "node:fs";
+ import { tmpdir } from "node:os";
+-import { join } from "node:path";
++import { dirname, isAbsolute, join } from "node:path";
+ import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+ import {
+   buildAuthorizationUrl,
+@@ -17,6 +24,7 @@ import {
+   discoverBinaries,
+   redactSecret,
+   redactTextSecrets,
++  resolveBinaryCatalog,
+   runCommandCapture,
+   type TriadAgentId,
+ } from "../src/discovery.ts";
+@@ -438,17 +446,52 @@ describe("Gateway Multi-Protocol Translation & MCP 2025-03-26", () => {
+   });
+ });
+ 
+-describe("Live Workstation CLI Discovery", () => {
+-  test("discovers installed claude, codex, agy, and gemini binaries and --help", () => {
+-    const bins = discoverBinaries();
+-    const byId = Object.fromEntries(bins.map((b) => [b.id, b]));
+-    expect(byId.claude?.installed).toBe(true);
+-    expect(byId.codex?.installed).toBe(true);
+-    expect(byId.agy?.installed).toBe(true);
+-    expect(byId.gemini?.installed).toBe(true);
+-
+-    const codexHelp = runCommandCapture([byId.codex!.executable, "--help"]);
+-    expect(codexHelp.exitCode).toBe(0);
+-    expect(codexHelp.stdout).toContain("Codex CLI");
++describe("CLI discovery", () => {
++  test("finds the catalog binaries under a home directory and reads their version", () => {
++    const home = mkdtempSync(join(tmpdir(), "triad-home-"));
++    const localAppData = process.env.LOCALAPPDATA;
++    process.env.LOCALAPPDATA = join(home, "AppData", "Local");
++    try {
++      const missing = Object.fromEntries(
++        discoverBinaries(home).map((b) => [b.id, b]),
++      );
++      for (const id of ["claude", "codex", "agy", "gemini"]) {
++        expect(missing[id]?.installed).toBe(false);
++        expect(missing[id]?.version).toBe("not-installed");
++      }
++
++      // The test runtime stands in for each CLI: any executable that prints a version line is discoverable.
++      const catalog = resolveBinaryCatalog(home);
++      let first: string | undefined;
++      for (const id of ["claude", "codex", "agy", "gemini"]) {
++        // A catalog entry that is not installed may be a bare command name: the fixture goes under the home.
++        const listed = catalog[id]!.executable;
++        const exe = isAbsolute(listed)
++          ? listed
++          : join(home, ".local", "bin", id);
++        mkdirSync(dirname(exe), { recursive: true });
++        if (first) {
++          try {
++            linkSync(first, exe);
++          } catch {
++            copyFileSync(first, exe); // a hard link needs one device
++          }
++        } else copyFileSync(process.execPath, (first = exe));
++      }
++
++      const found = Object.fromEntries(
++        discoverBinaries(home).map((b) => [b.id, b]),
++      );
++      for (const id of ["claude", "codex", "agy", "gemini"]) {
++        expect(found[id]?.installed).toBe(true);
++        expect(found[id]?.version).toMatch(/\d+\.\d+/);
++      }
++      const help = runCommandCapture([found.codex!.executable, "--help"]);
++      expect(help.exitCode).toBe(0);
++    } finally {
++      if (localAppData === undefined) delete process.env.LOCALAPPDATA;
++      else process.env.LOCALAPPDATA = localAppData;
++      rmSync(home, { recursive: true, force: true });
++    }
+   });
+ });
+diff --git a/frameworks/ai-os/engines/brain/README.md b/frameworks/ai-os/engines/brain/README.md
+index f4b3de5..342ef31 100644
+--- a/frameworks/ai-os/engines/brain/README.md
++++ b/frameworks/ai-os/engines/brain/README.md
+@@ -16,5 +16,5 @@ bun run --cwd frameworks/ai-os/engines/brain check
+ bun run --cwd frameworks/ai-os/engines/brain fmt
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+diff --git a/frameworks/ai-os/engines/brain/src/cli.ts b/frameworks/ai-os/engines/brain/src/cli.ts
+index 33a8991..98f3a72 100644
+--- a/frameworks/ai-os/engines/brain/src/cli.ts
++++ b/frameworks/ai-os/engines/brain/src/cli.ts
+@@ -2,24 +2,35 @@
+ // brain: merge AGY sessions into a redacted Obsidian vault, build the code graph (graphify), sync to Google Drive.
+ // The Google OAuth consent for the agent account is done by a human (see `brain auth-drive`); nothing here handles passwords.
+ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+-import { join } from "node:path";
++import { homedir } from "node:os";
++import { delimiter, join } from "node:path";
+ import { spawnSync } from "node:child_process";
++import { dataDir, envFile, workspaceRoot } from "../../../src/core/paths.ts";
+ 
+-const VAULT = process.env.BRAIN_VAULT ?? "C:/aphrody/var/brain";
++const VAULT = process.env.BRAIN_VAULT ?? dataDir("brain");
++/** Code directories of the workspace that the code graph covers. */
++const GRAPH_ROOTS = ["frameworks", "system", "tools"].filter((d) =>
++  existsSync(join(workspaceRoot(), d)),
++);
+ const REMOTE = process.env.BRAIN_RCLONE_REMOTE ?? "gdrive-yoyo";
+ const REMOTE_DIR = process.env.BRAIN_REMOTE_DIR ?? "aphrody-brain";
+-const HOME = process.env.USERPROFILE ?? "";
+ const run = (cmd: string, args: string[], cwd?: string) =>
+   spawnSync(cmd, args, {
+     stdio: "inherit",
+     cwd,
+-    env: { ...process.env, PATH: `${HOME}\\.local\\bin;${process.env.PATH}` },
++    env: {
++      ...process.env,
++      PATH: [join(homedir(), ".local", "bin"), process.env.PATH].join(
++        delimiter,
++      ),
++    },
+   });
+ 
+ function envSecrets(): string[] {
+   const out: string[] = [];
+-  if (!existsSync("C:/aphrody/.env")) return out;
+-  for (const l of readFileSync("C:/aphrody/.env", "utf8").split(/\r?\n/)) {
++  const env = envFile();
++  if (!existsSync(env)) return out;
++  for (const l of readFileSync(env, "utf8").split(/\r?\n/)) {
+     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
+     const v = m?.[2]?.replace(/^['"]|['"]$/g, "") ?? "";
+     if (
+@@ -78,11 +89,11 @@ function main() {
+           .status ?? 1,
+       );
+     case "graph": {
+-      for (const d of ["packages", "crates", "apps", "infra"])
+-        run("graphify", ["update", `C:/aphrody/${d}`]);
+-      const graphs = ["packages", "crates", "apps", "infra"]
+-        .map((d) => `C:/aphrody/${d}/graphify-out/graph.json`)
+-        .filter(existsSync);
++      for (const d of GRAPH_ROOTS)
++        run("graphify", ["update", join(workspaceRoot(), d)]);
++      const graphs = GRAPH_ROOTS.map((d) =>
++        join(workspaceRoot(), d, "graphify-out", "graph.json"),
++      ).filter(existsSync);
+       if (graphs.length > 1)
+         run("graphify", [
+           "merge-graphs",
+diff --git a/frameworks/ai-os/engines/brain/src/index.ts b/frameworks/ai-os/engines/brain/src/index.ts
+index 3d93793..71954cd 100644
+--- a/frameworks/ai-os/engines/brain/src/index.ts
++++ b/frameworks/ai-os/engines/brain/src/index.ts
+@@ -1,7 +1,8 @@
+ import { existsSync, readFileSync, readdirSync } from "node:fs";
+ import { join } from "node:path";
++import { dataDir } from "../../../src/core/paths.ts";
+ 
+-export const DEFAULT_BRAIN_VAULT_PATH = "C:/aphrody/var/brain";
++export const DEFAULT_BRAIN_VAULT_PATH = dataDir("brain");
+ 
+ export interface BrainSessionRecord {
+   id: string;
+diff --git a/frameworks/ai-os/engines/brain/src/merge-sessions.ts b/frameworks/ai-os/engines/brain/src/merge-sessions.ts
+index bfb6fbf..4922d4a 100644
+--- a/frameworks/ai-os/engines/brain/src/merge-sessions.ts
++++ b/frameworks/ai-os/engines/brain/src/merge-sessions.ts
+@@ -1,5 +1,5 @@
+ // Merge all AGY CLI sessions into a redacted Obsidian-compatible "brain" vault.
+-// Read-only on sessions; writes only under C:/aphrody/var/brain.
++// Read-only on sessions; writes only under the data directory (AY_DATA_DIR, else <workspace>/var/brain).
+ import {
+   existsSync,
+   mkdirSync,
+@@ -7,16 +7,20 @@ import {
+   readdirSync,
+   writeFileSync,
+ } from "node:fs";
++import { homedir } from "node:os";
++import { join } from "node:path";
++import { dataDir, envFile } from "../../../src/core/paths.ts";
+ 
+-const BRAIN = "%USERPROFILE%/.gemini/antigravity-cli/brain";
+-const VAULT = "C:/aphrody/var/brain";
++const BRAIN = join(homedir(), ".gemini", "antigravity-cli", "brain");
++const VAULT = dataDir("brain");
+ mkdirSync(`${VAULT}/Sessions`, { recursive: true });
+ mkdirSync(`${VAULT}/.obsidian`, { recursive: true });
+ 
+-// Redaction: exact secret values from C:/aphrody/.env (in memory only) + generic token patterns.
++// Redaction: exact secret values from the workspace .env (in memory only) + generic token patterns.
+ const secrets: string[] = [];
+-if (existsSync("C:/aphrody/.env")) {
+-  for (const l of readFileSync("C:/aphrody/.env", "utf8").split(/\r?\n/)) {
++const envPath = envFile();
++if (existsSync(envPath)) {
++  for (const l of readFileSync(envPath, "utf8").split(/\r?\n/)) {
+     const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
+     if (!m) continue;
+     const v = m[2]!.replace(/^['"]|['"]$/g, "");
+diff --git a/frameworks/ai-os/engines/brain/test/brain.test.ts b/frameworks/ai-os/engines/brain/test/brain.test.ts
+index 4619a39..886a34c 100644
+--- a/frameworks/ai-os/engines/brain/test/brain.test.ts
++++ b/frameworks/ai-os/engines/brain/test/brain.test.ts
+@@ -22,7 +22,7 @@ describe("@aphrody/brain vault indexing & query API", () => {
+             start: "2026-11-11T10:00:00Z",
+             end: "2026-11-11T10:15:00Z",
+             steps: 24,
+-            files: ["C:/aphrody/apps/web/server.ts"],
++            files: ["apps/web/server.ts"],
+             subagents: ["Codebase Researcher"],
+             toolErrors: 0,
+             status: "completed",
+@@ -34,7 +34,7 @@ describe("@aphrody/brain vault indexing & query API", () => {
+             start: "2026-11-10T22:00:00Z",
+             end: "2026-11-10T22:42:00Z",
+             steps: 12,
+-            files: ["C:/aphrody/apps/yolo/server.ts"],
++            files: ["apps/yolo/server.ts"],
+             subagents: [],
+             toolErrors: 1,
+             status: "stopped-quota-429",
+@@ -47,7 +47,7 @@ describe("@aphrody/brain vault indexing & query API", () => {
+       const all = loadBrainSessions(vault);
+       expect(all.length).toBe(2);
+ 
+-      const hits = queryBrainSessions("aphrody", { vaultPath: vault });
++      const hits = queryBrainSessions("sovereign", { vaultPath: vault });
+       expect(hits.length).toBe(1);
+       expect(hits[0]?.id).toBe("4b0b07e6-test");
+ 
+diff --git a/frameworks/ai-os/engines/gemma-web/README.md b/frameworks/ai-os/engines/gemma-web/README.md
+index 9261d7d..7eb7941 100644
+--- a/frameworks/ai-os/engines/gemma-web/README.md
++++ b/frameworks/ai-os/engines/gemma-web/README.md
+@@ -16,5 +16,5 @@ bun run --cwd frameworks/ai-os/engines/gemma-web build:web
+ bun run --cwd frameworks/ai-os/engines/gemma-web bench:webgpu
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+diff --git a/frameworks/ai-os/engines/inference/README.md b/frameworks/ai-os/engines/inference/README.md
+index 6b0e476..d49ea12 100644
+--- a/frameworks/ai-os/engines/inference/README.md
++++ b/frameworks/ai-os/engines/inference/README.md
+@@ -17,7 +17,7 @@ bun run --cwd frameworks/ai-os/engines/inference typecheck
+ bun run --cwd frameworks/ai-os/engines/inference test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ `NativeInference` loads the `aphrody_ffi` library (cargo feature `inference` of `aphrody-ffi`) and uses
+diff --git a/frameworks/ai-os/engines/knowledge-engine/README.md b/frameworks/ai-os/engines/knowledge-engine/README.md
+index 7a91b09..bed46cd 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/README.md
++++ b/frameworks/ai-os/engines/knowledge-engine/README.md
+@@ -21,7 +21,7 @@ bun run --cwd frameworks/ai-os/engines/knowledge-engine mcp-stdio
+ bun run --cwd frameworks/ai-os/engines/knowledge-engine build
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ Unified **Context7 v2 + 5-Channel Deep Research + Deterministic Fact-Checker + Monorepo Docs & Skills Generator + Continuous AGY Session Reviewer** built in 100% pure **Bun v1.4.4** (`bun:sqlite` WAL + `bun:ffi` `rust_stack_ffi.dll` Blake3).
+@@ -34,9 +34,9 @@ Unified **Context7 v2 + 5-Channel Deep Research + Deterministic Fact-Checker + M
+ 
+ ## Modules
+ 
+-1. [`src/context7/client.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/context7/client.ts): Context7 v2 `/libs/search` and `/context` client cached in `C:\aphrody\var\knowledge.sqlite` (`context7_cache` keyed by `rs_blake3_hex`, 24h TTL).
+-2. [`src/research/deep-research.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/research/deep-research.ts): Parallel 5-channel Deep Research across Context7, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local `C:\aphrody` lockfiles -> `C:\aphrody\docs\research\<slug>.md`.
+-3. [`src/factcheck/verifier.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/factcheck/verifier.ts): Deterministic multi-evidence Fact Checker over local paths, `~/.local/bin` binaries, lockfile versions, GitHub repos, Context7 API symbols, secret hygiene, `C:\Windows\System32` non-mutation, and zero-emoji compliance.
+-4. [`src/generators/docs-gen.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/generators/docs-gen.ts) & [`src/generators/skills-gen.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/generators/skills-gen.ts): Generates `C:\aphrody\docs\MONOREPO_ATLAS.md`, `C:\aphrody\third_party\bun\docs\sovereign\index.mdx`, and the 5 sovereign `SKILL.md` workspace skills.
+-5. [`src/reviewer/agy-session-auditor.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/reviewer/agy-session-auditor.ts): Incremental `< 30ms` auditor over all `brain/*/transcript.jsonl` sessions + continuous `ske watch` daemon.
+-6. [`src/mcp/stdio.ts`](file:///C:/aphrody/frameworks/ai-os/engines/knowledge-engine/src/mcp/stdio.ts): MCP `2025-03-26` server exposing `ctx7_query_docs`, `deep_research`, `fact_check`, `generate_docs_and_skills`, `review_agy_sessions`, and `knowledge_status`.
++1. [`src/context7/client.ts`](src/context7/client.ts): Context7 v2 `/libs/search` and `/context` client cached in `<workspace>/var/knowledge.sqlite` (`context7_cache` keyed by `rs_blake3_hex`, 24h TTL).
++2. [`src/research/deep-research.ts`](src/research/deep-research.ts): Parallel 5-channel Deep Research across Context7, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local `<workspace>` lockfiles -> `<workspace>/docs/research\<slug>.md`.
++3. [`src/factcheck/verifier.ts`](src/factcheck/verifier.ts): Deterministic multi-evidence Fact Checker over local paths, `~/.local/bin` binaries, lockfile versions, GitHub repos, Context7 API symbols, secret hygiene, `%SystemRoot%\System32` non-mutation, and zero-emoji compliance.
++4. [`src/generators/docs-gen.ts`](src/generators/docs-gen.ts) & [`src/generators/skills-gen.ts`](src/generators/skills-gen.ts): Generates `<workspace>/docs/MONOREPO_ATLAS.md`, `third_party/bun/docs/sovereign/index.mdx`, and the 5 sovereign `SKILL.md` workspace skills.
++5. [`src/reviewer/agy-session-auditor.ts`](src/reviewer/agy-session-auditor.ts): Incremental `< 30ms` auditor over all `brain/*/transcript.jsonl` sessions + continuous `ske watch` daemon.
++6. [`src/mcp/stdio.ts`](src/mcp/stdio.ts): MCP `2025-03-26` server exposing `ctx7_query_docs`, `deep_research`, `fact_check`, `generate_docs_and_skills`, `review_agy_sessions`, and `knowledge_status`.
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/cli.ts b/frameworks/ai-os/engines/knowledge-engine/src/cli.ts
+index 46bd696..e2a3ce7 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/cli.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/cli.ts
+@@ -22,10 +22,10 @@ Usage:
+   ske <command> [options]
+ 
+ Commands:
+-  research <query> [--no-save]          Run 5-channel parallel Deep Research and write C:\\aphrody\\docs\\research\\<slug>.md
++  research <query> [--no-save]          Run 5-channel parallel Deep Research and write docs/research/<slug>.md
+   factcheck <claim-or-file> [--json]    Verify paths, binaries, versions, repos, Context7 symbols, secrets & System32 safety
+   ctx7 <library> [query] [--tokens N]   Resolve library via Context7 v2 + SQLite WAL Blake3 cache and fetch official docs
+-  gen-docs [--offline]                  Generate C:\\aphrody\\docs\\MONOREPO_ATLAS.md and third_party/bun/docs/sovereign/index.mdx
++  gen-docs [--offline]                  Generate docs/MONOREPO_ATLAS.md and third_party/bun/docs/sovereign/index.mdx
+   gen-skills                            Synthesize and validate the 5 sovereign workspace SKILL.md definitions
+   review-sessions [--json] [--limit N]  Incrementally audit all AGY brain transcripts (< 30ms cached) -> AGY_SESSIONS_CONTINUOUS_REVIEW.md
+   watch [--interval 30] [--once]        Continuous reviewer loop over active transcripts, docs/*.md, and SKILL.md
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/context7/client.ts b/frameworks/ai-os/engines/knowledge-engine/src/context7/client.ts
+index 1f332da..1e8b171 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/context7/client.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/context7/client.ts
+@@ -164,7 +164,7 @@ export function parseContext7TextChunks(
+ 
+ /**
+  * Searches Context7 v2 `/libs/search` for official upstream library IDs and metadata,
+- * caching responses in `C:\aphrody\var\knowledge.sqlite` keyed by Blake3 digest (TTL 24h).
++ * caching responses in `var/knowledge.sqlite` keyed by Blake3 digest (TTL 24h).
+  */
+ export async function searchLibraries(
+   libraryName: string,
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/db/sqlite.ts b/frameworks/ai-os/engines/knowledge-engine/src/db/sqlite.ts
+index 585f765..4744caa 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/db/sqlite.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/db/sqlite.ts
+@@ -1,11 +1,9 @@
+ import { Database } from "bun:sqlite";
+ import { existsSync, mkdirSync } from "node:fs";
+ import { dirname, resolve } from "node:path";
++import { dataDir } from "../../../../src/core/paths.ts";
+ 
+-export const DEFAULT_KNOWLEDGE_DB_PATH =
+-  process.platform === "win32"
+-    ? "C:\\aphrody\\var\\knowledge.sqlite"
+-    : "/src/var/knowledge.sqlite";
++export const DEFAULT_KNOWLEDGE_DB_PATH = dataDir("knowledge.sqlite");
+ 
+ const dbPool = new Map<string, Database>();
+ 
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/env/safe-env.ts b/frameworks/ai-os/engines/knowledge-engine/src/env/safe-env.ts
+index fdb7f35..a1d06ee 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/env/safe-env.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/env/safe-env.ts
+@@ -1,4 +1,5 @@
+ import { existsSync, readFileSync } from "node:fs";
++import { envFile } from "../../../../src/core/paths.ts";
+ import {
+   isSecretKey,
+   loadMonorepoEnv,
+@@ -6,8 +7,7 @@ import {
+   type LoadedMonorepoEnv,
+ } from "../../../../../../system/env-kit/src/index.ts";
+ 
+-export const DEFAULT_ENV_FILE_PATH =
+-  process.platform === "win32" ? "C:\\aphrody\\.env" : "/src/.env";
++export const DEFAULT_ENV_FILE_PATH = envFile();
+ 
+ const TOKEN_PREFIX_REDACTION_REGEX =
+   /(?:ya29\.[A-Za-z0-9._-]{20,}|1\/\/[A-Za-z0-9._-]{20,}|\b(?:sk-[A-Za-z0-9_-]{12,}|AIza[A-Za-z0-9_-]{20,}|figd_[A-Za-z0-9_-]{12,}|gh[pousr]_[A-Za-z0-9_]{16,}|github_pat_[A-Za-z0-9_]{20,}|ctx7sk-[A-Za-z0-9_-]{12,}|vcp_[A-Za-z0-9_-]{12,}|napi_[A-Za-z0-9_-]{12,}|npm_[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{10,})\b)/g;
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/factcheck/verifier.ts b/frameworks/ai-os/engines/knowledge-engine/src/factcheck/verifier.ts
+index 7e3f9c5..120dc62 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/factcheck/verifier.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/factcheck/verifier.ts
+@@ -1,6 +1,7 @@
+ import { existsSync, readFileSync } from "node:fs";
+ import { homedir } from "node:os";
+-import { join, resolve } from "node:path";
++import { join, resolve, sep } from "node:path";
++import { pathToFileURL } from "node:url";
+ import { getLibraryDocs, searchLibraries } from "../context7/client.ts";
+ import { openKnowledgeDatabase } from "../db/sqlite.ts";
+ import {
+@@ -10,6 +11,7 @@ import {
+   scanTextForSecretLeaks,
+ } from "../env/safe-env.ts";
+ import { blake3Hex } from "../ffi/blake3.ts";
++import { envFile, workspaceRoot } from "../../../../src/core/paths.ts";
+ 
+ export type ClaimVerdictStatus =
+   "VERIFIED" | "CONTRADICTED" | "UNVERIFIED_NEEDS_CITATION";
+@@ -121,10 +123,10 @@ function checkSafetyInvariants(
+   if (leaks.length === 0) {
+     diags.push({
+       category: "safety_secret_hygiene",
+-      claim: "Zero raw secret values from C:\\aphrody\\.env or bearer tokens",
++      claim: "Zero raw secret values from the workspace .env or bearer tokens",
+       status: "VERIFIED",
+       line: 1,
+-      citation: `file:///${(envPath ?? "C:/aphrody/.env").replace(/\\/g, "/")}`,
++      citation: pathToFileURL(envPath ?? envFile()).href,
+       detail:
+         "Verified 0 raw secret literals or unredacted API tokens present.",
+     });
+@@ -141,7 +143,7 @@ function checkSafetyInvariants(
+     }
+   }
+ 
+-  // 2. C:\Windows\System32 mutation check
++  // 2. Windows System32 mutation check
+   const lines = text.split(/\r?\n/);
+   let sys32MutationLine = 0;
+   const destructiveSys32Pattern =
+@@ -155,20 +157,20 @@ function checkSafetyInvariants(
+   if (sys32MutationLine > 0) {
+     diags.push({
+       category: "safety_system32",
+-      claim: "Sacred C:\\Windows\\System32 userspace non-mutation",
++      claim: "Sacred Windows System32 userspace non-mutation",
+       status: "CONTRADICTED",
+       line: sys32MutationLine,
+       citation: targetLabel,
+-      detail: `Destructive write/delete command targeting C:\\Windows\\System32 detected at line ${sys32MutationLine}.`,
++      detail: `Destructive write/delete command targeting Windows System32 detected at line ${sys32MutationLine}.`,
+     });
+   } else {
+     diags.push({
+       category: "safety_system32",
+-      claim: "Sacred C:\\Windows\\System32 userspace non-mutation",
++      claim: "Sacred Windows System32 userspace non-mutation",
+       status: "VERIFIED",
+       line: 1,
+-      citation: "file:///C:/aphrody/.agents/scripts/pre-tool-guard.ts",
+-      detail: "Zero destructive mutations targeting C:\\Windows\\System32.",
++      citation: targetLabel,
++      detail: "Zero destructive mutations targeting Windows System32.",
+     });
+   }
+ 
+@@ -208,11 +210,14 @@ function checkFilesystemAndBinaryClaims(
+   const diags: ClaimDiagnostic[] = [];
+   const seenPaths = new Set<string>();
+ 
+-  // 1. Explicit file:///C:/... links
+-  const fileUrlRegex = /file:\/\/\/([A-Za-z]:\/[^\s)"'`#>\]]+)/g;
++  // 1. Explicit file:/// links (a drive path on Windows, an absolute path elsewhere)
++  const fileUrlRegex = /file:\/\/\/([^\s)"'`#>\]]+)/g;
+   let m: RegExpExecArray | null = fileUrlRegex.exec(text);
+   while (m !== null) {
+-    const rawPath = decodeURIComponent(m[1]!).replace(/\//g, "\\");
++    const decoded = decodeURIComponent(m[1]!);
++    const rawPath = /^[A-Za-z]:/.test(decoded)
++      ? decoded.replace(/\//g, "\\")
++      : `/${decoded}`;
+     const normKey = rawPath.toLowerCase();
+     if (!seenPaths.has(normKey)) {
+       seenPaths.add(normKey);
+@@ -236,11 +241,19 @@ function checkFilesystemAndBinaryClaims(
+     m = fileUrlRegex.exec(text);
+   }
+ 
+-  // 2. Direct C:\aphrody\... paths
+-  const winSrcRegex = /\b(C:\\aphrody\\[A-Za-z0-9_.\-\\/]+)\b/g;
++  // 2. Direct paths below the workspace root, written with either separator
++  const rootPattern = srcRoot
++    .replace(/[\\/]+$/, "")
++    .split(/[\\/]+/)
++    .map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
++    .join("[\\\\/]");
++  const winSrcRegex = new RegExp(
++    `(?<![A-Za-z0-9_])(${rootPattern}[\\\\/][A-Za-z0-9_.\\-\\\\/]+)`,
++    "g",
++  );
+   m = winSrcRegex.exec(text);
+   while (m !== null) {
+-    const rawCandidate = m[1]!.replace(/[/]+/g, "\\").replace(/[.,;:]+$/, "");
++    const rawCandidate = m[1]!.replace(/[\\/]+/g, sep).replace(/[.,;:]+$/, "");
+     if (rawCandidate.includes("*") || rawCandidate.includes("<")) {
+       m = winSrcRegex.exec(text);
+       continue;
+@@ -581,8 +594,7 @@ export async function runFactCheck(
+   options: FactCheckOptions = {},
+ ): Promise<FactCheckVerdict> {
+   const t0 = Bun.nanoseconds();
+-  const srcRoot =
+-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
++  const srcRoot = options.srcRoot ?? workspaceRoot();
+   const localBinDir = options.localBinDir ?? join(homedir(), ".local", "bin");
+ 
+   const resolvedFile = normalizeTargetFileCandidate(claimOrFile);
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/ffi/blake3.ts b/frameworks/ai-os/engines/knowledge-engine/src/ffi/blake3.ts
+index da7c162..4d5d5f0 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/ffi/blake3.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/ffi/blake3.ts
+@@ -1,5 +1,6 @@
+ import { dlopen, FFIType, ptr } from "bun:ffi";
+ import { existsSync } from "node:fs";
++import { homedir } from "node:os";
+ import { join } from "node:path";
+ 
+ const encoder = new TextEncoder();
+@@ -23,8 +24,7 @@ const scratchOut = new Uint8Array(128);
+ function resolveCandidateDllPaths(): string[] {
+   const candidates: Array<string | undefined> = [
+     process.env.RUST_STACK_FFI_DLL,
+-    "%USERPROFILE%\\.local\\bin\\rust_stack_ffi.dll",
+-    "C:\\aphrody\\crates\\rust-stack\\target\\release\\rust_stack_ffi.dll",
++    join(homedir(), ".local", "bin", "rust_stack_ffi.dll"),
+     process.env.CARGO_TARGET_DIR
+       ? join(process.env.CARGO_TARGET_DIR, "release", "rust_stack_ffi.dll")
+       : undefined,
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/generators/docs-gen.ts b/frameworks/ai-os/engines/knowledge-engine/src/generators/docs-gen.ts
+index 39a1514..136877e 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/generators/docs-gen.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/generators/docs-gen.ts
+@@ -11,9 +11,18 @@ import { dirname, join, resolve } from "node:path";
+ import { searchLibraries } from "../context7/client.ts";
+ import { redactSecretsFromText, stripEmojis } from "../env/safe-env.ts";
+ import { blake3Hex } from "../ffi/blake3.ts";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ 
+ export interface WorkspaceEntityRecord {
+-  group: "apps" | "packages" | "crates" | "infra" | "tools" | "third_party";
++  group:
++    | "apps"
++    | "packages"
++    | "crates"
++    | "infra"
++    | "tools"
++    | "third_party"
++    | "frameworks"
++    | "system";
+   name: string;
+   absPath: string;
+   language: string;
+@@ -351,8 +360,7 @@ export async function generateMonorepoDocs(
+   options: DocsGenOptions = {},
+ ): Promise<DocsGenerationReport> {
+   const t0 = Bun.nanoseconds();
+-  const srcRoot =
+-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
++  const srcRoot = options.srcRoot ?? workspaceRoot();
+   const localBinDir = options.localBinDir ?? join(homedir(), ".local", "bin");
+   const atlasPath = resolve(
+     options.atlasOutPath ?? join(srcRoot, "docs", "MONOREPO_ATLAS.md"),
+@@ -370,6 +378,8 @@ export async function generateMonorepoDocs(
+     "crates",
+     "tools",
+     "third_party",
++    "frameworks",
++    "system",
+   ] as const) {
+     const groupDir = join(srcRoot, group);
+     if (!existsSync(groupDir)) continue;
+@@ -475,40 +485,36 @@ export async function generateMonorepoDocs(
+ 
+   const generatedAt = new Date().toISOString();
+   const atlasLines: string[] = [
+-    "# Sovereign Monorepo Atlas (`C:\\aphrody`)",
++    "# Sovereign Monorepo Atlas (`<workspace>`)",
+     "",
+     `Auto-generated by \`@aphrody/knowledge-engine\` (\`ske gen-docs\`) at \`${generatedAt}\`.`,
+     "",
+-    `- **Monorepo Root**: [\`C:\\aphrody\`](file:///${srcRoot.replace(/\\/g, "/")})`,
++    `- **Monorepo Root**: [\`<workspace>\`](file:///${srcRoot.replace(/\\/g, "/")})`,
+     `- **Indexed Workspace Entities**: \`${entities.length}\``,
+     `- **Installed Userland CLIs & Shims (\`~/.local/bin\`)**: \`${cliShims.length}\``,
+     `- **Native C-ABI Shared Libraries (\`*.dll\`)**: \`${ffiDlls.length}\``,
+     "",
+-    renderGroupTable(
+-      "apps",
+-      "1. Production Applications (`C:\\aphrody\\apps\\*`)",
+-    ),
++    renderGroupTable("apps", "1. Production Applications (`apps/*`)"),
+     renderGroupTable(
+       "packages",
+-      "2. First-Party Bun v1.4.4 Packages (`C:\\aphrody\\packages\\*`)",
+-    ),
+-    renderGroupTable(
+-      "crates",
+-      "3. Systems Rust 2024 Crates (`C:\\aphrody\\crates\\*`)",
++      "2. First-Party Bun v1.4.4 Packages (`packages/*`)",
+     ),
++    renderGroupTable("crates", "3. Systems Rust 2024 Crates (`crates/*`)"),
+     renderGroupTable(
+       "infra",
+-      "4. Go 1.27 One-Click Deploy & Polyglot FFI (`C:\\aphrody\\infra`)",
++      "4. Go 1.27 One-Click Deploy & Polyglot FFI (`infra`)",
+     ),
+     renderGroupTable(
+       "tools",
+-      "5. Sovereign Architecture & Verification Tools (`C:\\aphrody\\tools\\*`)",
++      "5. Sovereign Architecture & Verification Tools (`tools/*`)",
+     ),
+     renderGroupTable(
+       "third_party",
+-      "6. Vendor & Upstream Ecosystem Mirrors (`C:\\aphrody\\third_party\\*`)",
++      "6. Vendor & Upstream Ecosystem Mirrors (`third_party/*`)",
+     ),
+-    "## 7. Native C-ABI Shared Libraries & FFI Surface (`~/.local/bin/*.dll`)",
++    renderGroupTable("frameworks", "7. Frameworks (`frameworks/*`)"),
++    renderGroupTable("system", "8. System Units (`system/*`)"),
++    "## 9. Native C-ABI Shared Libraries & FFI Surface (`~/.local/bin/*.dll`)",
+     "",
+     "| DLL Binary | Size (KB) | Path |",
+     "| :--- | :--- | :--- |",
+@@ -537,7 +543,7 @@ export async function generateMonorepoDocs(
+   mkdirSync(dirname(atlasPath), { recursive: true });
+   writeFileSync(atlasPath, cleanAtlas, "utf8");
+ 
+-  // Generate MDX documentation for C:\aphrody\third_party\bun\docs\sovereign\index.mdx
++  // Generate MDX documentation for third_party/bun/docs/sovereign/index.mdx
+   const pkgCount = entities.filter((e) => e.group === "packages").length;
+   const crateCount = entities.filter((e) => e.group === "crates").length;
+   const appCount = entities.filter((e) => e.group === "apps").length;
+@@ -550,7 +556,7 @@ description: Full-Rust Bun v1.4.4 packages, Systems Rust 2024 C-ABI crates, Go 1
+ 
+ ## Overview
+ 
+-The Sovereign Monorepo (\`C:\\aphrody\`) unifies **${appCount} production apps**, **${pkgCount} pure Bun v1.4.4 packages**, **${crateCount} Rust 2024 systems crates**, and **Go 1.27 daemonless OCI infrastructure** connected through zero-copy \`bun:ffi\` shared libraries (\`rust_stack_ffi.dll\`, \`infra_go.dll\`, \`agent_desktop_ffi.dll\`).
++The Sovereign Monorepo (\`<workspace>\`) unifies **${appCount} production apps**, **${pkgCount} pure Bun v1.4.4 packages**, **${crateCount} Rust 2024 systems crates**, and **Go 1.27 daemonless OCI infrastructure** connected through zero-copy \`bun:ffi\` shared libraries (\`rust_stack_ffi.dll\`, \`infra_go.dll\`, \`agent_desktop_ffi.dll\`).
+ 
+ <CardGroup cols={3}>
+   <Card title="Knowledge Engine (ske)" icon="book">
+@@ -594,7 +600,7 @@ ${entities
+   )
+   .join("\n")}
+ 
+-<Info>Auto-synchronized by \`ske gen-docs\`. Full cross-linked reference available in \`C:\\aphrody\\docs\\MONOREPO_ATLAS.md\`.</Info>
++<Info>Auto-synchronized by \`ske gen-docs\`. Full cross-linked reference available in \`docs/MONOREPO_ATLAS.md\`.</Info>
+ `),
+   );
+ 
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/generators/kernel-crawler.ts b/frameworks/ai-os/engines/knowledge-engine/src/generators/kernel-crawler.ts
+index 3ec8694..fe68e13 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/generators/kernel-crawler.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/generators/kernel-crawler.ts
+@@ -3,6 +3,7 @@
+ 
+ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+ import { join } from "node:path";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ import { openKnowledgeDatabase } from "../db/sqlite.ts";
+ 
+ export interface KernelRelease {
+@@ -269,7 +270,8 @@ export async function syncKernelStoryMdx(options?: {
+   });
+   const mdxOutput = generateLiveUpstreamMdx(feed);
+   const targetDir =
+-    options?.targetDir ?? "C:/aphrody/docs/linux-kernel-story/mdx";
++    options?.targetDir ??
++    join(workspaceRoot(), "docs", "linux-kernel-story", "mdx");
+   if (!existsSync(targetDir)) {
+     mkdirSync(targetDir, { recursive: true });
+   }
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/generators/skills-gen.ts b/frameworks/ai-os/engines/knowledge-engine/src/generators/skills-gen.ts
+index bf6bfa0..d96a6a0 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/generators/skills-gen.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/generators/skills-gen.ts
+@@ -5,6 +5,7 @@ import {
+   scanTextForEmojis,
+   stripEmojis,
+ } from "../env/safe-env.ts";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ 
+ export interface GeneratedSkillDescriptor {
+   name: string;
+@@ -40,7 +41,7 @@ const SKILL_BLUEPRINTS: readonly SkillBlueprint[] = [
+       "Mandatory upstream API grounding via Context7 v2 SQLite cache, 5-channel parallel deep research (ske research), and deterministic multi-evidence fact checking (ske factcheck) before writing or reviewing code.",
+     bodyMarkdown: `# Context7, Deep Research & Deterministic Fact-Checker (\`ske\`)
+ 
+-Activate this skill before implementing unfamiliar upstream APIs, auditing architectural Markdown plans, or citing external library behavior in \`C:\\aphrody\`.
++Activate this skill before implementing unfamiliar upstream APIs, auditing architectural Markdown plans, or citing external library behavior in \`<workspace>\`.
+ 
+ ## Core Workflow
+ 
+@@ -51,12 +52,12 @@ Activate this skill before implementing unfamiliar upstream APIs, auditing archi
+      ske research "Bun v1.4.4 bun:ffi dlopen and Context7 MCP"
+      \`\`\`
+ 2. **Multi-Hop Deep Research (\`ske research\`)**:
+-   - Fans out in parallel across Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local \`C:\\aphrody\` lockfiles/manifests.
+-   - Emits Blake3-deduplicated dossiers into \`C:\\aphrody\\docs\\research\\<slug>.md\`.
++   - Fans out in parallel across Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local \`<workspace>\` lockfiles/manifests.
++   - Emits Blake3-deduplicated dossiers into \`docs/research/<slug>.md\`.
+ 3. **Deterministic Fact-Checking (\`ske factcheck\`)**:
+-   - Verifies \`file:///C:/...\` links, \`~/.local/bin\` binaries, \`src.lock.json\` versions, GitHub repo liveness, Context7 symbols, secret hygiene, \`C:\\Windows\\System32\` non-mutation, and zero-emoji compliance:
++   - Verifies \`file:///\` links, \`~/.local/bin\` binaries, \`src.lock.json\` versions, GitHub repo liveness, Context7 symbols, secret hygiene, Windows System32 non-mutation, and zero-emoji compliance:
+      \`\`\`powershell
+-     ske factcheck C:/aphrody/README.md
++     ske factcheck README.md
+      \`\`\`
+ 
+ ## Progressive Disclosure Reference
+@@ -70,11 +71,11 @@ Activate this skill before implementing unfamiliar upstream APIs, auditing archi
+ ## REST & Cache Architecture
+ - **Search Endpoint**: \`GET https://context7.com/api/v2/libs/search?libraryName=<name>&query=<q>\`
+ - **Context Endpoint**: \`GET https://context7.com/api/v2/context?libraryId=<id>&query=<q>&type=txt\`
+-- **SQLite WAL Store**: \`C:\\aphrody\\var\\knowledge.sqlite\` (\`context7_cache\` table keyed by \`rs_blake3_hex\` via \`rust_stack_ffi.dll\`, 24h TTL).
+-- **Secret Hygiene**: \`CTX7_API_KEY\`, \`EXA_API_KEY\`, and \`GITHUB_TOKEN\` are loaded in-memory from \`C:\\aphrody\\.env\` via \`@aphrody/env-kit\` and never written to editor JSON/TOML config files.
++- **SQLite WAL Store**: \`var/knowledge.sqlite\` (\`context7_cache\` table keyed by \`rs_blake3_hex\` via \`rust_stack_ffi.dll\`, 24h TTL).
++- **Secret Hygiene**: \`CTX7_API_KEY\`, \`EXA_API_KEY\`, and \`GITHUB_TOKEN\` are loaded in-memory from \`.env\` via \`@aphrody/env-kit\` and never written to editor JSON/TOML config files.
+ 
+ ## Source Authority Tiers
+-1. **Tier 1**: Official Specifications (WHATWG, W3C, MCP \`2025-03-26\`, \`kernel.org\`), Context7 Official Docs, and Local Verified \`C:\\aphrody\` Lockfiles.
++1. **Tier 1**: Official Specifications (WHATWG, W3C, MCP \`2025-03-26\`, \`kernel.org\`), Context7 Official Docs, and Local Verified \`<workspace>\` Lockfiles.
+ 2. **Tier 2**: Upstream GitHub / Freedesktop GitLab Canonical Repositories & Release Tags.
+ 3. **Tier 3**: Exa Neural Web Search Highlights.
+ `,
+@@ -130,7 +131,7 @@ Activate this skill when coordinating multi-agent tasks, running parallel code r
+   {
+     name: "rust-stack-sovereign",
+     description:
+-      "Build, serve, and bind the 100% Pure-Rust Sovereign Stack (C:\\aphrody\\crates\\rust-stack): Better-Auth (Argon2id, OAuth2.1 PKCE, Ed25519 JWKS), shadcn_rs zero-JS SSR/Dioxus/GPUI components, native Open-WebUI, Rust coding agent, OpenAI Gateway (:4320), and 228ns rust_stack_ffi.dll.",
++      "Build, serve, and bind the 100% Pure-Rust Sovereign Stack (crates/rust-stack): Better-Auth (Argon2id, OAuth2.1 PKCE, Ed25519 JWKS), shadcn_rs zero-JS SSR/Dioxus/GPUI components, native Open-WebUI, Rust coding agent, OpenAI Gateway (:4320), and 228ns rust_stack_ffi.dll.",
+     bodyMarkdown: `# Pure-Rust Sovereign Stack & \`rust_stack_ffi.dll\`
+ 
+ Activate this skill when working on authentication, zero-JS SSR UI components (\`shadcn_rs\`), high-throughput LLM gateway caching (\`:4320\`), or sub-microsecond Bun <-> Rust C-ABI FFI.
+@@ -143,8 +144,8 @@ Activate this skill when working on authentication, zero-JS SSR UI components (\
+    \`\`\`
+ 2. **Run Cargo & Bun FFI Verification**:
+    \`\`\`powershell
+-   cargo test --manifest-path C:\\aphrody\\crates\\rust-stack\\Cargo.toml
+-   bun test C:\\aphrody\\crates\\rust-stack\\ffi_verify.test.ts
++   cargo test --manifest-path crates/rust-stack/Cargo.toml
++   bun test crates/rust-stack/ffi_verify.test.ts
+    \`\`\`
+ 3. **Bun v1.4.4 \`bun:ffi\` Binding Contract**:
+    Always pass \`FFIType.u64\` (with \`BigInt(byteLength)\`) for Rust \`usize\` parameters so \`bun check\` and 64-bit Windows MS-x64 ABI match cleanly.
+@@ -173,7 +174,7 @@ Located at \`%USERPROFILE%\\.local\\bin\\rust_stack_ffi.dll\` (compiled with \`o
+   {
+     name: "go-infra-oneclick-deploy",
+     description:
+-      "Deploy any Bun, Rust, Go, or WASM/WebGPU app in C:\\aphrody via Go 1.27 src-deploy / dpl: daemonless OCI v1.1 image builds, Caddy HTTP/3 blue/green across fr1/fr2 and Google-only usa egress, Cloudflare DNS/Workers/R2 S3v4, and 3-way Rust <-> Bun <-> Go FFI (infra_go.dll).",
++      "Deploy any Bun, Rust, Go, or WASM/WebGPU app in <workspace> via Go 1.27 src-deploy / dpl: daemonless OCI v1.1 image builds, Caddy HTTP/3 blue/green across fr1/fr2 and Google-only usa egress, Cloudflare DNS/Workers/R2 S3v4, and 3-way Rust <-> Bun <-> Go FFI (infra_go.dll).",
+     bodyMarkdown: `# Go 1.27 One-Click Deploy & Three-Way FFI (\`src-deploy\` / \`dpl\`)
+ 
+ Activate this skill when packaging OCI v1.1 container images without a Docker daemon, generating HTTP/3 \`Caddyfile\` and \`systemd\` units, uploading assets to Cloudflare R2, or calling \`infra_go.dll\` via FFI.
+@@ -183,12 +184,12 @@ Activate this skill when packaging OCI v1.1 container images without a Docker da
+ 1. **Environment & Fleet Readiness**:
+    \`\`\`powershell
+    dpl doctor
+-   dpl detect C:\\aphrody\\apps\\web
++   dpl detect apps/web
+    \`\`\`
+ 2. **Generate Deployment Plan & HTTP/3 Caddyfile**:
+    \`\`\`powershell
+-   dpl plan --all --out C:\\aphrody\\infra\\generated\\deploy-plan.json
+-   dpl caddyfile --out C:\\aphrody\\infra\\generated\\Caddyfile
++   dpl plan --all --out infra/generated/deploy-plan.json
++   dpl caddyfile --out infra/generated/Caddyfile
+    \`\`\`
+ 3. **Dry-Run or Live Fleet Rollout**:
+    \`\`\`powershell
+@@ -207,7 +208,7 @@ Activate this skill when packaging OCI v1.1 container images without a Docker da
+         filename: "oci-fleet-and-ffi.md",
+         content: `# Go Infra OCI v1.1, Fleet Routing & \`infra_go.dll\` FFI
+ 
+-## Daemonless OCI v1.1 Packaging (\`C:\\aphrody\\infra\\internal\\oci\`)
++## Daemonless OCI v1.1 Packaging (\`infra/internal/oci\`)
+ Writes deterministic \`oci-layout\`, \`index.json\`, config blobs, and tar layers directly to \`blobs/sha256/*\` without requiring \`dockerd\`, plus supports Windows Named Pipe \`\\\\.\\pipe\\docker_engine\` and SSH tunnel pushes when a daemon is present.
+ 
+ ## Zig 0.17 CGO Shared Library (\`%USERPROFILE%\\.local\\bin\\infra_go.dll\`)
+@@ -215,7 +216,7 @@ Writes deterministic \`oci-layout\`, \`index.json\`, config blobs, and tar layer
+ - \`GoDetectProjectJSON(path)\` — Framework & regional topology classification.
+ - \`GoSignR2S3v4AuthHeader(...)\` — Pure-Go Cloudflare R2 S3v4 signature generator.
+ - \`GoComputeOciDigest(buffer)\` — Deterministic SHA-256 OCI layer digest.
+-- Tested end-to-end across Rust, Bun, and Go in \`C:\\aphrody\\infra\\ffi-bridge\\polyglot.test.ts\`.
++- Tested end-to-end across Rust, Bun, and Go in \`infra/ffi-bridge/polyglot.test.ts\`.
+ `,
+       },
+     ],
+@@ -223,7 +224,7 @@ Writes deterministic \`oci-layout\`, \`index.json\`, config blobs, and tar layer
+   {
+     name: "agy-continuous-reviewer",
+     description:
+-      "Audit historical and live Antigravity CLI (agy) sessions via ske review-sessions, ske watch, and C:\\aphrody\\.agents\\hooks.json (PreToolUse, PostToolUse, Stop) for broken file:/// links, failed commands, emoji violations, secret leaks, and System32 safety.",
++      "Audit historical and live Antigravity CLI (agy) sessions via ske review-sessions, ske watch, and .agents/hooks.json (PreToolUse, PostToolUse, Stop) for broken file:/// links, failed commands, emoji violations, secret leaks, and System32 safety.",
+     bodyMarkdown: `# Continuous AGY Session Reviewer & Lifecycle Hooks
+ 
+ Activate this skill when auditing \`agy\` transcripts (\`transcript.jsonl\`), configuring \`.agents/hooks.json\`, or running real-time workspace quality gates.
+@@ -231,20 +232,20 @@ Activate this skill when auditing \`agy\` transcripts (\`transcript.jsonl\`), co
+ ## Commands (\`ske\`)
+ 
+ 1. **Incremental Full-Brain Session Audit (\`< 30ms\` cached)**:
+-   Scans \`%USERPROFILE%\\.gemini\\antigravity-cli\\brain\\*\\.system_generated\\logs\\transcript.jsonl\` and writes \`C:\\aphrody\\docs\\AGY_SESSIONS_CONTINUOUS_REVIEW.md\` + \`C:\\aphrody\\var\\reports\\agy-sessions-audit.json\`:
++   Scans \`%USERPROFILE%\\.gemini\\antigravity-cli\\brain\\*\\.system_generated\\logs\\transcript.jsonl\` and writes \`docs/AGY_SESSIONS_CONTINUOUS_REVIEW.md\` + \`var/reports/agy-sessions-audit.json\`:
+    \`\`\`powershell
+    ske review-sessions
+    \`\`\`
+ 2. **Continuous Watcher Loop**:
+-   Incrementally audits active transcripts, fact-checks modified \`C:\\aphrody\\docs\\*.md\` and \`SKILL.md\` files, and refreshes \`MONOREPO_ATLAS.md\`:
++   Incrementally audits active transcripts, fact-checks modified \`docs/*.md\` and \`SKILL.md\` files, and refreshes \`MONOREPO_ATLAS.md\`:
+    \`\`\`powershell
+    ske watch --interval 30
+    ske watch --once
+    \`\`\`
+ 
+ ## Antigravity \`hooks.json\` Contract Invariants
+-- \`PreToolUse\` (\`pre-tool-guard.ts\`): Returns \`{"decision":"allow"}\` or \`{"decision":"deny","reason":"..."}\`. Blocks \`C:\\Windows\\System32\` mutations, raw \`.env\` git staging, and raw token commits.
+-- \`PostToolUse\` (\`post-tool-tracker.ts\`): Logs turn events to \`C:\\aphrody\\var\\knowledge.sqlite\` (\`live_turn_events\`) in \`< 15ms\` and returns \`{}\`.
++- \`PreToolUse\` (\`pre-tool-guard.ts\`): Returns \`{"decision":"allow"}\` or \`{"decision":"deny","reason":"..."}\`. Blocks Windows System32 mutations, raw \`.env\` git staging, and raw token commits.
++- \`PostToolUse\` (\`post-tool-tracker.ts\`): Logs turn events to \`var/knowledge.sqlite\` (\`live_turn_events\`) in \`< 15ms\` and returns \`{}\`.
+ - \`Stop\` (\`stop-session-reviewer.ts\`): Audits the active turn in \`< 40ms\`, appends to \`continuous-review-stream.jsonl\`, and returns \`{"decision":"stop"}\` (or \`{"decision":"continue","reason":"..."}\` strictly when \`terminationReason === "NO_TOOL_CALL"\`, \`executionNum <= 1\`, and a critical safety violation occurred).
+ 
+ ## Progressive Disclosure Reference
+@@ -326,8 +327,7 @@ export function generateWorkspaceSkills(
+   options: SkillsGenOptions = {},
+ ): SkillsGenReport {
+   const t0 = Bun.nanoseconds();
+-  const srcRoot =
+-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
++  const srcRoot = options.srcRoot ?? workspaceRoot();
+   const skillsRootDir = resolve(
+     options.skillsRootDir ?? join(srcRoot, ".agents", "skills"),
+   );
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/mcp/stdio.ts b/frameworks/ai-os/engines/knowledge-engine/src/mcp/stdio.ts
+index cf6d4a2..460b84b 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/mcp/stdio.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/mcp/stdio.ts
+@@ -68,7 +68,7 @@ export const KNOWLEDGE_MCP_TOOLS = [
+   {
+     name: "deep_research",
+     description:
+-      "Execute 5-channel parallel Deep Research (Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local C:\\aphrody grounding) and optionally save a cited Markdown dossier.",
++      "Execute 5-channel parallel Deep Research (Context7 v2, Exa Neural Search, GitHub Live API, Kernel.org/Freedesktop GitLab, and local <workspace> grounding) and optionally save a cited Markdown dossier.",
+     inputSchema: {
+       type: "object",
+       properties: {
+@@ -79,7 +79,7 @@ export const KNOWLEDGE_MCP_TOOLS = [
+         saveReport: {
+           type: "boolean",
+           description:
+-            "Save dossier to C:\\aphrody\\docs\\research\\<slug>.md (default: true)",
++            "Save dossier to docs/research/<slug>.md (default: true)",
+         },
+       },
+       required: ["query"],
+@@ -88,14 +88,13 @@ export const KNOWLEDGE_MCP_TOOLS = [
+   {
+     name: "fact_check",
+     description:
+-      "Deterministically fact-check a text claim or local file path (verifies file:/// and C:\\aphrody paths, ~/.local/bin binaries, lockfile versions, GitHub repos, Context7 symbols, secret hygiene, System32 safety, and zero-emoji compliance).",
++      "Deterministically fact-check a text claim or local file path (verifies file:/// and <workspace> paths, ~/.local/bin binaries, lockfile versions, GitHub repos, Context7 symbols, secret hygiene, System32 safety, and zero-emoji compliance).",
+     inputSchema: {
+       type: "object",
+       properties: {
+         target: {
+           type: "string",
+-          description:
+-            "Claim text or absolute file path (e.g., 'C:/aphrody/README.md')",
++          description: "Claim text or absolute file path (e.g., 'README.md')",
+         },
+       },
+       required: ["target"],
+@@ -104,7 +103,7 @@ export const KNOWLEDGE_MCP_TOOLS = [
+   {
+     name: "generate_docs_and_skills",
+     description:
+-      "Regenerate C:\\aphrody\\docs\\MONOREPO_ATLAS.md, C:\\aphrody\\third_party\\bun\\docs\\sovereign\\index.mdx, and/or the 5 sovereign workspace SKILL.md definitions.",
++      "Regenerate docs/MONOREPO_ATLAS.md, third_party/bun/docs/sovereign/index.mdx, and/or the 5 sovereign workspace SKILL.md definitions.",
+     inputSchema: {
+       type: "object",
+       properties: {
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/research/deep-research.ts b/frameworks/ai-os/engines/knowledge-engine/src/research/deep-research.ts
+index 637d21f..d2ac1c5 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/research/deep-research.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/research/deep-research.ts
+@@ -18,6 +18,7 @@ import {
+   stripEmojis,
+ } from "../env/safe-env.ts";
+ import { blake3Hex } from "../ffi/blake3.ts";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ 
+ export type AuthorityTier =
+   | "Tier 1: Official Spec / Context7 / Local Verified Source"
+@@ -726,15 +727,14 @@ function renderResearchDossierMarkdown(params: {
+ 
+ /**
+  * Multi-hop parallel Deep Research engine fanning out across Context7 v2, Exa Neural Search,
+- * GitHub Live API, Kernel.org/Freedesktop GitLab, and local `C:\aphrody` manifests.
++ * GitHub Live API, Kernel.org/Freedesktop GitLab, and local `<workspace>` manifests.
+  */
+ export async function runDeepResearch(
+   query: string,
+   options: DeepResearchOptions = {},
+ ): Promise<DeepResearchResult> {
+   const t0 = Bun.nanoseconds();
+-  const srcRoot =
+-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
++  const srcRoot = options.srcRoot ?? workspaceRoot();
+   const outDir = options.outDir ?? join(srcRoot, "docs", "research");
+   const saveReport = options.saveReport ?? true;
+   const fetchFn = options.fetchImpl ?? fetch;
+diff --git a/frameworks/ai-os/engines/knowledge-engine/src/reviewer/agy-session-auditor.ts b/frameworks/ai-os/engines/knowledge-engine/src/reviewer/agy-session-auditor.ts
+index b677a52..620f1bc 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/src/reviewer/agy-session-auditor.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/src/reviewer/agy-session-auditor.ts
+@@ -20,6 +20,7 @@ import {
+   scanTextForSecretLeaks,
+   stripEmojis,
+ } from "../env/safe-env.ts";
++import { workspaceRoot } from "../../../../src/core/paths.ts";
+ 
+ export interface SessionAuditMetrics {
+   sessionId: string;
+@@ -297,10 +298,7 @@ export function parseSingleSession(
+             const p = String(
+               tc.args?.Path ?? tc.args?.path ?? "",
+             ).toLowerCase();
+-            if (
+-              p.startsWith("c:\\windows\\system32") ||
+-              p.startsWith("c:/windows/system32")
+-            ) {
++            if (/^[a-z]:[\\/]windows[\\/]system32/.test(p)) {
+               metrics.system32ViolationsCount++;
+             }
+           } else if (name === "run_command") {
+@@ -383,8 +381,8 @@ function renderContinuousReviewMarkdown(
+     `| **Total Planner & Tool Steps** | \`${report.totals.steps.toLocaleString()}\` | Active |`,
+     `| **Total Token Volume (In / Out)** | \`${report.totals.inputTokens.toLocaleString()}\` in / \`${report.totals.outputTokens.toLocaleString()}\` out | Tracked |`,
+     `| **Total Tool Invocations / MCP Calls** | \`${report.totals.toolCalls.toLocaleString()}\` tools (\`${report.totals.mcpCalls}\` MCP calls) | Active |`,
+-    `| **Raw \`C:\\aphrody\\.env\` Secret Leaks** | \`${report.totals.secretLeaks}\` | ${report.totals.secretLeaks === 0 ? "PASS (Zero Leaks)" : "ACTION REQUIRED"} |`,
+-    `| **\`C:\\Windows\\System32\` Mutations** | \`${report.totals.system32Violations}\` | ${report.totals.system32Violations === 0 ? "PASS (Sacred Userspace Intact)" : "CRITICAL VIOLATION"} |`,
++    `| **Raw \`.env\` Secret Leaks** | \`${report.totals.secretLeaks}\` | ${report.totals.secretLeaks === 0 ? "PASS (Zero Leaks)" : "ACTION REQUIRED"} |`,
++    `| **Windows System32 Mutations** | \`${report.totals.system32Violations}\` | ${report.totals.system32Violations === 0 ? "PASS (Sacred Userspace Intact)" : "CRITICAL VIOLATION"} |`,
+     `| **Non-Zero / Error Tool Steps** | \`${report.totals.failedCommands}\` | Historical command retries |`,
+     `| **Broken \`file:///\` Links in Outputs/Artifacts** | \`${report.totals.brokenFileLinks}\` | Tracked |`,
+     `| **Emoji Occurrences in Final Responses/Artifacts** | \`${report.totals.emojiViolations}\` | Audited |`,
+@@ -457,8 +455,7 @@ export function auditAllAgySessions(
+ ): GlobalSessionsAuditReport {
+   const t0 = Bun.nanoseconds();
+   const home = homedir();
+-  const srcRoot =
+-    options.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
++  const srcRoot = options.srcRoot ?? workspaceRoot();
+   const brainRootDir = resolve(
+     options.brainRootDir ?? join(home, ".gemini", "antigravity-cli", "brain"),
+   );
+@@ -730,7 +727,7 @@ export interface WatchCycleSummary {
+ /**
+  * Continuous Reviewer & Watcher (`ske watch [--interval 30] [--once]`).
+  * 1. Incrementally audits modified AGY `transcript.jsonl` sessions,
+- * 2. Fact-checks modified `C:\aphrody\docs\*.md` and `SKILL.md` files,
++ * 2. Fact-checks modified `docs/*.md` and `SKILL.md` files,
+  * 3. Regenerates `MONOREPO_ATLAS.md` and `AGY_SESSIONS_CONTINUOUS_REVIEW.md` when changes occur.
+  */
+ export async function runContinuousWatchLoop(options?: {
+@@ -740,8 +737,7 @@ export async function runContinuousWatchLoop(options?: {
+   brainRootDir?: string;
+   dbPath?: string;
+ }): Promise<WatchCycleSummary> {
+-  const srcRoot =
+-    options?.srcRoot ?? (process.platform === "win32" ? "C:\\aphrody" : "/src");
++  const srcRoot = options?.srcRoot ?? workspaceRoot();
+   const intervalMs = Math.max(2, options?.intervalSeconds ?? 30) * 1000;
+   const seenDocMtimes = new Map<string, number>();
+ 
+diff --git a/frameworks/ai-os/engines/knowledge-engine/tests/knowledge-engine.test.ts b/frameworks/ai-os/engines/knowledge-engine/tests/knowledge-engine.test.ts
+index 3c9866d..0c48e8f 100644
+--- a/frameworks/ai-os/engines/knowledge-engine/tests/knowledge-engine.test.ts
++++ b/frameworks/ai-os/engines/knowledge-engine/tests/knowledge-engine.test.ts
+@@ -1,13 +1,14 @@
+ import { afterAll, describe, expect, test } from "bun:test";
+ import {
+   existsSync,
++  mkdirSync,
+   mkdtempSync,
+   readFileSync,
+   rmSync,
+   writeFileSync,
+ } from "node:fs";
+ import { tmpdir } from "node:os";
+-import { join } from "node:path";
++import { join, resolve } from "node:path";
+ import {
+   auditAllAgySessions,
+   blake3Hex,
+@@ -32,6 +33,8 @@ afterAll(() => {
+   closeAllKnowledgeDatabases();
+ });
+ 
++const srcRoot = resolve(import.meta.dir, "..", "..", "..", "..", "..");
++
+ describe("@aphrody/knowledge-engine core verification", () => {
+   test("Blake3 FFI + fallback hashing is deterministic", () => {
+     const info = getBlake3EngineInfo();
+@@ -96,8 +99,8 @@ describe("@aphrody/knowledge-engine core verification", () => {
+ 
+   test("Deterministic fact-checker verifies real paths and flags nonexistent files", async () => {
+     const okVerdict = await runFactCheck(
+-      "C:\\aphrody\\AGENTS.md defines the canonical architecture with Bun v1.4.4.",
+-      { skipNetwork: true },
++      `${join(srcRoot, "README.md")} defines the canonical architecture with Bun v1.4.4.`,
++      { skipNetwork: true, srcRoot },
+     );
+     expect(okVerdict.totals.contradicted).toBe(0);
+ 
+@@ -106,10 +109,13 @@ describe("@aphrody/knowledge-engine core verification", () => {
+       const badDoc = join(tmp, "claim.md");
+       writeFileSync(
+         badDoc,
+-        "File `C:\\aphrody\\nonexistent_fake_path_999.ts` exists.",
++        `File \`${join(srcRoot, "nonexistent_fake_path_999.ts")}\` exists.`,
+         "utf8",
+       );
+-      const badVerdict = await runFactCheck(badDoc, { skipNetwork: true });
++      const badVerdict = await runFactCheck(badDoc, {
++        skipNetwork: true,
++        srcRoot,
++      });
+       expect(badVerdict.verdict).toBe("CONTRADICTED");
+     } finally {
+       rmSync(tmp, { recursive: true, force: true });
+@@ -139,13 +145,44 @@ describe("@aphrody/knowledge-engine core verification", () => {
+       const mdxPath = join(tmpOut, "index.mdx");
+       const docsRep = await generateMonorepoDocs({
+         enrichContext7: false,
++        srcRoot,
++        dbPath: ":memory:",
+         atlasOutPath: atlasPath,
+         mdxOutPath: mdxPath,
+       });
+       expect(docsRep.entitiesCount).toBeGreaterThanOrEqual(15);
+       expect(existsSync(atlasPath)).toBe(true);
+ 
++      const brain = join(tmpOut, "brain");
++      const logs = join(
++        brain,
++        "11111111-2222-3333-4444-555555555555",
++        ".system_generated",
++        "logs",
++      );
++      mkdirSync(logs, { recursive: true });
++      writeFileSync(
++        join(logs, "transcript.jsonl"),
++        [
++          {
++            step_index: 0,
++            type: "SYSTEM_MESSAGE",
++            content: "start",
++            created_at: "2026-11-11T10:00:00Z",
++          },
++          {
++            step_index: 1,
++            type: "USER_INPUT",
++            content: "audit this",
++            created_at: "2026-11-11T10:01:00Z",
++          },
++        ]
++          .map((s) => JSON.stringify(s))
++          .join("\n"),
++      );
+       const sessRep = auditAllAgySessions({
++        brainRootDir: brain,
++        dbPath: ":memory:",
+         limit: 5,
+         markdownOutPath: join(tmpOut, "REVIEW.md"),
+         jsonOutPath: join(tmpOut, "ledger.json"),
+@@ -169,5 +206,5 @@ describe("@aphrody/knowledge-engine core verification", () => {
+     } finally {
+       rmSync(tmpOut, { recursive: true, force: true });
+     }
+-  });
++  }, 60_000);
+ });
+diff --git a/frameworks/ai-os/engines/pi-opencode/README.md b/frameworks/ai-os/engines/pi-opencode/README.md
+index a11b373..69f4e5b 100644
+--- a/frameworks/ai-os/engines/pi-opencode/README.md
++++ b/frameworks/ai-os/engines/pi-opencode/README.md
+@@ -21,22 +21,22 @@ bun run --cwd frameworks/ai-os/engines/pi-opencode fmt
+ bun run --cwd frameworks/ai-os/engines/pi-opencode fmt:check
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ Unified minimalist, autonomous coding harness synthesized from the real late-2026 open-source ecosystem and engineered around **Linus Torvalds**, **Jarred Sumner**, and **Larry Page** principles:
+ 
+-1. **Pi Minimalist & Modular Agent Core** (`C:\aphrody\third_party\pi` — `earendil-works/pi`, 121k+ stars):
+-   - Zero framework bloat: exposes only 4 atomic composable tools (`read`, `write`, `edit`, `bash`) in [`src/pi-core.ts`](file:///C:/aphrody/frameworks/ai-os/engines/pi-opencode/src/pi-core.ts).
+-   - Strict userspace safety boundary (`C:\Windows\System32`, `/usr/bin`, `/etc` and workspace-escape attempts are deterministically blocked in both Rust and TypeScript).
+-2. **OpenCode + OpenTUI Bun & Rust Libraries / UI** (`C:\aphrody\third_party\opencode` — `anomalyco/opencode`, 225k+ stars & `C:\aphrody\third_party\opentui` — `aphrody-dev/opentui`):
+-   - Native Rust zero-copy FNV-1a/Merkle workspace snapshotter, bounded LCS diff engine, and Win32 thread inspector ([`rust-core/src/lib.rs`](file:///C:/aphrody/frameworks/ai-os/engines/pi-opencode/rust-core/src/lib.rs)) loaded via `bun:ffi` ([`src/native-bridge.ts`](file:///C:/aphrody/frameworks/ai-os/engines/pi-opencode/src/native-bridge.ts)).
+-   - `bun:sqlite` WAL session/event persistence, differential OpenTUI terminal renderer, and instant zero-dependency Bun Web UI/API server ([`src/opencode-ui.ts`](file:///C:/aphrody/frameworks/ai-os/engines/pi-opencode/src/opencode-ui.ts)).
+-3. **Locally Uncensored + Heretic + Ring3-Agent Open-Weights Inference** (`C:\aphrody\third_party\locally-uncensored` — `PurpleDoubleD/locally-uncensored` v3.0.10, `C:\aphrody\third_party\heretic` — `p-e-w/heretic` v2, `C:\aphrody\crates\ring3-agent`):
+-   - Hardware-aware catalog of abliterated / Heretic-modified open-weights models fitting RTX 4070 12GB (`sm_89`), OVH FR AVX2 VPS, and Browser WebGPU ([`src/lu-provider.ts`](file:///C:/aphrody/frameworks/ai-os/engines/pi-opencode/src/lu-provider.ts)).
++1. **Pi Minimalist & Modular Agent Core** (`third_party/pi` — `earendil-works/pi`, 121k+ stars):
++   - Zero framework bloat: exposes only 4 atomic composable tools (`read`, `write`, `edit`, `bash`) in [`src/pi-core.ts`](src/pi-core.ts).
++   - Strict userspace safety boundary (`%SystemRoot%\System32`, `/usr/bin`, `/etc` and workspace-escape attempts are deterministically blocked in both Rust and TypeScript).
++2. **OpenCode + OpenTUI Bun & Rust Libraries / UI** (`third_party/opencode` — `anomalyco/opencode`, 225k+ stars & `third_party/opentui` — `aphrody-dev/opentui`):
++   - Native Rust zero-copy FNV-1a/Merkle workspace snapshotter, bounded LCS diff engine, and Win32 thread inspector ([`rust-core/src/lib.rs`](rust-core/src/lib.rs)) loaded via `bun:ffi` ([`src/native-bridge.ts`](src/native-bridge.ts)).
++   - `bun:sqlite` WAL session/event persistence, differential OpenTUI terminal renderer, and instant zero-dependency Bun Web UI/API server ([`src/opencode-ui.ts`](src/opencode-ui.ts)).
++3. **Locally Uncensored + Heretic + Ring3-Agent Open-Weights Inference** (`third_party/locally-uncensored` — `PurpleDoubleD/locally-uncensored` v3.0.10, `third_party/heretic` — `p-e-w/heretic` v2, `<workspace>/crates/ring3-agent`):
++   - Hardware-aware catalog of abliterated / Heretic-modified open-weights models fitting RTX 4070 12GB (`sm_89`), OVH FR AVX2 VPS, and Browser WebGPU ([`src/lu-provider.ts`](src/lu-provider.ts)).
+    - Direct OpenAI-compatible tool-calling bridge to `Locally Uncensored` (`127.0.0.1:8129/v1`), `ring3-agent` (`127.0.0.1:8787`), `mistral.rs`, `Ollama`, and `llama.cpp` without cloud refusal filters, plus `heretic-init` config generation.
+-4. **Symphony + Ralph Full-Auto NHITL ("No Human In The Loop") Workflow** (`C:\aphrody\third_party\symphony` — `openai/symphony` & `C:\aphrody\third_party\ralph` — `snarktank/ralph`):
+-   - Versioned in-repo `WORKFLOW.md` + `prd.json` contract executed inside detached Git worktrees (`withIsolatedWorktree`) until empirical acceptance commands (`bun test`, `bun check`, `cargo test`) turn GREEN ([`src/nhitl-loop.ts`](file:///C:/aphrody/frameworks/ai-os/engines/pi-opencode/src/nhitl-loop.ts)).
++4. **Symphony + Ralph Full-Auto NHITL ("No Human In The Loop") Workflow** (`third_party/symphony` — `openai/symphony` & `third_party/ralph` — `snarktank/ralph`):
++   - Versioned in-repo `WORKFLOW.md` + `prd.json` contract executed inside detached Git worktrees (`withIsolatedWorktree`) until empirical acceptance commands (`bun test`, `bun check`, `cargo test`) turn GREEN ([`src/nhitl-loop.ts`](src/nhitl-loop.ts)).
+ 
+ ## Quick Usage
+ 
+diff --git a/frameworks/ai-os/engines/pi-opencode/rust-core/src/lib.rs b/frameworks/ai-os/engines/pi-opencode/rust-core/src/lib.rs
+index 9d0ec59..b35910e 100644
+--- a/frameworks/ai-os/engines/pi-opencode/rust-core/src/lib.rs
++++ b/frameworks/ai-os/engines/pi-opencode/rust-core/src/lib.rs
+@@ -18,12 +18,12 @@ const IGNORED_DIRS: &[&str] = &[
+ ];
+ 
+ const FORBIDDEN_HOST_PREFIXES_WIN: &[&str] = &[
+-    "c:\\windows",
+-    "c:/windows",
+-    "c:\\program files",
+-    "c:/program files",
+-    "c:\\program files (x86)",
+-    "c:/program files (x86)",
++    "c:\\windows", // paths:ok
++    "c:/windows", // paths:ok
++    "c:\\program files", // paths:ok
++    "c:/program files", // paths:ok
++    "c:\\program files (x86)", // paths:ok
++    "c:/program files (x86)", // paths:ok
+ ];
+ 
+ const FORBIDDEN_HOST_PREFIXES_UNIX: &[&str] = &[
+@@ -261,10 +261,10 @@ mod tests {
+ 
+     #[test]
+     fn test_sacred_userspace_guard_blocks_system32() {
+-        assert!(!is_safe_workspace_path(Path::new(r"C:\Windows\System32\cmd.exe")));
+-        assert!(!is_safe_workspace_path(Path::new("C:/Windows/System32")));
++        assert!(!is_safe_workspace_path(Path::new(r"C:\Windows\System32\cmd.exe"))); // paths:ok
++        assert!(!is_safe_workspace_path(Path::new("C:/Windows/System32"))); // paths:ok
+         assert!(!is_safe_workspace_path(Path::new("/usr/bin/bash")));
+-        assert!(is_safe_workspace_path(Path::new(r"C:\aphrody\packages\pi-opencode\src\cli.ts")));
++        assert!(is_safe_workspace_path(&Path::new(env!("CARGO_MANIFEST_DIR")).join("src").join("lib.rs")));
+     }
+ 
+     #[test]
+diff --git a/frameworks/ai-os/engines/pi-opencode/src/lu-provider.ts b/frameworks/ai-os/engines/pi-opencode/src/lu-provider.ts
+index 75a772b..6fef150 100644
+--- a/frameworks/ai-os/engines/pi-opencode/src/lu-provider.ts
++++ b/frameworks/ai-os/engines/pi-opencode/src/lu-provider.ts
+@@ -163,7 +163,7 @@ export function generateHereticConfigToml(opts: {
+     terse: "concise_alignment",
+   };
+   return [
+-    "# Generated by pi-opencode for p-e-w/heretic v2 (C:\\aphrody\\third_party\\heretic)",
++    "# Generated by pi-opencode for p-e-w/heretic v2",
+     `model = "${opts.modelRepo}"`,
+     `quantization = "${opts.bnb4bit !== false ? "bnb_4bit" : "none"}"`,
+     `steering_profile = "${modeDescriptions[opts.mode]}"`,
+diff --git a/frameworks/ai-os/engines/pi-opencode/src/native-bridge.ts b/frameworks/ai-os/engines/pi-opencode/src/native-bridge.ts
+index 1cd32ee..dd98e99 100644
+--- a/frameworks/ai-os/engines/pi-opencode/src/native-bridge.ts
++++ b/frameworks/ai-os/engines/pi-opencode/src/native-bridge.ts
+@@ -99,12 +99,12 @@ export function getCpuThreads(): number {
+ }
+ 
+ const FORBIDDEN_PREFIXES = [
+-  "c:\\windows",
+-  "c:/windows",
+-  "c:\\program files",
+-  "c:/program files",
+-  "c:\\program files (x86)",
+-  "c:/program files (x86)",
++  "c:\\windows", // paths:ok
++  "c:/windows", // paths:ok
++  "c:\\program files", // paths:ok
++  "c:/program files", // paths:ok
++  "c:\\program files (x86)", // paths:ok
++  "c:/program files (x86)", // paths:ok
+   "/bin",
+   "/sbin",
+   "/usr/bin",
+@@ -195,10 +195,55 @@ export function diffLineStats(before: string, after: string): DiffStats {
+     const removed = Number(packed & 0xffffffffn);
+     return { added, removed };
+   }
+-  const bLines = before.split(/\r?\n/);
+-  const aLines = after.split(/\r?\n/);
+-  return {
+-    added: Math.max(0, aLines.length - bLines.length),
+-    removed: Math.max(0, bLines.length - aLines.length),
+-  };
++  return diffLineStatsTs(before, after);
++}
++
++/** Lines of a text with the semantics of Rust's `str::lines`: no empty trailing line. */
++function textLines(text: string): string[] {
++  const lines = text.split(/\r?\n/);
++  if (lines.at(-1) === "") lines.pop();
++  return lines;
++}
++
++/**
++ * Pure TypeScript twin of `diff_line_stats` in rust-core: common prefix and suffix are trimmed, then a bounded O(N*M)
++ * LCS counts the lines added and removed; very large windows fall back to counting every line of the window.
++ */
++export function diffLineStatsTs(before: string, after: string): DiffStats {
++  const oldLines = textLines(before);
++  const newLines = textLines(after);
++  let prefix = 0;
++  while (
++    prefix < oldLines.length &&
++    prefix < newLines.length &&
++    oldLines[prefix] === newLines[prefix]
++  )
++    prefix++;
++  let oldEnd = oldLines.length;
++  let newEnd = newLines.length;
++  while (
++    oldEnd > prefix &&
++    newEnd > prefix &&
++    oldLines[oldEnd - 1] === newLines[newEnd - 1]
++  ) {
++    oldEnd--;
++    newEnd--;
++  }
++  const oldMid = oldLines.slice(prefix, oldEnd);
++  const newMid = newLines.slice(prefix, newEnd);
++  if (oldMid.length === 0) return { added: newMid.length, removed: 0 };
++  if (newMid.length === 0) return { added: 0, removed: oldMid.length };
++  if (oldMid.length * newMid.length > 250_000)
++    return { added: newMid.length, removed: oldMid.length };
++  let prev = new Array<number>(newMid.length + 1).fill(0);
++  let curr = new Array<number>(newMid.length + 1).fill(0);
++  for (const o of oldMid) {
++    for (let j = 0; j < newMid.length; j++)
++      curr[j + 1] =
++        o === newMid[j] ? prev[j]! + 1 : Math.max(prev[j + 1]!, curr[j]!);
++    [prev, curr] = [curr, prev];
++    curr.fill(0);
++  }
++  const common = prev[newMid.length]!;
++  return { added: newMid.length - common, removed: oldMid.length - common };
+ }
+diff --git a/frameworks/ai-os/engines/pi-opencode/src/pi-core.ts b/frameworks/ai-os/engines/pi-opencode/src/pi-core.ts
+index f1736e0..eb653bb 100644
+--- a/frameworks/ai-os/engines/pi-opencode/src/pi-core.ts
++++ b/frameworks/ai-os/engines/pi-opencode/src/pi-core.ts
+@@ -102,7 +102,7 @@ export function buildMinimalPiSystemPrompt(opts: PiAgentOptions): string {
+     "Tools available: read, write, edit, bash.",
+     "Rules:",
+     "- Read files before editing them. Prefer surgical edits over full rewrites.",
+-    "- Never touch host OS directories (C:\\Windows\\System32, /usr/bin, /etc).",
++    "- Never touch host OS directories (the Windows system directories, /usr/bin, /etc).",
+     "- Verify every change with real tests or typechecks (`bun test`, `bun check`, `cargo test`).",
+     `Working directory: ${resolve(opts.cwd)}`,
+   ];
+diff --git a/frameworks/ai-os/engines/pi-opencode/tests/pi-opencode.test.ts b/frameworks/ai-os/engines/pi-opencode/tests/pi-opencode.test.ts
+index eadf694..027f16b 100644
+--- a/frameworks/ai-os/engines/pi-opencode/tests/pi-opencode.test.ts
++++ b/frameworks/ai-os/engines/pi-opencode/tests/pi-opencode.test.ts
+@@ -34,13 +34,18 @@ describe("pi-opencode: Rust Native FFI & Torvalds Userspace Guard", () => {
+     expect(getCpuThreads()).toBeGreaterThanOrEqual(4);
+   });
+ 
+-  test("blocks C:\\Windows\\System32 and /usr/bin while allowing workspace paths", () => {
+-    expect(isSafeWorkspacePath("C:\\Windows\\System32\\cmd.exe")).toBe(false);
+-    expect(isSafeWorkspacePath("C:\\Program Files\\Vendor\\x.exe")).toBe(false);
++  test("blocks the host system directories while allowing workspace paths", () => {
++    if (process.platform === "win32") {
++      expect(isSafeWorkspacePath("C:\\Windows\\System32\\cmd.exe")).toBe(false); // paths:ok
++      expect(isSafeWorkspacePath("C:\\Program Files\\Vendor\\x.exe")).toBe(
++        false,
++      ); // paths:ok
++    } else {
++      expect(isSafeWorkspacePath("/usr/bin/bash")).toBe(false);
++      expect(isSafeWorkspacePath("/etc/passwd")).toBe(false);
++    }
+     expect(
+-      isSafeWorkspacePath(
+-        "C:\\aphrody\\packages\\ai-os\\engines\\pi-opencode\\src\\cli.ts",
+-      ),
++      isSafeWorkspacePath(join(import.meta.dir, "..", "src", "cli.ts")),
+     ).toBe(true);
+   });
+ 
+diff --git a/frameworks/ai-os/engines/rag-core/README.md b/frameworks/ai-os/engines/rag-core/README.md
+index 586c5cd..d6a5e89 100644
+--- a/frameworks/ai-os/engines/rag-core/README.md
++++ b/frameworks/ai-os/engines/rag-core/README.md
+@@ -18,7 +18,7 @@ bun run --cwd frameworks/ai-os/engines/rag-core typecheck
+ bun run --cwd frameworks/ai-os/engines/rag-core test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ The RAG core of Aphrody (source-aware chunkers, rank fusion, MMR, source weighting, vector kernels,
+diff --git a/frameworks/ai-os/engines/xai/README.md b/frameworks/ai-os/engines/xai/README.md
+index b6b3bcd..4240957 100644
+--- a/frameworks/ai-os/engines/xai/README.md
++++ b/frameworks/ai-os/engines/xai/README.md
+@@ -15,7 +15,7 @@ bun run --cwd frameworks/ai-os/engines/xai typecheck
+ bun run --cwd frameworks/ai-os/engines/xai test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ Headless **xAI Grok** client for Bun — OpenAI-compatible `https://api.x.ai/v1`.
+diff --git a/frameworks/ai-os/engines/xai/package.json b/frameworks/ai-os/engines/xai/package.json
+index 324d857..595f1df 100644
+--- a/frameworks/ai-os/engines/xai/package.json
++++ b/frameworks/ai-os/engines/xai/package.json
+@@ -3,12 +3,12 @@
+   "version": "1.1.6",
+   "description": "Headless xAI Grok API client for Bun — high-level fluent Chat API (createChat/append/sample/stream/executeToolCalls/sampleStructured, reasoning, structured, XTools for native X tool fulfillment) + SUPER_GROK_TOKEN keyless + OIDC. OpenAI-compatible REST, deep native integration with @aphrody/x.",
+   "bugs": {
+-    "url": "https://github.com/aphrody-labs/ay/issues"
++    "url": "https://github.com/aphrody-dev/ai-os/issues"
+   },
+   "license": "Apache-2.0",
+   "repository": {
+     "type": "git",
+-    "url": "https://github.com/aphrody-labs/ay.git",
++    "url": "https://github.com/aphrody-dev/ai-os.git",
+     "directory": "frameworks/ai-os/engines/xai"
+   },
+   "files": [
+diff --git a/frameworks/ai-os/protocols/a2a/README.md b/frameworks/ai-os/protocols/a2a/README.md
+index c567db2..0a1ff27 100644
+--- a/frameworks/ai-os/protocols/a2a/README.md
++++ b/frameworks/ai-os/protocols/a2a/README.md
+@@ -20,7 +20,7 @@ bun run --cwd frameworks/ai-os/protocols/a2a test
+ bun run --cwd frameworks/ai-os/protocols/a2a lint
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ A2A **1.0** client for Bun and the web platform: Agent Card discovery, the JSON-RPC and HTTP+JSON
+diff --git a/frameworks/ai-os/protocols/ag-ui-client/README.md b/frameworks/ai-os/protocols/ag-ui-client/README.md
+index 1287ea6..1e8c377 100644
+--- a/frameworks/ai-os/protocols/ag-ui-client/README.md
++++ b/frameworks/ai-os/protocols/ag-ui-client/README.md
+@@ -18,7 +18,7 @@ bun run --cwd frameworks/ai-os/protocols/ag-ui-client prepack
+ bun run --cwd frameworks/ai-os/protocols/ag-ui-client test:upstream
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ AG-UI client with stream error draining and HTTP cancellation fixes.
+diff --git a/frameworks/ai-os/protocols/ag-ui/README.md b/frameworks/ai-os/protocols/ag-ui/README.md
+index de0c7e8..0f22844 100644
+--- a/frameworks/ai-os/protocols/ag-ui/README.md
++++ b/frameworks/ai-os/protocols/ag-ui/README.md
+@@ -15,7 +15,7 @@ bun run --cwd frameworks/ai-os/protocols/ag-ui typecheck
+ bun run --cwd frameworks/ai-os/protocols/ag-ui test
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ One import for the AG-UI protocol in Aphrody surfaces: the `@ag-ui/core` event schema, the
+diff --git a/frameworks/ai-os/protocols/agent-browser/README.md b/frameworks/ai-os/protocols/agent-browser/README.md
+index 3503a19..c55f872 100644
+--- a/frameworks/ai-os/protocols/agent-browser/README.md
++++ b/frameworks/ai-os/protocols/agent-browser/README.md
+@@ -16,5 +16,5 @@ bun run --cwd frameworks/ai-os/protocols/agent-browser test
+ bun run --cwd frameworks/ai-os/protocols/agent-browser lint
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+diff --git a/frameworks/ai-os/protocols/mcp-ui/README.md b/frameworks/ai-os/protocols/mcp-ui/README.md
+index ed21992..02e008c 100644
+--- a/frameworks/ai-os/protocols/mcp-ui/README.md
++++ b/frameworks/ai-os/protocols/mcp-ui/README.md
+@@ -17,7 +17,7 @@ bun run --cwd frameworks/ai-os/protocols/mcp-ui build
+ bun run --cwd frameworks/ai-os/protocols/mcp-ui prepack
+ ```
+ 
+-Part of Aphrody: [aphrody-labs/ay](../../../../README.md), [Catalog](../../../../docs/reference/catalog/package.md).
++Part of Aphrody: [aphrody-dev/ai-os](../../../../README.md).
+ <!-- catalog:end -->
+ 
+ MCP interactive app client with sandbox readiness and cancellation fixes.
+diff --git a/frameworks/ai-os/src/core/cabi.ts b/frameworks/ai-os/src/core/cabi.ts
+index 43c5d44..36ac7b6 100644
+--- a/frameworks/ai-os/src/core/cabi.ts
++++ b/frameworks/ai-os/src/core/cabi.ts
+@@ -217,7 +217,7 @@ export function osUname(): AiOsUname {
+     fhs: {
+       etc: "/etc/ai-os",
+       var: "/var/lib/ai-os",
+-      home: "/home/agent",
++      home: "/home/agent", // paths:ok virtual FHS of the agent OS, not a host path
+       proc: "/proc/agent",
+       tmp: "/tmp",
+       dev: ["/dev/llm", "/dev/rag", "/dev/world", "/dev/sys1"],
+diff --git a/frameworks/ai-os/src/core/index.ts b/frameworks/ai-os/src/core/index.ts
+index a9932ee..630d6ea 100644
+--- a/frameworks/ai-os/src/core/index.ts
++++ b/frameworks/ai-os/src/core/index.ts
+@@ -71,3 +71,4 @@ export {
+   type WorldStepInput,
+   type WorldStepResult,
+ } from "./cabi";
++export { dataDir, envFile, workspaceRoot } from "./paths";
+diff --git a/frameworks/ai-os/src/core/paths.ts b/frameworks/ai-os/src/core/paths.ts
+new file mode 100644
+index 0000000..d3a1adc
+--- /dev/null
++++ b/frameworks/ai-os/src/core/paths.ts
+@@ -0,0 +1,33 @@
++// Where things live, derived and never written down: the checkout root, the data directory and the `.env` file.
++import { existsSync } from "node:fs";
++import { dirname, join, resolve } from "node:path";
++
++/** Root of the checkout: $WORKSPACE_ROOT, then $SRC_ROOT, else the nearest ancestor of `from` holding `.git`, else four levels above this file. */
++export function workspaceRoot(from: string = import.meta.dir): string {
++  const explicit =
++    process.env.WORKSPACE_ROOT?.trim() || process.env.SRC_ROOT?.trim();
++  if (explicit) return resolve(explicit);
++  for (let dir = resolve(from); ; dir = dirname(dir)) {
++    if (existsSync(join(dir, ".git"))) return dir;
++    if (dirname(dir) === dir)
++      return resolve(import.meta.dir, "..", "..", "..", "..");
++  }
++}
++
++/** Mutable data of the workspace: $AY_DATA_DIR, else `<root>/var`; `parts` are joined below it. */
++export function dataDir(...parts: string[]): string {
++  return join(
++    process.env.AY_DATA_DIR?.trim() || join(workspaceRoot(), "var"),
++    ...parts,
++  );
++}
++
++/** The `.env` file: $ENV_FILE, else the nearest `.env` from the current directory upward, else `<root>/.env`. */
++export function envFile(): string {
++  const explicit = process.env.ENV_FILE?.trim();
++  if (explicit) return resolve(explicit);
++  for (let dir = process.cwd(); ; dir = dirname(dir)) {
++    if (existsSync(join(dir, ".env"))) return join(dir, ".env");
++    if (dirname(dir) === dir) return join(workspaceRoot(), ".env");
++  }
++}
+diff --git a/frameworks/ai-os/src/core/sandbox.ts b/frameworks/ai-os/src/core/sandbox.ts
+index 5847546..088d29c 100644
+--- a/frameworks/ai-os/src/core/sandbox.ts
++++ b/frameworks/ai-os/src/core/sandbox.ts
+@@ -18,7 +18,7 @@ export class OverlaySandbox {
+   private readonly files = new Map<string, string>();
+   private readonly deleted = new Set<string>();
+   private readonly dirs = new Set<string>(["/"]);
+-  readonly env: Record<string, string> = { HOME: "/home/user", PWD: "/" };
++  readonly env: Record<string, string> = { HOME: "/home/user", PWD: "/" }; // paths:ok root of the in-memory overlay, not a host path
+   cwd = "/";
+ 
+   constructor(readonly root: string) {}
+diff --git a/frameworks/ai-os/src/google/cli.ts b/frameworks/ai-os/src/google/cli.ts
+index 19620cf..ab4029d 100644
+--- a/frameworks/ai-os/src/google/cli.ts
++++ b/frameworks/ai-os/src/google/cli.ts
+@@ -13,7 +13,20 @@ process.env.JULES_HOME ??= join(
+   "jules",
+ );
+ 
+-export const DEFAULT_REPO = Bun.env.JULES_REPO ?? "aphrody-labs/src";
++/** The GitHub repository of the checkout (origin remote, `<owner>/<name>`), the target of a Jules session by default. */
++function originRepo(): string {
++  const r = Bun.spawnSync(
++    ["git", "-C", import.meta.dir, "remote", "get-url", "origin"],
++    { stdout: "pipe", stderr: "ignore" },
++  );
++  return (
++    /github\.com[:/]([\w.-]+\/[\w.-]+?)(?:\.git)?\/?$/.exec(
++      r.stdout.toString().trim(),
++    )?.[1] ?? ""
++  );
++}
++
++export const DEFAULT_REPO = Bun.env.JULES_REPO ?? originRepo();
+ 
+ const print = (v: unknown) => console.log(JSON.stringify(v, null, 2));
+ const readStdin = async () =>
+diff --git a/frameworks/ai-os/src/relay/registry-mcp.ts b/frameworks/ai-os/src/relay/registry-mcp.ts
+index d70f790..bee8610 100644
+--- a/frameworks/ai-os/src/relay/registry-mcp.ts
++++ b/frameworks/ai-os/src/relay/registry-mcp.ts
+@@ -15,7 +15,7 @@ type Args = Record<string, unknown>;
+ const CRATES = Bun.env.REGISTRY_CRATES_API ?? "https://crates.io/api/v1";
+ const NPM = Bun.env.REGISTRY_NPM_API ?? "https://registry.npmjs.org";
+ // crates.io asks every API client to identify itself (crates.io data access policy).
+-const UA = "aphrody-registry-mcp (+https://github.com/aphrody-labs/ay)";
++const UA = "aphrody-registry-mcp (+https://github.com/aphrody-dev/ai-os)";
+ 
+ async function get(url: string, accept = "application/json"): Promise<any> {
+   const r = await fetch(url, {
+diff --git a/frameworks/ai-os/test/google/jules.test.ts b/frameworks/ai-os/test/google/jules.test.ts
+index c2817e1..1e47bcc 100644
+--- a/frameworks/ai-os/test/google/jules.test.ts
++++ b/frameworks/ai-os/test/google/jules.test.ts
+@@ -22,7 +22,7 @@ const SESSION = {
+   title: "Fix it",
+   prompt: "Fix it",
+   sourceContext: {
+-    source: "sources/github/aphrody-labs/src",
++    source: "sources/github/example-org/example-repo",
+     githubRepoContext: { startingBranch: "main" },
+   },
+   createTime: "2026-11-13T00:00:00Z",
+@@ -38,12 +38,12 @@ beforeAll(() => {
+       const path = u.pathname.replace(/^\/v1alpha\//, "");
+       const body = req.method === "POST" ? await req.json() : null;
+       seen.push({ method: req.method, path, headers: req.headers, body });
+-      if (path === "sources/github/aphrody-labs/src")
++      if (path === "sources/github/example-org/example-repo")
+         return Response.json({
+-          name: "sources/github/aphrody-labs/src",
+-          id: "github/aphrody-labs/src",
++          name: "sources/github/example-org/example-repo",
++          id: "github/example-org/example-repo",
+           githubRepo: {
+-            owner: "aphrody-labs",
++            owner: "example-org",
+             repo: "src",
+             defaultBranch: { displayName: "main" },
+           },
+@@ -65,7 +65,7 @@ beforeAll(() => {
+                 outputs: [
+                   {
+                     pullRequest: {
+-                      url: "https://github.com/aphrody-labs/src/pull/1",
++                      url: "https://github.com/example-org/example-repo/pull/1",
+                       title: "Fix it",
+                       description: "",
+                     },
+@@ -98,7 +98,7 @@ describe("jules: absorbed core", () => {
+     });
+     const run = await j.run({
+       prompt: "Fix it",
+-      source: { github: "aphrody-labs/src", baseBranch: "main" },
++      source: { github: "example-org/example-repo", baseBranch: "main" },
+     });
+     expect(run.id).toBe("s1");
+     const post = seen.find(
+@@ -110,14 +110,14 @@ describe("jules: absorbed core", () => {
+       automationMode: "AUTO_CREATE_PR",
+       requirePlanApproval: false,
+       sourceContext: {
+-        source: "sources/github/aphrody-labs/src",
++        source: "sources/github/example-org/example-repo",
+         githubRepoContext: { startingBranch: "main" },
+       },
+     });
+     const out = await run.result();
+     expect(out.state).toBe("completed");
+     expect(out.pullRequest?.url).toBe(
+-      "https://github.com/aphrody-labs/src/pull/1",
++      "https://github.com/example-org/example-repo/pull/1",
+     );
+   });
+ 
+diff --git a/frameworks/ai-os/test/orch/orch.test.ts b/frameworks/ai-os/test/orch/orch.test.ts
+index 647d103..25e4692 100644
+--- a/frameworks/ai-os/test/orch/orch.test.ts
++++ b/frameworks/ai-os/test/orch/orch.test.ts
+@@ -302,10 +302,10 @@ test("routing: Jules only on explicit request, repository in the template locati
+     rank(
+       "pc",
+       all,
+-      { edit: true, models: ["jules:aphrody-labs/src"] },
++      { edit: true, models: ["jules:example-org/example-repo"] },
+       h,
+     ).slice(0, 2),
+-  ).toEqual(["jules:aphrody-labs/src", "jules"]);
++  ).toEqual(["jules:example-org/example-repo", "jules"]);
+   expect(rank("pc", all, { only: ["^jules"] }, h)).toEqual(["jules"]);
+   h.close();
+ });
+diff --git a/frameworks/ai-os/test/relay/acp.test.ts b/frameworks/ai-os/test/relay/acp.test.ts
+index 8eea280..3c5a40e 100644
+--- a/frameworks/ai-os/test/relay/acp.test.ts
++++ b/frameworks/ai-os/test/relay/acp.test.ts
+@@ -28,7 +28,7 @@ const rpc = async (
+   await handle({ jsonrpc: "2.0", id, method, params }, (m) => out.push(m));
+   return out;
+ };
+-const cwd = process.platform === "win32" ? "C:\\w" : "/w";
++const cwd = join(tmpdir(), "w");
+ 
+ test("initialize: negotiated version, loadSession and session/list announced", async () => {
+   const [r] = await rpc("initialize", { protocolVersion: 7 });
+diff --git a/frameworks/ai-os/test/relay/sessions.test.ts b/frameworks/ai-os/test/relay/sessions.test.ts
+index e69c0d0..0e2c8bd 100644
+--- a/frameworks/ai-os/test/relay/sessions.test.ts
++++ b/frameworks/ai-os/test/relay/sessions.test.ts
+@@ -26,12 +26,15 @@ afterAll(() => {
+ });
+ 
+ test("SessionStart hook registers and names the session", () => {
+-  const o = runHook("start", { session_id: "aaaa1111", cwd: "C:/aphrody" });
++  const o = runHook("start", {
++    session_id: "aaaa1111",
++    cwd: join(tmpdir(), "aphrody"),
++  });
+   expect(o.hookSpecificOutput.hookEventName).toBe("SessionStart");
+   expect(o.hookSpecificOutput.additionalContext).toContain(
+     'this session is "claude-code-aphrody-aaaa11"',
+   );
+-  runHook("start", { session_id: "bbbb2222", cwd: "C:/aphrody" });
++  runHook("start", { session_id: "bbbb2222", cwd: join(tmpdir(), "aphrody") });
+   S.resetStore();
+   expect(
+     S.list()
+diff --git a/frameworks/ai-os/test/research/research.test.ts b/frameworks/ai-os/test/research/research.test.ts
+index 9e0cb6c..2f9abc8 100644
+--- a/frameworks/ai-os/test/research/research.test.ts
++++ b/frameworks/ai-os/test/research/research.test.ts
+@@ -21,14 +21,11 @@ const REF = join(
+   "ai_foundations_to_agi",
+ );
+ 
+-test.skipIf(!existsSync(REF))(
+-  "validator port agrees with validate_json.py on the reference pack",
+-  async () => {
+-    const r = await validateDir(join(REF, "outline.yaml"));
+-    expect(r.length).toBe(3);
+-    expect(r.every((x) => x.ok)).toBe(true);
+-  },
+-);
++test("validator port agrees with validate_json.py on the reference pack", async () => {
++  const r = await validateDir(join(REF, "outline.yaml"));
++  expect(r.length).toBe(3);
++  expect(r.every((x) => x.ok)).toBe(true);
++});
+ 
+ test("validate: uncertain mismatch and missing fields", () => {
+   const fields: Fields = {
+@@ -49,37 +46,34 @@ test("validate: uncertain mismatch and missing fields", () => {
+   );
+ });
+ 
+-test.skipIf(!existsSync(REF))(
+-  "research: fan-out, results written, validated, fed to memory",
+-  async () => {
+-    const dir = mkdtempSync(join(tmpdir(), "agent-research-"));
+-    cpSync(join(REF, "outline.yaml"), join(dir, "outline.yaml"));
+-    cpSync(join(REF, "fields.yaml"), join(dir, "fields.yaml"));
+-    const fields = await loadYaml<Fields>(join(dir, "fields.yaml"));
+-    const answer = Object.fromEntries(
+-      fields.required_fields.map((f) => [
+-        f.name,
+-        f.type.startsWith("list") ? ["v"] : "v",
+-      ]),
+-    );
+-    const model = scriptedModel(JSON.stringify({ ...answer, uncertain: [] }));
+-    const home = join(dir, "home");
+-    const r = await research({
+-      outlinePath: join(dir, "outline.yaml"),
+-      model,
+-      home,
+-      web: false,
+-    });
+-    expect(r.passed).toBe(3);
+-    expect(existsSync(join(dir, "results", "Alan_Turing.json"))).toBe(true);
+-    const m = new Memory(join(home, "memory.sqlite"));
+-    const hits = await m.ctx.select("Alan Turing era", {
+-      sources: ["research"],
+-      k: 3,
+-    });
+-    expect(hits[0]?.id).toStartWith(
+-      "research:ai_foundations_to_agi/Alan_Turing#",
+-    );
+-    m.close();
+-  },
+-);
++test("research: fan-out, results written, validated, fed to memory", async () => {
++  const dir = mkdtempSync(join(tmpdir(), "agent-research-"));
++  cpSync(join(REF, "outline.yaml"), join(dir, "outline.yaml"));
++  cpSync(join(REF, "fields.yaml"), join(dir, "fields.yaml"));
++  const fields = await loadYaml<Fields>(join(dir, "fields.yaml"));
++  const answer = Object.fromEntries(
++    fields.required_fields.map((f) => [
++      f.name,
++      f.type.startsWith("list") ? ["v"] : "v",
++    ]),
++  );
++  const model = scriptedModel(JSON.stringify({ ...answer, uncertain: [] }));
++  const home = join(dir, "home");
++  const r = await research({
++    outlinePath: join(dir, "outline.yaml"),
++    model,
++    home,
++    web: false,
++  });
++  expect(r.passed).toBe(3);
++  expect(existsSync(join(dir, "results", "Alan_Turing.json"))).toBe(true);
++  const m = new Memory(join(home, "memory.sqlite"));
++  const hits = await m.ctx.select("Alan Turing era", {
++    sources: ["research"],
++    k: 3,
++  });
++  expect(hits[0]?.id).toStartWith(
++    "research:ai_foundations_to_agi/Alan_Turing#",
++  );
++  m.close();
++});

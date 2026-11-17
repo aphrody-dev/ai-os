@@ -1,13 +1,13 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Dot-sourceable PowerShell loader for C:\aphrody\.env (`C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1`).
+  Dot-sourceable PowerShell loader for the workspace .env.
   Never prints raw secret values. Does not override existing process env vars unless -Override is specified.
 .EXAMPLE
-  . C:\aphrody\packages\env-kit\loaders\shell\load-env.ps1
+  . system\env-kit\loaders\shell\load-env.ps1
 #>
 param(
-  [string]$EnvPath = "C:\aphrody\.env",
+  [string]$EnvPath = $(if ($env:ENV_KIT_ROOT) { Join-Path $env:ENV_KIT_ROOT '.env' } else { Join-Path $PSScriptRoot '..\..\..\..\.env' }),
   [switch]$Override,
   [string[]]$Required = @(),
   [string]$Service = "powershell"

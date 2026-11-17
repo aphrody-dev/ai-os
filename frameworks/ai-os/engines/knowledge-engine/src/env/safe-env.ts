@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { envFile } from "../../../../src/core/paths.ts";
 import {
   isSecretKey,
   loadMonorepoEnv,
@@ -6,8 +7,7 @@ import {
   type LoadedMonorepoEnv,
 } from "../../../../../../system/env-kit/src/index.ts";
 
-export const DEFAULT_ENV_FILE_PATH =
-  process.platform === "win32" ? "C:\\aphrody\\.env" : "/src/.env";
+export const DEFAULT_ENV_FILE_PATH = envFile();
 
 const TOKEN_PREFIX_REDACTION_REGEX =
   /(?:ya29\.[A-Za-z0-9._-]{20,}|1\/\/[A-Za-z0-9._-]{20,}|\b(?:sk-[A-Za-z0-9_-]{12,}|AIza[A-Za-z0-9_-]{20,}|figd_[A-Za-z0-9_-]{12,}|gh[pousr]_[A-Za-z0-9_]{16,}|github_pat_[A-Za-z0-9_]{20,}|ctx7sk-[A-Za-z0-9_-]{12,}|vcp_[A-Za-z0-9_-]{12,}|napi_[A-Za-z0-9_-]{12,}|npm_[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{10,})\b)/g;
