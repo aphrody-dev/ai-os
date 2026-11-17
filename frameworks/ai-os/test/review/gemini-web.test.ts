@@ -195,12 +195,12 @@ test("fresh chat, carbon mode, thinking level, fenced JSON parsed, chat id recor
     ...opts(),
     screenshot: join(home, "proof.png"),
   });
+  expect(r).toMatchObject({ ok: true });
   expect(
     Buffer.from(await Bun.file(join(home, "proof.png")).arrayBuffer())
       .subarray(1, 4)
       .toString(),
   ).toBe("PNG");
-  expect(r).toMatchObject({ ok: true });
   expect(r.mode).toContain("Carbon");
   expect(r.chatId).toBe("chat123");
   expect(r.chat).toContain("/app/chat123");
