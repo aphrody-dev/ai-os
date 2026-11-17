@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "agy-desktop"
+name = "ai-os-agy-desktop"
 version = "2.0.0"

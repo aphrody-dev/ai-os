@@ -3,7 +3,7 @@ requires = ["maturin>=1.9,<2"]
 build-backend = "maturin"
 
 [project]
-name = "agent-core"
+name = "ai-os-agent-core"
 version = "0.1.0"
 description = "pyo3 bridge to the agent Context store (frameworks/agent/context, feature python)."
 requires-python = ">=3.10"

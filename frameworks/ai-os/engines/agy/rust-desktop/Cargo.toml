@@ -1,6 +1,6 @@
 [package]
 license.workspace = true
-name = "agy-desktop"
+name = "ai-os-agy-desktop"
 version = "2.0.0"
 edition = "2024"
 description = "Native Rust Desktop Shell & TUI Launcher for Google Antigravity + Gemini + Gemma 4 (@aphrody/agy + @aphrody/ai-os)"

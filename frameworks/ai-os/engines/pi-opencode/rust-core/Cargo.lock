@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "pi_opencode_native"
+name = "ai-os-pi-opencode-native"
 version = "1.0.0"
 dependencies = [
  "windows-sys",

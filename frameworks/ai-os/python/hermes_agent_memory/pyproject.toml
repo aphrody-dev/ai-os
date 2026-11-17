@@ -3,11 +3,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "hermes-agent-memory"
+name = "ai-os-hermes-agent-memory"
 version = "0.1.0"
 description = "Hermes Agent memory provider backed by the unified agent Context store (pyo3 agent_core)."
 requires-python = ">=3.10"
-dependencies = ["agent-core"]
+dependencies = ["ai-os-agent-core"]
 
 [project.entry-points."hermes_agent.memory_providers"]
 agent = "hermes_agent_memory:register"
@@ -16,4 +16,4 @@ agent = "hermes_agent_memory:register"
 dev = ["pytest>=8"]
 
 [tool.uv.sources]
-agent-core = { workspace = true }
+ai-os-agent-core = { workspace = true }

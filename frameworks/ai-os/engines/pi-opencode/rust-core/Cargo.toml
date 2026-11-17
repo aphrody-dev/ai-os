@@ -1,11 +1,12 @@
 [package]
-name = "pi_opencode_native"
+name = "ai-os-pi-opencode-native"
 version = "1.0.0"
 edition = "2024"
 description = "OpenCode + OpenTUI inspired Rust native zero-copy file index, unified diff engine, and Win32/POSIX workspace isolation primitives for Bun FFI"
 license = "MIT"
 
 [lib]
+name = "pi_opencode_native"
 crate-type = ["cdylib", "rlib"]
 
 [target.'cfg(windows)'.dependencies]

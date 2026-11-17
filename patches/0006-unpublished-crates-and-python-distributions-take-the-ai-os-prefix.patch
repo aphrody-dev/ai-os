@@ -1,0 +1,125 @@
+diff --git a/frameworks/agent/context/pyproject.toml b/frameworks/agent/context/pyproject.toml
+index c869a30..83bcf1a 100644
+--- a/frameworks/agent/context/pyproject.toml
++++ b/frameworks/agent/context/pyproject.toml
+@@ -3,7 +3,7 @@ requires = ["maturin>=1.9,<2"]
+ build-backend = "maturin"
+ 
+ [project]
+-name = "agent-core"
++name = "ai-os-agent-core"
+ version = "0.1.0"
+ description = "pyo3 bridge to the agent Context store (frameworks/agent/context, feature python)."
+ requires-python = ">=3.10"
+diff --git a/frameworks/ai-os/engines/agy/rust-desktop/Cargo.lock b/frameworks/ai-os/engines/agy/rust-desktop/Cargo.lock
+index e02ca6e..bb5072f 100644
+--- a/frameworks/ai-os/engines/agy/rust-desktop/Cargo.lock
++++ b/frameworks/ai-os/engines/agy/rust-desktop/Cargo.lock
+@@ -3,5 +3,5 @@
+ version = 4
+ 
+ [[package]]
+-name = "agy-desktop"
++name = "ai-os-agy-desktop"
+ version = "2.0.0"
+diff --git a/frameworks/ai-os/engines/agy/rust-desktop/Cargo.toml b/frameworks/ai-os/engines/agy/rust-desktop/Cargo.toml
+index 93fa11f..463a7f4 100644
+--- a/frameworks/ai-os/engines/agy/rust-desktop/Cargo.toml
++++ b/frameworks/ai-os/engines/agy/rust-desktop/Cargo.toml
+@@ -1,6 +1,6 @@
+ [package]
+ license.workspace = true
+-name = "agy-desktop"
++name = "ai-os-agy-desktop"
+ version = "2.0.0"
+ edition = "2024"
+ description = "Native Rust Desktop Shell & TUI Launcher for Google Antigravity + Gemini + Gemma 4 (@aphrody/agy + @aphrody/ai-os)"
+diff --git a/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.lock b/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.lock
+index 72ddbba..9feef24 100644
+--- a/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.lock
++++ b/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.lock
+@@ -3,7 +3,7 @@
+ version = 4
+ 
+ [[package]]
+-name = "pi_opencode_native"
++name = "ai-os-pi-opencode-native"
+ version = "1.0.0"
+ dependencies = [
+  "windows-sys",
+diff --git a/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.toml b/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.toml
+index 7c70b59..9200c67 100644
+--- a/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.toml
++++ b/frameworks/ai-os/engines/pi-opencode/rust-core/Cargo.toml
+@@ -1,11 +1,12 @@
+ [package]
+-name = "pi_opencode_native"
++name = "ai-os-pi-opencode-native"
+ version = "1.0.0"
+ edition = "2024"
+ description = "OpenCode + OpenTUI inspired Rust native zero-copy file index, unified diff engine, and Win32/POSIX workspace isolation primitives for Bun FFI"
+ license = "MIT"
+ 
+ [lib]
++name = "pi_opencode_native"
+ crate-type = ["cdylib", "rlib"]
+ 
+ [target.'cfg(windows)'.dependencies]
+diff --git a/frameworks/ai-os/python/hermes_agent_memory/pyproject.toml b/frameworks/ai-os/python/hermes_agent_memory/pyproject.toml
+index 43e8fe4..d961c55 100644
+--- a/frameworks/ai-os/python/hermes_agent_memory/pyproject.toml
++++ b/frameworks/ai-os/python/hermes_agent_memory/pyproject.toml
+@@ -3,11 +3,11 @@ requires = ["hatchling"]
+ build-backend = "hatchling.build"
+ 
+ [project]
+-name = "hermes-agent-memory"
++name = "ai-os-hermes-agent-memory"
+ version = "0.1.0"
+ description = "Hermes Agent memory provider backed by the unified agent Context store (pyo3 agent_core)."
+ requires-python = ">=3.10"
+-dependencies = ["agent-core"]
++dependencies = ["ai-os-agent-core"]
+ 
+ [project.entry-points."hermes_agent.memory_providers"]
+ agent = "hermes_agent_memory:register"
+@@ -16,4 +16,4 @@ agent = "hermes_agent_memory:register"
+ dev = ["pytest>=8"]
+ 
+ [tool.uv.sources]
+-agent-core = { workspace = true }
++ai-os-agent-core = { workspace = true }
+diff --git a/frameworks/ai-os/python/research_ref/pyproject.toml b/frameworks/ai-os/python/research_ref/pyproject.toml
+index 0378c16..4a68445 100644
+--- a/frameworks/ai-os/python/research_ref/pyproject.toml
++++ b/frameworks/ai-os/python/research_ref/pyproject.toml
+@@ -1,5 +1,5 @@
+ [project]
+-name = "research-ref"
++name = "ai-os-research-ref"
+ version = "0.1.0"
+ description = "Reference validator for agent research results (TS port in frameworks/ai-os/src/research)."
+ requires-python = ">=3.14"
+diff --git a/frameworks/re-ts/ghidra/scripts/parity/pyproject.toml b/frameworks/re-ts/ghidra/scripts/parity/pyproject.toml
+index eee4c13..3a5239f 100644
+--- a/frameworks/re-ts/ghidra/scripts/parity/pyproject.toml
++++ b/frameworks/re-ts/ghidra/scripts/parity/pyproject.toml
+@@ -1,5 +1,5 @@
+ [project]
+-name = "aphrody-ghidra-parity"
++name = "ai-os-ghidra-parity"
+ version = "0.1.0"
+ description = "Reference run of the Ghidra Python API (pyghidra) against which frameworks/re-ts/ghidra is compared"
+ requires-python = ">=3.10"
+diff --git a/frameworks/ring3-agent/Cargo.toml b/frameworks/ring3-agent/Cargo.toml
+index fba46a5..0ec24c0 100644
+--- a/frameworks/ring3-agent/Cargo.toml
++++ b/frameworks/ring3-agent/Cargo.toml
+@@ -1,6 +1,6 @@
+ [package]
+ repository.workspace = true
+-name = "ring3-agent"
++name = "ai-os-ring3-agent"
+ version = "0.1.0"
+ edition = "2024"
+ license = "Apache-2.0 OR MIT"
