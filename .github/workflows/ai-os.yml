@@ -42,7 +42,7 @@ jobs:
         working-directory: .
       - run: bun fmt --check .
       - run: bun check src/cli.ts src/relay/cli.ts bench/retrieval.ts test
-      - run: bun test test
+      - run: bun test ./test
   relay-service:
     runs-on: windows-latest
     timeout-minutes: 30
