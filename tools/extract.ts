@@ -20,8 +20,9 @@ const arg = (k: string) => Bun.argv.find((a) => a.startsWith(`--${k}=`))?.slice(
 // at a local clone instead; it is read, never created.
 const override = Bun.env.AI_OS_LEGACY_CHECKOUT;
 const legacy = abs(here, override ?? cfg.source.checkout);
+// A fetch must fail instead of asking for credentials.
 const sh = async (cwd: string, ...cmd: string[]) => {
-  const p = Bun.spawn(cmd, { cwd, stdout: "pipe", stderr: "pipe" });
+  const p = Bun.spawn(cmd, { cwd, stdout: "pipe", stderr: "pipe", env: { ...process.env, GIT_TERMINAL_PROMPT: "0" } });
   const [out, err, code] = await Promise.all([new Response(p.stdout).text(), new Response(p.stderr).text(), p.exited]);
   if (code !== 0) throw new Error(`${cmd.join(" ")}: ${err.trim()}`);
   return out;
@@ -37,7 +38,14 @@ if (!(existsSync(join(legacy, ".git")) && (await hasRev(rev)))) {
     await sh(legacy, "git", "fetch", "-q", "--depth", "1", `https://github.com/${cfg.source.repo}`, rev);
     await sh(legacy, "git", "checkout", "-q", "FETCH_HEAD");
   } catch (e) {
-    console.log(`skipped: ${cfg.source.repo}@${rev} is not available (${(e as Error).message.split("\n")[0]}); nothing extracted`);
+    const why = `${cfg.source.repo}@${rev} is not available (${(e as Error).message.split("\n")[0]})`;
+    // The extraction check is an integrity gate: where it cannot run it must fail. Skipping is a local choice, never made in CI.
+    const ci = Bun.env.CI === "true" || Bun.env.GITHUB_ACTIONS === "true";
+    if (ci || Bun.env.AI_OS_EXTRACT_ALLOW_SKIP !== "1") {
+      console.error(`error: ${why}${ci ? "" : "; set AI_OS_EXTRACT_ALLOW_SKIP=1 to skip the extraction on this machine"}`);
+      process.exit(1);
+    }
+    console.log(`skipped: ${why}; nothing extracted`);
     process.exit(0);
   }
 }
@@ -46,8 +54,14 @@ if (rev !== cfg.source.rev) writeFileSync(cfgPath, readFileSync(cfgPath, "utf8")
 
 // 1. Closure at the pinned rev: checked out into a scratch index-free listing through git itself (the closure tool reads HEAD sizes,
 // so it must run on a checkout whose HEAD is the rev; legacy HEAD is used and compared).
-const head = (await sh(legacy, "git", "rev-parse", "HEAD")).trim();
-if (head !== rev) console.warn(`warning: legacy HEAD ${head.slice(0, 9)} differs from the pinned rev ${rev.slice(0, 9)}; the closure follows HEAD, files come from the rev`);
+// The closure follows HEAD while the files come from the rev: they must be the same commit. A cache is moved to the rev; a clone
+// named by AI_OS_LEGACY_CHECKOUT is never touched.
+let head = (await sh(legacy, "git", "rev-parse", "HEAD")).trim();
+if (head !== rev && !override) {
+  await sh(legacy, "git", "checkout", "-q", "--detach", rev);
+  head = (await sh(legacy, "git", "rev-parse", "HEAD")).trim();
+}
+if (head !== rev) throw new Error(`legacy HEAD ${head} is not the pinned rev ${rev}: check out ${rev} in ${legacy} before extracting`);
 const rows = JSON.parse(
   await sh(here, "bun", "tools/closure.ts", legacy, ...cfg.select.seeds, `--stop=${cfg.select.stop.join(",")}`, "--json"),
 ) as { unit: string; mb: number; needs: string[] }[];

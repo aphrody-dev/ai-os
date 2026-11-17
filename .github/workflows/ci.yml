@@ -22,6 +22,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun test ./frameworks/ai-os/test
+      - run: bun test ./tools/extract.test.ts
   rust:
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -34,7 +35,7 @@ jobs:
       - run: bun tools/crates.ts --jobs=2
   extract:
     # The tree is the output of tools/extract.ts at the rev pinned in extract.toml: running it again must change nothing.
-    # The tool fetches that rev into .cache/legacy-rev by itself and skips when it cannot.
+    # The tool fetches that rev into .cache/legacy-rev by itself and fails when it cannot: this check never passes without its source.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
