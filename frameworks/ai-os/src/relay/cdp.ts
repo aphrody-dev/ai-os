@@ -59,16 +59,30 @@ export async function launchBrowser(
     ...(headless ? ["--headless=new"] : []),
     url,
   ];
-  Bun.spawn([chromePath(), ...args], {
+  const log = join(profile, "chrome.log");
+  const chrome = Bun.spawn([chromePath(), ...args], {
     stdout: "ignore",
-    stderr: "ignore",
+    stderr: Bun.file(log),
     stdin: "ignore",
-  }).unref();
+  });
+  chrome.unref();
   for (let i = 0; i < 50; i++) {
     if (await version().catch(() => null)) return;
+    if (chrome.exitCode !== null) break;
     await Bun.sleep(200);
   }
-  throw new Error(`Relay Chrome unreachable on 127.0.0.1:${cdpPort()}`);
+  const why =
+    chrome.exitCode === null
+      ? "no answer in 10 s"
+      : `exited with code ${chrome.exitCode}`;
+  const tail = (
+    await Bun.file(log)
+      .text()
+      .catch(() => "")
+  ).slice(-400);
+  throw new Error(
+    `Relay Chrome unreachable on 127.0.0.1:${cdpPort()} (${why}) ${tail}`.trim(),
+  );
 }
 
 /** Closes the relay's Chrome through CDP (Browser.close); no effect if none answers. */
