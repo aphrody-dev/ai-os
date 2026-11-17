@@ -1,0 +1,30 @@
+[package]
+name = "ai-os-guard"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.97"
+license = "Apache-2.0"
+authors.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+description = "Autonomous-agent safety guardrails: pre-main process hardening (disable core dumps, block ptrace attach, strip LD_*/DYLD_* loader env) and a cross-platform shell command-safety classifier (Allow / Prompt / Forbidden) for gating agent-issued commands. Inspired by OpenAI Codex (Apache-2.0). Legacy crates.io name: aphrody-guard."
+
+[dependencies]
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+pretty_assertions = "1"
+
+[lints.rust]
+non_ascii_idents = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }

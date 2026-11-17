@@ -1,0 +1,35 @@
+[package]
+name = "ai-os-rollout"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.97"
+license = "Apache-2.0"
+authors.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+description = "Resilient agent-session recorder: appends timestamped JSONL items to ~/.aphrody/sessions/rollout-*.jsonl through an async actor (mpsc + background writer task with Flush/Persist/Shutdown), and resumes a prior session by replaying its JSONL. Inspired by OpenAI Codex rollout (Apache-2.0). Legacy crates.io name: aphrody-rollout."
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = "2.0.20"
+tokio = { workspace = true }
+tracing = "0.1.44"
+uuid = { version = "1.26.0", features = ["v4", "v7", "serde"] }
+
+[dev-dependencies]
+pretty_assertions = "1"
+tempfile = "3.27.0"
+
+[lints.rust]
+non_ascii_idents = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }

@@ -1,0 +1,38 @@
+[package]
+name = "ai-os-ocr-core"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.97"
+license = "Apache-2.0"
+authors.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+description = "Portable versioned OCR result contract, provenance and quality states for aphrody. Legacy crates.io name: aphrody-ocr-core."
+
+[features]
+default = []
+sqlite = ["dep:rusqlite", "dep:chrono", "dep:aphrody-agent-home"]
+
+[dependencies]
+aphrody-agent-home = { path = "../agent-home", optional = true }
+chrono = { version = "0.4", features = ["serde"], optional = true }
+rusqlite = { workspace = true, features = ["bundled"], optional = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = "0.1.44"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[lints.rust]
+non_ascii_idents = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }

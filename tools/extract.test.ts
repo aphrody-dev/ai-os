@@ -29,7 +29,7 @@ repository = "https://github.com/example-org/example-repo"
 function scratch(name: string, rev = REV): string {
   const dir = join(base, name);
   mkdirSync(join(dir, "tools"), { recursive: true });
-  for (const f of ["extract.ts", "closure.ts"]) copyFileSync(join(root, "tools", f), join(dir, "tools", f));
+  for (const f of ["extract.ts", "closure.ts", "first-party.ts"]) copyFileSync(join(root, "tools", f), join(dir, "tools", f));
   writeFileSync(join(dir, "extract.toml"), toml(rev));
   return dir;
 }

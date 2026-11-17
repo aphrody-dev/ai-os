@@ -24,9 +24,17 @@ export function system32(exe: string): string {
   return join(process.env.SystemRoot ?? process.env.windir ?? "", "System32", exe);
 }
 
-/** Repository root: SRC_ROOT, else four levels above this file (system/env-kit/vault/src). */
+/** Repository root: AI_OS_ROOT, or SRC_ROOT when valid for this tree, else four levels above this file (system/env-kit/vault/src). */
 export function srcRoot(): string {
-  return process.env.SRC_ROOT ?? resolve(import.meta.dir, "..", "..", "..", "..");
+  const selfRoot = resolve(import.meta.dir, "..", "..", "..", "..");
+  if (process.env.AI_OS_ROOT) return resolve(process.env.AI_OS_ROOT);
+  if (process.env.SRC_ROOT) {
+    try {
+      accessSync(join(process.env.SRC_ROOT, "system", "env-kit"), constants.R_OK);
+      return resolve(process.env.SRC_ROOT);
+    } catch {}
+  }
+  return selfRoot;
 }
 
 /** True when `p` (or its nearest existing ancestor) is writable: false under ProtectSystem=strict,

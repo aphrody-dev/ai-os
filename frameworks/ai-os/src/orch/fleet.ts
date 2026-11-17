@@ -26,11 +26,12 @@ export type ExecResult = {
   ms: number;
 };
 
-/** src root: $SRC_ROOT, otherwise the ancestor that contains src.lock.json. */
+/** Repository root: $AI_OS_ROOT, or $SRC_ROOT when it owns frameworks/ai-os, otherwise the ancestor carrying extract.toml or src.lock.json. */
 export function srcRoot(): string {
-  if (Bun.env.SRC_ROOT) return resolve(Bun.env.SRC_ROOT);
+  if (Bun.env.AI_OS_ROOT) return resolve(Bun.env.AI_OS_ROOT);
+  if (Bun.env.SRC_ROOT && existsSync(join(Bun.env.SRC_ROOT, "frameworks/ai-os"))) return resolve(Bun.env.SRC_ROOT);
   let d = import.meta.dir;
-  while (!existsSync(join(d, "src.lock.json"))) {
+  while (!existsSync(join(d, "extract.toml")) && !existsSync(join(d, "src.lock.json"))) {
     const up = dirname(d);
     if (up === d) return resolve(import.meta.dir, "../../../..");
     d = up;

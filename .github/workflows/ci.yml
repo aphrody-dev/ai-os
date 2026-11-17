@@ -22,7 +22,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun test ./frameworks/ai-os/test
-      - run: bun test ./tools/extract.test.ts
+      - run: bun test ./tools/extract.test.ts ./tools/first-party.test.ts
   rust:
     runs-on: ubuntu-latest
     timeout-minutes: 45

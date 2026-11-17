@@ -4,6 +4,8 @@
 telemetry = false
 
 [install]
+globalStore = false
+minimumReleaseAge = 259200
 linker = "hoisted"
 exact = true
 saveTextLockfile = true

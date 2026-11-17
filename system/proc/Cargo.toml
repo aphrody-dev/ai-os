@@ -1,0 +1,45 @@
+[package]
+name = "ai-os-proc"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.97"
+license = "Apache-2.0"
+authors.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+description = "Process supervision primitives shared by the llama-server supervisor, the command sandbox and the training runner: process groups that die with their owner (Linux session + killpg, Windows Job Object with KILL_ON_JOB_CLOSE), detached daemons, liveness probes, elevated execution without a new console window (Sudo for Windows inline, UAC, sudo-rs), free-port allocation, advisory file locks and the single-GPU lease (shared for inference, exclusive for training). Legacy crates.io name: aphrody-proc."
+
+[features]
+tokio = ["dep:tokio"]
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = "2.0.20"
+tracing = "0.1.44"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { workspace = true, features = ["process"], optional = true }
+
+[target.'cfg(unix)'.dependencies]
+rustix = { version = "1", features = ["process", "std"] }
+
+[target.'cfg(windows)'.dependencies]
+windows = { workspace = true, features = ["Win32_System_Console", "Win32_System_JobObjects", "Win32_System_Registry", "Win32_UI_Shell"] }
+
+[dev-dependencies]
+pretty_assertions = "1"
+tempfile = "3.27.0"
+
+[lints.rust]
+non_ascii_idents = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }

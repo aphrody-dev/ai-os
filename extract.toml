@@ -37,7 +37,7 @@ paths = [
   ".claude/agents",
   "prebuilts/up/tools.toml",
   "docs/proofs/ai-os-interop-2026-11-13.md",
-  # Pet data of the identity package (system/env-kit/identity): its tests and runtime read these files.
+  # Pet data of the identity package (system/env-kit/identity): its tests and runtime read these two files.
   "system/identity/assets/aphrody/animations.json",
   "system/identity/assets/aphrody/web.json",
   "system/identity/tests/fixtures/parite-web.json",
@@ -48,6 +48,27 @@ exclude = [
   "**/*.exe",
   "frameworks/*/Cargo.lock",
   "frameworks/*/Cargo.toml.orig",
+]
+
+[first-party]
+# Crates written in this repository, not extracted: units of the legacy monorepo that survive only as crates.io tarballs (ai-os-<unit>,
+# legacy name aphrody-<unit>, publish = false). They are workspace members next to the extracted ones; tools/first-party.ts merges them.
+crates = [
+  "frameworks/app-protocol",
+  "frameworks/code-graph",
+  "frameworks/ocr-core",
+  "frameworks/rollout",
+  "frameworks/subsystem",
+  "frameworks/toolcall",
+  "frameworks/toolcall-repair",
+  "frameworks/translate-core",
+  "system/fsindex",
+  "system/guard",
+  "system/jobs",
+  "system/proc",
+  "system/secrets",
+  "system/sql",
+  "system/store",
 ]
 
 [package-json]

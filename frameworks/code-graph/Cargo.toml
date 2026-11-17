@@ -1,0 +1,47 @@
+[package]
+name = "ai-os-code-graph"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.97"
+license = "Apache-2.0"
+authors.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+description = "Native code graph (nodes, EXTRACTED/INFERRED edges with confidence, communities, god nodes, query/path/explain, report, graph.json) stored in the home database. Port of the Graphify concepts (Apache-2.0, see NOTICE). Legacy crates.io name: aphrody-code-graph."
+
+[[bin]]
+name = "ai-os-graph"
+path = "src/bin/ai-os-graph.rs"
+
+[dependencies]
+ai-os-proc = { path = "../../system/proc" }
+ai-os-store = { path = "../../system/store" }
+clap = { workspace = true }
+oxc_allocator = "0.153.0"
+oxc_ast = "0.153.0"
+oxc_ast_visit = "0.153.0"
+oxc_parser = "0.153.0"
+oxc_span = "0.153.0"
+oxc_syntax = "0.153.0"
+rusqlite = { workspace = true, features = ["bundled"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = "2.0.20"
+tree-sitter = { workspace = true }
+tree-sitter-rust = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[lints.rust]
+non_ascii_idents = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }

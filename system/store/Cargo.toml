@@ -1,0 +1,47 @@
+[package]
+name = "ai-os-store"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.97"
+license = "Apache-2.0"
+authors.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+description = "The single agent-home database (`<home>/db/aphrody.sqlite`): per-profile path resolution, versioned migrations, source/file fingerprints, pipeline journal, sync state and checksum-verified backups. Legacy crates.io name: aphrody-store."
+
+[features]
+default = []
+# Register sqlite-vec (`vec0`) on every connection (migration 0007 and later add the vec tables).
+vec = ["ai-os-sql/vec"]
+
+[[bin]]
+name = "ai-os-store"
+path = "src/bin/ai-os-store.rs"
+
+[dependencies]
+ai-os-sql = { path = "../sql", default-features = false, features = ["sqlite"] }
+aphrody-agent-home = { path = "../../frameworks/agent-home" }
+blake3 = { workspace = true }
+clap = { workspace = true }
+ignore = { workspace = true }
+rusqlite = { workspace = true, features = ["bundled"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = "0.11.0"
+thiserror = "2.0.20"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[lints.rust]
+non_ascii_idents = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }
